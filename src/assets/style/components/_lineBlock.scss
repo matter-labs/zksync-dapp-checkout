@@ -1,0 +1,56 @@
+.lineContainer {
+  width: 100%;
+  min-height: 40px;
+  display: grid;
+  grid-template-columns: 65px 75px 75px 1fr max-content;
+  grid-template-rows: 100%;
+  grid-gap: 5px;
+  align-items: center;
+
+  .tokenItem {
+    display: flex;
+    align-items: center;
+
+    .tokenImg {
+      display: block;
+      height: 16px;
+      width: 16px;
+      object-fit: contain;
+      margin-right: 5px;
+    }
+
+    .tokenName {
+      font-weight: 600;
+      color: $majorDark;
+      font-size: 12px;
+    }
+  }
+
+  .amount {
+    font-weight: 600;
+    font-size: 12px;
+    color: $black2;
+
+    &.disabled {
+      opacity: 0.25;
+    }
+  }
+
+  .alert {
+    display: flex;
+    align-items: center;
+
+    .alertIcon {
+      margin-right: 7px;
+    }
+
+    .alertText {
+      font-size: 12px;
+    }
+  }
+
+  .amountInputGroup {
+    position: relative;
+    left: 4px;
+  }
+}

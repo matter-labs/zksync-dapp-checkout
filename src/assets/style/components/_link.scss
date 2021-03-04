@@ -1,0 +1,45 @@
+.lightLink {
+  position: relative;
+  color: $lightViolet;
+  transition: $transition;
+  transition-property: color;
+  will-change: color;
+  border-bottom: 1px solid transparent;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: $lightViolet;
+    visibility: hidden;
+    transform: scaleX(0);
+    transition: $transition;
+    transition-property: transform, visibility;
+    will-change: transform, visibility;
+  }
+
+  &:hover {
+    color: $violet;
+
+    &::after {
+      visibility: visible;
+      transform: scaleX(1);
+    }
+  }
+}
+
+.linkDefault {
+  font-family: $firaCondensed;
+  font-weight: 600;
+  color: $violet;
+  transition: $transition;
+  transition-property: color;
+  will-change: color;
+
+  &:hover {
+    color: $lightViolet;
+  }
+}

@@ -1,0 +1,135 @@
+.amountInputGroup {
+  width: max-content;
+  height: 36px;
+  padding: 5px;
+  padding-right: 3px;
+  display: flex;
+  align-items: center;
+  border-color: transparent;
+  transition: $transition;
+  transition-property: border-color;
+  will-change: border-color;
+
+  &:not(:disabled) {
+    &:hover, &.focused {
+      border-color: $light;
+
+      .leftSide {
+        .inputContainer {
+          .penIcon {
+            width: 15px;
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    &.focused {
+      .leftSide {
+        .inputContainer {
+          .penIcon {
+            color: $violet;
+          }
+        }
+      }
+    }
+
+    .leftSide {
+      cursor: text;
+    }
+  }
+
+  &.hasUnderInput {
+    .leftSide {
+      height: 100%;
+    }
+  }
+
+  .leftSide {
+    display: flex;
+    width: max-content;
+    height: max-content;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    cursor: default;
+
+    .inputContainer {
+      height: 18px;
+      width: max-content;
+      display: flex;
+      align-items: center;
+
+      input, .sizeSpan {
+        display: block;
+        font-family: $firaSans;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      input {
+        position: relative;
+        left: 4px;
+        height: 100%;
+        width: 0;
+        min-width: 44px;
+        line-height: 18px;
+        color: $black2;
+        text-align: right;
+        background-color: transparent;
+        outline: none !important;
+        border: none;
+        transition: .05s ease;
+        transition-property: width;
+        will-change: width;
+        padding: 0 4px;
+        box-sizing: content-box;
+
+        &::placeholder {
+          color: $gray;
+          font-weight: 400;
+        }
+      }
+
+      .sizeSpan {
+        position: absolute;
+        width: max-content;
+        z-index: -9999;
+        left: -9999px;
+        top: -9999px;
+        opacity: 0;
+      }
+
+      .penIcon {
+        transition: $transition;
+        transition-property: width, opacity, color;
+        will-change: width, opacity, color;
+        color: transparentize($color: $gray, $amount: 0.4);
+        width: 0;
+        opacity: 0;
+        pointer-events: none;
+
+        i {
+          display: block;
+          font-size: 10px;
+          line-height: 18px;
+          padding-left: 5px;
+        }
+      }
+    }
+
+    .underInput {
+      color: $gray;
+      font-size: 9px;
+      line-height: 12px;
+      font-family: $firaCondensed;
+      pointer-events: none;
+    }
+  }
+
+  .rightSide {
+    height: max-content;
+    width: max-content;
+    padding-left: 7px;
+  }
+}

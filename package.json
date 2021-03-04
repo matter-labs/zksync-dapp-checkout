@@ -1,0 +1,179 @@
+{
+  "homepage": "https://checkout.zksync.io",
+  "name": "zkCheckout",
+  "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
+  "version": "0.9.0",
+  "private": true,
+  "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://www.opensource.org/licenses/mit-license.php"
+    },
+    {
+      "type": "Apache-2.0",
+      "url": "https://opensource.org/licenses/apache2.0.php"
+    }
+  ],
+  "author": "Matter Labs",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "bugs": {
+    "url": "https://linear.app/matterlabs/project/zkcheckout-eae8f3c3e539/ZKF"
+  },
+  "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/runtime": "^7.12.5",
+    "@ethersproject/logger": "^5.0.8",
+    "@matterlabs/zk-wallet-onboarding": "^1.18.6",
+    "@nuxt/typescript-runtime": "^2.0.0",
+    "@nuxtjs/axios": "latest",
+    "@nuxtjs/google-gtag": "^1.0.4",
+    "@nuxtjs/pwa": "^3.3.5",
+    "@nuxtjs/sentry": "^5.0.0",
+    "@nuxtjs/tailwindcss": "^3.4.2",
+    "@nuxtjs/toast": "latest",
+    "@types/js-cookie": "^2.2.6",
+    "@walletconnect/web3-provider": "^1.3.1",
+    "ethereum-blockies-base64": "^1.0.2",
+    "ethers": "^5.0.12",
+    "js-cookie": "^2.2.1",
+    "lottie-web": "^5.7.5",
+    "moment": "^2.29.1",
+    "nuxt": "^2.14.12",
+    "nuxt-i18n": "^6.8.1",
+    "nuxt-webfontloader": "^1.1.0",
+    "surge": "^0.21.7",
+    "vue": "^2.6.12",
+    "vue-qrcode": "^0.3.5",
+    "vue-scrollto": "^2.17.1",
+    "vuex": "^3.6.2",
+    "web3": "^1.3.1",
+    "zksync": "^0.8.4"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.14.12",
+    "@nuxt/typescript-build": "^2.0.3",
+    "@nuxtjs/dotenv": "1.4.1",
+    "@nuxtjs/eslint-config-typescript": "^5.0.0",
+    "@tailwindcss/postcss7-compat": "^2.0.3",
+    "@types/jest": "^26.0.20",
+    "autoprefixer": "^9",
+    "babel-core": "^7.0.0-bridge.0",
+    "commitlint": "^11.0.0",
+    "dotenv": "8.2.0",
+    "eslint": "^7.16.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier-vue": "^2.1.1",
+    "eslint-plugin-vue": "^7.0.0",
+    "fork-ts-checker-webpack-plugin": "^6.1.0",
+    "node-sass": "latest",
+    "postcss": "^7",
+    "prettier": "^2.2.1",
+    "sass-loader": "^10.1.1",
+    "stylelint": "^13.8.0",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
+    "webpack": "^5.11.1"
+  },
+  "optionalDependencies": {
+    "@sentry/webpack-plugin": "^1.14.0",
+    "fs-extra": "^9.0.1"
+  },
+  "eslintConfig": {
+    "extends": "@nuxtjs/eslint-config"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{css,scss}": "yarn run lint-css",
+    "*.{ts,tsx}": [
+      "yarn run lint-ts",
+      "yarn run format"
+    ]
+  },
+  "scripts": {
+    "ci": "rm -fr node_modules && rm -rf 'public/*' && sh ./cli-check-env.sh && yarn install --immutable  --immutable-cache",
+    "ci:build": "yarn run nuxt-ci && && sh ./cli-process-env.sh \"$NETWORK\" && yarn run generate --fail-on-error",
+    "dev": "sh ./cli-check-env.sh && nuxt",
+    "generate": "sh ./cli-check-env.sh && nuxt generate ",
+    "start:firebase": "firebase serve --only hosting",
+    "deploy:prod": "./cli-deploy-production.sh",
+    "prepare_ci": "yarn ci && sh cli-process-env.sh 'rinkeby'",
+    "start": "nuxt-ts start",
+    "build": "nuxt-ts build",
+    "build:stage": "yarn ci && sh cli-process-env.sh 'rinkeby' && yarn generate --fail-on-error",
+    "format": "prettier --write",
+    "lint-ts": "eslint --fix \"**/*.{ts, js, vue}\"",
+    "lint-css": "stylelint --fix \"**/*.scss\"",
+    "audit_dependencies": "yarn audit --package-lock-only --audit-level critical --json | yarn-audit-html --output audit.html"
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-recommended",
+      "stylelint-config-rational-order"
+    ],
+    "plugins": [
+      "stylelint-order",
+      "stylelint-scss",
+      "stylelint-config-rational-order/plugin",
+      "stylelint-high-performance-animation",
+      "stylelint-declaration-use-variable"
+    ],
+    "rules": {
+      "no-empty-source": [
+        true,
+        {
+          "severity": "warning"
+        }
+      ],
+      "plugin/no-low-performance-animation-properties": [
+        true,
+        {
+          "severity": "warning"
+        }
+      ],
+      "sh-waqar/declaration-use-variable": [
+        [
+          "/color/",
+          "font-size",
+          "font-family",
+          "font-weight"
+        ]
+      ],
+      "order/properties-order": [],
+      "plugin/rational-order": [
+        true,
+        {
+          "border-in-box-model": false,
+          "empty-line-between-groups": false
+        }
+      ],
+      "selector-type-no-unknown": [
+        true,
+        {
+          "ignore": [
+            "custom-elements"
+          ]
+        }
+      ],
+      "no-descending-specificity": true,
+      "at-rule-no-unknown": null,
+      "scss/at-rule-no-unknown": true
+    }
+  }
+}

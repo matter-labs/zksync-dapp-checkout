@@ -1,0 +1,125 @@
+# [zkSync.io](https://zksync.io/) &middot; [zkSync docs](https://zksync.io/) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT)
+
+# Website zkSync.io
+
+First public release of the updated zkSync.io landing page design
+
+## CHANGELOG.md
+
+### v.2.1.1 🗓 1.03.2021
+
+---
+
+* Partners block addded
+* Tables purified
+* Code optimized
+
+## Build Setup
+
+``` bash
+# install dependencies && populate .env file as of RINKEBY connection (clear install)
+$ yarn prepare_ci
+
+# serve with hot reload at localhost:3000
+$ yarn dev
+
+# build for dev
+$ build:stage
+# afterward you'll have prepared distributive in /public folder
+
+# build for production (only if you have firebase:auth) 
+$ cli-deploy-production.sh  
+```
+
+For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+---
+
+## Solutions used
+
+* [Nuxt.js](https://nuxtjs.org)
+* [TS Lang](https://www.typescriptlang.org)
+* [Vue.js](https://vuejs.org)
+
+# zkSync docs
+
+This repository contains the zkSync documentation hosted on <zksync.io>.
+
+## Local testing
+
+```bash
+yarn
+yarn docs:dev
+```
+
+## Development
+
+CI pipeline will check that the files are formatted according to `prettier`, `markdownlint` founds no issues in document and spelling is correct. Also, there should be no dead
+links.
+
+You can check it locally as follows:
+
+```bash
+yarn
+yarn md:lint
+yarn md:deadlinks
+yarn fmt:check
+yarn cspell
+```
+
+If `cspell` doesn't recognize a word but you're sure that it's correct, consider adding it to the `cspell-zksync.txt`.
+
+## Deployment
+
+`master` branch is automatically deployed to <https://console.firebase.google.com/u/0/project/zksync-js-docs>
+
+# Deploying altogether
+
+> will do:
+
+* install node modules;
+* prepare, test and build documentation;
+* prepare and build nuxt.js-version of the landing page of zksync.io/index.html
+* afterwards all contained into the `dist` folder will be deployed in form of the static website
+
+```bash
+yarn zk-ci-prepare
+yarn firebase deploy
+```
+
+# Extra documentation
+
+## cSpell
+
+Configuration in `.cSpell.json`:
+
+* `version` — version of the setting file, always **0.1**
+* `language` — language - current active spelling language
+* `words[]` — words - list of words to be always considered correct
+* `dictionaries[]`
+
+```
+"dictionaryDefinitions": [
+    {
+      "name": "zksync", "path": "./cspell-zksync.txt"
+    }
+]
+```
+
+```bash
+{
+  
+  "version": "0.1",
+  // language - current active spelling language
+  "language": "en",
+  // words - list of words to be always considered correct
+  "words": [],
+  "dictionaries": ["typescript", "zksync"],
+  //
+  "dictionaryDefinitions": [
+  { 
+    "name": "zksync", "path": "./cspell-zksync.txt"
+  }
+]
+}
+```

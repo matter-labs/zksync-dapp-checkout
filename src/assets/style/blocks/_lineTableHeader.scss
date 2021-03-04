@@ -1,0 +1,17 @@
+.lineTableHeader {
+  width: 100%;
+  height: 29px;
+  display: grid;
+  grid-template-columns: 65px 75px 75px 1fr max-content;
+  grid-template-rows: 100%;
+  grid-gap: 5px;
+  align-items: center;
+
+  .tableItem {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    color: $black2;
+    font-family: $firaCondensed;
+  }
+}

@@ -1,0 +1,57 @@
+.valuesBlockContainer {
+  width: 100%;
+  height: max-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .valuesBlockSecondary {
+    height: max-content;
+  }
+
+  .valuesBlockRight {
+    text-align: right;
+  }
+
+  .valuesLeftBottom, .valuesRightBottom {
+    padding-top: 1px;
+  }
+
+  .address {
+    font-family: $firaCode;
+    color: $black2;
+    font-size: 0.65rem;
+    line-height: 1.4;
+    font-weight: 300;
+    letter-spacing: -0.025em;
+  }
+
+  .headline {
+    font-family: $firaCondensed;
+    color: $dark;
+    font-size: 16px;
+    line-height: 1.37;
+    font-weight: 600;
+
+    &.big {
+      font-size: 20px;
+    }
+  }
+
+  .value {
+    color: $black2;
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: 600;
+
+    &.big {
+      font-size: 16px;
+    }
+  }
+
+  .secondaryValue {
+    color: $gray;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
