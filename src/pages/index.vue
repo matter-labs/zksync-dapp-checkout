@@ -136,20 +136,20 @@ import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import Vue from "vue";
 
 export default Vue.extend({
-                            components: {
-                              connectedWallet,
-                              lineTableHeader
-                            },
-                            data() {
-                              return {
-                                modal: false,
-                                input: {
-                                  token:  {
-                                    symbol: "ETH"
-                                  },
-                                  amount: "0.03"
-                                }
-                              }
-                            }
-                          });
+  components: {
+    connectedWallet,
+    lineTableHeader,
+  },
+  data() {
+    return {
+      modal: false,
+      input: {
+        token: {
+          symbol: "ETH",
+        },
+        amount: "0.03",
+      },
+    };
+  },
+});
 </script>

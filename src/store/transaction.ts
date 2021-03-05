@@ -1,7 +1,7 @@
-import { ActionTree, GetterTree, MutationTree } from 'vuex';
-import { walletData } from '@/plugins/walletData';
-import { ETHOperation } from '@/plugins/types';
-import { RootState } from '~/store';
+import { ActionTree, GetterTree, MutationTree } from "vuex";
+import { walletData } from "@/plugins/walletData";
+import { ETHOperation } from "@/plugins/types";
+import { RootState } from "~/store";
 
 let updateBalancesTimeout = undefined as any;
 
@@ -29,8 +29,8 @@ export const state = () => ({
 export type TransactionModuleState = ReturnType<typeof state>;
 
 export const mutations: MutationTree<TransactionModuleState> = {
-  updateTransactionStatus (state, { hash, status }): void {
-    if (status === 'Verified') {
+  updateTransactionStatus(state, { hash, status }): void {
+    if (status === "Verified") {
       delete state.watchedTransactions[hash];
       return;
     }
@@ -42,7 +42,7 @@ export const mutations: MutationTree<TransactionModuleState> = {
       state.watchedTransactions[hash].status = status;
     }
   },
-  updateDepositStatus (state, { tokenSymbol, hash, amount, status, confirmations }) {
+  updateDepositStatus(state, { tokenSymbol, hash, amount, status, confirmations }) {
     if (!Array.isArray(state.deposits[tokenSymbol])) {
       state.deposits[tokenSymbol] = [];
     }
@@ -66,17 +66,17 @@ export const mutations: MutationTree<TransactionModuleState> = {
       state.forceUpdateTick++;
     }
   },
-  setWithdrawalTx (state, { tx, ethTx }) {
+  setWithdrawalTx(state, { tx, ethTx }) {
     state.withdrawalTxToEthTx.set(tx, ethTx);
   },
 };
 
 export const getters: GetterTree<TransactionModuleState, RootState> = {
-  depositList (state) {
+  depositList(state) {
     state.forceUpdateTick;
     return state.deposits;
   },
-  getWithdrawalTx (state) {
+  getWithdrawalTx(state) {
     return (tx: string): string | undefined => {
       return state.withdrawalTxToEthTx.get(tx);
     };
@@ -84,46 +84,46 @@ export const getters: GetterTree<TransactionModuleState, RootState> = {
 };
 
 export const actions: ActionTree<TransactionModuleState, RootState> = {
-  async watchTransaction ({ dispatch, commit, state }, { transactionHash, existingTransaction /* , tokenSymbol, type */ }): Promise<void> {
+  async watchTransaction({ dispatch, commit, state }, { transactionHash, existingTransaction /* , tokenSymbol, type */ }): Promise<void> {
     try {
       if (state.watchedTransactions.hasOwnProperty(transactionHash)) {
         return;
       }
       if (!existingTransaction) {
-        const committedTransaction = await walletData.get().syncProvider!.notifyTransaction(transactionHash, 'COMMIT');
-        commit('updateTransactionStatus', { hash: transactionHash, status: 'Commited' });
-        dispatch('requestBalancesUpdate');
+        const committedTransaction = await walletData.get().syncProvider!.notifyTransaction(transactionHash, "COMMIT");
+        commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
+        dispatch("requestBalancesUpdate");
       } else {
-        commit('updateTransactionStatus', { hash: transactionHash, status: 'Commited' });
+        commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
       }
-      const verifiedTransaction = await walletData.get().syncProvider!.notifyTransaction(transactionHash, 'VERIFY');
-      commit('updateTransactionStatus', { hash: transactionHash, status: 'Verified' });
-      dispatch('requestBalancesUpdate');
+      const verifiedTransaction = await walletData.get().syncProvider!.notifyTransaction(transactionHash, "VERIFY");
+      commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
+      dispatch("requestBalancesUpdate");
     } catch (error) {
-      commit('updateTransactionStatus', { hash: transactionHash, status: 'Verified' });
+      commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
     }
   },
-  async watchDeposit ({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: string; amount: string }): Promise<void> {
+  async watchDeposit({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: string; amount: string }): Promise<void> {
     try {
-      commit('updateDepositStatus', { hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: 'Initiated', confirmations: 1 });
+      commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
       const committedDeposit = await depositTx.awaitEthereumTxCommit();
-      dispatch('requestBalancesUpdate');
-      // commit('updateDepositStatus', {hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: 'Initiated', confirmations: commitedDeposit.confirmations});
+      dispatch("requestBalancesUpdate");
+      // commit('updateDepositStatus', {hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: 'Initiated', confirmations: committedDeposit.confirmations});
       const depositReceipt = await depositTx.awaitReceipt();
-      dispatch('requestBalancesUpdate');
-      commit('updateDepositStatus', { hash: depositTx!.ethTx.hash, tokenSymbol, status: 'Commited' });
+      dispatch("requestBalancesUpdate");
+      commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Committed" });
       const depositVerifyReceipt = await depositTx.awaitVerifyReceipt();
-      dispatch('requestBalancesUpdate');
-      commit('updateDepositStatus', { hash: depositTx!.ethTx.hash, tokenSymbol, status: 'Verified' });
+      dispatch("requestBalancesUpdate");
+      commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Verified" });
     } catch (error) {
-      commit('updateDepositStatus', { hash: depositTx!.ethTx.hash, tokenSymbol, status: 'Verified' });
+      commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Verified" });
     }
   },
-  async requestBalancesUpdate (): Promise<void> {
+  async requestBalancesUpdate(): Promise<void> {
     clearTimeout(updateBalancesTimeout);
     updateBalancesTimeout = setTimeout(() => {
-      this.dispatch('wallet/getzkBalances', { accountState: undefined, force: true });
-      this.dispatch('wallet/getTransactionsHistory', { offset: 0, force: true });
+      this.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
+      this.dispatch("wallet/getTransactionsHistory", { offset: 0, force: true });
     }, 2000);
   },
 };

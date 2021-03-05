@@ -4,10 +4,10 @@
       <div class="text-violet text-2xl font-bold">Checkout</div>
       <note class="mt-7">
         <template slot="icon">
-          <i class="text-gray fal fa-comment-alt-exclamation"></i>
+          <em class="text-gray fal fa-comment-alt-exclamation"/>
         </template>
         <template slot="default">
-          <div class="text-dark2 font-light text-sm">By using zkSync: Checkout Gateway, you agree to accept full responsability. See our <a class="lightLink"
+          <div class="text-dark2 font-light text-sm">By using zkSync: Checkout Gateway, you agree to accept full responsibility. See our <a class="lightLink"
                                                                                                                                             href="https://zksync.io/legal/terms.html#overview"
                                                                                                                                             target="_blank">Terms of Service</a> and
             <a class="lightLink" href="https://zksync.io/legal/privacy.html#introduction" target="_blank">Privacy Policy</a> for the details.
@@ -109,14 +109,14 @@
         <footer>
           <div class="poweredBy flex justify-center items-center pt-5">
             <div class="text-lg font-firaCondensed font-medium uppercase text-violet mr-3">Powered by</div>
-            <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync">
+            <img class="zkSyncLogoFull h-12" src="@/assets/images/zkSyncLogoFull.svg" alt="zkSync">
           </div>
           <div class="poweredBy flex justify-center items-center mt-3">
             <a class="linkDefault" href="https://zksync.io/legal/terms.html#overview" target="_blank">Terms of Service</a>
             <a class="linkDefault ml-5" href="https://zksync.io/legal/privacy.html#introduction" target="_blank">Privacy Policy</a>
           </div>
         </footer>
-        <img class="zkSyncFooter" src="/zkSyncFooter.svg" alt="zkSync">
+        <img class="zkSyncFooter" src="@/assets/images/zkSyncFooter.svg" alt="zkSync">
       </div>
     </div>
   </aside>

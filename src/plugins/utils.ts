@@ -1,7 +1,7 @@
-import { walletData } from '@/plugins/walletData';
-import { Address, DecimalBalance, GweiBalance, TokenSymbol } from '@/plugins/types';
-import { utils as zkUtils } from 'zksync';
-import { BigNumberish, utils } from 'ethers';
+import { walletData } from "@/plugins/walletData";
+import { Address, DecimalBalance, GweiBalance, TokenSymbol } from "@/plugins/types";
+import { utils as zkUtils } from "zksync";
+import { BigNumberish, utils } from "ethers";
 
 /**
  *
@@ -13,10 +13,10 @@ const parseToken = (symbol: TokenSymbol, amount: DecimalBalance | number) => {
   /**
    * skip already bignumber
    */
-  if (typeof amount === 'object') {
+  if (typeof amount === "object") {
     return amount;
   }
-  if (typeof amount === 'number') {
+  if (typeof amount === "number") {
     const tokenDecimals = walletData.get().syncProvider!.tokenSet.resolveTokenDecimals(symbol);
     amount = amount.toFixed(tokenDecimals);
   }
@@ -24,7 +24,7 @@ const parseToken = (symbol: TokenSymbol, amount: DecimalBalance | number) => {
 };
 
 const handleFormatToken = (symbol: TokenSymbol, amount: GweiBalance) => {
-  if (!amount || amount === 'undefined') return '0';
+  if (!amount || amount === "undefined") return "0";
   return walletData.get().syncProvider!.tokenSet.formatToken(symbol, amount);
 };
 
@@ -43,14 +43,14 @@ export default {
     };
   },
 
-  handleTimeAmount: (time: number, string: string) => `${time} ${string}${time > 1 ? 's' : ''}`,
+  handleTimeAmount: (time: number, string: string) => `${time} ${string}${time > 1 ? "s" : ""}`,
 
   handleFormatToken,
 
   getFormattedTotalPrice: (price: number, amount: number) => {
     const total = price * amount;
     if (!amount || total === 0) {
-      return '$0.00';
+      return "$0.00";
     }
     return total < 0.01 ? `<$0.01` : `~$${total.toFixed(2)}`;
   },
@@ -63,7 +63,7 @@ export default {
    * @return {number}
    */
   sortBalancesById: (a: any, b: any) => {
-    if (a.hasOwnProperty('id')) {
+    if (a.hasOwnProperty("id")) {
       if (a.id < b.id) {
         return -1;
       }

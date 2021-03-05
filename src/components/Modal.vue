@@ -1,15 +1,15 @@
 <template>
   <transition name="modal">
-    <div class="modalContainer" :class="{'full': !block}" v-if="value" @click.self="$emit('input', false)">
+    <div v-if="value" class="modalContainer" :class="{'full': !block}" @click.self="$emit('input', false)">
       <div class="modalMain">
         <closebtn v-if="!block" @click="$emit('input', false)" />
-        <div class="modalHeader" v-if="$slots['header']">
+        <div v-if="$slots['header']" class="modalHeader">
           <slot name="header" />
         </div>
-        <div class="modalBody" v-if="$slots['default']">
+        <div v-if="$slots['default']" class="modalBody">
           <slot name="default" />
         </div>
-        <div class="modalFooter" v-if="$slots['footer']">
+        <div v-if="$slots['footer']" class="modalFooter">
           <slot name="footer" />
         </div>
       </div>
@@ -24,13 +24,13 @@ export default Vue.extend({
     value: {
       type: Boolean,
       default: false,
-      required: false
+      required: false,
     },
     block: {
       type: Boolean,
       default: false,
-      required: false
+      required: false,
     },
-  }
+  },
 });
 </script>

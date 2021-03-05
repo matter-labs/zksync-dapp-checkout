@@ -1,8 +1,7 @@
 type networkIDS = {
   [key: string]: number;
 };
-let _ETHER_NETWORK_ID_DICTIONARY: networkIDS;
-_ETHER_NETWORK_ID_DICTIONARY = {
+const _ETHER_NETWORK_ID_DICTIONARY: networkIDS = {
   rinkeby: 4,
   ropsten: 3,
   mainnet: 1,
@@ -16,18 +15,17 @@ export const APP_VERSION = process.env.APP_GIT_VERSION;
  */
 console.log(`This is ${APP_VERSION}, last commit was done at ${GIT_REVISION_DATE}`);
 
-export const GIT_REVISION = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : '';
-export const GIT_REVISION_SHORT = GIT_REVISION ? GIT_REVISION.slice(-7) : '';
+export const GIT_REVISION = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
 
-export const ETHER_NETWORK_NAME: string = process.env.APP_CURRENT_NETWORK || '';
+export const ETHER_NETWORK_NAME: string = process.env.APP_CURRENT_NETWORK || "";
 
-export const ETHER_PRODUCTION = ETHER_NETWORK_NAME === 'mainnet';
+export const ETHER_PRODUCTION = ETHER_NETWORK_NAME === "mainnet";
 
-console.log('production: ', ETHER_PRODUCTION);
+console.log("production: ", ETHER_PRODUCTION);
 
-export const ETHER_PREFIX = ETHER_PRODUCTION ? '' : ETHER_NETWORK_NAME;
-export const ETHER_PREFIX_DOT = ETHER_PREFIX + (ETHER_PRODUCTION ? '' : '.');
-export const ETHER_PREFIX_MINUS = ETHER_PREFIX + (ETHER_PRODUCTION ? '' : '-');
+export const ETHER_PREFIX = ETHER_PRODUCTION ? "" : ETHER_NETWORK_NAME;
+export const ETHER_PREFIX_DOT = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : ".");
+export const ETHER_PREFIX_MINUS = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : "-");
 
 export const ETHER_NETWORK_ID = _ETHER_NETWORK_ID_DICTIONARY.rinkeby;
 export const APP_ZKSYNC_API_LINK = `${ETHER_PREFIX_MINUS}api.zksync.io`;

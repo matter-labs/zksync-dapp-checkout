@@ -3,7 +3,7 @@
     <info-block/>
     <div class="routerContainer bg-white2 min-h-screen py-10 px-10">
       <logging-in/>
-      <transition name="fade" mode="out-in" v-if="!loggingIn">
+      <transition v-if="!loggingIn" name="fade" mode="out-in">
         <nuxt class="routeMain"/>
       </transition>
     </div>
@@ -17,7 +17,7 @@ import loggingIn from "@/blocks/loggingIn.vue";
 export default {
   components: {
     infoBlock,
-    loggingIn
+    loggingIn,
   },
   computed: {
     loggingIn() {

@@ -1,4 +1,4 @@
-import { walletData } from '@/plugins/walletData';
+import { walletData } from "@/plugins/walletData";
 
 let changeNetworkWasSet = false;
 
@@ -14,12 +14,12 @@ const changeNetworkHandle = (dispatch, context) => {
     if (!walletData.get().syncWallet) {
       return;
     }
-    const refreshWalletResult = await dispatch('walletRefresh', false);
+    const refreshWalletResult = await dispatch("walletRefresh", false);
     if (refreshWalletResult === false) {
-      await context.$router.push('/');
-      await dispatch('logout');
+      await context.$router.push("/");
+      await dispatch("logout");
     } else {
-      await dispatch('forceRefreshData');
+      await dispatch("forceRefreshData");
     }
   };
 };
@@ -36,9 +36,9 @@ const changeAccountHandle = (dispatch, context) => {
     if (!walletData.get().syncWallet) {
       return;
     }
-    await dispatch('logout');
-    await context.$router.push('/');
-    await dispatch('clearDataStorage');
+    await dispatch("logout");
+    await context.$router.push("/");
+    await dispatch("clearDataStorage");
   };
 };
 
@@ -52,12 +52,12 @@ const changeNetworkSet = (dispatch, context) => {
   if (changeNetworkWasSet !== true) {
     if (process.client && window.ethereum) {
       changeNetworkWasSet = true;
-      window.ethereum.on('disconnect', () => {
-        dispatch('toaster/error', 'Connection with your Wallet was lost. Restarting the DAPP', { root: true });
-        dispatch('logout');
+      window.ethereum.on("disconnect", () => {
+        dispatch("toaster/error", "Connection with your Wallet was lost. Restarting the DAPP", { root: true });
+        dispatch("logout");
       });
-      window.ethereum.on('chainChanged', changeNetworkHandle(dispatch, context));
-      window.ethereum.on('accountsChanged', changeAccountHandle(dispatch, context));
+      window.ethereum.on("chainChanged", changeNetworkHandle(dispatch, context));
+      window.ethereum.on("accountsChanged", changeAccountHandle(dispatch, context));
     }
   }
 };

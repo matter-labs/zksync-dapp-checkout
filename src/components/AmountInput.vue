@@ -4,9 +4,9 @@
       <div class="inputContainer">
         <input ref="input" v-model="valNow" :disabled="disabled" :style="{'width': `${width}px`}" placeholder="Amount" type="text" @blur="focused=false" @focus="focused=true">
         <span ref="sizeSpan" class="sizeSpan">{{ valNow }}</span>
-        <div class="penIcon">
-          <i class="fad fa-pen"></i>
-        </div>
+        <label for class="penIcon">
+          <i class="fad fa-pen"/>
+        </label>
       </div>
       <div class="underInput">
         <slot name="underInput"/>
@@ -43,7 +43,7 @@ export default {
     valNow: {
       immediate: true,
       handler(val) {
-        if (typeof val === "String") {
+        if (typeof val === "string") {
           this.valNow = val.trim();
         }
         setTimeout(() => {
@@ -66,8 +66,7 @@ export default {
       if (!sizeSpan) {
         return;
       }
-      const inputSize = sizeSpan.getBoundingClientRect().width;
-      this.width = inputSize;
+      this.width = sizeSpan.getBoundingClientRect().width;
     },
   },
 };

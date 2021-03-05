@@ -1,7 +1,7 @@
 export default async function (to, from, savedPosition) {
   if (to.path !== from.path) {
-    this.app.$store.commit('scroll/setLastPath', from.path);
-    this.app.$store.commit('scroll/setLastScroll', savedPosition);
+    this.app.$store.commit("scroll/setLastPath", from.path);
+    this.app.$store.commit("scroll/setLastScroll", savedPosition);
   }
 
   if (savedPosition) {
@@ -25,8 +25,8 @@ export default async function (to, from, savedPosition) {
   if (to.hash) {
     const el = await findEl(to.hash);
     const offsetTop = el.getBoundingClientRect().top + window.pageYOffset;
-    if ('scrollBehavior' in document.documentElement.style) {
-      return window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+    if ("scrollBehavior" in document.documentElement.style) {
+      return window.scrollTo({ top: offsetTop, behavior: "smooth" });
     } else {
       return window.scrollTo(0, offsetTop);
     }

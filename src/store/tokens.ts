@@ -1,8 +1,8 @@
-import { ActionTree, GetterTree, MutationTree } from 'vuex';
-import { Address, Token, TokenItem, TokenPrices, Tokens, TokenSymbol } from '@/plugins/types';
-import { BigNumberish } from 'ethers';
-import { walletData } from '@/plugins/walletData';
-import { RootState } from '~/store';
+import { ActionTree, GetterTree, MutationTree } from "vuex";
+import { Address, Token, TokenItem, TokenPrices, Tokens, TokenSymbol } from "@/plugins/types";
+import { BigNumberish } from "ethers";
+import { walletData } from "@/plugins/walletData";
+import { RootState } from "~/store";
 
 /**
  * Operations with the tokens (assets)
@@ -12,7 +12,7 @@ export const state = () => ({
   /**
    * Restricted tokens, fee can't be charged in it
    */
-  restrictedTokens: ['PHNX', 'LAMB', 'MLTT'] as Array<TokenSymbol>,
+  restrictedTokens: ["PHNX", "LAMB", "MLTT"] as Array<TokenSymbol>,
 
   /**
    * All available tokens:
@@ -34,19 +34,19 @@ export const state = () => ({
 export type TokensModuleState = ReturnType<typeof state>;
 
 export const mutations: MutationTree<TokensModuleState> = {
-  setAllTokens (state, tokenList: Tokens): void {
+  setAllTokens(state, tokenList: Tokens): void {
     state.allTokens = tokenList;
   },
-  setTokenPrice (state, { symbol, obj }): void {
+  setTokenPrice(state, { symbol, obj }): void {
     state.tokenPrices[symbol] = obj;
   },
 };
 
 export const getters: GetterTree<TokensModuleState, RootState> = {
-  getAllTokens (state): Tokens {
+  getAllTokens(state): Tokens {
     return state.allTokens;
   },
-  getTokenByID (state): Function {
+  getTokenByID(state): Function {
     return (id: number): TokenItem | undefined => {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
@@ -55,29 +55,29 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
       }
     };
   },
-  getRestrictedTokens (state): Tokens {
+  getRestrictedTokens(state): Tokens {
     return Object.fromEntries(Object.entries(state.allTokens).filter((e: any) => state.restrictedTokens.includes(e[1].symbol)));
   },
-  getAvailableTokens (state): Tokens {
+  getAvailableTokens(state): Tokens {
     return Object.fromEntries(Object.entries(state.allTokens).filter((e: any) => !state.restrictedTokens.includes(e[1].symbol)));
   },
-  getTokenPrices (state): TokenPrices {
+  getTokenPrices(state): TokenPrices {
     return state.tokenPrices;
   },
 };
 
 export const actions: ActionTree<TokensModuleState, RootState> = {
-  async loadAllTokens ({ commit, getters }): Promise<Tokens> {
+  async loadAllTokens({ commit, getters }): Promise<Tokens> {
     if (Object.entries(getters.getAllTokens).length === 0) {
-      await this.dispatch('wallet/restoreProviderConnection');
+      await this.dispatch("wallet/restoreProviderConnection");
       const tokensList = await walletData.get().syncProvider?.getTokens();
-      commit('setAllTokens', tokensList);
+      commit("setAllTokens", tokensList);
       return tokensList || {};
     }
     return getters.getAllTokens;
   },
 
-  async loadTokensAndBalances ({
+  async loadTokensAndBalances({
     dispatch,
   }): Promise<{
     tokens: Tokens;
@@ -86,7 +86,7 @@ export const actions: ActionTree<TokensModuleState, RootState> = {
     const syncWallet = walletData.get().syncWallet;
     const accountState = walletData.get().accountState;
 
-    const tokens = await dispatch('loadAllTokens');
+    const tokens = await dispatch("loadAllTokens");
     const zkBalance = accountState?.committed.balances;
     if (!zkBalance) {
       return {
@@ -100,7 +100,7 @@ export const actions: ActionTree<TokensModuleState, RootState> = {
       },
     ).map((key: TokenSymbol) => ({
       address: tokens[key].address as Address,
-      balance: syncWallet?.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : '0') as string,
+      balance: syncWallet?.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0") as string,
       symbol: tokens[key].symbol as TokenSymbol,
       id: tokens[key].id as Number,
     }));
@@ -120,15 +120,15 @@ export const actions: ActionTree<TokensModuleState, RootState> = {
    * @param symbol
    * @return {Promise<{n: number, d: number}|number|*>}
    */
-  async getTokenPrice ({ commit, getters }, symbol: TokenSymbol): Promise<number> {
+  async getTokenPrice({ commit, getters }, symbol: TokenSymbol): Promise<number> {
     const localPricesList = getters.getTokenPrices;
     if (localPricesList.hasOwnProperty(symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
       return localPricesList[symbol].price;
     }
-    await this.dispatch('wallet/restoreProviderConnection');
+    await this.dispatch("wallet/restoreProviderConnection");
     const syncProvider = walletData.get().syncProvider;
     const tokenPrice = await syncProvider?.getTokenPrice(symbol);
-    commit('setTokenPrice', {
+    commit("setTokenPrice", {
       symbol,
       obj: {
         lastUpdated: new Date().getTime(),

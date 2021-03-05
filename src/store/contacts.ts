@@ -1,8 +1,8 @@
-import { GetterTree, MutationTree } from 'vuex';
-import { Address, Contact } from '@/plugins/types';
-import { walletData } from '@/plugins/walletData';
-import utils from '@/plugins/utils';
-import { RootState } from '~/store';
+import { GetterTree, MutationTree } from "vuex";
+import { Address, Contact } from "@/plugins/types";
+import { walletData } from "@/plugins/walletData";
+import utils from "@/plugins/utils";
+import { RootState } from "~/store";
 
 export const state = () => ({
   contactsList: [] as Array<Contact>,
@@ -11,11 +11,11 @@ export const state = () => ({
 export type ContactsModuleState = ReturnType<typeof state>;
 
 export const mutations: MutationTree<ContactsModuleState> = {
-  getContactsFromStorage (state) {
+  getContactsFromStorage(state) {
     try {
       const walletAddress = walletData.get().syncWallet!.address();
-      let contactsList = window.localStorage.getItem('contacts-' + walletAddress);
-      if (process.client && contactsList && window.localStorage.getItem('contacts-' + walletAddress)) {
+      let contactsList = window.localStorage.getItem("contacts-" + walletAddress);
+      if (process.client && contactsList && window.localStorage.getItem("contacts-" + walletAddress)) {
         contactsList = JSON.parse(contactsList) || [];
         if (Array.isArray(contactsList)) {
           // @ts-ignore: Unreachable code error
@@ -30,7 +30,7 @@ export const mutations: MutationTree<ContactsModuleState> = {
       state.contactsList = [];
     }
   },
-  saveContact (state, { name, address }) {
+  saveContact(state, { name, address }) {
     const lowerCaseAddress = address.toLowerCase();
     for (let a = state.contactsList.length - 1; a >= 0; a--) {
       if (state.contactsList[a].address.toLowerCase() === lowerCaseAddress) {
@@ -39,10 +39,10 @@ export const mutations: MutationTree<ContactsModuleState> = {
     }
     state.contactsList.unshift({ name: name.trim(), address });
     if (process.client) {
-      window.localStorage.setItem('contacts-' + walletData.get().syncWallet!.address(), JSON.stringify(state.contactsList));
+      window.localStorage.setItem("contacts-" + walletData.get().syncWallet!.address(), JSON.stringify(state.contactsList));
     }
   },
-  deleteContact (state, address) {
+  deleteContact(state, address) {
     const lowerCaseAddress = address.toLowerCase();
     for (let a = state.contactsList.length - 1; a >= 0; a--) {
       if (state.contactsList[a].address.toLowerCase() === lowerCaseAddress) {
@@ -50,16 +50,16 @@ export const mutations: MutationTree<ContactsModuleState> = {
       }
     }
     if (process.client) {
-      window.localStorage.setItem('contacts-' + walletData.get().syncWallet!.address(), JSON.stringify(state.contactsList));
+      window.localStorage.setItem("contacts-" + walletData.get().syncWallet!.address(), JSON.stringify(state.contactsList));
     }
   },
 };
 
 export const getters: GetterTree<ContactsModuleState, RootState> = {
-  get (state) {
+  get(state) {
     return state.contactsList;
   },
-  isInContacts (state): Function {
+  isInContacts(state): Function {
     return (address: Address): boolean => {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {
@@ -70,7 +70,7 @@ export const getters: GetterTree<ContactsModuleState, RootState> = {
       return false;
     };
   },
-  getByAddress (state): Function {
+  getByAddress(state): Function {
     return (address: Address): false | Contact => {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {

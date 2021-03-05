@@ -1,5 +1,5 @@
-import { walletData } from '@/plugins/walletData';
-import { Address, GweiBalance, TokenSymbol, Tx } from '@/plugins/types';
+import { walletData } from "@/plugins/walletData";
+import { Address, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
 
 /**
  * Transaction processing action
@@ -14,7 +14,7 @@ import { Address, GweiBalance, TokenSymbol, Tx } from '@/plugins/types';
  */
 export const transaction = async (address: Address, token: TokenSymbol, feeToken: TokenSymbol, amountBigValue: GweiBalance, feeBigValue: GweiBalance, store: any) => {
   const syncWallet = walletData.get().syncWallet;
-  let nonce = await syncWallet!.getNonce('committed');
+  let nonce = await syncWallet!.getNonce("committed");
   const transferTx = {
     fee: 0,
     nonce,
@@ -41,12 +41,12 @@ export const transaction = async (address: Address, token: TokenSymbol, feeToken
       amount: amountBigValue,
       fee: feeBigValue,
     });
-    store.dispatch('transaction/watchTransaction', { transactionHash: transaction.txHash, tokenSymbol: token, type: 'withdraw' });
+    store.dispatch("transaction/watchTransaction", { transactionHash: transaction.txHash, tokenSymbol: token, type: "withdraw" });
     return transaction;
   } else {
     const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
     for (let a = 0; a < transferTransaction.length; a++) {
-      store.dispatch('transaction/watchTransaction', { transactionHash: transferTransaction[a].txHash, tokenSymbol: a === 0 ? token : feeToken, type: 'withdraw' });
+      store.dispatch("transaction/watchTransaction", { transactionHash: transferTransaction[a].txHash, tokenSymbol: a === 0 ? token : feeToken, type: "withdraw" });
     }
     if (transferTransaction) {
       return transferTransaction;
@@ -78,14 +78,14 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
       fee: feeBigValue,
       fastProcessing: fastWithdraw,
     });
-    store.dispatch('transaction/watchTransaction', { transactionHash: transaction.txHash, tokenSymbol: token, type: 'transfer' });
+    store.dispatch("transaction/watchTransaction", { transactionHash: transaction.txHash, tokenSymbol: token, type: "transfer" });
     return transaction;
   } else {
     const withdrawals = [
       {
         ethAddress: address,
         amount: amountBigValue,
-        fee: '0',
+        fee: "0",
         token,
       },
     ];
@@ -93,14 +93,14 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
       {
         to: syncWallet!.address(),
         token: feeToken,
-        amount: '0',
+        amount: "0",
         fee: feeBigValue,
       },
     ];
     if (!syncWallet!.signer) {
-      throw new Error('zkSync signer is required for sending zksync transactions.');
+      throw new Error("zkSync signer is required for sending zksync transactions.");
     } else if (transfers.length === 0) {
-      throw new Error('No transfers in queue');
+      throw new Error("No transfers in queue");
     }
 
     const signedTransactions = [] as Array<Tx>;
@@ -119,7 +119,7 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
           nonce,
         })
         .catch((error) => {
-          throw new Error('Error while performing signWithdrawFromSyncToEthereum: ' + error.message);
+          throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
         });
 
       // @ts-ignore: Unreachable code error
@@ -137,7 +137,7 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
           nonce,
         })
         .catch((error) => {
-          throw new Error('Error while performing signSyncTransfer: ' + error.message);
+          throw new Error("Error while performing signSyncTransfer: " + error.message);
         });
 
       // @ts-ignore: Unreachable code error
@@ -145,10 +145,10 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
     }
 
     const transactionHashes = await syncWallet!.provider.submitTxsBatch(signedTransactions).catch((error) => {
-      throw new Error('Error while performing submitTxsBatch: ' + error.message);
+      throw new Error("Error while performing submitTxsBatch: " + error.message);
     });
     for (let a = 0; a < transactionHashes.length; a++) {
-      store.dispatch('transaction/watchTransaction', { transactionHash: transactionHashes[a], tokenSymbol: a === 0 ? token : feeToken, type: 'transfer' });
+      store.dispatch("transaction/watchTransaction", { transactionHash: transactionHashes[a], tokenSymbol: a === 0 ? token : feeToken, type: "transfer" });
     }
     return transactionHashes.map((txHash, index) => ({
       txData: signedTransactions[index],
@@ -172,6 +172,6 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: an
     token,
     amount,
   });
-  store.dispatch('transaction/watchDeposit', { depositTx: depositResponse, tokenSymbol: token, amount });
+  store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse;
 };

@@ -21,21 +21,21 @@
 </template>
 
 <script lang="ts">
-  import Vue from "vue";
+import Vue from "vue";
 
-  import { Address } from "@/plugins/types";
+import { Address } from "@/plugins/types";
 
-  export default Vue.extend({
-  methods: {
-  logout: function (): void {
-  this.$store.dispatch("wallet/logout");
-  this.$router.push("/connect");
-},
-},
+export default Vue.extend({
   computed: {
-  ownAddress: function (): Address {
-  return this.$store.getters["account/address"];
-},
-}
+    ownAddress(): Address {
+      return this.$store.getters["account/address"];
+    },
+  },
+  methods: {
+    logout(): void {
+      this.$store.dispatch("wallet/logout");
+      this.$router.push("/connect");
+    },
+  },
 });
 </script>
