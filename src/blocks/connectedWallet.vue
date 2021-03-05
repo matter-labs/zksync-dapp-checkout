@@ -32,10 +32,17 @@ export default Vue.extend({
     },
   },
   methods: {
-    logout(): void {
+    logout: function (): void {
       this.$store.dispatch("wallet/logout");
       this.$router.push("/connect");
     },
   },
+  computed: {
+    ownAddress: function (): Address {
+      let address = this.$store.getters["account/address"];
+      address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
+      return address;
+    },
+  }
 });
 </script>

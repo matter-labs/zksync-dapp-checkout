@@ -9,9 +9,9 @@
     <div class="lineItem">
       <slot name="third"/>
     </div>
-    <div class="lineItem">
-      <slot/>
-    </div>
+    <!-- <div class="lineItem">
+      <slot />
+    </div> -->
     <div class="lineItem">
       <slot name="right"/>
     </div>

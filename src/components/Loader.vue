@@ -1,6 +1,6 @@
 <template>
   <div class="loaderSpinnerContainer">
-    <div :class="[`size-${size}`,`color-${color}`]" class="loaderSpinner">Loading...</div>
+    <div class="loaderSpinner" :class="[`size-${size}`,`color-${color}`]">Loading...</div>
   </div>
 </template>
 

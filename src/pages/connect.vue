@@ -14,7 +14,7 @@
 <script>
 export default {
   methods: {
-    async customWallet() {
+    customWallet: async function () {
       const onboard = this.$store.getters["wallet/getOnboard"];
       onboard.config({
         darkMode: false,

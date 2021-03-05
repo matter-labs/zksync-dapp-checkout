@@ -36,9 +36,10 @@
     .leftSide {
       cursor: text;
     }
-    &.error {
-      border-color: $red !important;
-    }
+  }
+
+  &.error {
+    border-color: $red !important;
   }
 
   &.hasUnderInput {

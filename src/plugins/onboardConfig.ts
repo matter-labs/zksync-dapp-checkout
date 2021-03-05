@@ -9,6 +9,7 @@ const INFURA_KEY = process.env.APP_WALLET_CONNECT;
 const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
 const initializedWallets = {
   wallets: [
+    { walletName: "imToken", rpcUrl: RPC_URL },
     { walletName: "metamask", preferred: true },
     {
       walletName: "walletConnect",
@@ -20,7 +21,6 @@ const initializedWallets = {
     // FIXME: enable again
     // { walletName: "authereum" },
     { walletName: "coinbase", preferred: true },
-    { walletName: "trust", preferred: true, rpcUrl: RPC_URL },
     { walletName: "dapper", preferred: false },
     {
       walletName: "ledger",
@@ -46,7 +46,6 @@ const initializedWallets = {
     { walletName: "operaTouch" },
     { walletName: "torus" },
     { walletName: "status" },
-    { walletName: "imToken", rpcUrl: RPC_URL },
     { walletName: "meetone" },
     { walletName: "mykey", rpcUrl: RPC_URL },
     { walletName: "huobiwallet", rpcUrl: RPC_URL },

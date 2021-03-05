@@ -1,18 +1,18 @@
 <template>
   <div class="valuesBlockContainer py-1">
     <div class="valuesBlockLeft">
-      <div v-if="$slots['left-top']" class="valuesBlockSecondary valuesLeftTop">
+      <div class="valuesBlockSecondary valuesLeftTop" v-if="$slots['left-top']">
         <slot name="left-top"/>
       </div>
-      <div v-if="$slots['left-bottom']" class="valuesBlockSecondary valuesLeftBottom">
+      <div class="valuesBlockSecondary valuesLeftBottom" v-if="$slots['left-bottom']">
         <slot name="left-bottom"/>
       </div>
     </div>
     <div class="valuesBlockRight">
-      <div v-if="$slots['right-top']" class="valuesBlockSecondary valuesRightTop">
+      <div class="valuesBlockSecondary valuesRightTop" v-if="$slots['right-top']">
         <slot name="right-top"/>
       </div>
-      <div v-if="$slots['right-bottom']" class="valuesBlockSecondary valuesRightBottom">
+      <div class="valuesBlockSecondary valuesRightBottom" v-if="$slots['right-bottom']">
         <slot name="right-bottom"/>
       </div>
     </div>

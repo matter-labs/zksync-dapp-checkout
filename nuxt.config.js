@@ -82,7 +82,7 @@ export default {
   plugins: ["@/plugins/main"],
 
   router: {
-    middleware: [],
+    middleware: ["wallet"],
   },
   /*
    ** Nuxt.js dev-modules
@@ -164,14 +164,14 @@ export default {
       autodetectVariant: true,
     },
   },
+  styleResources: {
+    scss: "@/assets/style/_variables.scss",
+  },
   sentry: {
     dsn: process.env.SENTRY_DSN,
     config: {
       tracesSampleRate: 1.0,
     },
-  },
-  styleResources: {
-    scss: "@/assets/style/_variables.scss",
   },
   "google-gtag": {
     id: process.env.GTAG_ID,
@@ -225,12 +225,9 @@ export default {
         },
         fontSize: {
           ...tailwindDefault.fontSize,
-          xxs: [
-            "0.65rem",
-            {
-              lineHeight: "0.75rem",
-            },
-          ],
+          'xxs': ['0.65rem', {
+            'lineHeight': '0.75rem'
+          }]
         },
         fontFamily: {
           ...tailwindDefault.fontFamily,
@@ -269,6 +266,10 @@ export default {
    */
   build: {
     ssr: false,
+    // target: "static",
+    /* extractCSS: {
+      ignoreOrder: true,
+    }, */
     extend(config) {
       config.node = {
         fs: "empty",

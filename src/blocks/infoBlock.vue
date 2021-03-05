@@ -4,14 +4,10 @@
       <div class="text-violet text-2xl font-bold">Checkout</div>
       <note class="mt-7">
         <template slot="icon">
-          <em class="text-gray fal fa-comment-alt-exclamation"/>
+          <i class="text-gray text-base lg:text-lg fal fa-comment-alt-exclamation"></i>
         </template>
         <template slot="default">
-          <div class="text-dark2 font-light text-sm">By using zkSync: Checkout Gateway, you agree to accept full responsibility. See our <a class="lightLink"
-                                                                                                                                            href="https://zksync.io/legal/terms.html#overview"
-                                                                                                                                            target="_blank">Terms of Service</a> and
-            <a class="lightLink" href="https://zksync.io/legal/privacy.html#introduction" target="_blank">Privacy Policy</a> for the details.
-          </div>
+          <div class="text-dark2 font-light text-xs lg:text-sm">By using zkSync: Checkout Gateway, you agree to accept full responsibility. See our <a class="lightLink" target="_blank" href="https://zksync.io/legal/terms.html#overview">Terms of Service</a> and <a class="lightLink" target="_blank" href="https://zksync.io/legal/privacy.html#introduction">Privacy Policy</a> for the details.</div>
         </template>
       </note>
       <values-block class="mt-10">
@@ -90,6 +86,9 @@
         <div class="flex-1 flex flex-col items-end">
           <div class="font-firaCondensed font-bold text-lg text-violet mt-1">
             205.32 USD
+            <span @click="totalOpened=!totalOpened">
+              <i class="transition-transform ease transition-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"></i>
+            </span>
           </div>
           <div class="flex items-center font-firaCondensed font-bold text-xs text-black2 mt-2">
             <div>0.0103 ETH</div>
@@ -109,14 +108,14 @@
         <footer>
           <div class="poweredBy flex justify-center items-center pt-5">
             <div class="text-lg font-firaCondensed font-medium uppercase text-violet mr-3">Powered by</div>
-            <img class="zkSyncLogoFull h-12" src="@/assets/images/zkSyncLogoFull.svg" alt="zkSync">
+            <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync">
           </div>
           <div class="poweredBy flex justify-center items-center mt-3">
-            <a class="linkDefault" href="https://zksync.io/legal/terms.html#overview" target="_blank">Terms of Service</a>
-            <a class="linkDefault ml-5" href="https://zksync.io/legal/privacy.html#introduction" target="_blank">Privacy Policy</a>
+            <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
+            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault ml-5">Privacy Policy</a>
           </div>
         </footer>
-        <img class="zkSyncFooter" src="@/assets/images/zkSyncFooter.svg" alt="zkSync">
+        <img class="zkSyncFooter" src="/zkSyncFooter.svg" alt="zkSync">
       </div>
     </div>
   </aside>

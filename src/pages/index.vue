@@ -76,12 +76,14 @@
     <line-block>
       <template slot="first">
         <div class="tokenItem">
-          <img alt="ETH" class="tokenImg" src="/tokens/eth.svg">
+          <div>
+            <img src="/tokens/eth.svg" alt="ETH" class="tokenImg">
           <div class="tokenName">ETH</div>
+          </div>
         </div>
       </template>
       <template slot="right">
-        <defbtn disabled loader outline>
+        <defbtn outline disabled loader>
           <span>Unlocking... </span>
         </defbtn>
       </template>
@@ -102,7 +104,7 @@
       <template slot="default">
         <div class="alert text-red">
           <i class="alertIcon fas fa-exclamation-circle"></i>
-          <span class="alertText">Insufficient funds on L2</span>
+          <div class="alertText">Unsufficient funds</div>
         </div>
       </template>
       <template slot="right">
@@ -117,39 +119,49 @@
       </template>
     </line-block>
 
-    <div class="mt-5 flex justify-center">
-      <defbtn outline @click="modal=true">
-        <i class="far fa-arrow-left"></i>
+    <div class="mainBtnsContainer">
+      <div class="mainBtns">
+        <defbtn class="mr-3 desktopOnly" outline @click="modal=true">
+          <i class="far fa-arrow-left"></i>
         <span>Cancel and return</span>
       </defbtn>
-      <defbtn class="ml-3" disabled outline>
-        <i class="far fa-ban"></i>
+        <defbtn class="desktopOnly" @click="modal=true">
+          <i class="far fa-exchange"></i>
+          <span>Transfer assets</span>
+        </defbtn>
+        <defbtn class="mobileOnly" big square outline @click="modal=true">
+          <i class="far fa-arrow-left"></i>
+        </defbtn>
+        <defbtn class="mobileOnly" big @click="modal=true">
+          <i class="far fa-exchange"></i>
         <span>Transfer assets</span>
       </defbtn>
     </div>
   </div>
+  </div>
 </template>
 
 <script lang="ts">
-import connectedWallet from "@/blocks/connectedWallet.vue";
-import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import Vue from "vue";
+
+import connectedWallet from '@/blocks/connectedWallet.vue';
+import lineTableHeader from '@/blocks/lineTableHeader.vue';
 
 export default Vue.extend({
   components: {
     connectedWallet,
-    lineTableHeader,
+    lineTableHeader
   },
   data() {
     return {
       modal: false,
       input: {
         token: {
-          symbol: "ETH",
+          symbol: 'ETH'
         },
-        amount: "0.03",
-      },
-    };
+        amount: '0.03'
+      }
+    }
   },
 });
 </script>

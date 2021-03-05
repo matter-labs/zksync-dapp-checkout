@@ -1,11 +1,11 @@
-import { AccountState, Provider, Wallet } from "@/plugins/types";
+import { Provider, Wallet, AccountState } from "@/plugins/types";
 
 interface walletData {
+  [key: string]: object | undefined;
   syncProvider?: Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
   zkSync?: object;
-  [key: string]: object | undefined;
 }
 
 const internalWalletData: walletData = {
@@ -19,7 +19,7 @@ const internalWalletData: walletData = {
  * Wrapper for the major Providers
  * @type {{accountState: null, syncProvider: null, syncWallet: null, zkSync: any|null}}
  */
-export const walletData: { set: (val: object) => void; zkSync: () => Promise<any>; get: () => walletData } = {
+export const walletData = {
   /**
    * @return {Promise<null|*>}
    */
@@ -28,7 +28,7 @@ export const walletData: { set: (val: object) => void; zkSync: () => Promise<any
       return null;
     }
     if (!internalWalletData.zkSync) {
-      internalWalletData.zkSync = await import("zksync");
+      [internalWalletData.zkSync] = await Promise.all([import("zksync")]);
     }
     return internalWalletData.zkSync;
   },

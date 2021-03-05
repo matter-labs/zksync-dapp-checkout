@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "esModuleInterop": true,
     "lib": [
       "ESNext",
@@ -17,11 +17,13 @@
       "@/*": [
         "./*"
       ],
-      "*": [
-        "./",
-        "./node_modules/"
-      ]
-    },
+      "~~/*": [
+        "./*"
+      ],
+      "@@/*": [
+        "./*"
+        ]
+      },
     "sourceMap": true,
     "strict": true,
     "target": "ES2018",
@@ -31,5 +33,9 @@
     ]
   },
   "exclude": [
+    "node_modules",
+    ".nuxt",
+    "dist",
+    "public"
   ]
 }

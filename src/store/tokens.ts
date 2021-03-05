@@ -1,5 +1,5 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Token, TokenItem, TokenPrices, Tokens, TokenSymbol } from "@/plugins/types";
+import { Address, Token, TokenPrices, Tokens, TokenSymbol, TokenItem } from "@/plugins/types";
 import { BigNumberish } from "ethers";
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
@@ -47,13 +47,13 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
     return state.allTokens;
   },
   getTokenByID(state): Function {
-    return (id: number): TokenItem | undefined => {
+    return (id: number): (TokenItem | undefined) => {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
           return state.allTokens[symbol];
         }
       }
-    };
+    }
   },
   getRestrictedTokens(state): Tokens {
     return Object.fromEntries(Object.entries(state.allTokens).filter((e: any) => state.restrictedTokens.includes(e[1].symbol)));

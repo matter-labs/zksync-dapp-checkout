@@ -1,7 +1,7 @@
 <template>
   <button class="defbtn" :class="[outline===true?'outline':'filled']" v-on="$listeners">
     <slot/>
-    <loader v-if="loader" color="gray" size="xs"/>
+    <loader size="xs" color="gray" v-if="loader" />
   </button>
 </template>
 
@@ -17,6 +17,11 @@ export default {
       default: false,
       type: Boolean,
       required: false,
+    },
+    to: {
+      default: "",
+      type: String,
+      required: false
     },
   },
 };

@@ -91,10 +91,10 @@ export const actions: ActionTree<TransactionModuleState, RootState> = {
       }
       if (!existingTransaction) {
         const committedTransaction = await walletData.get().syncProvider!.notifyTransaction(transactionHash, "COMMIT");
-        commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
+        commit("updateTransactionStatus", { hash: transactionHash, status: "Commited" });
         dispatch("requestBalancesUpdate");
       } else {
-        commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
+        commit("updateTransactionStatus", { hash: transactionHash, status: "Commited" });
       }
       const verifiedTransaction = await walletData.get().syncProvider!.notifyTransaction(transactionHash, "VERIFY");
       commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
@@ -108,10 +108,10 @@ export const actions: ActionTree<TransactionModuleState, RootState> = {
       commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
       const committedDeposit = await depositTx.awaitEthereumTxCommit();
       dispatch("requestBalancesUpdate");
-      // commit('updateDepositStatus', {hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: 'Initiated', confirmations: committedDeposit.confirmations});
+      // commit('updateDepositStatus', {hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: 'Initiated', confirmations: commitedDeposit.confirmations});
       const depositReceipt = await depositTx.awaitReceipt();
       dispatch("requestBalancesUpdate");
-      commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Committed" });
+      commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Commited" });
       const depositVerifyReceipt = await depositTx.awaitVerifyReceipt();
       dispatch("requestBalancesUpdate");
       commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Verified" });
