@@ -11,17 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: yarn ci
-
-      - name: Configure for rinkeby
-        run: sh ./cli-process-env.sh rinkeby
-
-      - name: Build rinkeby
-        run: yarn generate --fail-on-error
-
-      - name: Deploy to stage site
+      - run: 'yarn build:stage'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

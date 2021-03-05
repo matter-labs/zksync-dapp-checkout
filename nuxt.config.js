@@ -9,7 +9,6 @@ const pageKeywords = process.env.SITE_KEYWORDS;
 const srcDir = "src";
 
 export default {
-
   ssr: false,
   target: "static",
   srcDir: `${srcDir}/`,
@@ -22,7 +21,6 @@ export default {
   env: {
     ...process.env,
   },
-
 
   /*
    ** Headers of the page
@@ -87,11 +85,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [
-    "@nuxt/typescript-build",
-    "@nuxtjs/tailwindcss",
-    ["@nuxtjs/dotenv", { path: __dirname }]
-  ],
+  buildModules: ["@nuxt/typescript-build", "@nuxtjs/tailwindcss", ["@nuxtjs/dotenv", { path: __dirname }]],
 
   /*
    ** Nuxt.js modules
@@ -120,11 +114,11 @@ export default {
     [
       "nuxt-social-meta",
       {
-        url: "https://zksync.io",
+        url: "https://checkout.zksync.io",
         title: pageTitle,
         site_name: pageTitle,
         description: pageDescription,
-        img: "https://zksync.io/social.jpg",
+        img: "/social.jpg",
         locale: "en_US",
         twitter: "@zksync",
         twitter_card: "https://zksync.io/social.jpg",
@@ -198,7 +192,7 @@ export default {
           `${srcDir}/layouts/**/*.vue`,
           `${srcDir}/pages/**/*.vue`,
           `${srcDir}/plugins/**/*.{js,ts}`,
-          `nuxt.config.{js,ts}`
+          `nuxt.config.{js,ts}`,
         ],
       },
       theme: {
@@ -225,22 +219,25 @@ export default {
         },
         fontSize: {
           ...tailwindDefault.fontSize,
-          'xxs': ['0.65rem', {
-            'lineHeight': '0.75rem'
-          }]
+          xxs: [
+            "0.65rem",
+            {
+              lineHeight: "0.75rem",
+            },
+          ],
         },
         fontFamily: {
           ...tailwindDefault.fontFamily,
-          'firaCode': ['Fira Code', 'sans-serif'],
-          'firaCondensed': ['Fira Sans Condensed', 'sans-serif'],
+          firaCode: ["Fira Code", "sans-serif"],
+          firaCondensed: ["Fira Sans Condensed", "sans-serif"],
         },
         screens: {
           ...tailwindDefault.screens,
-          'lg': '1101px',
+          lg: "1101px",
         },
         transitionTimingFunction: {
           ...tailwindDefault.transitionTimingFunction,
-          'ease': 'ease',
+          ease: "ease",
         },
         /* extend: {
           width: {
