@@ -73,15 +73,15 @@
       <div class="w-full border-b-2 border-light mt-1 lg:mt-3"></div>
       <values-block class="mt-1 lg:mt-3">
         <template slot="left-top">
-          <div class="headline big">Fees</div>
+          <div class="headline big" @click="feesOpened=!feesOpened">Fees</div>
         </template>
         <template slot="right-top">
-          <div class="flex items-center">
+          <div class="flex items-center" @click="feesOpened=!feesOpened">
             <div class="flex md:flex-col mr-3">
               <div class="value mr-2 md:mr-0">0.01 ETH</div>
               <div class="secondaryValue">5.44 $</div>
             </div>
-            <span @click="feesOpened=!feesOpened">
+            <span >
               <i class="transition-transform ease transition-200 far fa-angle-down" :style="{'transform': `rotate(${feesOpened===true?-180:0}deg)`}"></i>
             </span>
           </div>
@@ -118,14 +118,14 @@
         </values-block>
       </max-height>
       <div class="w-full border-b-2 border-light mt-1 lg:mt-3"></div>
-      <div class="mt-2 lg:mt-4 flex">
+      <div class="mt-2 lg:mt-4 flex" @click="totalOpened=!totalOpened">
         <div class="flex-2">
           <div class="font-firaCondensed font-bold text-xl md:text-2xl text-dark">Total amount</div>
         </div>
         <div class="flex-1 flex flex-col items-end">
           <div class="font-firaCondensed font-bold text-lg text-violet md:mt-1">
             205.32 USD
-            <span @click="totalOpened=!totalOpened">
+            <span>
               <i class="transition-transform ease transition-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"></i>
             </span>
           </div>
