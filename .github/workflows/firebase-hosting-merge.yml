@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install dependencies
+        - name: Install dependencies
           run: yarn ci
 
             - name: Configure for rinkeby
