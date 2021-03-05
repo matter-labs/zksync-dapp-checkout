@@ -15,12 +15,11 @@ jobs:
         - name: Install dependencies
           run: yarn ci
 
-            - name: Configure for rinkeby
-              # if: github.ref == 'refs/heads/dev'
-              run: sh ./cli-process-env.sh rinkeby
+        - name: Configure for rinkeby
+          run: sh ./cli-process-env.sh rinkeby
 
-            - name: Build
-              run: yarn generate --fail-on-error
+        - name: Build
+          run: yarn generate --fail-on-error
       - name: Deploy to stage site
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
