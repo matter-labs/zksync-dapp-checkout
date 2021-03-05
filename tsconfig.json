@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": "./src",
+    "esModuleInterop": true,
     "jsx": "preserve",
-    "target": "ES2018",
-    "module": "ESNext",
-    "moduleResolution": "Node",
     "lib": [
       "ESNext",
       "ESNext.AsyncIterable",
       "DOM"
     ],
-    "esModuleInterop": true,
-    "allowJs": true,
-    "sourceMap": true,
-    "strict": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "noEmit": true,
-    "baseUrl": "./src",
     "paths": {
       "~/*": [
         "./*"
@@ -29,6 +26,9 @@
         "./*"
       ]
     },
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2018",
     "types": [
       "@types/nuxt",
       "@types/node",

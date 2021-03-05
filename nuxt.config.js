@@ -1,14 +1,18 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const tailwindDefault = require('tailwindcss/defaultTheme');
+const tailwindDefault = require("tailwindcss/defaultTheme");
 
-const isProduction = process.env.APP_CURRENT_NETWORK === 'mainnet';
-const pageTitle = `zkSync Wallet | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
+const pageTitle = `${process.env.SITE_TITLE} | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+const pageDescription = process.env.SITE_DESCRIPTION;
+const pageKeywords = process.env.SITE_KEYWORDS;
+const srcDir = "src";
 
 export default {
+
   ssr: false,
-  target: 'static',
-  srcDir: 'src/',
+  target: "static",
+  srcDir: `${srcDir}/`,
   vue: {
     config: {
       productionTip: isProduction,
@@ -19,6 +23,7 @@ export default {
     ...process.env,
   },
 
+
   /*
    ** Headers of the page
    */
@@ -26,91 +31,121 @@ export default {
     name: pageTitle,
     titleTemplate: pageTitle,
     meta: [
-      { 'http-equiv': 'pragma', content: 'no-cache' },
-      { 'http-equiv': 'cache-control', content: 'no-cache , no-store, must-revalidate' },
-      { 'http-equiv': 'expires', content: '0' },
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
-        hid: 'description',
-        name: 'description',
-        content: process.env.npm_package_description || '',
+        hid: "keywords",
+        name: "keywords",
+        content: pageKeywords,
       },
       {
-        hid: 'msapplication-TileImage',
-        name: 'msapplication-TileImage',
-        content: '/icon.png',
+        hid: "author",
+        name: "author",
+        content: "https://matter-labs.io",
       },
-      { hid: 'theme-color', name: 'theme-color', content: '#4e529a' },
+      { "http-equiv": "pragma", content: "no-cache" },
+      { "http-equiv": "cache-control", content: "no-cache , no-store, must-revalidate" },
+      { "http-equiv": "expires", content: "0" },
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
-        hid: 'msapplication-TileColor',
-        property: 'msapplication-TileColor',
-        content: '#4e529a',
+        hid: "description",
+        name: "description",
+        content: pageDescription,
+      },
+      {
+        hid: "msapplication-TileImage",
+        name: "msapplication-TileImage",
+        content: "/icon.png",
+      },
+      { hid: "theme-color", name: "theme-color", content: "#4e529a" },
+      {
+        hid: "msapplication-TileColor",
+        property: "msapplication-TileColor",
+        content: "#4e529a",
       },
     ],
   },
+
   /*
    ** Customize the progress-bar color
    */
   loading: {
-    color: '#8c8dfc',
+    color: "#8c8dfc",
     continuous: true,
   },
   /*
    ** Global CSS
    */
-  css: ['@/assets/style/main.scss'],
+  css: ["@/assets/style/main.scss"],
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['@/plugins/main'],
+  plugins: ["@/plugins/main"],
 
   router: {
-    middleware: ['wallet'],
+    middleware: [],
   },
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxt/typescript-build', '@nuxtjs/tailwindcss'],
+  buildModules: [
+    "@nuxt/typescript-build",
+    "@nuxtjs/tailwindcss",
+    ["@nuxtjs/dotenv", { path: __dirname }]
+  ],
 
   /*
    ** Nuxt.js modules
    */
   modules: [
-    '@nuxtjs/dotenv',
-    '@nuxtjs/pwa',
-    '@nuxtjs/axios',
-    '@nuxtjs/toast',
-    '@nuxtjs/google-gtag',
-    'nuxt-webfontloader',
+    "@nuxtjs/dotenv",
+    "@nuxtjs/pwa",
+    "@nuxtjs/axios",
+    "@nuxtjs/toast",
+    "@nuxtjs/google-gtag",
+    "nuxt-webfontloader",
     [
-      'nuxt-i18n',
+      "nuxt-i18n",
       {
         locales: [
           {
-            code: 'en',
-            iso: 'en_US',
-            file: 'en/translations.json',
+            code: "en",
+            iso: "en_US",
+            file: "en/translations.json",
           },
         ],
-        defaultLocale: 'en',
-        langDir: './locales/',
+        defaultLocale: "en",
+        langDir: "./locales/",
       },
     ],
+    [
+      "nuxt-social-meta",
+      {
+        url: "https://zksync.io",
+        title: pageTitle,
+        site_name: pageTitle,
+        description: pageDescription,
+        img: "https://zksync.io/social.jpg",
+        locale: "en_US",
+        twitter: "@zksync",
+        twitter_card: "https://zksync.io/social.jpg",
+        themeColor: "#4e529a",
+      },
+    ],
+    "@nuxtjs/sentry",
   ],
   webfontloader: {
     google: {
-      families: ['Fira+Sans:300,400,600', 'Fira+Sans+Condensed:200,400,600', 'Fira+Code:300'],
+      families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
     },
   },
   toast: {
     singleton: true,
     keepOnHover: true,
-    position: 'bottom-right',
+    position: "bottom-right",
     duration: 4000,
-    iconPack: 'fontawesome',
+    iconPack: "fontawesome",
     action: {
-      text: 'OK',
+      text: "OK",
       onClick: (event, toastObject) => {
         toastObject.goAway(100);
       },
@@ -118,9 +153,9 @@ export default {
   },
   i18n: {
     vueI18n: {
-      fallbackLocale: 'en',
+      fallbackLocale: "en",
       messages: {
-        en: require('./src/locales/en/translations.json'),
+        en: require(`./${srcDir}/locales/en/translations.json`),
       },
     },
   },
@@ -129,17 +164,17 @@ export default {
       autodetectVariant: true,
     },
   },
-  styleResources: {
-    scss: '@/assets/style/_variables.scss',
-  },
   sentry: {
-    dsn: process.env.FLOW_SENTRY,
+    dsn: process.env.SENTRY_DSN,
     config: {
       tracesSampleRate: 1.0,
     },
   },
-  'google-gtag': {
-    id: 'UA-178057628-1',
+  styleResources: {
+    scss: "@/assets/style/_variables.scss",
+  },
+  "google-gtag": {
+    id: process.env.GTAG_ID,
     config: {
       anonymize_ip: true, // anonymize IP
       send_page_view: true, // might be necessary to avoid duplicated page track on page reload
@@ -155,47 +190,52 @@ export default {
         purgeLayersByDefault: true,
       },
       purge: {
-        enabled: process.env.NODE_ENV === 'production',
+        enabled: process.env.NODE_ENV === "production",
         content: [
-          'src/components/**/*.vue',
-          'src/blocks/**/*.vue',
-          'src/blocks/**/*.vue',
-          'src/layouts/**/*.vue',
-          'src/pages/**/*.vue',
-          'src/plugins/**/*.{js,ts}',
-          'nuxt.config.{js,ts}',
+          `${srcDir}/components/**/*.vue`,
+          `${srcDir}/blocks/**/*.vue`,
+          `${srcDir}/blocks/**/*.vue`,
+          `${srcDir}/layouts/**/*.vue`,
+          `${srcDir}/pages/**/*.vue`,
+          `${srcDir}/plugins/**/*.{js,ts}`,
+          `nuxt.config.{js,ts}`
         ],
       },
       theme: {
         borderColor: {
-          light: '#E1E4E8',
-          gray: '#8D9AAC',
+          light: "#E1E4E8",
+          gray: "#8D9AAC",
         },
         backgroundColor: {
-          white: '#FFFFFF',
-          white2: '#FBFBFB',
-          white3: '#F4F5F7',
-          violet: '#5436D6',
+          white: "#FFFFFF",
+          white2: "#FBFBFB",
+          white3: "#F4F5F7",
+          violet: "#5436D6",
         },
         textColor: {
-          white: '#FFFFFF',
-          gray: '#8D9AAC',
-          dark: '#243955',
-          dark2: '#4E566D',
-          black2: '#3C4257',
-          black: '#000',
-          violet: '#5436D6',
-          red: '#F25F5C',
-          green: '#057A55',
+          white: "#FFFFFF",
+          gray: "#8D9AAC",
+          dark: "#243955",
+          dark2: "#4E566D",
+          black2: "#3C4257",
+          black: "#000",
+          violet: "#5436D6",
+          red: "#F25F5C",
+          green: "#057A55",
         },
         fontSize: {
           ...tailwindDefault.fontSize,
           xxs: [
-            '0.65rem',
+            "0.65rem",
             {
-              lineHeight: '0.75rem',
+              lineHeight: "0.75rem",
             },
           ],
+        },
+        fontFamily: {
+          ...tailwindDefault.fontFamily,
+          'firaCode': ['Fira Code', 'sans-serif'],
+          'firaCondensed': ['Fira Sans Condensed', 'sans-serif'],
         },
         /* extend: {
           width: {
@@ -213,14 +253,14 @@ export default {
           },
         }, */
       },
-      variants: {
+      /* variants: {
         extends: {
           fontFamily: {
-            firaCode: ['Fira Code', 'sans-serif'],
-            firaCondensed: ['Fira Sans Condensed', 'sans-serif'],
+            firaCode: ["Fira Code", "sans-serif"],
+            firaCondensed: ["Fira Sans Condensed", "sans-serif"],
           },
         },
-      },
+      }, */
       plugins: [],
     },
   },
@@ -229,23 +269,19 @@ export default {
    */
   build: {
     ssr: false,
-    // target: "static",
-    /* extractCSS: {
-      ignoreOrder: true,
-    }, */
-    extend (config) {
+    extend(config) {
       config.node = {
-        fs: 'empty',
+        fs: "empty",
       };
     },
   },
   generate: {
-    dir: 'public',
-    fallback: '404.html',
+    dir: "public",
+    fallback: "404.html",
   },
   pwa: {
     workbox: {
-      pagesURLPattern: '/_nuxt/',
+      pagesURLPattern: "/_nuxt/",
     },
   },
 };

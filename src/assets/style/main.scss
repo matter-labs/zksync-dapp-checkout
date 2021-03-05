@@ -10,15 +10,20 @@
 //Blocks
 @import "./blocks/infoBlock.scss";
 @import "./blocks/lineTableHeader.scss";
+@import "./blocks/loggingIn.scss";
+@import "./blocks/onboard.scss";
 
 //Components
 @import "./components/note.scss";
 @import "./components/link.scss";
 @import "./components/defbtn.scss";
+@import "./components/closebtn.scss";
 @import "./components/loader.scss";
 @import "./components/valuesBlock.scss";
 @import "./components/lineBlock.scss";
 @import "./components/amountInput.scss";
+@import "./components/modal.scss";
 
 //Pages
-/* @import "./pages/index.scss"; */
+@import "./pages/index.scss";
+@import "./pages/connect.scss";

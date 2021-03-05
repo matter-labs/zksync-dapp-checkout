@@ -7,10 +7,10 @@
           <div class="headline">My Wallet</div>
         </template>
         <template slot="left-bottom">
-          <div class="address">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
+          <div class="address">{{ownAddress}}</div>
         </template>
         <template slot="right-top">
-          <defbtn>
+          <defbtn @click="logout()">
             <span>Disconnect</span>
             <i class="far fa-power-off"></i>
           </defbtn>
@@ -20,8 +20,22 @@
   </div>
 </template>
 
-<script>
-export default {};
-</script>
+<script lang="ts">
+  import Vue from "vue";
 
-<style></style>
+  import { Address } from "@/plugins/types";
+
+  export default Vue.extend({
+  methods: {
+  logout: function (): void {
+  this.$store.dispatch("wallet/logout");
+  this.$router.push("/connect");
+},
+},
+  computed: {
+  ownAddress: function (): Address {
+  return this.$store.getters["account/address"];
+},
+}
+});
+</script>

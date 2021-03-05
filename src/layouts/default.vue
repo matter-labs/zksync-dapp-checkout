@@ -2,7 +2,8 @@
   <div class="defaultLayout min-h-screen">
     <info-block/>
     <div class="routerContainer bg-white2 min-h-screen py-10 px-10">
-      <transition mode="out-in" name="fade">
+      <logging-in/>
+      <transition name="fade" mode="out-in" v-if="!loggingIn">
         <nuxt class="routeMain"/>
       </transition>
     </div>
@@ -11,12 +12,21 @@
 
 <script>
 import infoBlock from "@/blocks/infoBlock.vue";
+import loggingIn from "@/blocks/loggingIn.vue";
 
 export default {
   components: {
     infoBlock,
+    loggingIn
   },
-  computed: {},
+  computed: {
+    loggingIn() {
+      return this.$store.getters["account/loader"];
+    },
+    loggedIn() {
+      return this.$store.getters["account/loggedIn"];
+    },
+  },
   watch: {
     $route: {
       immediate: true,

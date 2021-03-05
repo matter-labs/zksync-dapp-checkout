@@ -1,5 +1,5 @@
 <template>
-  <button :class="[outline===true?'outline':'filled']" class="defbtn">
+  <button class="defbtn" :class="[outline===true?'outline':'filled']" v-on="$listeners">
     <slot/>
     <loader v-if="loader" color="gray" size="xs"/>
   </button>

@@ -1,0 +1,67 @@
+.modalContainer {
+  will-change: opacity, transform;
+  width: 100%;
+
+  &.full {
+    z-index: 1;
+    position: fixed;
+    width: 57% !important;
+    height: 100%;
+    left: 43% !important;
+    top: 0;
+    background-color: transparentize($color: $white, $amount: 0.5) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+
+    .modalMain {
+      width: 90%;
+    }
+    @media screen and (min-width: 1300px) {
+      left: 600px !important;
+      width: calc(100% - 600px) !important;
+    }
+  }
+
+  .modalMain {
+    position: relative;
+    width: 100%;
+    max-width: 548px;
+    height: max-content;
+    background-color: $white;
+    border: 1px solid #E9E8FC;
+    box-shadow: 0px 2px 4px rgba(7, 4, 146, 0.1), 0px 24px 60px rgba(6, 47, 125, 0.05), 0px 12px 24px rgba(27, 59, 119, 0.05);
+    border-radius: 12px;
+
+    & > div {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .modalHeader,.modalFooter {
+      padding-top: 15px;
+      padding-bottom: 15px;
+    }
+    .modalHeader {
+      .withIcon {
+        display: flex;
+        align-items: center;
+        font-family: $firaCondensed;
+        font-weight: 500;
+
+        & > i {
+          margin-right: 10px;
+          font-size: 24px;
+        }
+      }
+    }
+    .modalBody {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+    .modalFooter {
+      border-radius: 0 0 12px 12px;
+      background-color: $white3;
+    }
+  }
+}

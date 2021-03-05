@@ -1,8 +1,7 @@
 .infoBlockContainer {
-  z-index: 1;
+  z-index: 4;
   width: 100%;
   box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
-  /* direction: rtl; */
   overflow: auto;
 
   .infoBlock {

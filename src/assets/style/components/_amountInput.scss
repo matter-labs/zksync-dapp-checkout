@@ -1,8 +1,7 @@
 .amountInputGroup {
   width: max-content;
   height: 36px;
-  padding: 5px;
-  padding-right: 3px;
+  padding: 5px 3px 5px 0;
   display: flex;
   align-items: center;
   border-color: transparent;
@@ -37,6 +36,9 @@
     .leftSide {
       cursor: text;
     }
+    &.error {
+      border-color: $red !important;
+    }
   }
 
   &.hasUnderInput {
@@ -69,10 +71,10 @@
 
       input {
         position: relative;
-        left: 4px;
+        left: 2px;
         height: 100%;
         width: 0;
-        min-width: 44px;
+        min-width: 46px;
         line-height: 18px;
         color: $black2;
         text-align: right;
@@ -82,7 +84,7 @@
         transition: .05s ease;
         transition-property: width;
         will-change: width;
-        padding: 0 4px;
+        padding: 0 2px;
         box-sizing: content-box;
 
         &::placeholder {

@@ -22,10 +22,10 @@
           <div class="address">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
         </template>
         <template slot="right-top">
-          <div class="value">15,13 LINK</div>
+          <div class="value">15.13 LINK</div>
         </template>
         <template slot="right-bottom">
-          <div class="secondaryValue">2,31 $</div>
+          <div class="secondaryValue">2.31 $</div>
         </template>
       </values-block>
       <values-block class="mt-3">
@@ -36,10 +36,10 @@
           <div class="address">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
         </template>
         <template slot="right-top">
-          <div class="value">0,00013 BTC</div>
+          <div class="value">0.00013 BTC</div>
         </template>
         <template slot="right-bottom">
-          <div class="secondaryValue">2,31 $</div>
+          <div class="secondaryValue">2.31 $</div>
         </template>
       </values-block>
       <div class="w-full border-b-2 border-light mt-3"></div>
@@ -48,10 +48,10 @@
           <div class="headline big">Fees</div>
         </template>
         <template slot="right-top">
-          <div class="value big">0,013 ETH</div>
+          <div class="value big">0.013 ETH</div>
         </template>
         <template slot="right-bottom">
-          <div class="secondaryValue font-medium">5,61 $</div>
+          <div class="secondaryValue font-medium">5.61 $</div>
         </template>
       </values-block>
       <values-block class="mt-3">
@@ -62,10 +62,10 @@
           <div class="address">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
         </template>
         <template slot="right-top">
-          <div class="value">0,01 ETH</div>
+          <div class="value">0.01 ETH</div>
         </template>
         <template slot="right-bottom">
-          <div class="secondaryValue">5,44 $</div>
+          <div class="secondaryValue">5.44 $</div>
         </template>
       </values-block>
       <values-block class="mt-3">
@@ -76,10 +76,10 @@
           <div class="address">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
         </template>
         <template slot="right-top">
-          <div class="value">0,0003 ETH</div>
+          <div class="value">0.0003 ETH</div>
         </template>
         <template slot="right-bottom">
-          <div class="secondaryValue">0,16 $</div>
+          <div class="secondaryValue">0.16 $</div>
         </template>
       </values-block>
       <div class="w-full border-b-2 border-light mt-3"></div>
@@ -88,24 +88,35 @@
           <div class="font-firaCondensed font-bold text-2xl text-dark">Total amount</div>
         </div>
         <div class="flex-1 flex flex-col items-end">
-          <div class="font-firaCondensed font-bold text-lg text-violet mt-1">205,32 USD</div>
-          <div class="font-firaCondensed font-bold text-xs text-black2 mt-2">0,0103 ETH</div>
-          <div class="font-firaCondensed font-bold text-xs text-black2 mt-2">0,000103 BTC</div>
-          <div class="font-firaCondensed font-bold text-xs text-black2 mt-2">15,13 LINK</div>
+          <div class="font-firaCondensed font-bold text-lg text-violet mt-1">
+            205.32 USD
+          </div>
+          <div class="flex items-center font-firaCondensed font-bold text-xs text-black2 mt-2">
+            <div>0.0103 ETH</div>
+            <img class="ml-1 w-4 h-4 object-contain" src="/tokens/eth.svg" alt="ETH">
+          </div>
+          <div class="flex items-center font-firaCondensed font-bold text-xs text-black2 mt-2">
+            <div>0.000103 BTC</div>
+            <img class="ml-1 w-4 h-4 object-contain" src="/tokens/btc.svg" alt="BTC">
+          </div>
+          <div class="flex items-center font-firaCondensed font-bold text-xs text-black2 mt-2">
+            <div>15.13 LINK</div>
+            <img class="ml-1 w-4 h-4 object-contain" src="/tokens/link.svg" alt="LINK">
+          </div>
         </div>
       </div>
       <div class="footerContainer">
         <footer>
           <div class="poweredBy flex justify-center items-center pt-5">
             <div class="text-lg font-firaCondensed font-medium uppercase text-violet mr-3">Powered by</div>
-            <img alt="" class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg">
+            <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync">
           </div>
           <div class="poweredBy flex justify-center items-center mt-3">
             <a class="linkDefault" href="https://zksync.io/legal/terms.html#overview" target="_blank">Terms of Service</a>
             <a class="linkDefault ml-5" href="https://zksync.io/legal/privacy.html#introduction" target="_blank">Privacy Policy</a>
           </div>
         </footer>
-        <img alt="" class="zkSyncFooter" src="/zkSyncFooter.svg">
+        <img class="zkSyncFooter" src="/zkSyncFooter.svg" alt="zkSync">
       </div>
     </div>
   </aside>

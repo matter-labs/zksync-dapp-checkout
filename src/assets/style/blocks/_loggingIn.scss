@@ -1,0 +1,35 @@
+.loggingInContainer {
+  z-index: 1;
+  background: $white2;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+  transition-delay: 0.35s;
+  &.fade-leave-active {
+    transition-delay: 0.5s;
+  }
+
+  .hint {
+    position: relative;
+    height: 20px;
+    width: 100%;
+
+    & > div {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+    }
+  }
+}
