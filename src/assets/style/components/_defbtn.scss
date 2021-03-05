@@ -1,15 +1,15 @@
 .defbtn {
   display: flex;
   width: max-content;
-  height: 29px;
-  font-size: 11px;
+  height: 30px;
+  font-size: 12px;
   padding: 0 15px;
   background-color: $violet;
   border-radius: 4px;
   font-weight: 500;
+  white-space: nowrap;
   transition: $transition;
   outline: none !important;
-  display: flex;
   align-items: center;
 
   &:disabled {
@@ -64,6 +64,22 @@
         transition-delay: 0.0001s;
         border-color: $lightViolet;
       }
+    }
+  }
+  &[big] {
+    height: 50px;
+    font-size: 18px;
+
+    &[square] {
+      width: 50px;
+    }
+  }
+  &[square] {
+    width: 29px;
+    padding: 0;
+
+    i {
+      width: 100%;
     }
   }
 

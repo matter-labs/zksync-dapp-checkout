@@ -2,7 +2,7 @@
   width: 100%;
   height: 29px;
   display: grid;
-  grid-template-columns: 65px 75px 75px 1fr max-content;
+  grid-template-columns: 65px 90px 1fr max-content;
   grid-template-rows: 100%;
   grid-gap: 5px;
   align-items: center;
@@ -13,5 +13,13 @@
     line-height: 1.3;
     color: $black2;
     font-family: $firaCondensed;
+    &:last-child {
+      width: max-content;
+      justify-self: end;
+    }
+  }
+
+  @media screen and (max-width: $mobile) {
+    grid-template-columns: 45px 1fr max-content;
   }
 }

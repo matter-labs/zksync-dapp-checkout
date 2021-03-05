@@ -2,11 +2,17 @@
   width: 100%;
   min-height: 40px;
   display: grid;
-  grid-template-columns: 65px 75px 75px 1fr max-content;
+  grid-template-columns: 65px 90px 1fr max-content;
   grid-template-rows: 100%;
-  grid-gap: 5px;
+  grid-column-gap: 5px;
   align-items: center;
 
+  .lineItem {
+    &:last-child {
+      width: max-content;
+      justify-self: end;
+    }
+  }
   .tokenItem {
     display: flex;
     align-items: center;
@@ -28,11 +34,15 @@
 
   .amount {
     font-weight: 600;
-    font-size: 12px;
+    font-size: 16px;
     color: $black2;
-
+    white-space: nowrap;
     &.disabled {
       opacity: 0.25;
+    }
+    .amountType {
+      /* color: $gray;
+      font-size: 12px; */
     }
   }
 
@@ -46,11 +56,52 @@
 
     .alertText {
       font-size: 12px;
+      line-height: 1.15;
     }
   }
 
   .amountInputGroup {
     position: relative;
     left: 4px;
+  }
+
+  @media screen and (max-width: $mobile) {
+    padding: 5px 0;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: 45px 1fr max-content;
+    grid-template-areas: "token L2 rightSide" "token L1 rightSide";
+
+    .lineItem {
+      &:nth-child(1) {
+        grid-area: token;
+      }
+      &:nth-child(2) {
+        grid-area: L2;
+      }
+      &:nth-child(3) {
+        grid-area: L1;
+      }
+      &:nth-child(4) {
+        grid-area: rightSide;
+      }
+
+      .amount {
+        font-size: 14px;
+      }
+      .tokenItem {
+        align-items: flex-start;
+
+        & > div {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .tokenImg {
+          margin-right: 0;
+          margin-bottom: 2px;
+        }
+      }
+    }
   }
 }

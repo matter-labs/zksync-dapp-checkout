@@ -9,6 +9,7 @@ import Loader from "@/components/Loader.vue";
 import AmountInput from "@/components/AmountInput.vue";
 import ValuesBlock from "@/components/ValuesBlock.vue";
 import Modal from "@/components/Modal.vue";
+import MaxHeight from "@/components/MaxHeight.vue";
 
 import { TokenSymbol } from "@/plugins/types";
 import { BigNumber } from "ethers";
@@ -23,6 +24,7 @@ Vue.component("Loader", Loader);
 Vue.component("AmountInput", AmountInput);
 Vue.component("ValuesBlock", ValuesBlock);
 Vue.component("Modal", Modal);
+Vue.component("MaxHeight", MaxHeight);
 
 /**
  * Implementation of the tokenFormatter as a global filter

@@ -234,6 +234,14 @@ export default {
           'firaCode': ['Fira Code', 'sans-serif'],
           'firaCondensed': ['Fira Sans Condensed', 'sans-serif'],
         },
+        screens: {
+          ...tailwindDefault.screens,
+          'lg': '1101px',
+        },
+        transitionTimingFunction: {
+          ...tailwindDefault.transitionTimingFunction,
+          'ease': 'ease',
+        },
         /* extend: {
           width: {
             '72': '18rem',

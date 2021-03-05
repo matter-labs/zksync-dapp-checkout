@@ -1,7 +1,10 @@
+@import "../variables";
+
 .amountInputGroup {
   width: max-content;
   height: 36px;
-  padding: 5px 3px 5px 0;
+  padding-left: 0;
+  padding-right: 2px;
   display: flex;
   align-items: center;
   border-color: transparent;

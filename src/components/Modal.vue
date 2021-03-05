@@ -1,16 +1,16 @@
 <template>
   <transition name="modal">
-    <div v-if="value" class="modalContainer" :class="{'full': !block}" @click.self="$emit('input', false)">
+    <div class="modalContainer" :class="{'full': !block}" v-if="value" @click.self="close()">
       <div class="modalMain">
-        <closebtn v-if="!block" @click="$emit('input', false)" />
-        <div v-if="$slots['header']" class="modalHeader">
-          <slot name="header" />
+        <closebtn v-if="!block && notClosable===false" @click="close()"/>
+        <div class="modalHeader" v-if="$slots['header']">
+          <slot name="header"/>
         </div>
-        <div v-if="$slots['default']" class="modalBody">
-          <slot name="default" />
+        <div class="modalBody" v-if="$slots['default']">
+          <slot name="default"/>
         </div>
-        <div v-if="$slots['footer']" class="modalFooter">
-          <slot name="footer" />
+        <div class="modalFooter" v-if="$slots['footer']">
+          <slot name="footer"/>
         </div>
       </div>
     </div>
@@ -19,18 +19,33 @@
 
 <script lang="ts">
 import Vue from "vue";
-export default Vue.extend({
-  props: {
-    value: {
-      type: Boolean,
-      default: false,
-      required: false,
+
+export default Vue.extend(
+  {
+    props:   {
+      value:       {
+        type:     Boolean,
+        default:  false,
+        required: false
+      },
+      block:       {
+        type:     Boolean,
+        default:  false,
+        required: false
+      },
+      notClosable: {
+        type:     Boolean,
+        default:  false,
+        required: false
     },
-    block: {
-      type: Boolean,
-      default: false,
-      required: false,
     },
+    methods: {
+      close: function () {
+        if (this.notClosable) {
+          return
+        }
+      this.$emit('input', false);
+      }
   },
-});
+  });
 </script>

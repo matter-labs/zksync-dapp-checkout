@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="connectedWallet py-4 flex items-center">
-      <i class="text-gray text-4xl mr-3 fal fa-wallet"></i>
+      <i class="text-gray text-4xl mr-3 far fa-wallet"></i>
       <values-block>
         <template slot="left-top">
           <div class="headline">My Wallet</div>
@@ -10,10 +10,15 @@
           <div class="address">{{ownAddress}}</div>
         </template>
         <template slot="right-top">
-          <defbtn @click="logout()">
-            <span>Disconnect</span>
-            <i class="far fa-power-off"></i>
-          </defbtn>
+          <div class="flex">
+            <defbtn class="mr-2" target="_blank" to="///wallet.zksync.io">
+              <span>zkWallet</span>
+              <i class="far fa-external-link-alt"></i>
+            </defbtn>
+            <defbtn @click="logout()" outline square>
+              <i class="far fa-power-off"></i>
+            </defbtn>
+          </div>
         </template>
       </values-block>
     </div>
@@ -26,11 +31,6 @@ import Vue from "vue";
 import { Address } from "@/plugins/types";
 
 export default Vue.extend({
-  computed: {
-    ownAddress(): Address {
-      return this.$store.getters["account/address"];
-    },
-  },
   methods: {
     logout: function (): void {
       this.$store.dispatch("wallet/logout");

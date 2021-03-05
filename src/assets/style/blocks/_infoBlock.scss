@@ -6,7 +6,6 @@
 
   .infoBlock {
     position: relative;
-    direction: ltr;
     height: max-content;
 
     .footerContainer {
@@ -29,7 +28,19 @@
       bottom: 40px;
       width: 100%;
       height: max-content;
+    }
+  }
 
+  @media screen and (max-width: $mobile) {
+    /* box-shadow: none; */
+    height: max-content;
+
+    .infoBlock {
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
     }
   }
 }

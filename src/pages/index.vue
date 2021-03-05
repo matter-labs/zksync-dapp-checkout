@@ -14,23 +14,25 @@
             <div class="headline">Minimal amount to deposit</div>
           </template>
           <template slot="left-bottom">
-            <div class="address">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
+            <div class="address hidden md:block">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
           </template>
           <template slot="right-top">
-            <div class="value">6.051 LINK</div>
-          </template>
-          <template slot="right-bottom">
-            <div class="secondaryValue">23.45 $</div>
+            <div class="flex md:flex-col whitespace-nowrap">
+              <div class="value mr-2 md:mr-0">6.051 LINK</div>
+              <div class="secondaryValue">23.45 $</div>
+            </div>
           </template>
         </values-block>
       </template>
       <template slot="footer">
-        <div class="flex justify-center">
-          <defbtn outline class="mr-2" @click="modal=false">
+        <div class="flex items-center justify-center flex-wrap">
+          <!-- <div class="flex mb-2 md:mb-0">
+          </div> -->
+          <defbtn outline class="mb-2 mr-2 lg:mb-0" @click="modal=false">
             <i class="far fa-arrow-left"></i>
             <span>Cancel and return</span>
           </defbtn>
-          <defbtn outline class="mr-2" @click="modal=false">
+          <defbtn outline class="mb-2 lg:mb-0 md:mr-2" @click="modal=false">
             <span>Disconnect</span>
             <i class="far fa-power-off"></i>
           </defbtn>
@@ -45,29 +47,33 @@
     <connected-wallet/>
     <note>
       <template slot="icon">
-        <i class="pl-1 text-lg text-red far fa-ban"></i>
+        <i class="pl-1 text-base lg:text-lg text-red far fa-ban"></i>
       </template>
       <template slot="default">
-        <div class="text-red text-sm">
-          Unfortunately, you don’t have enough funds on L2.<br>
+        <div class="text-red text-xs lg:text-sm">
+          Unfortunately, you don’t have enough funds on L2.
+          <br class="hidden md:block">
           You need to deposit some tokens into zkSync in order to proceed.
         </div>
       </template>
     </note>
 
-    <line-table-header class="mt-7"/>
+    <line-table-header class="mt-4 md:mt-7" />
+
     <line-block>
       <template slot="first">
         <div class="tokenItem">
-          <img alt="BTC" class="tokenImg" src="/tokens/btc.svg">
-          <div class="tokenName">BTC</div>
+          <div>
+            <img src="/tokens/btc.svg" alt="BTC" class="tokenImg">
+            <div class="tokenName">BTC</div>
+          </div>
         </div>
       </template>
       <template slot="second">
-        <div class="amount">9.103</div>
+        <div class="amount">9.103 <span class="amountType md:hidden">L2</span></div>
       </template>
       <template slot="third">
-        <div class="amount disabled">4.032</div>
+        <div class="amount disabled">4.032 <span class="amountType md:hidden">L1</span></div>
       </template>
       <template slot="right">
         <i class="text-base text-green fas fa-check-circle"></i>
@@ -82,6 +88,12 @@
           </div>
         </div>
       </template>
+      <template slot="second">
+        <div class="amount disabled">1.0335 <span class="amountType md:hidden">L2</span></div>
+      </template>
+      <template slot="third">
+        <div class="amount">0.2195 <span class="amountType md:hidden">L1</span></div>
+      </template>
       <template slot="right">
         <defbtn outline disabled loader>
           <span>Unlocking... </span>
@@ -91,22 +103,24 @@
     <line-block>
       <template slot="first">
         <div class="tokenItem">
-          <img alt="LINK" class="tokenImg" src="/tokens/link.svg">
-          <div class="tokenName">LINK</div>
+          <div>
+            <img src="/tokens/link.svg" alt="LINK" class="tokenImg">
+            <div class="tokenName">LINK</div>
+          </div>
         </div>
       </template>
       <template slot="second">
-        <div class="amount disabled">15.035</div>
+        <div class="amount disabled">15.035 <span class="amountType md:hidden">L2</span></div>
       </template>
       <template slot="third">
-        <div class="amount">2.195</div>
+        <div class="amount">2.195 <span class="amountType md:hidden">L1</span></div>
       </template>
-      <template slot="default">
+      <!-- <template slot="default">
         <div class="alert text-red">
           <i class="alertIcon fas fa-exclamation-circle"></i>
           <div class="alertText">Unsufficient funds</div>
         </div>
-      </template>
+      </template> -->
       <template slot="right">
         <amount-input v-model="input.amount" :token="input.token">
           <template slot="underInput">

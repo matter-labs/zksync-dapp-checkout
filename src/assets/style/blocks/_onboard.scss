@@ -1,11 +1,14 @@
 .bn-onboard-modal {
-  z-index: 1;
-  width: 57% !important;
-  left: 43% !important;
-  background-color: transparent !important;
-  @media screen and (min-width: 1300px) {
-    left: 600px !important;
-    width: calc(100% - 600px) !important;
+  z-index: 4;
+
+  @media screen and (min-width: $mobile) {
+    width: 57% !important;
+    left: 43% !important;
+    background-color: transparent !important;
+    @media screen and (min-width: 1300px) {
+      left: 600px !important;
+      width: calc(100% - 600px) !important;
+    }
   }
 
   .bn-onboard-modal-content {

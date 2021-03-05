@@ -1,5 +1,9 @@
 .noteContainer {
-  display: flex;
-  align-items: center;
-  text-align: left;
+  width: 100%;
+
+  .noteMain {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
 }

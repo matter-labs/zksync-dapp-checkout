@@ -1,3 +1,41 @@
 .indexPage {
 
+  .mainBtnsContainer {
+    margin-top: 25px;
+
+    .mainBtns {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  @media screen and (max-width: $mobile) {
+    .mainBtnsContainer {
+      margin-top: 0;
+      height: 80px;
+      width: 100%;
+
+      .mainBtns {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: $white;
+        padding: 10px 1.25rem;
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        grid-template-rows: 100%;
+        grid-column-gap: 10px;
+        box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
+
+        .defbtn {
+          &:last-child {
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
 }
