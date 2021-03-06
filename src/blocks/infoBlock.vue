@@ -11,28 +11,20 @@
       <template slot="default">
         <div class="text-dark2 font-light">By using zkSync: Checkout Gateway, you agree to accept full responsibility. See our <a class="lightLink" target="_blank" href="https://zksync.io/legal/terms.html#overview">Terms of Service</a> and <a class="lightLink" target="_blank" href="https://zksync.io/legal/privacy.html#introduction">Privacy Policy</a> for the details.</div>
       </template>
-      <!-- <template slot="footer">
-        <div class="flex justify-center">
-          <defbtn outline class="mr-2" @click="modal=false">
-            <i class="far fa-arrow-left"></i>
-            <span>Cancel and return</span>
-          </defbtn>
-        </div>
-      </template> -->
     </modal>
 
     <div class="infoBlock md:min-h-screen py-4 md:py-10 px-5 md:px-10">
       <header>
         <span class="mobileOnly" @click="modal=true">
-          <i class="far fa-arrow-left"></i>
+          <i class="text-xl far fa-arrow-left"></i>
         </span>
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
           <div class="text-violet text-2xl font-bold">Checkout</div>
         </div>
-        <strong class="mobileOnly" @click="modal=true">
-          <i class="fal fa-shield-check"></i>
-        </strong>
+        <span class="mobileOnly" @click="modal=true">
+          <i class="text-xl fal fa-shield-check"></i>
+        </span>
       </header>
       <note class="hidden md:block mt-3 lg:mt-7">
         <template slot="icon">
@@ -42,31 +34,18 @@
           <div class="text-dark2 font-light text-xs lg:text-sm">By using zkSync: Checkout Gateway, you agree to accept full responsibility. See our <a class="lightLink" target="_blank" href="https://zksync.io/legal/terms.html#overview">Terms of Service</a> and <a class="lightLink" target="_blank" href="https://zksync.io/legal/privacy.html#introduction">Privacy Policy</a> for the details.</div>
         </template>
       </note>
-      <values-block class="mt-3 lg:mt-10">
+      <div class="lg:mt-5"></div>
+      <values-block class="mt-3" v-for="(item,index) in transactionData.transactions" :key="index">
         <template slot="left-top">
-          <div class="headline">Gitcoin Bounty</div>
+          <div class="headline">{{item.description}}</div>
         </template>
         <template slot="left-bottom">
-          <div class="address hidden lg:block">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
+          <div class="address hidden lg:block">{{item.to}}</div>
         </template>
         <template slot="right-top">
           <div class="flex md:flex-col whitespace-nowrap">
-            <div class="value mr-2 md:mr-0">15.13 LINK</div>
-            <div class="secondaryValue">2.31 $</div>
-          </div>
-        </template>
-      </values-block>
-      <values-block class="mt-1 lg:mt-3">
-        <template slot="left-top">
-          <div class="headline">Paid Extras: featured placement</div>
-        </template>
-        <template slot="left-bottom">
-          <div class="address hidden lg:block">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
-        </template>
-        <template slot="right-top">
-          <div class="flex md:flex-col whitespace-nowrap">
-            <div class="value mr-2 md:mr-0">0.00013 BTC</div>
-            <div class="secondaryValue">12.31 $</div>
+            <div class="value mr-2 md:mr-0">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
+            <div class="secondaryValue">{{ item.amount | formatUsdAmount(tokensPrices[item.token].price, item.token) }}</div>
           </div>
         </template>
       </values-block>
@@ -77,42 +56,25 @@
         </template>
         <template slot="right-top">
           <div class="flex items-center" @click="feesOpened=!feesOpened">
-            <div class="flex md:flex-col mr-3">
+            <div class="flex md:flex-col">
               <div class="value mr-2 md:mr-0">0.01 ETH</div>
               <div class="secondaryValue">5.44 $</div>
             </div>
-            <span >
-              <i class="transition-transform ease transition-200 far fa-angle-down" :style="{'transform': `rotate(${feesOpened===true?-180:0}deg)`}"></i>
+            <span class="ml-3 md:hidden">
+              <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${feesOpened===true?-180:0}deg)`}"></i>
             </span>
           </div>
         </template>
       </values-block>
-      <max-height v-model="feesOpened">
-        <values-block class="mt-1 lg:mt-3">
+      <max-height :updateValue="allFees.length" mobileOnly v-model="feesOpened">
+        <values-block class="mt-1 lg:mt-3" v-for="(item, index) in allFees" :key="index">
           <template slot="left-top">
-            <div class="headline">3rd Party / GitCoin</div>
-          </template>
-          <template slot="left-bottom">
-            <div class="address hidden lg:block">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
+            <div class="headline">{{item.name}}</div>
           </template>
           <template slot="right-top">
             <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">0.01 ETH</div>
-              <div class="secondaryValue">5.44 $</div>
-            </div>
-          </template>
-        </values-block>
-        <values-block class="mt-1 lg:mt-3">
-          <template slot="left-top">
-            <div class="headline">Tx Batch Fee / zkSync</div>
-          </template>
-          <template slot="left-bottom">
-            <div class="address hidden lg:block">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
-          </template>
-          <template slot="right-top">
-            <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">0.0003 ETH</div>
-              <div class="secondaryValue">0.16 $</div>
+              <div class="value mr-2 md:mr-0">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
+              <div class="secondaryValue">{{ item.amount | formatUsdAmount(tokensPrices[item.token].price, item.token) }}</div>
             </div>
           </template>
         </values-block>
@@ -124,24 +86,16 @@
         </div>
         <div class="flex-1 flex flex-col items-end">
           <div class="font-firaCondensed font-bold text-lg text-violet md:mt-1">
-            205.32 USD
-            <span>
-              <i class="transition-transform ease transition-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"></i>
+            {{totalUSD}} USD
+            <span class="ml-2 md:hidden">
+              <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"></i>
             </span>
           </div>
-          <max-height v-model="totalOpened">
+          <max-height :updateValue="allFees.length" mobileOnly v-model="totalOpened">
             <div class="md:flex flex-col items-end">
-            <div class="flex items-center font-firaCondensed font-bold text-xs text-black2 mt-2">
-              <div>0.0103 ETH</div>
-              <img class="ml-1 w-4 h-4 object-contain" src="/tokens/eth.svg" alt="ETH">
-            </div>
-            <div class="flex items-center font-firaCondensed font-bold text-xs text-black2 mt-2">
-              <div>0.000103 BTC</div>
-              <img class="ml-1 w-4 h-4 object-contain" src="/tokens/btc.svg" alt="BTC">
-            </div>
-            <div class="flex items-center font-firaCondensed font-bold text-xs text-black2 mt-2">
-              <div>15.13 LINK</div>
-              <img class="ml-1 w-4 h-4 object-contain" src="/tokens/link.svg" alt="LINK">
+            <div class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 mt-2" v-for="(item, token) in totalByToken" :key="token">
+              <div>{{ item | formatToken(token) }} {{token}}</div>
+              <!-- <img class="ml-1 w-4 h-4 object-contain" src="/tokens/eth.svg" alt="ETH"> -->
             </div>
           </div>
           </max-height>
@@ -166,14 +120,43 @@
 
 
 <script lang="ts">
-  import Vue from "vue";
-  export default Vue.extend({
+import Vue from "vue";
+import { transactionData, transactionFee, TokenPrices, TotalByToken } from "@/plugins/types";
+
+export default Vue.extend({
   data() {
     return {
       totalOpened: false,
       feesOpened: false,
       modal: false,
     }
+  },
+  computed: {
+    transactionData: function(): transactionData {
+      return this.$store.getters['checkout/getTransactionData'];
+    },
+    allFees: function(): Array<transactionFee> {
+      return this.$store.getters['checkout/getAllFees'];
+    },
+    totalUSD: function(): string {
+      const transactionData = this.transactionData;
+      const allFees = this.allFees;
+      const tokensPrices = this.tokensPrices;
+      var totalUSD = 0;
+      for(const item of transactionData.transactions) {
+        totalUSD += parseFloat(this.$options.filters!.formatUsdAmount(item.amount, tokensPrices[item.token].price, item.token).replaceAll(/[~$<]/g,''));
+      }
+      for(const item of allFees) {
+        totalUSD += parseFloat(this.$options.filters!.formatUsdAmount(item.amount, tokensPrices[item.token].price, item.token).replaceAll(/[~$<]/g,''));
+      }
+      return totalUSD < 0.01 ? `<0.01` : `~${totalUSD.toFixed(2)}`
+    },
+    totalByToken: function(): TotalByToken {
+      return this.$store.getters['checkout/getTotalByToken'];
+    },
+    tokensPrices: function(): TokenPrices {
+      return this.$store.getters['tokens/getTokenPrices'];
+    },
   },
 });
 </script>

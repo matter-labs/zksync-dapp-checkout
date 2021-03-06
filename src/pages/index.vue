@@ -45,7 +45,8 @@
     </modal>
 
     <connected-wallet/>
-    <note>
+    
+    <!-- <note>
       <template slot="icon">
         <i class="pl-1 text-base lg:text-lg text-red far fa-ban"></i>
       </template>
@@ -56,7 +57,7 @@
           You need to deposit some tokens into zkSync in order to proceed.
         </div>
       </template>
-    </note>
+    </note> -->
 
     <line-table-header class="mt-4 md:mt-7"/>
 
@@ -150,25 +151,40 @@
 </template>
 
 <script lang="ts">
-import connectedWallet from "@/blocks/connectedWallet.vue";
-import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import Vue from "vue";
 
+import { transactionData, TotalByToken } from "@/plugins/types";
+
+import connectedWallet from "@/blocks/connectedWallet.vue";
+import lineTableHeader from "@/blocks/lineTableHeader.vue";
+
+
 export default Vue.extend({
-                            components: {
-                              connectedWallet,
-                              lineTableHeader
-                            },
-                            data() {
-                              return {
-                                modal: false,
-                                input: {
-                                  token:  {
-                                    symbol: "ETH"
-                                  },
-                                  amount: "0.03"
-                                }
-                              }
-                            }
-                          });
+  components: {
+    connectedWallet,
+    lineTableHeader
+  },
+  data() {
+    return {
+      modal: false,
+      input: {
+        token:  {
+          symbol: "ETH"
+        },
+        amount: "0.03"
+      }
+    }
+  },
+  computed: {
+    zkBalances: function() {
+      return this.$store.getters['wallet/getzkBalances'];
+    },
+    transactionData: function(): transactionData {
+      return this.$store.getters['checkout/getTransactionData'];
+    },
+    totalByToken: function(): TotalByToken {
+      return this.$store.getters['checkout/getTotalByToken'];
+    },
+  },
+});
 </script>

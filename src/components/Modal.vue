@@ -20,32 +20,32 @@
 <script lang="ts">
 import Vue from "vue";
 
-export default Vue.extend(
-  {
-    props:   {
-      value:       {
-        type:     Boolean,
-        default:  false,
-        required: false
-      },
-      block:       {
-        type:     Boolean,
-        default:  false,
-        required: false
-      },
-      notClosable: {
-        type:     Boolean,
-        default:  false,
-        required: false
+export default Vue.extend({
+  props:   {
+    value:       {
+      type: Boolean,
+      default: false,
+      required: false
     },
+    block: {
+      type: Boolean,
+      default: false,
+      required: false
     },
-    methods: {
-      close: function () {
-        if (this.notClosable) {
-          return
-        }
-      this.$emit('input', false);
-      }
+    notClosable: {
+      type: Boolean,
+      default: false,
+      required: false
+    },
   },
-  });
+  methods: {
+    close: function () {
+      if (this.notClosable) {
+        return
+      }
+      this.$emit('input', false);
+      this.$emit('close');
+    }
+  },
+});
 </script>

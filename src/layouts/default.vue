@@ -1,23 +1,26 @@
 <template>
-  <div class="defaultLayout min-h-screen">
-    <info-block />
+<div class="defaultLayout min-h-screen">
+  <modals />
+  <info-block />
   <div class="routerContainer bg-white2 md:min-h-screen py-4 md:py-10 px-5 md:px-10">
-      <logging-in/>
-      <transition name="fade" mode="out-in" v-if="!loggingIn">
-        <nuxt class="routeMain"/>
-      </transition>
-    </div>
+    <logging-in/>
+    <transition name="fade" mode="out-in" v-if="!loggingIn">
+      <nuxt class="routeMain"/>
+    </transition>
   </div>
+</div>
 </template>
 
 <script>
 import infoBlock from "@/blocks/infoBlock.vue";
 import loggingIn from "@/blocks/loggingIn.vue";
+import modals from "@/blocks/modals.vue";
 
 export default {
   components: {
     infoBlock,
-    loggingIn
+    loggingIn,
+    modals
   },
   computed: {
     loggingIn() {

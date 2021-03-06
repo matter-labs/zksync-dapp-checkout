@@ -77,7 +77,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main"],
+  plugins: ["@/plugins/main","@/plugins/setCheckoutData"],
 
   router: {
     middleware: ["wallet"],
@@ -235,10 +235,10 @@ export default {
           ...tailwindDefault.screens,
           lg: "1101px",
         },
-        transitionTimingFunction: {
+        /* transitionTimingFunction: {
           ...tailwindDefault.transitionTimingFunction,
           ease: "ease",
-        },
+        }, */
         /* extend: {
           width: {
             '72': '18rem',

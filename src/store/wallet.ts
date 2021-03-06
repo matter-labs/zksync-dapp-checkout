@@ -515,10 +515,16 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
     }
   },
-  async checkLockedState({ commit }): Promise<void> {
+  async checkLockedState({ commit }): Promise<boolean> {
     const syncWallet = walletData.get().syncWallet;
     const isSigningKeySet = await syncWallet!.isSigningKeySet();
     commit("setAccountLockedState", !isSigningKeySet);
+    return !isSigningKeySet;
+  },
+  async getProviders({ commit }): Promise<void> {
+    const zksync = await walletData.zkSync();
+    const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
+    walletData.set({ syncProvider });
   },
   async walletRefresh({ getters, dispatch }, firstSelect = true): Promise<boolean> {
     try {
@@ -545,6 +551,11 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       if (getAccounts.length === 0) {
         return false;
       }
+      const transactionData = this.getters['checkout/getTransactionData'];
+      if(transactionData.fromAddress && transactionData.fromAddress.toLowerCase()!==getAccounts[0].toLowerCase()) {
+        this.commit('setCurrentModal', 'wrongAccountAddress');
+        return false;
+      }
       if (walletData.get().syncWallet) {
         this.commit("account/setAddress", walletData.get().syncWallet!.address());
         this.commit("account/setLoggedIn", true);
@@ -561,18 +572,19 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
 
       const zksync = await walletData.zkSync();
-      const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
-      const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
+      await dispatch('restoreProviderConnection');
+      const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, walletData.get().syncProvider);
 
       this.commit("account/setLoadingHint", "loadingData");
       const accountState = await syncWallet.getAccountState();
 
-      walletData.set({ syncProvider, syncWallet, accountState, ethWallet });
+      walletData.set({ syncWallet, accountState, ethWallet });
 
       await this.dispatch("tokens/loadTokensAndBalances");
       await dispatch("getzkBalances", accountState);
 
       await dispatch("checkLockedState");
+      await this.dispatch('checkout/getAccountUnlockedFee');
 
       await watcher.changeNetworkSet(dispatch, this);
 
@@ -607,10 +619,11 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
   async logout({ commit, getters }): Promise<void> {
     const onboard = getters.getOnboard;
     onboard.walletReset();
-    walletData.set({ syncProvider: null, syncWallet: null, accountState: null });
+    walletData.set({ syncWallet: null, accountState: null });
     localStorage.removeItem("selectedWallet");
     this.commit("account/setLoggedIn", false);
     this.commit("account/setSelectedWallet", "");
+    /* this.commit('checkout/setAccountUnlockFee', false); */
     commit("clearDataStorage");
   },
 };

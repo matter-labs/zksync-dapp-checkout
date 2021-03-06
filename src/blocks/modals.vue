@@ -1,0 +1,36 @@
+<template>
+  <div class="allModalsContainer">
+    <modal :value="currentModal==='wrongAccountAddress'" @close="closeModal()">
+      <template slot="header">
+        <div class="withIcon text-red">
+          <i class="fad fa-info-square"></i>
+          <div>Wrong account address</div>
+        </div>
+      </template>
+      <template slot="default">
+        <div class="text-center">The website that initiated the checkout, expects you to be logged in to the following account: <b>{{transactionData.fromAddress}}</b></div>
+      </template>
+    </modal>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+import { transactionData } from "@/plugins/types";
+
+export default Vue.extend({
+  computed: {
+    currentModal: function() {
+      return this.$store.getters['currentModal'];
+    },
+    transactionData: function(): transactionData {
+      return this.$store.getters['checkout/getTransactionData'];
+    },
+  },
+  methods: {
+    closeModal: function() {
+      this.$store.dispatch('closeActiveModal');
+    }
+  },
+});
+</script>

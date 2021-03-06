@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
+import { Types } from 'zksync-checkout';
 
 export declare type Address = string;
 export declare type PubKeyHash = string;
@@ -9,6 +10,21 @@ export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
 export declare type Nonce = number | "committed";
 
+export import ZkSyncTransaction = Types.ZkSyncTransaction;
+
+export type transactionData = {
+  transactions: Array<ZkSyncTransaction>,
+  fromAddress: Address,
+  feeToken: TokenSymbol
+}
+export type transactionFee = {
+  name: string,
+  amount: BigNumber,
+  token: TokenSymbol
+}
+export type TotalByToken = {
+  [token: string]: BigNumberish;
+}
 export interface Signature {
   pubKey: string;
   signature: string;

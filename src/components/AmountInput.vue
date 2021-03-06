@@ -2,7 +2,7 @@
   <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]" @click.self="focusInput()">
     <div class="leftSide" @click="focusInput()">
       <div class="inputContainer">
-        <input ref="input" :style="{'width': `${width}px`}" :disabled="disabled" type="text" placeholder="Amount" v-model="inputtedAmount" @focus="focused=true" @blur="focused=false" @keyup.enter="$emit('enter')">
+        <input ref="input" :style="{'width': `${width}px`}" :disabled="disabled" type="text" placeholder="Amount" maxlength="12" v-model="inputtedAmount" @focus="focused=true" @blur="focused=false" @keyup.enter="$emit('enter')">
         <span class="sizeSpan" ref="sizeSpan">{{inputtedAmount}}</span>
         <div class="penIcon">
           <i class="fad fa-pen"></i>
@@ -22,7 +22,6 @@
 import Vue from "vue";
 
 import utils from "@/plugins/utils";
-import { BigNumber } from "ethers";
 
 export default Vue.extend({
   props: {
@@ -58,18 +57,6 @@ export default Vue.extend({
       focused: false,
       width: 0,
     }
-  },
-  computed: {
-    /* inputtedAmountBigNumber: function (): string | BigNumber {
-      if (this.inputtedAmount) {
-        try {
-          return utils.parseToken(this.token.symbol, this.inputtedAmount);
-        } catch (error) {
-          return "0";
-        }
-      }
-      return "0";
-    }, */
   },
   watch: {
     inputtedAmount: {
