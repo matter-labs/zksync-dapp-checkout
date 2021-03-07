@@ -39,6 +39,19 @@ export interface ForcedExit {
   signature: Signature;
 }
 
+export interface DepositsInterface {
+  [tokenSymbol: string]: Array<SinglDepositsInterface>
+}
+interface SinglDepositsInterface{
+  hash: string,
+  amount: string,
+  status: string,
+  confirmations: number
+}
+export interface ActiveDepositInterface {
+  [tokenSymbol: string]: BigNumber
+}
+
 export interface Transfer {
   type: "Transfer";
   accountId: number;
@@ -342,6 +355,7 @@ export interface TokenItem {
   id: number;
   symbol: string;
   decimals: number;
+  unlocked: boolean;
 }
 
 export interface TokenPrices {

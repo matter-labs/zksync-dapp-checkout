@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
+import { Address, GweiBalance, TokenSymbol, Tx, ETHOperation } from "@/plugins/types";
 
 /**
  * Transaction processing action
@@ -163,9 +163,9 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
  * @param {TokenSymbol} token
  * @param {GweiBalance} amount
  * @param store
- * @returns {Promise<any>}
+ * @returns {Promise<ETHOperation>}
  */
-export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: any) => {
+export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: any): Promise<ETHOperation> => {
   const wallet = walletData.get().syncWallet;
   const depositResponse = await wallet?.depositToSyncFromEthereum({
     depositTo: wallet.address(),
@@ -173,5 +173,18 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: an
     amount,
   });
   store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
-  return depositResponse;
+  return (depositResponse as ETHOperation);
+};
+
+/**
+ * Unlock token action method
+ *
+ * @param {Address} address
+ * @param store
+ * @returns {Promise<ContractTransaction>}
+ */
+export const unlockToken = async (address: Address, store: any) => {
+  const wallet = walletData.get().syncWallet;
+  const unlockTransaction = await wallet!.approveERC20TokenDeposits(address as string);
+  return unlockTransaction;
 };

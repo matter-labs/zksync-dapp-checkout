@@ -84,7 +84,7 @@ export default {
       Knowing previous length of decimal part we get new decimal part.
       And then add padStart with zeros to handle value like 0.00000001 as it has been changed to just 1 when casting to BigNumber type
     */
-    var newDecimalPart = bigNumberString.substr(Math.max(0, bigNumberString.length-symbolsArrDecimal.length), bigNumberString.length-1).padStart(symbolsArrDecimal.length, '0');
+    var newDecimalPart = bigNumberString.substr(Math.max(0, bigNumberString.length-symbolsArrDecimal.length), bigNumberString.length).padStart(symbolsArrDecimal.length-1, '0');
     /*
       By getting bigNumberString from index 0 to index bigNumberString.length-newDecimalPart.length
       we can get an integer part of the new value

@@ -10,11 +10,17 @@ export default async (context: any) => {
       {
         to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
         token: "ETH",
-        amount: "92000000000000000",
+        amount: "92850000000000000",
         description: "For bananananas",
       },
+      {
+        to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
+        token: "USDT",
+        amount: "1000000",
+        description: "GME Stocks",
+      },
     ],
-    fromAddress: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
+    fromAddress: "",
     feeToken: "ETH"
   });
   await context.store.dispatch('wallet/getProviders');

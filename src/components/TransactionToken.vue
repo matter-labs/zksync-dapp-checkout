@@ -25,6 +25,17 @@
         </values-block>
       </template>
     </modal>
+    <modal :value="modal==='customError'" @close="modal=''">
+      <template slot="header">
+        <div class="withIcon text-red">
+          <i class="fad fa-info-square"></i>
+          <div>{{errorModal.headline}}</div>
+        </div>
+      </template>
+      <template slot="default">
+        <div class="text-sm">{{errorModal.text}}</div>
+      </template>
+    </modal>
 
 
     <!-- Main -->
@@ -51,16 +62,32 @@
               Required
             </template>
             <template slot="default">
-              <defbtn @click="deposit()">Deposit</defbtn>
+              <defbtn @click="deposit()" v-if="initialBalance.unlocked===true">Deposit</defbtn>
+              <defbtn @click="unlock()" v-else>Unlock <i class="fas fa-unlock-alt"></i></defbtn>
             </template>
           </amount-input>
         </template>
       </template>
-      <!-- <template slot="right">
-        <defbtn outline disabled loader>
-          <span>Unlocking... </span>
-        </defbtn>
-      </template> -->
+      <template v-else-if="step==='depositing'">
+        <template slot="right">
+          <defbtn outline disabled v-if="substep==='waitingUserConfirmation'">
+            <span>Confirm the deposit</span>
+          </defbtn>
+          <defbtn outline disabled loader v-else-if="substep==='depositing' || substep==='commiting'">
+            <span>{{substep==='depositing'?'Depositing':'Commiting deposit'}}...</span>
+          </defbtn>
+        </template>
+      </template>
+      <template v-else-if="step==='unlocking'">
+        <template slot="right">
+          <defbtn outline disabled v-if="substep==='waitingUserConfirmation'">
+            <span>Confirm the transaction</span>
+          </defbtn>
+          <defbtn outline disabled loader v-else-if="substep==='commiting'">
+            <span>Commiting transaction...</span>
+          </defbtn>
+        </template>
+      </template>
     </line-block>
   </div>
 </template>
@@ -68,7 +95,8 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { Balance, GweiBalance, Address, TokenPrices } from "@/plugins/types";
+import { Balance, GweiBalance, Address, TokenPrices, ETHOperation, ActiveDepositInterface } from "@/plugins/types";
+import { deposit, unlockToken } from "@/plugins/walletActions/transaction";
 import { BigNumber } from "ethers";
 import utils from "@/plugins/utils";
 
@@ -88,14 +116,30 @@ export default Vue.extend({
   data() {
     return {
       modal: '',
-      step: 'default',
+      errorModal: {
+        headline: '',
+        text: ''
+      },
+      step: 'default',/* default, depositing, unlocking */
+      substep: '',/* depositing: [waitingUserConfirmation,depositing,commiting] */
       depositAmount: '',
     }
   },
+  watch: {
+    activeDeposits: {
+      immediate: true,
+      handler(val, oldVal) {
+        if(!val){return}
+        if(val.hasOwnProperty(this.token)) {
+          this.step='depositing';
+        }
+        else if(this.step==='depositing' && oldVal.hasOwnProperty(this.token)) {
+          this.step='default';
+        }
+      }
+    }
+  },
   computed: {
-    ownAddress: function (): Address {
-      return this.$store.getters["account/address"];
-    },
     tokensPrices: function(): TokenPrices {
       return this.$store.getters['tokens/getTokenPrices'];
     },
@@ -124,6 +168,9 @@ export default Vue.extend({
     },
     enoughZkBalance: function(): Boolean {
       return BigNumber.from(this.zkBalance.rawBalance).gt(this.total);
+    },
+    activeDeposits: function(): ActiveDepositInterface {
+      return this.$store.getters['transaction/getActiveDeposits'] as ActiveDepositInterface
     },
 
     /**
@@ -172,7 +219,7 @@ export default Vue.extend({
     setDepositMinAmount: function() {
       this.depositAmount = utils.handleFormatToken(this.token, this.needToDeposit);
     },
-    deposit: function() {
+    deposit: async function() {
       if(!this.enoughWithInitialBalance) {
         this.modal = 'insufficientL1';
       }
@@ -181,6 +228,70 @@ export default Vue.extend({
       }
       else if(!this.enoughDepositAmount) {
         this.modal = 'insufficientL1Min';
+      }
+      else if(this.$refs && this.$refs.amountInput && (this.$refs.amountInput as Vue).$data.error) {
+        this.modal='customError';
+        this.errorModal = {
+          headline: `Inputed ${this.token} amount error`,
+          text: (this.$refs.amountInput as Vue).$data.error
+        }
+      }
+      else {
+        try {
+          this.substep = 'waitingUserConfirmation';
+          this.step = 'depositing';
+          const transferTransaction = await deposit(this.token, this.depositBigNumber, this.$store);
+          this.substep = 'depositing';
+          const receipt = await transferTransaction.awaitEthereumTxCommit();
+          this.substep = 'commiting';
+        } catch (error) {
+          this.step = 'default';
+          const createErrorModal = (text: string) => {
+            this.errorModal = {
+              headline: `Depositing ${this.token} error`,
+              text: text
+            }
+          }
+          if (error.message) {
+            if (!error.message.includes("User denied")) {
+              if (error.message.includes("Fee Amount is not packable")) {
+                createErrorModal("Fee Amount is not packable");
+              } else if (error.message.includes("Transaction Amount is not packable")) {
+                createErrorModal("Transaction Amount is not packable");
+              }
+            }
+          }
+          else {
+            createErrorModal("Unknow error. Try again later.");
+          }
+        }
+      }
+    },
+    unlock: async function() {
+      try {
+        this.substep = 'waitingUserConfirmation';
+        this.step = 'unlocking';
+        const unlockTransaction = await unlockToken((this.initialBalance.address as Address), this.$store);
+        this.substep = 'commiting';
+        await unlockTransaction.wait();
+        await this.$store.dispatch("wallet/getInitialBalances", true);
+        this.step = 'default';
+      } catch (error) {
+        this.step = 'default';
+        const createErrorModal = (text: string) => {
+          this.errorModal = {
+            headline: `Unlocking ${this.token} error`,
+            text: text
+          }
+        }
+        if (error.message) {
+          if (!error.message.includes("User denied")) {
+            createErrorModal(error.message);
+          }
+        }
+        else {
+          createErrorModal("Unknow error. Try again later.");
+        }
       }
     }
   },

@@ -25,14 +25,12 @@
         </values-block>
       </template>
       <template slot="footer">
-        <div class="flex items-center justify-center flex-wrap">
-          <!-- <div class="flex mb-2 md:mb-0">
-          </div> -->
-          <defbtn outline class="mb-2 mr-2 lg:mb-0" @click="modal=false">
+        <div class="flex items-center justify-center flex-wrap gap-2">
+          <defbtn outline @click="modal=false">
             <i class="far fa-arrow-left"></i>
             <span>Cancel and return</span>
           </defbtn>
-          <defbtn outline class="mb-2 lg:mb-0 md:mr-2" @click="modal=false">
+          <defbtn outline @click="modal=false">
             <span>Disconnect</span>
             <i class="far fa-power-off"></i>
           </defbtn>
