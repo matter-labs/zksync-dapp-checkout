@@ -1,0 +1,193 @@
+<template>
+  <div class="w-full transactionTokenContainer">
+    <!-- Modals -->
+    <modal :value="modal==='insufficientL1' || modal==='insufficientL1Deposit' || modal==='insufficientL1Min'" @close="modal=''">
+      <template slot="header">
+        <div class="withIcon text-red">
+          <i class="fad fa-info-square"></i>
+          <div>Insufficient funds in the on-chain wallet to deposit</div>
+        </div>
+      </template>
+      <template slot="default">
+        <div class="text-sm" v-if="modal==='insufficientL1'">On-chain wallet has insufficient funds to deposit minimal amount to zkSync L2 account. Top up your on-chain wallet with minimal amount:</div>
+        <div class="text-sm" v-else-if="modal==='insufficientL1Deposit'">On-chain wallet has insufficient funds to deposit <b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> to zkSync L2 account.</div>
+        <div class="text-sm" v-else-if="modal==='insufficientL1Min'"><b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> will not be enough to commit the transaction. The minimal amount is:</div>
+        <values-block class="mt-3 cursor-pointer" @click="setDepositMinAmount(); modal=''">
+          <template slot="left-top">
+            <div class="headline">Minimal amount to deposit</div>
+          </template>
+          <template slot="right-top">
+            <div class="flex md:flex-col whitespace-nowrap">
+              <div class="value mr-2 md:mr-0">{{ needToDeposit | formatTokenPretty(token) }} {{ token }}</div>
+              <div class="secondaryValue">{{ needToDeposit | formatUsdAmount(tokensPrices[token].price, token) }}</div>
+            </div>
+          </template>
+        </values-block>
+      </template>
+    </modal>
+
+
+    <!-- Main -->
+    <line-block>
+      <template slot="first">
+        <div class="tokenItem">
+          <!-- <img src="/tokens/btc.svg" alt="BTC" class="tokenImg"> -->
+          <div class="tokenName">{{token}}</div>
+        </div>
+      </template>
+      <template slot="second">
+        <div class="amount" :class="{'disabled': enoughZkBalance===false}">{{ zkBalance.rawBalance | formatTokenPretty(token) }} <span class="amountType md:hidden">L2</span></div>
+      </template>
+      <template slot="third">
+        <div class="amount" @click="setDepositMaxAmount()" :class="[{'disabled': enoughZkBalance===true},{'error': enoughOnInitialToDeposit===false},{'cursor-pointer': (!enoughZkBalance && step==='default')}]">{{ initialBalance.rawBalance | formatTokenPretty(token) }} <span class="amountType md:hidden">L1</span></div>
+      </template>
+      <template v-if="step==='default'">
+        <template slot="right" v-if="enoughZkBalance">
+          <i class="text-base text-green fas fa-check-circle"></i>
+        </template>
+        <template slot="right" v-else>
+          <amount-input ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{'error': !enoughDepositAmount}">
+            <template slot="underInput">
+              Required
+            </template>
+            <template slot="default">
+              <defbtn @click="deposit()">Deposit</defbtn>
+            </template>
+          </amount-input>
+        </template>
+      </template>
+      <!-- <template slot="right">
+        <defbtn outline disabled loader>
+          <span>Unlocking... </span>
+        </defbtn>
+      </template> -->
+    </line-block>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+
+import { Balance, GweiBalance, Address, TokenPrices } from "@/plugins/types";
+import { BigNumber } from "ethers";
+import utils from "@/plugins/utils";
+
+export default Vue.extend({
+  props: {
+    token: {
+      type: String,
+      default: '',
+      required: true
+    },
+    total: {
+      type: String,
+      default: '',
+      required: true
+    },
+  },
+  data() {
+    return {
+      modal: '',
+      step: 'default',
+      depositAmount: '',
+    }
+  },
+  computed: {
+    ownAddress: function (): Address {
+      return this.$store.getters["account/address"];
+    },
+    tokensPrices: function(): TokenPrices {
+      return this.$store.getters['tokens/getTokenPrices'];
+    },
+    zkBalance: function(): Balance {
+      return this.$store.getters['wallet/getzkBalances'].find((e: Balance) => e.symbol === this.token );
+    },
+    initialBalance: function(): Balance {
+      return this.$store.getters['wallet/getInitialBalances'].find((e: Balance) => e.symbol === this.token );
+    },
+    depositBigNumber: function(): GweiBalance {
+      if(!this.depositAmount) {
+        return "";
+      }
+      try {
+        return utils.parseToken(this.token, this.depositAmount).toString();
+      } catch (error) {
+        return "";
+      }
+    },
+    needToDeposit: function(): GweiBalance {
+      try {
+        return utils.parseToken(this.token, utils.handleFormatTokenPrettyCeil(this.token, BigNumber.from(this.total).sub(BigNumber.from(this.zkBalance.rawBalance)).toString())).toString();
+      } catch (error) {
+        return "";
+      }
+    },
+    enoughZkBalance: function(): Boolean {
+      return BigNumber.from(this.zkBalance.rawBalance).gt(this.total);
+    },
+
+    /**
+     * Returns (L1+L2 balance >= Total to pay)
+    */
+    enoughWithInitialBalance: function(): Boolean {
+      return BigNumber.from(this.zkBalance.rawBalance).add(BigNumber.from(this.initialBalance.rawBalance)).gte(this.total);
+    },
+
+    /**
+     * Returns (Inputed deposit amount >= L1 Balance)
+    */
+    enoughOnInitialToDeposit: function(): Boolean {
+      if(!this.depositAmount) {
+        return true;
+      }
+      try {
+        const depositAmountBigNumber = BigNumber.from(this.depositBigNumber);
+        return !depositAmountBigNumber.gt(BigNumber.from(this.initialBalance.rawBalance));
+      } catch (error) {
+        return false;
+      }
+    },
+
+    /**
+     * Returns (Inputed deposit amount >= Total to pay - L2 balance)
+    */
+    enoughDepositAmount: function(): Boolean {
+      if(!this.depositAmount) {
+        return true;
+      }
+      try {
+        const depositAmountBigNumber = BigNumber.from(this.depositBigNumber);
+        return depositAmountBigNumber.gte(BigNumber.from(this.needToDeposit));
+      } catch (error) {
+        return false;
+      }
+    },
+  },
+  methods: {
+    setDepositMaxAmount: function() {
+      if(!this.enoughZkBalance && this.step==='default') {
+        this.depositAmount = utils.handleFormatTokenPretty(this.token, BigNumber.from(this.initialBalance.rawBalance).toString());
+      }
+    },
+    setDepositMinAmount: function() {
+      this.depositAmount = utils.handleFormatToken(this.token, this.needToDeposit);
+    },
+    deposit: function() {
+      if(!this.enoughWithInitialBalance) {
+        this.modal = 'insufficientL1';
+      }
+      else if(!this.enoughOnInitialToDeposit) {
+        this.modal = 'insufficientL1Deposit';
+      }
+      else if(!this.enoughDepositAmount) {
+        this.modal = 'insufficientL1Min';
+      }
+    }
+  },
+  mounted() {
+    if(!this.enoughZkBalance) {
+      this.setDepositMinAmount();
+    }
+  },
+});
+</script>

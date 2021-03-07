@@ -1,5 +1,5 @@
 <template>
-  <div class="lineContainer">
+  <div class="lineContainer" v-on="$listeners">
     <div class="lineItem">
       <slot name="first"/>
     </div>

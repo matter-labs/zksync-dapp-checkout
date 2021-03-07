@@ -113,5 +113,8 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     else {
       commit('setAccountUnlockFee', false);
     }
-  }
+  },
+  async closeCheckout(): Promise<void> {
+    
+  },
 };

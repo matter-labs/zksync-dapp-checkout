@@ -37,10 +37,17 @@
     font-weight: 600;
     font-size: 16px;
     color: $black2;
+    width: max-content;
+    min-width: 30px;
     white-space: nowrap;
+    transition: color $transition;
+    will-change: color;
 
     &.disabled {
       opacity: 0.25;
+    }
+    &.error {
+      color: $red;
     }
 
     .amountType {

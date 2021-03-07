@@ -1,5 +1,5 @@
 <template>
-  <div class="valuesBlockContainer py-1">
+  <div class="valuesBlockContainer py-1" v-on="$listeners">
     <div class="valuesBlockLeft">
       <div class="valuesBlockSecondary valuesLeftTop" v-if="$slots['left-top']">
         <slot name="left-top"/>

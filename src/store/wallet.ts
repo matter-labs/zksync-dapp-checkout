@@ -350,6 +350,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     const localList = getters.getTokensList;
 
     if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
+      console.log('getInitialBalances 1', localList);
       return localList.list;
     }
     await dispatch("restoreProviderConnection");
@@ -357,11 +358,14 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     const accountState = await syncWallet?.getAccountState();
     walletData.set({ accountState });
     if (!syncWallet || !accountState) {
+      console.log('getInitialBalances 2', localList);
       return localList.list;
     }
     const loadedTokens = await this.dispatch("tokens/loadTokensAndBalances");
+    const totalByToken = this.getters['checkout/getTotalByToken'];
+    const usedTokens = Object.entries(totalByToken).map(e => e[0]);
 
-    const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key) => {
+    const loadInitialBalancesPromises = usedTokens.map(async (key) => {
       const currentToken = loadedTokens.tokens[key];
       try {
         const balance = await syncWallet.getEthereumBalance(key);
@@ -381,14 +385,11 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       // @todo insert sentry logging
       return [];
     });
-    const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.sortBalancesById) as Array<Token>;
-    const balancesEmpty = balancesResults.filter((token) => token && token.rawBalance.lte(0)).sort(utils.sortBalancesById) as Array<Token>;
-    balances.push(...balancesEmpty);
     commit("setTokensList", {
       lastUpdated: new Date().getTime(),
-      list: balances,
+      list: balancesResults,
     });
-    return balances;
+    return balancesResults as Array<Token>;
   },
 
   /**
@@ -582,13 +583,13 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
 
       await this.dispatch("tokens/loadTokensAndBalances");
       await dispatch("getzkBalances", accountState);
+      await dispatch("getInitialBalances", true);
 
       await dispatch("checkLockedState");
       await this.dispatch('checkout/getAccountUnlockedFee');
 
       await watcher.changeNetworkSet(dispatch, this);
 
-      this.commit("contacts/getContactsFromStorage");
       this.commit("account/setAddress", syncWallet.address());
       this.commit("account/setLoggedIn", true);
       return true;

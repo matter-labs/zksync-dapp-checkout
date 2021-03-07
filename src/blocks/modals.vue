@@ -1,6 +1,6 @@
 <template>
   <div class="allModalsContainer">
-    <modal :value="currentModal==='wrongAccountAddress'" @close="closeModal()">
+    <modal :value="true" @close="closeModal()" v-if="currentModal==='wrongAccountAddress'">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square"></i>

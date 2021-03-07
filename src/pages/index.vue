@@ -45,7 +45,7 @@
     </modal>
 
     <connected-wallet/>
-    
+
     <!-- <note>
       <template slot="icon">
         <i class="pl-1 text-base lg:text-lg text-red far fa-ban"></i>
@@ -61,72 +61,7 @@
 
     <line-table-header class="mt-4 md:mt-7"/>
 
-    <line-block>
-      <template slot="first">
-        <div class="tokenItem">
-          <img src="/tokens/btc.svg" alt="BTC" class="tokenImg">
-          <div class="tokenName">BTC</div>
-        </div>
-      </template>
-      <template slot="second">
-        <div class="amount">9.103 <span class="amountType md:hidden">L2</span></div>
-      </template>
-      <template slot="third">
-        <div class="amount disabled">4.032 <span class="amountType md:hidden">L1</span></div>
-      </template>
-      <template slot="right">
-        <i class="text-base text-green fas fa-check-circle"></i>
-      </template>
-    </line-block>
-    <line-block>
-      <template slot="first">
-        <div class="tokenItem">
-          <img src="/tokens/eth.svg" alt="ETH" class="tokenImg">
-          <div class="tokenName">ETH</div>
-        </div>
-      </template>
-      <template slot="second">
-        <div class="amount disabled">1.0335 <span class="amountType md:hidden">L2</span></div>
-      </template>
-      <template slot="third">
-        <div class="amount">0.2195 <span class="amountType md:hidden">L1</span></div>
-      </template>
-      <template slot="right">
-        <defbtn outline disabled loader>
-          <span>Unlocking... </span>
-        </defbtn>
-      </template>
-    </line-block>
-    <line-block>
-      <template slot="first">
-        <div class="tokenItem">
-            <img src="/tokens/link.svg" alt="LINK" class="tokenImg">
-            <div class="tokenName">LINK</div>
-        </div>
-      </template>
-      <template slot="second">
-        <div class="amount disabled">15.035 <span class="amountType md:hidden">L2</span></div>
-      </template>
-      <template slot="third">
-        <div class="amount">2.195 <span class="amountType md:hidden">L1</span></div>
-      </template>
-      <!-- <template slot="default">
-        <div class="alert text-red">
-          <i class="alertIcon fas fa-exclamation-circle"></i>
-          <div class="alertText">Unsufficient funds</div>
-        </div>
-      </template> -->
-      <template slot="right">
-        <amount-input v-model="input.amount" :token="input.token">
-          <template slot="underInput">
-            Required
-          </template>
-          <template slot="default">
-            <defbtn @click="modal=true">Deposit</defbtn>
-          </template>
-        </amount-input>
-      </template>
-    </line-block>
+    <transaction-token v-for="(total, token) in totalByToken" :key="token" :token="token" :total="total.toString()" />
 
     <div class="mainBtnsContainer">
       <div class="mainBtns">
@@ -167,12 +102,6 @@ export default Vue.extend({
   data() {
     return {
       modal: false,
-      input: {
-        token:  {
-          symbol: "ETH"
-        },
-        amount: "0.03"
-      }
     }
   },
   computed: {

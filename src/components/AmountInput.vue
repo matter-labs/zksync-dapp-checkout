@@ -2,7 +2,7 @@
   <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]" @click.self="focusInput()">
     <div class="leftSide" @click="focusInput()">
       <div class="inputContainer">
-        <input ref="input" :style="{'width': `${width}px`}" :disabled="disabled" type="text" placeholder="Amount" maxlength="12" v-model="inputtedAmount" @focus="focused=true" @blur="focused=false" @keyup.enter="$emit('enter')">
+        <input ref="input" :style="{'width': `${width}px`}" :disabled="disabled" type="text" placeholder="Amount" maxlength="15" v-model="inputtedAmount" @focus="focused=true" @blur="focused=false" @keyup.enter="$emit('enter')">
         <span class="sizeSpan" ref="sizeSpan">{{inputtedAmount}}</span>
         <div class="penIcon">
           <i class="fad fa-pen"></i>
@@ -35,13 +35,14 @@ export default Vue.extend({
       default: "",
       required: false,
     },
-    maxAmount: {
+    /* maxAmount: {
       type: String,
       default: "",
       required: false,
-    },
+    }, */
     token: {
-      type: Object,
+      type: String,
+      default: "",
       required: true,
     },
     disabled: {
@@ -79,7 +80,13 @@ export default Vue.extend({
         this.emitValue(strVal);
       }
     },
-    token: {
+    token() {
+      if (!this.inputtedAmount) {
+        return;
+      }
+      this.emitValue(this.inputtedAmount);
+    },
+    /* maxAmount: {
       deep: true,
       handler() {
         if (!this.inputtedAmount) {
@@ -87,16 +94,7 @@ export default Vue.extend({
         }
         this.emitValue(this.inputtedAmount);
       },
-    },
-    maxAmount: {
-      deep: true,
-      handler() {
-        if (!this.inputtedAmount) {
-          return;
-        }
-        this.emitValue(this.inputtedAmount);
-      },
-    },
+    }, */
     value(val) {
       if (!this.error || (this.error && !!val)) {
         this.inputtedAmount = val;
@@ -129,11 +127,11 @@ export default Vue.extend({
 
       let inputAmount = null;
       try {
-        inputAmount = utils.parseToken(this.token.symbol, val);
+        inputAmount = utils.parseToken(this.token, val);
       } catch (error) {
         let errorInfo = `Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help`;
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
-          errorInfo = `Precision exceeded: ${this.token.symbol} doesn't support that many decimal digits`;
+          errorInfo = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
         }
         this.error = errorInfo;
         return;
@@ -144,12 +142,12 @@ export default Vue.extend({
         return;
       }
 
-      if (this.maxAmount) {
+      /* if (this.maxAmount) {
         if (inputAmount.gt(this.maxAmount)) {
-          this.error = `Not enough ${this.token.symbol} to ${this.type} requested amount`;
+          this.error = `Not enough ${this.token} to ${this.type} requested amount`;
           return;
         }
-      }
+      } */
 
       if (this.type === "transfer" && !utils.isAmountPackable(inputAmount.toString())) {
         this.error = "Max supported precision for transfers exceeded";

@@ -4,7 +4,7 @@
   <info-block />
   <div class="routerContainer bg-white2 md:min-h-screen py-4 md:py-10 px-5 md:px-10">
     <logging-in/>
-    <transition name="fade" mode="out-in" v-if="!loggingIn">
+    <transition name="fade" mode="out-in" v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')">
       <nuxt class="routeMain"/>
     </transition>
   </div>
