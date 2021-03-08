@@ -121,7 +121,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { transactionData, transactionFee, TokenPrices, TotalByToken } from "@/plugins/types";
+import { TransactionData, transactionFee, TokenPrices, TotalByToken } from "@/plugins/types";
 
 export default Vue.extend({
   data() {
@@ -132,7 +132,7 @@ export default Vue.extend({
     }
   },
   computed: {
-    transactionData: function(): transactionData {
+    transactionData: function(): TransactionData {
       return this.$store.getters['checkout/getTransactionData'];
     },
     allFees: function(): Array<transactionFee> {

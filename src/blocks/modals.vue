@@ -16,14 +16,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { transactionData } from "@/plugins/types";
+import { TransactionData } from "@/plugins/types";
 
 export default Vue.extend({
   computed: {
     currentModal: function() {
       return this.$store.getters['currentModal'];
     },
-    transactionData: function(): transactionData {
+    transactionData: function(): TransactionData {
       return this.$store.getters['checkout/getTransactionData'];
     },
   },

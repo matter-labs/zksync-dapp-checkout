@@ -95,7 +95,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { Balance, GweiBalance, Address, TokenPrices, ETHOperation, ActiveDepositInterface } from "@/plugins/types";
+import { Balance, GweiBalance, Address, TokenPrices, ActiveDepositInterface } from "@/plugins/types";
 import { deposit, unlockToken } from "@/plugins/walletActions/transaction";
 import { BigNumber } from "ethers";
 import utils from "@/plugins/utils";
@@ -121,7 +121,7 @@ export default Vue.extend({
         text: ''
       },
       step: 'default',/* default, depositing, unlocking */
-      substep: '',/* depositing: [waitingUserConfirmation,depositing,commiting] */
+      substep: '',/* depositing: [waitingUserConfirmation,depositing,commiting], unlocking: [waitingUserConfirmation,commiting] */
       depositAmount: '',
     }
   },

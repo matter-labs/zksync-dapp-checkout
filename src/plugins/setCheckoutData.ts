@@ -4,13 +4,13 @@ export default async (context: any) => {
       {
         to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
         token: "DAI",
-        amount: "43000000000000000000",
+        amount: "3000000000000000000",
         description: "For apples",
       },
       {
         to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
         token: "ETH",
-        amount: "92850000000000000",
+        amount: "890000000000000",
         description: "For bananananas",
       },
       {

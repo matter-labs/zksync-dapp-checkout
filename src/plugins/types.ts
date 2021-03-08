@@ -12,13 +12,14 @@ export declare type Nonce = number | "committed";
 
 export import ZkSyncTransaction = Types.ZkSyncTransaction;
 
-export type transactionData = {
+export type TransactionData = {
   transactions: Array<ZkSyncTransaction>,
   fromAddress: Address,
   feeToken: TokenSymbol
 }
 export type transactionFee = {
   name: string,
+  key: string,
   amount: BigNumber,
   token: TokenSymbol
 }
@@ -198,8 +199,8 @@ export declare class Wallet {
   }): Promise<Transaction>;
 
   isSigningKeySet(): Promise<boolean>;
-  signSetSigningKey(changePubKey: { feeToken: TokenLike; fee: BigNumberish; nonce: number; onchainAuth: boolean }): Promise<SignedTransaction>;
-  setSigningKey(changePubKey: { feeToken: TokenLike; fee?: BigNumberish; nonce?: Nonce; onchainAuth?: boolean }): Promise<Transaction>;
+  signSetSigningKey(changePubKey: { feeToken: TokenLike; fee: BigNumberish; nonce: number; onchainAuth: boolean; }): Promise<SignedTransaction>;
+  setSigningKey(changePubKey: { feeToken: TokenLike; fee?: BigNumberish; nonce?: Nonce; onchainAuth?: boolean; ethAuthType: string }): Promise<Transaction>;
   isOnchainAuthSigningKeySet(nonce?: Nonce): Promise<boolean>;
   onchainAuthSigningKey(nonce?: Nonce, ethTxOptions?: ethers.providers.TransactionRequest): Promise<ContractTransaction>;
   getCurrentPubKeyHash(): Promise<PubKeyHash>;

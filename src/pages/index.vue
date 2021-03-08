@@ -42,54 +42,86 @@
       </template>
     </modal>
 
-    <connected-wallet/>
-
-    <!-- <note>
-      <template slot="icon">
-        <i class="pl-1 text-base lg:text-lg text-red far fa-ban"></i>
-      </template>
-      <template slot="default">
-        <div class="text-red text-xs lg:text-sm">
-          Unfortunately, you don’t have enough funds on L2.
-          <br class="hidden md:block">
-          You need to deposit some tokens into zkSync in order to proceed.
+    <modal :value="errorModal!==false" @close="errorModal=false">
+      <template slot="header">
+        <div class="withIcon text-red">
+          <i class="fad fa-info-square"></i>
+          <div>{{errorModal.headline}}</div>
         </div>
       </template>
-    </note> -->
+      <template slot="default">
+        <div class="text-sm">{{errorModal.text}}</div>
+      </template>
+    </modal>
 
-    <line-table-header class="mt-4 md:mt-7"/>
+    <connected-wallet/>
 
-    <transaction-token v-for="(total, token) in totalByToken" :key="token" :token="token" :total="total.toString()" />
+    <note v-if="accountLocked">
+      <template slot="icon">
+        <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"></i>
+      </template>
+      <template slot="default">
+        <div class="text-gray text-xs lg:text-sm">
+          To start using your account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by verifying ETH signatures with zero-knowledge proofs. Please bear with us!
+        </div>
+      </template>
+    </note>
 
-    <div class="mainBtnsContainer">
-      <div class="mainBtns">
-        <defbtn class="mr-3 desktopOnly" outline @click="modal=true">
-          <i class="far fa-arrow-left"></i>
-          <span>Cancel and return</span>
-        </defbtn>
-        <defbtn class="desktopOnly" @click="modal=true">
-          <i class="far fa-exchange"></i>
-          <span>Transfer assets</span>
-        </defbtn>
-        <defbtn class="mobileOnly" big square outline @click="modal=true">
-          <i class="far fa-arrow-left"></i>
-        </defbtn>
-        <defbtn class="mobileOnly" big @click="modal=true">
-          <i class="far fa-exchange"></i>
-          <span>Transfer assets</span>
-        </defbtn>
+    <div class="w-full" v-if="step==='main'">
+      <line-table-header class="mt-4 md:mt-7"/>
+      <transaction-token v-for="(total, token) in totalByToken" :key="token" :token="token" :total="total.toString()" />
+      <div class="mainBtnsContainer" v-if="!accountLocked">
+        <div class="mainBtns">
+          <defbtn class="mr-3 desktopOnly" outline :disabled="loading" @click="cancel()">
+            <i class="far fa-arrow-left"></i>
+            <span>Cancel and return</span>
+          </defbtn>
+          <defbtn class="desktopOnly" :disabled="loading" :loading="loading" @click="nextStep()">
+            <i class="far fa-exchange"></i>
+            <span>Transfer assets</span>
+          </defbtn>
+          <defbtn class="mobileOnly" big square outline :disabled="loading" @click="cancel()">
+            <i class="far fa-arrow-left"></i>
+          </defbtn>
+          <defbtn class="mobileOnly" big :disabled="loading" :loading="loading" @click="nextStep()">
+            <i class="far fa-exchange"></i>
+            <span>Transfer assets</span>
+          </defbtn>
+        </div>
+      </div>
+      <div class="mainBtnsContainer" v-else>
+        <div class="mainBtns">
+          <defbtn class="mr-3 desktopOnly" outline :disabled="loading" @click="cancel()">
+            <i class="far fa-arrow-left"></i>
+            <span>Cancel and return</span>
+          </defbtn>
+          <defbtn class="desktopOnly" :loader="loading" :disabled="loading" @click="nextStep()">
+            <span><i class="fas fa-unlock-alt"></i> Activate the account</span>
+          </defbtn>
+          <defbtn class="mobileOnly" big square outline :disabled="loading" @click="cancel()">
+            <i class="far fa-arrow-left"></i>
+          </defbtn>
+          <defbtn class="mobileOnly" big :loader="loading" :disabled="loading" @click="nextStep()">
+            <i class="far fa-exchange"></i>
+            <span><i class="fas fa-unlock-alt"></i> Activate the account</span>
+          </defbtn>
+        </div>
       </div>
     </div>
+
+
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
-import { transactionData, TotalByToken } from "@/plugins/types";
+import { TransactionData, TotalByToken, Balance } from "@/plugins/types";
+import { changePubKey } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
+
 
 
 export default Vue.extend({
@@ -100,17 +132,70 @@ export default Vue.extend({
   data() {
     return {
       modal: false,
+      step: 'main',
+      loading: false,
+      errorModal: false as (false | {
+        headline: string,
+        text: string,
+      }),
     }
   },
   computed: {
-    zkBalances: function() {
+    zkBalances: function(): Array<Balance> {
       return this.$store.getters['wallet/getzkBalances'];
     },
-    transactionData: function(): transactionData {
+    transactionData: function(): TransactionData {
       return this.$store.getters['checkout/getTransactionData'];
     },
     totalByToken: function(): TotalByToken {
       return this.$store.getters['checkout/getTotalByToken'];
+    },
+    accountLocked: function(): Boolean {
+      return this.$store.getters['wallet/isAccountLocked'];
+    },
+  },
+  methods: {
+    nextStep: function() {
+      if(this.step==='main') {
+        if(this.accountLocked) {
+          this.changePubKey();
+        }
+        else {
+          this.transfer();
+        }
+      }
+    },
+    changePubKey: async function() {
+      this.loading=true;
+      try {
+        await changePubKey(this.transactionData.feeToken, this.$store);
+        await this.$store.dispatch("wallet/getInitialBalances", true);
+      } catch (error) {
+        const createErrorModal = (text: string) => {
+          this.errorModal = {
+            headline: `Activating account error`,
+            text: text
+          }
+        }
+        if (error.message) {
+          if (!error.message.includes("User denied")) {
+            createErrorModal(error.message);
+          }
+        }
+        else {
+          createErrorModal("Unknow error. Try again later.");
+        }
+      }
+      this.loading=false;
+    },
+    transfer: async function() {
+
+    },
+    cancel: async function() {
+      if(this.loading){return}
+      if(this.step==='main') {
+
+      }
     },
   },
 });

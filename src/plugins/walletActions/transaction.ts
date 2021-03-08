@@ -185,6 +185,52 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: an
  */
 export const unlockToken = async (address: Address, store: any) => {
   const wallet = walletData.get().syncWallet;
+  await store.dispatch("wallet/restoreProviderConnection");
   const unlockTransaction = await wallet!.approveERC20TokenDeposits(address as string);
   return unlockTransaction;
+};
+
+/**
+ * Change pub key method
+ *
+ * @param {TokenSymbol} feeToken
+ * @param store
+ * @returns {Promise<void>}
+ */
+export const changePubKey = async (feeToken: TokenSymbol, store: any) => {
+  const syncWallet = walletData.get().syncWallet;
+  await store.dispatch("wallet/restoreProviderConnection");
+  if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
+    const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
+    if (!isOnchainAuthSigningKeySet) {
+      const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
+      await onchainAuthTransaction?.wait();
+    }
+
+    const isSigningKeySet = await syncWallet!.isSigningKeySet();
+    if (!isSigningKeySet) {
+      const changePubkey = await syncWallet?.setSigningKey({
+        feeToken: feeToken,
+        nonce: "committed",
+        ethAuthType: "Onchain",
+      });
+      console.log("changePubkey", changePubkey);
+      await changePubkey?.awaitReceipt();
+    }
+  } else {
+    const isSigningKeySet = await syncWallet!.isSigningKeySet();
+    if (!isSigningKeySet) {
+      const changePubkey = await syncWallet!.setSigningKey({
+        feeToken: feeToken,
+        ethAuthType: "ECDSA",
+      });
+      console.log("changePubkey", changePubkey);
+      await changePubkey.awaitReceipt();
+    }
+  }
+  const isSigningKeySet = await syncWallet?.isSigningKeySet();
+  store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
+
+  const newAccountState = await syncWallet?.getAccountState();
+  walletData.set({ accountState: newAccountState });
 };

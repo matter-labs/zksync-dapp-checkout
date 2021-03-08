@@ -22,6 +22,11 @@
     will-change: transform;
 
     &.color {
+      &-white {
+        border-color: $white;
+        border-left-color: transparent;
+      }
+
       &-violet {
         border-color: $violet;
         border-left-color: transparent;
