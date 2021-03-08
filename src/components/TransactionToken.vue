@@ -161,7 +161,7 @@ export default Vue.extend({
     },
     needToDeposit: function(): GweiBalance {
       try {
-        return utils.parseToken(this.token, utils.handleFormatTokenPrettyCeil(this.token, BigNumber.from(this.total).sub(BigNumber.from(this.zkBalance.rawBalance)).toString())).toString();
+        return BigNumber.from(this.total).sub(this.zkBalance.rawBalance).toString();
       } catch (error) {
         return "";
       }
@@ -297,7 +297,7 @@ export default Vue.extend({
   },
   mounted() {
     if(!this.enoughZkBalance) {
-      this.setDepositMinAmount();
+      this.depositAmount = utils.handleFormatTokenPrettyCeil(this.token, BigNumber.from(this.total).sub(BigNumber.from(this.zkBalance.rawBalance)).toString());
     }
   },
 });

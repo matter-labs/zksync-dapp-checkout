@@ -169,7 +169,7 @@ export default Vue.extend({
       this.loading=true;
       try {
         await changePubKey(this.transactionData.feeToken, this.$store);
-        await this.$store.dispatch("wallet/getInitialBalances", true);
+        await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
       } catch (error) {
         const createErrorModal = (text: string) => {
           this.errorModal = {
