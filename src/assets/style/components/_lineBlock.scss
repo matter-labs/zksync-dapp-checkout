@@ -42,18 +42,6 @@
     white-space: nowrap;
     transition: color $transition;
     will-change: color;
-
-    &.disabled {
-      opacity: 0.25;
-    }
-    &.error {
-      color: $red;
-    }
-
-    .amountType {
-      /* color: $gray;
-      font-size: 12px; */
-    }
   }
 
   .alert {
@@ -103,10 +91,9 @@
       }
 
       .tokenItem {
-
-        display: flex;
+        /* display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: center; */
 
         .tokenImg {
           margin-right: 0;

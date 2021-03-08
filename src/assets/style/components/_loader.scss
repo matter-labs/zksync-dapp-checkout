@@ -55,8 +55,12 @@
 
       &-sm {
         &, &::after {
-          width: 3rem;
-          height: 3rem;
+          width: 1.15rem;
+          height: 1.15rem;
+        }
+
+        & {
+          border-width: .15rem;
         }
       }
 

@@ -1,5 +1,6 @@
 import { walletData } from "@/plugins/walletData";
 import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
+import { BigNumber } from "ethers";
 
 /**
  * Transaction processing action
@@ -172,7 +173,7 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: an
     token,
     amount,
   });
-  store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
+  //store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse as ETHOperation;
 };
 
@@ -196,7 +197,7 @@ export const unlockToken = async (address: Address, store: any) => {
  * @param store
  * @returns {Promise<void>}
  */
-export const changePubKey = async (feeToken: TokenSymbol, store: any) => {
+export const changePubKey = async (feeToken: TokenSymbol, fee: BigNumber, store: any) => {
   const syncWallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
   if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
@@ -210,10 +211,10 @@ export const changePubKey = async (feeToken: TokenSymbol, store: any) => {
     if (!isSigningKeySet) {
       const changePubkey = await syncWallet?.setSigningKey({
         feeToken,
+        fee,
         nonce: "committed",
         ethAuthType: "Onchain",
       });
-      console.log("changePubkey", changePubkey);
       await changePubkey?.awaitReceipt();
     }
   } else {
@@ -221,9 +222,9 @@ export const changePubKey = async (feeToken: TokenSymbol, store: any) => {
     if (!isSigningKeySet) {
       const changePubkey = await syncWallet!.setSigningKey({
         feeToken,
+        fee,
         ethAuthType: "ECDSA",
       });
-      console.log("changePubkey", changePubkey);
       await changePubkey.awaitReceipt();
     }
   }

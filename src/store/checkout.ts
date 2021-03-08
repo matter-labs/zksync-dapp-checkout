@@ -40,7 +40,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
   getAccountUnlockFee(state): false | BigNumber {
     return state.accountUnlockedFee;
   },
-  getAllFees(state: /* Vuex store state */ any, rootGetters: /* Vuex store getters */ any): Array<transactionFee> {
+  getAllFees(state: /* Vuex store state */ any, getters, rootState, rootGetters: /* Vuex store getters */ any): Array<transactionFee> {
     const allFees = [...state.transactionFees] as Array<transactionFee>;
     if (state.accountUnlockedFee && rootGetters["wallet/isAccountLocked"]) {
       allFees.push({
@@ -92,7 +92,7 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     });
     commit("setTransactionFees", tranasctionFees);
   },
-  async getAccountUnlockedFee({ state, commit }): Promise<void> {
+  async getAccountUnlockFee({ state, commit }): Promise<void> {
     const syncProvider = walletData.get().syncProvider;
     const isAccountLocked = this.getters["wallet/isAccountLocked"];
     await this.dispatch("wallet/restoreProviderConnection");

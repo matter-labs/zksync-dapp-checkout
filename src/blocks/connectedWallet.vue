@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="connectedWallet py-4 flex items-center">
+    <div class="connectedWallet md:py-4 flex items-center">
       <i class="text-gray text-4xl mr-3 far fa-wallet"></i>
       <values-block>
         <template slot="left-top">
@@ -10,13 +10,14 @@
           <div class="address">{{ownAddress}}</div>
         </template>
         <template slot="right-top">
-          <div class="flex">
-            <defbtn class="mr-2" target="_blank" to="///wallet.zksync.io">
-              <span>zkWallet</span>
-              <i class="far fa-external-link-alt"></i>
+          <div class="flex items-center flex-col md:flex-row">
+            <defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" to="///wallet.zksync.io">
+              <span>Open wallet</span>
+              <i class="fas fa-external-link"></i>
             </defbtn>
-            <defbtn outline square @click="logout()">
-              <i class="far fa-power-off"></i>
+            <defbtn outline @click="logout()">
+              <span class="text-red">Disconnect</span>
+              <i class="text-red far fa-times"></i>
             </defbtn>
           </div>
         </template>

@@ -22,13 +22,15 @@
         width: 100%;
         background-color: $white;
         padding: 10px 1.25rem;
-        display: grid;
+        /* display: grid;
         grid-template-columns: max-content 1fr;
         grid-template-rows: 100%;
-        grid-column-gap: 10px;
+        grid-column-gap: 10px; */
         box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
 
         .defbtn {
+          height: 50px;
+          font-size: 18px;
           &:last-child {
             width: 100%;
             text-align: center;

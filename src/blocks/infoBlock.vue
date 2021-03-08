@@ -35,7 +35,7 @@
         </template>
       </note>
       <div class="lg:mt-5"></div>
-      <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-3">
+      <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
         <template slot="left-top">
           <div class="headline">{{item.description}}</div>
         </template>
@@ -50,23 +50,25 @@
         </template>
       </values-block>
       <div class="w-full border-b-2 border-light mt-1 lg:mt-3"></div>
-      <values-block class="mt-1 lg:mt-3">
+      <values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
         <template slot="left-top">
-          <div class="headline big" @click="feesOpened=!feesOpened">Fees</div>
-        </template>
-        <template slot="right-top">
-          <div class="flex items-center" @click="feesOpened=!feesOpened">
-            <div class="flex md:flex-col">
-              <div class="value mr-2 md:mr-0">0.01 ETH</div>
-              <div class="secondaryValue">5.44 $</div>
-            </div>
-            <span class="ml-3 md:hidden">
+          <div class="flex items-center">
+            <div class="headline big">Fees</div>
+            <span class="ml-3">
               <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${feesOpened===true?-180:0}deg)`}"></i>
             </span>
           </div>
         </template>
+        <template slot="right-top">
+          <div class="flex items-center">
+            <div class="flex md:flex-col">
+              <div class="value mr-2 md:mr-0">{{ totalFees | formatToken('ETH') }} ETH</div>
+              <div class="secondaryValue">{{ totalFees | formatUsdAmount(tokensPrices['ETH'].price, 'ETH') }}</div>
+            </div>
+          </div>
+        </template>
       </values-block>
-      <max-height v-model="feesOpened" :update-value="allFees.length" mobile-only>
+      <max-height v-model="feesOpened" :update-value="allFees.length">
         <values-block v-for="(item, index) in allFees" :key="index" class="mt-1 lg:mt-3">
           <template slot="left-top">
             <div class="headline">{{item.name}}</div>
@@ -80,18 +82,20 @@
         </values-block>
       </max-height>
       <div class="w-full border-b-2 border-light mt-1 lg:mt-3"></div>
-      <div class="mt-2 lg:mt-4 flex" @click="totalOpened=!totalOpened">
+      <div class="mt-2 lg:mt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">
         <div class="flex-2">
-          <div class="font-firaCondensed font-bold text-xl md:text-2xl text-dark">Total amount</div>
+          <div class="flex items-center">
+            <div class="font-firaCondensed font-bold text-xl md:text-2xl text-dark">Total amount</div>
+            <span class="ml-3">
+              <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"></i>
+            </span>
+          </div>
         </div>
         <div class="flex-1 flex flex-col items-end">
           <div class="font-firaCondensed font-bold text-lg text-violet md:mt-1">
             {{totalUSD}} USD
-            <span class="ml-2 md:hidden">
-              <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"></i>
-            </span>
           </div>
-          <max-height v-model="totalOpened" :update-value="allFees.length" mobile-only>
+          <max-height v-model="totalOpened" :update-value="allFees.length">
             <div class="md:flex flex-col items-end">
             <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 mt-2">
               <div>{{ item | formatToken(token) }} {{token}}</div>
@@ -121,7 +125,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { TransactionData, transactionFee, TokenPrices, TotalByToken } from "@/plugins/types";
+import { TransactionData, transactionFee, TokenPrices, TotalByToken, GweiBalance } from "@/plugins/types";
+import { BigNumber } from "ethers";
 
 export default Vue.extend({
   data() {
@@ -132,13 +137,21 @@ export default Vue.extend({
     };
   },
   computed: {
-    transactionData(): TransactionData {
+    transactionData: function(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
-    allFees(): Array<transactionFee> {
+    allFees: function(): Array<transactionFee> {
       return this.$store.getters["checkout/getAllFees"];
     },
-    totalUSD(): string {
+    totalFees: function(): GweiBalance {
+      const allFees = this.allFees;
+      let totalFeeBigNum = BigNumber.from("0");
+      for (const item of allFees) {
+        totalFeeBigNum = totalFeeBigNum.add(item.amount);
+      }
+      return totalFeeBigNum.toString();
+    },
+    totalUSD: function(): string {
       const transactionData = this.transactionData;
       const allFees = this.allFees;
       const tokensPrices = this.tokensPrices;
@@ -151,10 +164,10 @@ export default Vue.extend({
       }
       return totalUSD < 0.01 ? `<0.01` : `~${totalUSD.toFixed(2)}`;
     },
-    totalByToken(): TotalByToken {
+    totalByToken: function(): TotalByToken {
       return this.$store.getters["checkout/getTotalByToken"];
     },
-    tokensPrices(): TokenPrices {
+    tokensPrices: function(): TokenPrices {
       return this.$store.getters["tokens/getTokenPrices"];
     },
   },

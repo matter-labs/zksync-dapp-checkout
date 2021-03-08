@@ -593,7 +593,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       await dispatch("getInitialBalances", true);
 
       await dispatch("checkLockedState");
-      await this.dispatch("checkout/getAccountUnlockedFee");
+      await this.dispatch("checkout/getAccountUnlockFee");
 
       await watcher.changeNetworkSet(dispatch, this);
 

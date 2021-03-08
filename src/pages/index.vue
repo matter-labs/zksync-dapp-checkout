@@ -68,42 +68,17 @@
     </note>
 
     <div v-if="step==='main'" class="w-full">
-      <line-table-header class="mt-4 md:mt-7"/>
-      <transaction-token v-for="(total, token) in totalByToken" :key="token" :token="token" :total="total.toString()" />
-      <div v-if="!accountLocked" class="mainBtnsContainer">
+      <line-table-header class="mt-4 md:mt-7 mb-2"/>
+      <transaction-token v-model="tokenItemsValid[token]" v-for="(total, token) in totalByToken" :key="token" :token="token" :total="total.toString()" />
+      <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn class="mr-3 desktopOnly" outline :disabled="loading" @click="cancel()">
-            <i class="far fa-arrow-left"></i>
-            <span>Cancel and return</span>
+          <defbtn v-if="accountLocked" :loader="loading" :disabled="loading" @click="nextStep()">
+            <i class="fas fa-unlock-alt"></i>
+            <span>Activate the account</span>
           </defbtn>
-          <defbtn class="desktopOnly" :disabled="loading" :loading="loading" @click="nextStep()">
-            <i class="far fa-exchange"></i>
-            <span>Transfer assets</span>
-          </defbtn>
-          <defbtn class="mobileOnly" big square outline :disabled="loading" @click="cancel()">
-            <i class="far fa-arrow-left"></i>
-          </defbtn>
-          <defbtn class="mobileOnly" big :disabled="loading" :loading="loading" @click="nextStep()">
-            <i class="far fa-exchange"></i>
-            <span>Transfer assets</span>
-          </defbtn>
-        </div>
-      </div>
-      <div v-else class="mainBtnsContainer">
-        <div class="mainBtns">
-          <defbtn class="mr-3 desktopOnly" outline :disabled="loading" @click="cancel()">
-            <i class="far fa-arrow-left"></i>
-            <span>Cancel and return</span>
-          </defbtn>
-          <defbtn class="desktopOnly" :loader="loading" :disabled="loading" @click="nextStep()">
-            <span><i class="fas fa-unlock-alt"></i> Activate the account</span>
-          </defbtn>
-          <defbtn class="mobileOnly" big square outline :disabled="loading" @click="cancel()">
-            <i class="far fa-arrow-left"></i>
-          </defbtn>
-          <defbtn class="mobileOnly" big :loader="loading" :disabled="loading" @click="nextStep()">
-            <i class="far fa-exchange"></i>
-            <span><i class="fas fa-unlock-alt"></i> Activate the account</span>
+          <defbtn v-else :disabled="!transferAllowed" :loading="loading" @click="nextStep()">
+            <i class="fas fa-paper-plane"></i>
+            <span>Complete payment</span>
           </defbtn>
         </div>
       </div>
@@ -132,6 +107,9 @@ export default Vue.extend({
       modal: false,
       step: "main",
       loading: false,
+      tokenItemsValid: {} as {
+        [token: string]: Boolean
+      },
       errorModal: false as
         | false
         | {
@@ -153,6 +131,14 @@ export default Vue.extend({
     accountLocked(): Boolean {
       return this.$store.getters["wallet/isAccountLocked"];
     },
+    transferAllowed(): Boolean {
+      for(const [token, state] of Object.entries(this.tokenItemsValid)) {
+        if(!state) {
+          return false;
+        }
+      }
+      return true;
+    },
   },
   methods: {
     nextStep() {
@@ -167,7 +153,7 @@ export default Vue.extend({
     async changePubKey() {
       this.loading = true;
       try {
-        await changePubKey(this.transactionData.feeToken, this.$store);
+        await changePubKey(this.transactionData.feeToken, this.$store.getters['checkout/getAccountUnlockFee'], this.$store);
         await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
       } catch (error) {
         const createErrorModal = (text: string) => {
@@ -178,7 +164,12 @@ export default Vue.extend({
         };
         if (error.message) {
           if (!error.message.includes("User denied")) {
-            createErrorModal(error.message);
+            if(error.message.includes("Account does not exist in the zkSync network")) {
+              createErrorModal("Please, make deposit or request tokens in order to activate the account.");
+            }
+            else {
+              createErrorModal(error.message);
+            }
           }
         } else {
           createErrorModal("Unknow error. Try again later.");
@@ -187,13 +178,6 @@ export default Vue.extend({
       this.loading = false;
     },
     async transfer() {},
-    async cancel() {
-      if (this.loading) {
-        return;
-      }
-      if (this.step === "main") {
-      }
-    },
   },
 });
 </script>

@@ -16,7 +16,7 @@ const changeNetworkHandle = (dispatch, context) => {
     }
     const refreshWalletResult = await dispatch("walletRefresh", false);
     if (refreshWalletResult === false) {
-      await context.$router.push("/");
+      await context.$router.push("/connect");
       await dispatch("logout");
     } else {
       await dispatch("forceRefreshData");
@@ -37,7 +37,7 @@ const changeAccountHandle = (dispatch, context) => {
       return;
     }
     await dispatch("logout");
-    await context.$router.push("/");
+    await context.$router.push("/connect");
     await dispatch("clearDataStorage");
   };
 };
