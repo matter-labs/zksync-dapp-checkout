@@ -125,7 +125,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { TransactionData, transactionFee, TokenPrices, TotalByToken, GweiBalance } from "@/plugins/types";
+import { TransactionData, TransactionFee, TokenPrices, TotalByToken, GweiBalance } from "@/plugins/types";
 import { BigNumber } from "ethers";
 
 export default Vue.extend({
@@ -140,7 +140,7 @@ export default Vue.extend({
     transactionData: function(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
-    allFees: function(): Array<transactionFee> {
+    allFees: function(): Array<TransactionFee> {
       return this.$store.getters["checkout/getAllFees"];
     },
     totalFees: function(): GweiBalance {

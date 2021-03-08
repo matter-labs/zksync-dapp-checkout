@@ -1,6 +1,6 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
-import { BigNumber } from "ethers";
+import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, ZkSyncTransaction, Nonce } from "@/plugins/types";
+import { BigNumber, BigNumberish } from "ethers";
 
 /**
  * Transaction processing action
@@ -13,46 +13,36 @@ import { BigNumber } from "ethers";
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
-export const transaction = async (address: Address, token: TokenSymbol, feeToken: TokenSymbol, amountBigValue: GweiBalance, feeBigValue: GweiBalance, store: any) => {
+export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, store: any) => {
   const syncWallet = walletData.get().syncWallet;
   let nonce = await syncWallet!.getNonce("committed");
-  const transferTx = {
-    fee: 0,
-    nonce,
-    amount: amountBigValue,
-    to: address,
-    token,
-  };
-  nonce += 1;
+  let transactionsaArray = [] as Array<{
+    fee: BigNumberish;
+    nonce: Nonce;
+    amount: BigNumberish;
+    to: Address;
+    token: TokenSymbol;
+  }>;
+
+  for(const tx of transactions) {
+    transactionsaArray.push({
+      fee: 0,
+      nonce,
+      amount: tx.amount,
+      to: (tx.to as Address),
+      token: tx.token,
+    });
+    nonce+=1;
+  }
   const feeTx = {
-    fee: feeBigValue,
+    fee: fee,
     nonce,
     amount: 0,
     to: syncWallet!.address(),
     token: feeToken,
   };
-
-  /**
-   * @todo: process case when there are 2 transactions
-   */
-  if (token === feeToken) {
-    const transaction = await syncWallet!.syncTransfer({
-      to: address,
-      token,
-      amount: amountBigValue,
-      fee: feeBigValue,
-    });
-    store.dispatch("transaction/watchTransaction", { transactionHash: transaction.txHash, tokenSymbol: token, type: "withdraw" });
-    return transaction;
-  } else {
-    const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
-    for (let a = 0; a < transferTransaction.length; a++) {
-      store.dispatch("transaction/watchTransaction", { transactionHash: transferTransaction[a].txHash, tokenSymbol: a === 0 ? token : feeToken, type: "withdraw" });
-    }
-    if (transferTransaction) {
-      return transferTransaction;
-    }
-  }
+  const transferTransaction = await syncWallet!.syncMultiTransfer([...transactionsaArray, feeTx]);
+  return transferTransaction;
 };
 
 /**

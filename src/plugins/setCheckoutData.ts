@@ -4,7 +4,7 @@ export default async (context: any) => {
       {
         to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
         token: "DAI",
-        amount: "300000000000000000",
+        amount: "3000000000000000",
         description: "For apples",
       },
       {
@@ -16,7 +16,7 @@ export default async (context: any) => {
       {
         to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
         token: "USDT",
-        amount: "100000",
+        amount: "1000",
         description: "GME Stocks",
       },
     ],
@@ -24,6 +24,6 @@ export default async (context: any) => {
     feeToken: "ETH",
   });
   await context.store.dispatch("wallet/getProviders");
+  await context.store.dispatch("checkout/getTransactionBatchFee");
   await context.store.dispatch("tokens/loadAllTokens");
-  await context.store.dispatch("checkout/getTransactionFees");
 };

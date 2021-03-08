@@ -17,11 +17,12 @@ export type TransactionData = {
   fromAddress: Address;
   feeToken: TokenSymbol;
 };
-export type transactionFee = {
+export type TransactionFee = {
   name: string;
   key: string;
   amount: BigNumber;
   token: TokenSymbol;
+  to?: Address;
 };
 export type TotalByToken = {
   [token: string]: BigNumberish;

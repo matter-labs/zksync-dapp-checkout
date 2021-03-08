@@ -1,14 +1,15 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { ZkSyncTransaction, Address, TokenSymbol, TransactionData, transactionFee, TotalByToken } from "@/plugins/types";
-import { walletData } from "@/plugins/walletData";
+import { ZkSyncTransaction, Address, TokenSymbol, TransactionData, TransactionFee, TotalByToken } from "@/plugins/types";
+import { closestPackableTransactionAmount } from 'zksync';
 import { BigNumber } from "ethers";
+import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
 
 export const state = () => ({
   transactions: [] as Array<ZkSyncTransaction>,
   fromAddress: "" as Address,
   feeToken: "" as TokenSymbol,
-  transactionFees: [] as Array<transactionFee>,
+  transactionBatchFee: {} as TransactionFee,
   accountUnlockedFee: false as false | BigNumber,
 });
 
@@ -16,10 +17,17 @@ export type CheckoutModuleState = ReturnType<typeof state>;
 
 export const mutations: MutationTree<CheckoutModuleState> = {
   setTransactionData(state, { transactions, fromAddress, feeToken }: TransactionData) {
-    (state.transactions = transactions), (state.fromAddress = fromAddress), (state.feeToken = feeToken);
+    state.transactions = transactions.map(tx => {
+      return {
+        ...tx,
+        amount: closestPackableTransactionAmount(tx.amount).toString()
+      }
+    });
+    state.fromAddress = fromAddress;
+    state.feeToken = feeToken;
   },
-  setTransactionFees(state, transactionFees: Array<transactionFee>) {
-    state.transactionFees = transactionFees;
+  setTransactionBatchFee(state, transaction: TransactionFee) {
+    state.transactionBatchFee = transaction;
   },
   setAccountUnlockFee(state, accountUnlockFee: false | BigNumber) {
     state.accountUnlockedFee = accountUnlockFee;
@@ -34,14 +42,15 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
       feeToken: state.feeToken,
     };
   },
-  getTransactionFees(state): Array<transactionFee> {
-    return state.transactionFees;
+  getTransactionBatchFee(state): TransactionFee {
+    return state.transactionBatchFee;
   },
   getAccountUnlockFee(state): false | BigNumber {
     return state.accountUnlockedFee;
   },
-  getAllFees(state: /* Vuex store state */ any, getters, rootState, rootGetters: /* Vuex store getters */ any): Array<transactionFee> {
-    const allFees = [...state.transactionFees] as Array<transactionFee>;
+  getAllFees(state: /* Vuex store state */ any, getters, rootState, rootGetters: /* Vuex store getters */ any): Array<TransactionFee> {
+    const allFees = [] as Array<TransactionFee>;
+    allFees.push(state.transactionBatchFee);
     if (state.accountUnlockedFee && rootGetters["wallet/isAccountLocked"]) {
       allFees.push({
         name: "One-time account unlock fee",
@@ -53,7 +62,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     return allFees;
   },
   getTotalByToken(state, getters): TotalByToken {
-    const allFees = getters.getAllFees;
+    const allFees = getters['getAllFees'];
     const totalByToken = new Map();
     const addToTotalByToken = (amount: BigNumber, token: TokenSymbol) => {
       if (totalByToken.has(token)) {
@@ -73,8 +82,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
 };
 
 export const actions: ActionTree<CheckoutModuleState, RootState> = {
-  async getTransactionFees({ state, commit }): Promise<void> {
-    const tranasctionFees = [] as Array<transactionFee>;
+  async getTransactionBatchFee({ state, commit }): Promise<void> {
     const syncProvider = walletData.get().syncProvider;
     await this.dispatch("wallet/restoreProviderConnection");
     const types = new Array(state.transactions.length).fill("Transfer") as "Transfer"[];
@@ -84,13 +92,12 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     types.push(types[0]);
     addresses.push(addresses[0]);
     const transactionFee = await syncProvider!.getTransactionsBatchFee(types, addresses, state.feeToken);
-    tranasctionFees.push({
+    commit("setTransactionBatchFee", {
       name: "Tx Batch Fee / zkSync",
       key: "txBatchFee",
       amount: BigNumber.from(transactionFee),
       token: state.feeToken,
     });
-    commit("setTransactionFees", tranasctionFees);
   },
   async getAccountUnlockFee({ state, commit }): Promise<void> {
     const syncProvider = walletData.get().syncProvider;

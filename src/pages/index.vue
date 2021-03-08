@@ -68,7 +68,12 @@
     </note>
 
     <div v-if="step==='main'" class="w-full">
-      <line-table-header class="mt-4 md:mt-7 mb-2"/>
+      <line-table-header class="mt-4 md:mt-7 mb-2">
+        <template slot="first">To Pay</template>
+        <template slot="second">L2 Balance</template>
+        <template slot="first:md">To Pay / L2 Balance</template>
+        <template slot="right">Deposit from mainnet</template>
+      </line-table-header>
       <transaction-token v-model="tokenItemsValid[token]" v-for="(total, token) in totalByToken" :key="token" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
@@ -83,6 +88,41 @@
         </div>
       </div>
     </div>
+    <div v-else-if="step==='transfer'" class="w-full">
+      <div class="font-firaCondensed font-medium text-3xl text-dark text-center pt-5 md:pt-10">Payment</div>
+      <div class="text-lg text-center pt-2" v-if="substep==='waitingUserConfirmation'">Confirm the transaction to transfer</div>
+      <div class="text-lg text-center pt-2" v-else-if="substep==='commiting'">Waiting for the transaction to be mined...</div>
+      <loader class="mx-auto mt-6" size="md" color="violet" />
+    </div>
+    <div v-else-if="step==='success'" class="w-full">
+      <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Thank you!</div>
+      <success-mark class="w-11/12 max-w-xxs mx-auto py-5" />
+      <div class="text-xl text-center font-light pt-2">Wasn’t that easy? Learn more about <a class="text-lightviolet underline" href="https://zksync.io/" target="_blank">zkSync</a></div>
+      <line-table-header class="mt-4 md:mt-7 mb-2">
+        <template slot="first">Paid</template>
+        <template slot="second">TX Hash</template>
+        <template slot="first:md">Paid / TX Hash</template>
+      </line-table-header>
+      <template v-for="(item,index) in finalTransactions">
+        <line-block :key="index">
+          <template slot="first">
+            <div class="tokenItem">
+              <div class="tokenName">{{getTokenByID(item.txData.tx.token)}}</div>
+            </div>
+          </template>
+          <template slot="second">
+            <div class="amount">{{ item.txData.tx.fee==='0'?item.txData.tx.amount:item.txData.tx.fee | formatToken(getTokenByID(item.txData.tx.token)) }}</div>
+          </template>
+          <template slot="third">
+            <a class="transactionLink" :href="getTxLink(item.txHash)" target="_blank">
+              <span class="text-gray text-xs col-span-2" v-if="item.txData.tx.fee!=='0'">Fee transaction</span>
+              <span class="text-xxs text-dark2">{{item.txHash}}</span>
+              <i class="text-xs text-violet pl-1 fas fa-external-link"></i>
+            </a>
+          </template>
+        </line-block>
+      </template>
+    </div>
 
 
   </div>
@@ -91,8 +131,10 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, Balance } from "@/plugins/types";
+import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction } from "@/plugins/types";
+import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import { changePubKey } from "@/plugins/walletActions/transaction";
+import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
@@ -105,11 +147,13 @@ export default Vue.extend({
   data() {
     return {
       modal: false,
-      step: "main",
+      step: "main",/* main, transfer, success */
+      substep: "",/* waitingUserConfirmation, commiting */
       loading: false,
       tokenItemsValid: {} as {
         [token: string]: Boolean
       },
+      finalTransactions: [] as Array<Transaction>,
       errorModal: false as
         | false
         | {
@@ -150,6 +194,12 @@ export default Vue.extend({
         }
       }
     },
+    getTokenByID(id: number) {
+      return this.$store.getters['tokens/getTokenByID'](id).symbol;
+    },
+    getTxLink(hash: string) {
+      return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
+    },
     async changePubKey() {
       this.loading = true;
       try {
@@ -177,7 +227,37 @@ export default Vue.extend({
       }
       this.loading = false;
     },
-    async transfer() {},
+    async transfer() {
+      if(this.transferAllowed) {
+        const transactionData = this.transactionData;
+        const getTransactionFee = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
+        this.step = "transfer";
+        this.substep = "waitingUserConfirmation";
+        try {
+          const transactions = await transactionBatch(transactionData.transactions, transactionData.feeToken, getTransactionFee.amount, this.$store);
+          console.log('transaction', transactions);
+          this.finalTransactions.push(...transactions);
+          this.substep = "commiting";
+          await transactions[0].awaitReceipt();/* Not sure if required. Wait for the first transaction (at least) to be confirmed */
+          this.step = "success";
+        } catch (error) {
+          this.step = "main";
+          if (error.message) {
+            if (!error.message.includes("User denied")) {
+              this.errorModal = {
+                headline: "Transfer error",
+                text: error.message
+              };
+            }
+          } else {
+            this.errorModal = {
+              headline: "Transfer error",
+              text: "Unknow error. Try again later."
+            };
+          }
+        }
+      }
+    },
   },
 });
 </script>

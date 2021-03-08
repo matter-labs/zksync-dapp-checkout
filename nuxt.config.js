@@ -214,6 +214,7 @@ export default {
           black2: "#3C4257",
           black: "#000",
           violet: "#5436D6",
+          lightviolet: "#7860df",
           red: "#F25F5C",
           green: "#057A55",
         },
@@ -225,6 +226,10 @@ export default {
               lineHeight: "0.75rem",
             },
           ],
+        },
+        maxWidth: {
+          ...tailwindDefault.maxWidth,
+          'xxs': '15rem'
         },
         fontFamily: {
           ...tailwindDefault.fontFamily,
