@@ -30,24 +30,24 @@ const handleFormatToken = (symbol: TokenSymbol, amount: GweiBalance) => {
 
 const handleFormatTokenPretty = (symbol: TokenSymbol, amount: GweiBalance) => {
   const firstFormated = handleFormatToken(symbol, amount);
-  const symbolsArr = firstFormated.split('.');
+  const symbolsArr = firstFormated.split(".");
   const symbolsArrInt = symbolsArr[0];
   let symbolsArrDecimal = symbolsArr[1];
-  if(!symbolsArrDecimal || symbolsArrDecimal==='0' || symbolsArrDecimal.length<5) {
+  if (!symbolsArrDecimal || symbolsArrDecimal === "0" || symbolsArrDecimal.length < 5) {
     return firstFormated;
   }
   let firstNotZero = -1;
-  for(let a=0; a<symbolsArrDecimal.length; a++) {
-    if(a>4 && firstNotZero!==-1) {
+  for (let a = 0; a < symbolsArrDecimal.length; a++) {
+    if (a > 4 && firstNotZero !== -1) {
       symbolsArrDecimal = symbolsArrDecimal.substr(0, a);
       break;
     }
-    if(firstNotZero===-1 && symbolsArrDecimal[a]!=='0') {
+    if (firstNotZero === -1 && symbolsArrDecimal[a] !== "0") {
       firstNotZero = a;
     }
   }
   return `${symbolsArrInt}.${symbolsArrDecimal}`;
-}
+};
 
 export default {
   parseToken,
@@ -72,24 +72,26 @@ export default {
 
   handleFormatTokenPrettyCeil: (symbol: TokenSymbol, amount: GweiBalance) => {
     const firstFormated = handleFormatTokenPretty(symbol, amount);
-    const symbolsArr = firstFormated.split('.');
+    const symbolsArr = firstFormated.split(".");
     const symbolsArrInt = symbolsArr[0];
     const symbolsArrDecimal = symbolsArr[1];
-    if(!symbolsArrDecimal || symbolsArrDecimal==='0' || symbolsArrDecimal.length<4) {
+    if (!symbolsArrDecimal || symbolsArrDecimal === "0" || symbolsArrDecimal.length < 4) {
       return firstFormated;
     }
     /* Converting "14.63316" to "1463316" and adding 1 */
-    var bigNumberString = BigNumber.from(`${symbolsArrInt}${symbolsArrDecimal}`).add("1").toString();
+    const bigNumberString = BigNumber.from(`${symbolsArrInt}${symbolsArrDecimal}`).add("1").toString();
     /*
       Knowing previous length of decimal part we get new decimal part.
       And then add padStart with zeros to handle value like 0.00000001 as it has been changed to just 1 when casting to BigNumber type
     */
-    var newDecimalPart = bigNumberString.substr(Math.max(0, bigNumberString.length-symbolsArrDecimal.length), bigNumberString.length).padStart(symbolsArrDecimal.length-1, '0');
+    const newDecimalPart = bigNumberString
+      .substr(Math.max(0, bigNumberString.length - symbolsArrDecimal.length), bigNumberString.length)
+      .padStart(symbolsArrDecimal.length - 1, "0");
     /*
       By getting bigNumberString from index 0 to index bigNumberString.length-newDecimalPart.length
       we can get an integer part of the new value
     */
-    return `${symbolsArrInt==='0'?'0':bigNumberString.substr(0, bigNumberString.length-newDecimalPart.length)}.${newDecimalPart}`;
+    return `${symbolsArrInt === "0" ? "0" : bigNumberString.substr(0, bigNumberString.length - newDecimalPart.length)}.${newDecimalPart}`;
   },
 
   getFormattedTotalPrice: (price: number, amount: number) => {

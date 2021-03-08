@@ -26,7 +26,7 @@ interface feesInterface {
   };
 }
 
-let getTransactionHistoryAgain = false;
+const getTransactionHistoryAgain = false;
 
 export const state = () => ({
   onboard: false as any,
@@ -317,12 +317,12 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       listVerified = newAccountState?.verified.balances || {};
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
-    const totalByToken = this.getters['checkout/getTotalByToken'];
-    const usedTokens = Object.entries(totalByToken).map(e => e[0]);
+    const totalByToken = this.getters["checkout/getTotalByToken"];
+    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
     for (const tokenSymbol of usedTokens) {
       const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
-      if(listCommitted.hasOwnProperty(tokenSymbol)) {
+      if (listCommitted.hasOwnProperty(tokenSymbol)) {
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
@@ -334,8 +334,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
           tokenPrice: price,
           restricted: +committedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol),
         } as Balance);
-      }
-      else {
+      } else {
         tokensList.push({
           symbol: tokenSymbol,
           status: "Pending",
@@ -375,15 +374,15 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       return localList.list;
     }
     const loadedTokens = await this.dispatch("tokens/loadAllTokens");
-    const totalByToken = this.getters['checkout/getTotalByToken'];
-    const usedTokens = Object.entries(totalByToken).map(e => e[0]);
+    const totalByToken = this.getters["checkout/getTotalByToken"];
+    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
     const loadInitialBalancesPromises = usedTokens.map(async (key) => {
       const currentToken = loadedTokens[key];
       try {
-        var unlocked = true;
+        let unlocked = true;
         const balance = await syncWallet.getEthereumBalance(key);
-        if(key!=='ETH') {
+        if (key !== "ETH") {
           unlocked = await syncWallet.isERC20DepositsApproved(currentToken.address);
         }
         return {
@@ -393,7 +392,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
           rawBalance: balance,
           formattedBalance: utils.handleFormatToken(currentToken.symbol, balance.toString()),
           symbol: currentToken.symbol,
-          unlocked
+          unlocked,
         };
       } catch (error) {
         this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
@@ -561,9 +560,9 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       if (getAccounts.length === 0) {
         return false;
       }
-      const transactionData = this.getters['checkout/getTransactionData'];
-      if(transactionData.fromAddress && transactionData.fromAddress.toLowerCase()!==getAccounts[0].toLowerCase()) {
-        this.commit('setCurrentModal', 'wrongAccountAddress');
+      const transactionData = this.getters["checkout/getTransactionData"];
+      if (transactionData.fromAddress && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
+        this.commit("setCurrentModal", "wrongAccountAddress");
         return false;
       }
       if (walletData.get().syncWallet) {
@@ -582,7 +581,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
 
       const zksync = await walletData.zkSync();
-      await dispatch('restoreProviderConnection');
+      await dispatch("restoreProviderConnection");
       const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, walletData.get().syncProvider);
 
       this.commit("account/setLoadingHint", "loadingData");
@@ -594,7 +593,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       await dispatch("getInitialBalances", true);
 
       await dispatch("checkLockedState");
-      await this.dispatch('checkout/getAccountUnlockedFee');
+      await this.dispatch("checkout/getAccountUnlockedFee");
 
       await watcher.changeNetworkSet(dispatch, this);
 

@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, GweiBalance, TokenSymbol, Tx, ETHOperation } from "@/plugins/types";
+import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
 
 /**
  * Transaction processing action
@@ -173,7 +173,7 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: an
     amount,
   });
   store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
-  return (depositResponse as ETHOperation);
+  return depositResponse as ETHOperation;
 };
 
 /**
@@ -186,8 +186,7 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: an
 export const unlockToken = async (address: Address, store: any) => {
   const wallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
-  const unlockTransaction = await wallet!.approveERC20TokenDeposits(address as string);
-  return unlockTransaction;
+  return await wallet!.approveERC20TokenDeposits(address as string);
 };
 
 /**
@@ -210,7 +209,7 @@ export const changePubKey = async (feeToken: TokenSymbol, store: any) => {
     const isSigningKeySet = await syncWallet!.isSigningKeySet();
     if (!isSigningKeySet) {
       const changePubkey = await syncWallet?.setSigningKey({
-        feeToken: feeToken,
+        feeToken,
         nonce: "committed",
         ethAuthType: "Onchain",
       });
@@ -221,7 +220,7 @@ export const changePubKey = async (feeToken: TokenSymbol, store: any) => {
     const isSigningKeySet = await syncWallet!.isSigningKeySet();
     if (!isSigningKeySet) {
       const changePubkey = await syncWallet!.setSigningKey({
-        feeToken: feeToken,
+        feeToken,
         ethAuthType: "ECDSA",
       });
       console.log("changePubkey", changePubkey);

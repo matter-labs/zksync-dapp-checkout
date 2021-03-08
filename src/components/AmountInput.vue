@@ -5,7 +5,7 @@
         <input ref="input" v-model="inputtedAmount" :style="{'width': `${width}px`}" :disabled="disabled" type="text" placeholder="Amount" maxlength="15" @focus="focused=true" @blur="focused=false" @keyup.enter="$emit('enter')">
         <span ref="sizeSpan" class="sizeSpan">{{inputtedAmount}}</span>
         <div class="penIcon">
-          <i class="fad fa-pen"></i>
+          <i class="fad fa-pen"/>
         </div>
       </div>
       <div class="underInput">

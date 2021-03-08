@@ -67,10 +67,10 @@
       </template>
     </note>
 
-    <div class="w-full" v-if="step==='main'">
+    <div v-if="step==='main'" class="w-full">
       <line-table-header class="mt-4 md:mt-7"/>
       <transaction-token v-for="(total, token) in totalByToken" :key="token" :token="token" :total="total.toString()" />
-      <div class="mainBtnsContainer" v-if="!accountLocked">
+      <div v-if="!accountLocked" class="mainBtnsContainer">
         <div class="mainBtns">
           <defbtn class="mr-3 desktopOnly" outline :disabled="loading" @click="cancel()">
             <i class="far fa-arrow-left"></i>
@@ -89,7 +89,7 @@
           </defbtn>
         </div>
       </div>
-      <div class="mainBtnsContainer" v-else>
+      <div v-else class="mainBtnsContainer">
         <div class="mainBtns">
           <defbtn class="mr-3 desktopOnly" outline :disabled="loading" @click="cancel()">
             <i class="far fa-arrow-left"></i>
@@ -122,51 +122,50 @@ import { changePubKey } from "@/plugins/walletActions/transaction";
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 
-
-
 export default Vue.extend({
   components: {
     connectedWallet,
-    lineTableHeader
+    lineTableHeader,
   },
   data() {
     return {
       modal: false,
-      step: 'main',
+      step: "main",
       loading: false,
-      errorModal: false as (false | {
-        headline: string,
-        text: string,
-      }),
-    }
+      errorModal: false as
+        | false
+        | {
+            headline: string;
+            text: string;
+          },
+    };
   },
   computed: {
-    zkBalances: function(): Array<Balance> {
-      return this.$store.getters['wallet/getzkBalances'];
+    zkBalances(): Array<Balance> {
+      return this.$store.getters["wallet/getzkBalances"];
     },
-    transactionData: function(): TransactionData {
-      return this.$store.getters['checkout/getTransactionData'];
+    transactionData(): TransactionData {
+      return this.$store.getters["checkout/getTransactionData"];
     },
-    totalByToken: function(): TotalByToken {
-      return this.$store.getters['checkout/getTotalByToken'];
+    totalByToken(): TotalByToken {
+      return this.$store.getters["checkout/getTotalByToken"];
     },
-    accountLocked: function(): Boolean {
-      return this.$store.getters['wallet/isAccountLocked'];
+    accountLocked(): Boolean {
+      return this.$store.getters["wallet/isAccountLocked"];
     },
   },
   methods: {
-    nextStep: function() {
-      if(this.step==='main') {
-        if(this.accountLocked) {
+    nextStep() {
+      if (this.step === "main") {
+        if (this.accountLocked) {
           this.changePubKey();
-        }
-        else {
+        } else {
           this.transfer();
         }
       }
     },
-    changePubKey: async function() {
-      this.loading=true;
+    async changePubKey() {
+      this.loading = true;
       try {
         await changePubKey(this.transactionData.feeToken, this.$store);
         await this.$store.dispatch("wallet/getInitialBalances", true);
@@ -174,27 +173,25 @@ export default Vue.extend({
         const createErrorModal = (text: string) => {
           this.errorModal = {
             headline: `Activating account error`,
-            text: text
-          }
-        }
+            text,
+          };
+        };
         if (error.message) {
           if (!error.message.includes("User denied")) {
             createErrorModal(error.message);
           }
-        }
-        else {
+        } else {
           createErrorModal("Unknow error. Try again later.");
         }
       }
-      this.loading=false;
+      this.loading = false;
     },
-    transfer: async function() {
-
-    },
-    cancel: async function() {
-      if(this.loading){return}
-      if(this.step==='main') {
-
+    async transfer() {},
+    async cancel() {
+      if (this.loading) {
+        return;
+      }
+      if (this.step === "main") {
       }
     },
   },

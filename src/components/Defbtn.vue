@@ -1,11 +1,11 @@
 <template>
   <button v-if="!to" class="defbtn" :class="[outline===true?'outline':'filled']" v-on="$listeners">
     <slot/>
-    <loader size="xs" :color="outline===true?'gray':'white'" v-if="loader" />
+    <loader v-if="loader" size="xs" :color="outline===true?'gray':'white'" />
   </button>
-  <nuxt-link :to="to" v-else class="defbtn" :class="[outline===true?'outline':'filled']" v-on="$listeners">
+  <nuxt-link v-else :to="to" class="defbtn" :class="[outline===true?'outline':'filled']" v-on="$listeners">
     <slot/>
-    <loader size="xs" :color="outline===true?'gray':'white'" v-if="loader"/>
+    <loader v-if="loader" size="xs" :color="outline===true?'gray':'white'"/>
   </nuxt-link>
 </template>
 
@@ -25,7 +25,7 @@ export default {
     to: {
       default: "",
       type: String,
-      required: false
+      required: false,
     },
   },
 };

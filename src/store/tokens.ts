@@ -47,22 +47,22 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
     return state.allTokens;
   },
   getTokenByID(state): Function {
-    return (id: number): (TokenItem | undefined) => {
+    return (id: number): TokenItem | undefined => {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
           return state.allTokens[symbol];
         }
       }
-    }
+    };
   },
   getTokenBySymbol(state): Function {
-    return (symbol: TokenSymbol): (TokenItem | undefined) => {
+    return (symbol: TokenSymbol): TokenItem | undefined => {
       for (const tokenProp in state.allTokens) {
         if (state.allTokens[tokenProp].symbol === symbol) {
           return state.allTokens[tokenProp];
         }
       }
-    }
+    };
   },
   getRestrictedTokens(state): Tokens {
     return Object.fromEntries(Object.entries(state.allTokens).filter((e: any) => state.restrictedTokens.includes(e[1].symbol)));
@@ -80,10 +80,10 @@ export const actions: ActionTree<TokensModuleState, RootState> = {
     if (Object.entries(getters.getAllTokens).length === 0) {
       await this.dispatch("wallet/restoreProviderConnection");
       const tokensList = await walletData.get().syncProvider?.getTokens();
-      const totalByToken = this.getters['checkout/getTotalByToken'];
-      const usedTokens = Object.entries(totalByToken).map(e => e[0]);
-      for(const symbol of Array.from(usedTokens)) {
-        await dispatch('getTokenPrice', symbol);
+      const totalByToken = this.getters["checkout/getTotalByToken"];
+      const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
+      for (const symbol of Array.from(usedTokens)) {
+        await dispatch("getTokenPrice", symbol);
       }
       commit("setAllTokens", tokensList);
       return tokensList || {};

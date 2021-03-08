@@ -1,9 +1,8 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { RootState } from "~/store";
 import { walletData } from "@/plugins/walletData";
 import { ETHOperation, DepositsInterface, ActiveDepositInterface } from "@/plugins/types";
 import { BigNumber } from "ethers";
-
+import { RootState } from "~/store";
 
 interface depositsInterface {
   [tokenSymbol: string]: Array<{
@@ -82,20 +81,20 @@ export const getters: GetterTree<TransactionModuleState, RootState> = {
     };
   },
   getActiveDeposits(state, getters): ActiveDepositInterface {
-    const deposits = getters['depositList'] as DepositsInterface
-    const activeDeposits = {} as DepositsInterface
+    const deposits = getters.depositList as DepositsInterface;
+    const activeDeposits = {} as DepositsInterface;
     const finalDeposits = {} as {
-      [tokenSymbol: string]: BigNumber,
-    }
+      [tokenSymbol: string]: BigNumber;
+    };
     for (const tokenSymbol in deposits) {
-      activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter((tx) => tx.status === 'Initiated')
+      activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter((tx) => tx.status === "Initiated");
     }
     for (const tokenSymbol in activeDeposits) {
       if (activeDeposits[tokenSymbol].length > 0) {
         if (!finalDeposits[tokenSymbol]) {
-          finalDeposits[tokenSymbol] = BigNumber.from('0')
+          finalDeposits[tokenSymbol] = BigNumber.from("0");
         }
-        for(const tx of activeDeposits[tokenSymbol]) {
+        for (const tx of activeDeposits[tokenSymbol]) {
           finalDeposits[tokenSymbol] = finalDeposits[tokenSymbol].add(tx.amount);
         }
       }
