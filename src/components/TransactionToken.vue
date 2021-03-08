@@ -18,7 +18,7 @@
           </template>
           <template slot="right-top">
             <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ needToDeposit | formatTokenPretty(token) }} {{ token }}</div>
+              <div class="value mr-2 md:mr-0">{{ needToDeposit | formatToken(token) }} {{ token }}</div>
               <div class="secondaryValue">{{ needToDeposit | formatUsdAmount(tokensPrices[token].price, token) }}</div>
             </div>
           </template>
@@ -147,15 +147,13 @@ export default Vue.extend({
     },
     needToDeposit(): GweiBalance {
       try {
-        return utils
-          .parseToken(this.token, utils.handleFormatTokenPrettyCeil(this.token, BigNumber.from(this.total).sub(BigNumber.from(this.zkBalance.rawBalance)).toString()))
-          .toString();
+        return BigNumber.from(this.total).sub(this.zkBalance.rawBalance).toString();
       } catch (error) {
         return "";
       }
     },
     enoughZkBalance(): Boolean {
-      return BigNumber.from(this.zkBalance.rawBalance).gt(this.total);
+      return BigNumber.from(this.zkBalance.rawBalance).gte(this.total);
     },
     activeDeposits(): ActiveDepositInterface {
       return this.$store.getters["transaction/getActiveDeposits"] as ActiveDepositInterface;
