@@ -1,6 +1,6 @@
 <template>
   <div class="allModalsContainer">
-    <modal :value="true" @close="closeModal()" v-if="currentModal==='wrongAccountAddress'">
+    <modal v-if="currentModal==='wrongAccountAddress'" :value="true" @close="closeModal()">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square"></i>
@@ -20,17 +20,17 @@ import { TransactionData } from "@/plugins/types";
 
 export default Vue.extend({
   computed: {
-    currentModal: function() {
-      return this.$store.getters['currentModal'];
+    currentModal() {
+      return this.$store.getters.currentModal;
     },
-    transactionData: function(): TransactionData {
-      return this.$store.getters['checkout/getTransactionData'];
+    transactionData(): TransactionData {
+      return this.$store.getters["checkout/getTransactionData"];
     },
   },
   methods: {
-    closeModal: function() {
-      this.$store.dispatch('closeActiveModal');
-    }
+    closeModal() {
+      this.$store.dispatch("closeActiveModal");
+    },
   },
 });
 </script>

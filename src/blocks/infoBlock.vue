@@ -35,7 +35,7 @@
         </template>
       </note>
       <div class="lg:mt-5"></div>
-      <values-block class="mt-3" v-for="(item,index) in transactionData.transactions" :key="index">
+      <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-3">
         <template slot="left-top">
           <div class="headline">{{item.description}}</div>
         </template>
@@ -66,8 +66,8 @@
           </div>
         </template>
       </values-block>
-      <max-height :updateValue="allFees.length" mobileOnly v-model="feesOpened">
-        <values-block class="mt-1 lg:mt-3" v-for="(item, index) in allFees" :key="index">
+      <max-height v-model="feesOpened" :update-value="allFees.length" mobile-only>
+        <values-block v-for="(item, index) in allFees" :key="index" class="mt-1 lg:mt-3">
           <template slot="left-top">
             <div class="headline">{{item.name}}</div>
           </template>
@@ -91,9 +91,9 @@
               <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"></i>
             </span>
           </div>
-          <max-height :updateValue="allFees.length" mobileOnly v-model="totalOpened">
+          <max-height v-model="totalOpened" :update-value="allFees.length" mobile-only>
             <div class="md:flex flex-col items-end">
-            <div class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 mt-2" v-for="(item, token) in totalByToken" :key="token">
+            <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 mt-2">
               <div>{{ item | formatToken(token) }} {{token}}</div>
               <!-- <img class="ml-1 w-4 h-4 object-contain" src="/tokens/eth.svg" alt="ETH"> -->
             </div>
@@ -129,33 +129,33 @@ export default Vue.extend({
       totalOpened: false,
       feesOpened: false,
       modal: false,
-    }
+    };
   },
   computed: {
-    transactionData: function(): TransactionData {
-      return this.$store.getters['checkout/getTransactionData'];
+    transactionData(): TransactionData {
+      return this.$store.getters["checkout/getTransactionData"];
     },
-    allFees: function(): Array<transactionFee> {
-      return this.$store.getters['checkout/getAllFees'];
+    allFees(): Array<transactionFee> {
+      return this.$store.getters["checkout/getAllFees"];
     },
-    totalUSD: function(): string {
+    totalUSD(): string {
       const transactionData = this.transactionData;
       const allFees = this.allFees;
       const tokensPrices = this.tokensPrices;
-      var totalUSD = 0;
-      for(const item of transactionData.transactions) {
-        totalUSD += parseFloat(this.$options.filters!.formatUsdAmount(item.amount, tokensPrices[item.token].price, item.token).replaceAll(/[~$<]/g,''));
+      let totalUSD = 0;
+      for (const item of transactionData.transactions) {
+        totalUSD += parseFloat(this.$options.filters!.formatUsdAmount(item.amount, tokensPrices[item.token].price, item.token).replaceAll(/[~$<]/g, ""));
       }
-      for(const item of allFees) {
-        totalUSD += parseFloat(this.$options.filters!.formatUsdAmount(item.amount, tokensPrices[item.token].price, item.token).replaceAll(/[~$<]/g,''));
+      for (const item of allFees) {
+        totalUSD += parseFloat(this.$options.filters!.formatUsdAmount(item.amount, tokensPrices[item.token].price, item.token).replaceAll(/[~$<]/g, ""));
       }
-      return totalUSD < 0.01 ? `<0.01` : `~${totalUSD.toFixed(2)}`
+      return totalUSD < 0.01 ? `<0.01` : `~${totalUSD.toFixed(2)}`;
     },
-    totalByToken: function(): TotalByToken {
-      return this.$store.getters['checkout/getTotalByToken'];
+    totalByToken(): TotalByToken {
+      return this.$store.getters["checkout/getTotalByToken"];
     },
-    tokensPrices: function(): TokenPrices {
-      return this.$store.getters['tokens/getTokenPrices'];
+    tokensPrices(): TokenPrices {
+      return this.$store.getters["tokens/getTokenPrices"];
     },
   },
 });

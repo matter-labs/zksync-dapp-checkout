@@ -15,7 +15,7 @@
               <span>zkWallet</span>
               <i class="far fa-external-link-alt"></i>
             </defbtn>
-            <defbtn @click="logout()" outline square>
+            <defbtn outline square @click="logout()">
               <i class="far fa-power-off"></i>
             </defbtn>
           </div>
@@ -31,18 +31,18 @@ import Vue from "vue";
 import { Address } from "@/plugins/types";
 
 export default Vue.extend({
-  methods: {
-    logout: function (): void {
-      this.$store.dispatch("wallet/logout");
-      this.$router.push("/connect");
-    },
-  },
   computed: {
-    ownAddress: function (): Address {
+    ownAddress(): Address {
       let address = this.$store.getters["account/address"];
       address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
       return address;
     },
-  }
+  },
+  methods: {
+    logout(): void {
+      this.$store.dispatch("wallet/logout");
+      this.$router.push("/connect");
+    },
+  },
 });
 </script>

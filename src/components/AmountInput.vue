@@ -2,8 +2,8 @@
   <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]" @click.self="focusInput()">
     <div class="leftSide" @click="focusInput()">
       <div class="inputContainer">
-        <input ref="input" :style="{'width': `${width}px`}" :disabled="disabled" type="text" placeholder="Amount" maxlength="15" v-model="inputtedAmount" @focus="focused=true" @blur="focused=false" @keyup.enter="$emit('enter')">
-        <span class="sizeSpan" ref="sizeSpan">{{inputtedAmount}}</span>
+        <input ref="input" v-model="inputtedAmount" :style="{'width': `${width}px`}" :disabled="disabled" type="text" placeholder="Amount" maxlength="15" @focus="focused=true" @blur="focused=false" @keyup.enter="$emit('enter')">
+        <span ref="sizeSpan" class="sizeSpan">{{inputtedAmount}}</span>
         <div class="penIcon">
           <i class="fad fa-pen"></i>
         </div>
@@ -57,18 +57,18 @@ export default Vue.extend({
       error: "",
       focused: false,
       width: 0,
-    }
+    };
   },
   watch: {
     inputtedAmount: {
       immediate: true,
       handler(val) {
         let strVal = val;
-        if(typeof(val)==='string') {
-          strVal = strVal.trim().replace(/,/g,'.');
-          let dotParts = strVal.split('.');
-          if(dotParts.length>2) {
-            strVal = `${dotParts[0]}.${dotParts.splice(1, dotParts.length).join('')}`;
+        if (typeof val === "string") {
+          strVal = strVal.trim().replace(/,/g, ".");
+          const dotParts = strVal.split(".");
+          if (dotParts.length > 2) {
+            strVal = `${dotParts[0]}.${dotParts.splice(1, dotParts.length).join("")}`;
           }
           this.inputtedAmount = strVal;
         }
@@ -78,7 +78,7 @@ export default Vue.extend({
           });
         }, 0);
         this.emitValue(strVal);
-      }
+      },
     },
     token() {
       if (!this.inputtedAmount) {
@@ -102,7 +102,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    emitValue: function (val: string): void {
+    emitValue(val: string): void {
       const trimmed = val.trim();
       this.inputtedAmount = trimmed;
       if (val !== trimmed) {
@@ -115,7 +115,7 @@ export default Vue.extend({
         this.$emit("input", "");
       }
     },
-    validateAmount: function (val: string): void {
+    validateAmount(val: string): void {
       if (!val || !parseFloat(val as string)) {
         this.error = "Wrong amount inputted";
         return;
@@ -157,17 +157,19 @@ export default Vue.extend({
     },
 
     /* Misc */
-    focusInput: function(): void {
+    focusInput(): void {
       if (this.disabled || this.focused) {
         return;
       }
       (this.$refs.input as HTMLElement).focus();
     },
-    calcWidth: function(): void {
-      var sizeSpan = this.$refs.sizeSpan;
-      if(!sizeSpan){return}
-      let inputSize = (sizeSpan as HTMLElement).getBoundingClientRect().width;
-      this.width = inputSize+4;
+    calcWidth(): void {
+      const sizeSpan = this.$refs.sizeSpan;
+      if (!sizeSpan) {
+        return;
+      }
+      const inputSize = (sizeSpan as HTMLElement).getBoundingClientRect().width;
+      this.width = inputSize + 4;
     },
   },
 });
