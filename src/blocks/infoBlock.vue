@@ -34,7 +34,7 @@
         <template slot="right-top">
           <div class="flex items-center">
             <div class="flex md:flex-col">
-              <div class="value mr-2 md:mr-0">{{ totalFees | formatUsdAmount(tokensPrices['ETH'] && tokensPrices['ETH'].price, 'ETH') }}</div>
+              <div class="value mr-2 md:mr-0">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
             </div>
           </div>
         </template>
@@ -64,7 +64,7 @@
         </div>
         <div class="flex-1 flex flex-col items-end">
           <div class="font-firaCondensed font-bold text-lg text-violet md:mt-1">
-            ${{totalUSD}}
+            {{totalUSD}}
           </div>
           <max-height v-model="totalOpened" :update-value="allFees.length">
             <div class="md:flex flex-col items-end">
@@ -128,7 +128,7 @@ export default Vue.extend({
       for (const item of [...transactionData.transactions, ...allFees]) {
         totalUSD += +tokensPrices[item.token].price * +utils.handleFormatToken(item.token, item.amount as string);
       }
-      return totalUSD < 0.01 ? `<0.01` : `${totalUSD.toFixed(2)}`;
+      return totalUSD < 0.01 ? `<$0.01` : `$${totalUSD.toFixed(2)}`;
     },
     totalByToken(): TotalByToken {
       return this.$store.getters["checkout/getTotalByToken"];

@@ -11,7 +11,7 @@
         </template>
         <template slot="right-top">
           <div class="flex items-center flex-col md:flex-row">
-            <defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" to="///wallet.zksync.io">
+            <defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="currentNetwork==='rinkeby'?'///stage.zksync.io':'///wallet.zksync.io'">
               <span>Open wallet</span>
               <i class="fas fa-external-link"/>
             </defbtn>
@@ -30,6 +30,7 @@
 import Vue from "vue";
 
 import { Address } from "@/plugins/types";
+import { ETHER_NETWORK_NAME } from "@/plugins/build";
 
 export default Vue.extend({
   computed: {
@@ -38,6 +39,9 @@ export default Vue.extend({
       address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
       return address;
     },
+    currentNetwork(): string {
+      return ETHER_NETWORK_NAME;
+    }
   },
   methods: {
     logout(): void {
