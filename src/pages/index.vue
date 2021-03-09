@@ -95,7 +95,7 @@
         <line-block :key="index">
           <template slot="first">
             <div class="tokenItem">
-              <div class="tokenName">{{getTokenByID(item.txData.tx.token)}}</div>
+              <div class="tokenName">{{getTokenByID(typeof(item.txData.tx.token)==='number'?item.txData.tx.token:item.txData.tx.feeToken)}}</div>
             </div>
           </template>
           <template slot="second">
