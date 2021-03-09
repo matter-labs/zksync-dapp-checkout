@@ -82,7 +82,7 @@ export const actions: ActionTree<TokensModuleState, RootState> = {
       const tokensList = await walletData.get().syncProvider?.getTokens();
       const totalByToken = this.getters["checkout/getTotalByToken"];
       const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
-      for (const symbol of Array.from(usedTokens)) {
+      for (const symbol of usedTokens) {
         await dispatch("getTokenPrice", symbol);
       }
       commit("setAllTokens", tokensList);
