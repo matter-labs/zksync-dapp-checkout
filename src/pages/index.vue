@@ -99,7 +99,7 @@
             </div>
           </template>
           <template slot="second">
-            <div class="amount">{{ item.txData.tx.fee==='0'?item.txData.tx.amount:item.txData.tx.fee | formatToken(getTokenByID(item.txData.tx.token)) }}</div>
+            <div class="amount">{{ item.txData.tx.fee==='0'?item.txData.tx.amount:item.txData.tx.fee | formatToken(getTokenByID(typeof(item.txData.tx.token)==='number'?item.txData.tx.token:item.txData.tx.feeToken)) }}</div>
           </template>
           <template slot="third">
             <a class="transactionLink linkDefault" :href="getTxLink(item.txHash)" target="_blank">
