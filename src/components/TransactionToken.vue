@@ -117,7 +117,7 @@ export default Vue.extend({
         text: "",
       },
       step: "default" /* default, depositing, unlocking */,
-      subStep: "" /* depositing: [waitingUserConfirmation,depositing,committing], unlocking: [waitingUserConfirmation,committing,confirming] */,
+      subStep: "", /* depositing: [waitingUserConfirmation,depositing,committing], unlocking: [waitingUserConfirmation,committing,confirming] */
       depositAmount: "",
     };
   },
@@ -294,8 +294,8 @@ export default Vue.extend({
         this.step = "default";
         const createErrorModal = (text: string) => {
           this.errorModal = {
-            headline: `Unlocking ${this.token} error`,
-            text,
+              headline: `Unlocking token error`,
+              text,
           };
         };
         if (error.message) {

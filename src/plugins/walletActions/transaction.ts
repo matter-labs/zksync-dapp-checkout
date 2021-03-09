@@ -152,11 +152,11 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
  * Deposit action method
  *
  * @param {TokenSymbol} token
- * @param {GweiBalance} amount
+ * @param {string} amount
  * @param store
  * @returns {Promise<ETHOperation>}
  */
-export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: any): Promise<ETHOperation> => {
+export const deposit = async (token: TokenSymbol, amount: string | BigNumber, store: any): Promise<ETHOperation> => {
   const wallet = walletData.get().syncWallet;
   const depositResponse = await wallet?.depositToSyncFromEthereum({
     depositTo: wallet.address(),

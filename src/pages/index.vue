@@ -240,7 +240,7 @@ export default Vue.extend({
           const hashes = transactions.map((tx) => tx.txHash);
           manager.notifyHashes(hashes);
           this.finalTransactions.push(...transactions);
-          this.subStep = "commiting";
+          this.subStep = "committing";
           await transactions[0].awaitReceipt();
           this.subStep = "committing";
           await transactions[0].awaitReceipt(); /* Not sure if required. Wait for the first transaction (at least) to be confirmed */
@@ -257,7 +257,7 @@ export default Vue.extend({
           } else {
             this.errorModal = {
               headline: "Transfer error",
-              text: "Unknow error. Try again later.",
+              text: "Unknown error. Try again later.",
             };
           }
         }

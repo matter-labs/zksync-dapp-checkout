@@ -23,7 +23,7 @@ const parseToken = (symbol: TokenSymbol, amount: DecimalBalance | number) => {
   return walletData.get().syncProvider!.tokenSet.parseToken(symbol, amount.toString());
 };
 
-const handleFormatToken = (symbol: TokenSymbol, amount: GweiBalance) => {
+const handleFormatToken = (symbol: TokenSymbol, amount: any) => {
   if (!amount || amount === "undefined") return "0";
   return walletData.get().syncProvider!.tokenSet.formatToken(symbol, amount);
 };
