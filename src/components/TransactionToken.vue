@@ -26,7 +26,7 @@
           <template slot="right-top">
             <div class="flex md:flex-col whitespace-nowrap">
               <div class="value mr-2 md:mr-0">{{ needToDeposit | formatToken(token) }} {{ token }}</div>
-              <div class="secondaryValue">{{ needToDeposit | formatUsdAmount(tokensPrices[token].price, token) }}</div>
+              <div class="secondaryValue">{{ needToDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}</div>
             </div>
           </template>
         </values-block>

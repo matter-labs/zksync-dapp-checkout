@@ -130,6 +130,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
 
 import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction } from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
@@ -234,7 +235,15 @@ export default Vue.extend({
         try {
           const transactions = await transactionBatch(transactionData.transactions, transactionData.feeToken, getTransactionFee.amount, this.$store);
           console.log("transaction", transactions);
+
+          const manager = ZkSyncCheckoutManager.getManager();
+          // We need to send the tx hashes to the client long before the
+          // awaitReceipt is called
+          const hashes = transactions.map((tx) => tx.txHash);
+          manager.notifyHashes(hashes);
           this.finalTransactions.push(...transactions);
+          this.substep = "commiting";
+          await transactions[0].awaitReceipt();
           this.substep = "committing";
           await transactions[0].awaitReceipt(); /* Not sure if required. Wait for the first transaction (at least) to be confirmed */
           this.step = "success";
