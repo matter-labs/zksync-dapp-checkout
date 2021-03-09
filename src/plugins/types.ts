@@ -187,6 +187,7 @@ export declare class Wallet {
       nonce?: Nonce;
     }[],
   ): Promise<Transaction[]>;
+  batchBuilder: any;
 
   syncTransfer(transfer: { to: Address; token: TokenLike; amount: BigNumberish; fee?: BigNumberish; nonce?: Nonce }): Promise<Transaction>;
   signWithdrawFromSyncToEthereum(withdraw: { ethAddress: string; token: TokenLike; amount: BigNumberish; fee: BigNumberish; nonce: number }): Promise<SignedTransaction>;
@@ -200,7 +201,7 @@ export declare class Wallet {
   }): Promise<Transaction>;
 
   isSigningKeySet(): Promise<boolean>;
-  signSetSigningKey(changePubKey: { feeToken: TokenLike; fee: BigNumberish; nonce: number; onchainAuth: boolean }): Promise<SignedTransaction>;
+  signSetSigningKey(changePubKey: { feeToken: TokenLike; fee: BigNumberish; nonce: number; ethAuthType: string }): Promise<SignedTransaction>;
   setSigningKey(changePubKey: { feeToken: TokenLike; fee?: BigNumberish; nonce?: Nonce; onchainAuth?: boolean; ethAuthType: string }): Promise<Transaction>;
   isOnchainAuthSigningKeySet(nonce?: Nonce): Promise<boolean>;
   onchainAuthSigningKey(nonce?: Nonce, ethTxOptions?: ethers.providers.TransactionRequest): Promise<ContractTransaction>;

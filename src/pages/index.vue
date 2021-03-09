@@ -77,12 +77,8 @@
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn v-if="accountLocked" :loader="loading" :disabled="loading" @click="nextStep()">
-            <i class="fas fa-unlock-alt"/>
-            <span>Activate the account</span>
-          </defbtn>
-          <defbtn v-else :disabled="!transferAllowed" :loading="loading" @click="nextStep()">
-            <i class="fas fa-paper-plane"/>
+          <defbtn :disabled="!transferAllowed" @click="nextStep()">
+            <i class="fas fa-paper-plane"></i>
             <span>Complete payment</span>
           </defbtn>
         </div>
@@ -118,11 +114,11 @@
           </template>
           <template slot="third">
             <a class="transactionLink linkDefault" :href="getTxLink(item.txHash)" target="_blank">
-<!--              <span v-if="item.txData.tx.fee!=='0'" class="text-gray text-xs col-span-2">Fee transaction</span>-->
-              <span class="text-xxs text-right">
+              <!--<span v-if="item.txData.tx.fee!=='0'" class="text-gray text-xs col-span-2">Fee transaction</span>-->
+              <div class="font-light txHash text-xxs md:text-right">
                 {{item.txHash | formatTransaction}}
-                <i class="text-xs text-violet pl-1 fas fa-external-link"/>
-              </span>
+              </div>
+              <i class="text-xs text-violet pl-1 fal fa-external-link"/>
             </a>
           </template>
         </line-block>
@@ -134,13 +130,14 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction } from "@/plugins/types";
+import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, Transfer, ZkSyncTransaction, ChangePubKey } from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { changePubKey, transactionBatch } from "@/plugins/walletActions/transaction";
+import { changePubKeyGetTx, transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
+import { ChangePubkeyTypes } from "~/../node_modules/zksync/build/types";
 
 export default Vue.extend({
   components: {
@@ -152,7 +149,6 @@ export default Vue.extend({
       modal: false,
       step: "main" /* main, transfer, success */,
       subStep: "" /* waitingUserConfirmation, committing */,
-      loading: false,
       tokenItemsValid: {} as {
         [token: string]: Boolean;
       },
@@ -190,11 +186,7 @@ export default Vue.extend({
   methods: {
     nextStep() {
       if (this.step === "main") {
-        if (this.accountLocked) {
-          this.changePubKey();
-        } else {
-          this.transfer();
-        }
+        this.transfer();
       }
     },
     getTokenByID(id: number) {
@@ -203,32 +195,6 @@ export default Vue.extend({
     getTxLink(hash: string) {
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
     },
-    async changePubKey() {
-      this.loading = true;
-      try {
-        await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
-        await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
-      } catch (error) {
-        const createErrorModal = (text: string) => {
-          this.errorModal = {
-            headline: `Activating account error`,
-            text,
-          };
-        };
-        if (error.message) {
-          if (!error.message.includes("User denied")) {
-            if (error.message.includes("Account does not exist in the zkSync network")) {
-              createErrorModal("Please, make deposit or request tokens in order to activate the account.");
-            } else {
-              createErrorModal(error.message);
-            }
-          }
-        } else {
-          createErrorModal("Unknown error. Try again later.");
-        }
-      }
-      this.loading = false;
-    },
     async transfer() {
       if (this.transferAllowed) {
         const transactionData = this.transactionData;
@@ -236,7 +202,19 @@ export default Vue.extend({
         this.step = "transfer";
         this.subStep = "waitingUserConfirmation";
         try {
-          const transactions = await transactionBatch(transactionData.transactions, transactionData.feeToken, getTransactionFee.amount, this.$store);
+          let transactionsList = [] as Array<ZkSyncTransaction>;
+          transactionsList.push(...transactionData.transactions);
+          /* if(this.accountLocked) {
+            const changePubKeyTX = await changePubKeyGetTx(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
+            console.log('changePubKeyTX', changePubKeyTX);
+            transactionsList.unshift({
+              to: (changePubKeyTX as ChangePubKey).address,
+              amount: "0",
+              fee: (changePubKeyTX as Transfer).fee,
+              token: this.transactionData.feeToken,
+            });
+          } */
+          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.accountLocked, this.$store);
           console.log("transaction", transactions);
 
           const manager = ZkSyncCheckoutManager.getManager();
@@ -255,14 +233,22 @@ export default Vue.extend({
           this.step = "main";
           if (error.message) {
             if (!error.message.includes("User denied")) {
-              this.errorModal = {
-                headline: "Transfer error",
-                text: error.message,
-              };
+              if (error.message.includes("Account does not exist in the zkSync network")) {
+                this.errorModal = {
+                  headline: "Payment error",
+                  text: "Please, make deposit or request tokens in order to activate the account.",
+                };
+              }
+              else {
+                this.errorModal = {
+                  headline: "Payment error",
+                  text: error.message,
+                };
+              }
             }
           } else {
             this.errorModal = {
-              headline: "Transfer error",
+              headline: "Payment error",
               text: "Unknown error. Try again later.",
             };
           }

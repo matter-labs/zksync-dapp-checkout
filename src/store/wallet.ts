@@ -318,7 +318,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
     const totalByToken = this.getters["checkout/getTotalByToken"];
-    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
+    let usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
     for (const tokenSymbol of usedTokens) {
       const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);

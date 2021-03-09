@@ -85,11 +85,8 @@
     grid-auto-rows: max-content;
     align-items: center;
     grid-column-gap: 5px;
-    font-weight: 300 !important;
-    i.fas{
-      font-weight: 300 !important;
-    }
-    a {
+    
+    .txHash {
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;

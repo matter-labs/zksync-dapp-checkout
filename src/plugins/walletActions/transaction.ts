@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, ZkSyncTransaction, Nonce } from "@/plugins/types";
+import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, ZkSyncTransaction, Transfer, Nonce } from "@/plugins/types";
 import { BigNumber, BigNumberish } from "ethers";
 
 /**
@@ -13,36 +13,34 @@ import { BigNumber, BigNumberish } from "ethers";
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
-export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, store: any) => {
+export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: Boolean, store: any) => {
   const syncWallet = walletData.get().syncWallet;
-  let nonce = await syncWallet!.getNonce("committed");
-  let transactionsaArray = [] as Array<{
-    fee: BigNumberish;
-    nonce: Nonce;
-    amount: BigNumberish;
-    to: Address;
-    token: TokenSymbol;
-  }>;
-
+  await store.dispatch("wallet/restoreProviderConnection");
+  const nonce = await syncWallet!.getNonce("committed");
+  let batchBuilder = syncWallet!.batchBuilder(nonce);
+  if(changePubKey===true) {
+    const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
+    batchBuilder.addChangePubKey({feeToken, ethAuthType, fee: store.getters["checkout/getAccountUnlockFee"]});
+  }
   for(const tx of transactions) {
-    transactionsaArray.push({
+    batchBuilder.addTransfer({
       fee: 0,
-      nonce,
       amount: tx.amount,
       to: (tx.to as Address),
-      token: tx.token,
+      token: (tx.token as string),
     });
-    nonce+=1;
   }
-  const feeTx = {
+  batchBuilder.addTransfer({ //Fee tx
     fee: fee,
     nonce,
     amount: 0,
     to: syncWallet!.address(),
     token: feeToken,
-  };
-  const transferTransaction = await syncWallet!.syncMultiTransfer([...transactionsaArray, feeTx]);
-  return transferTransaction;
+  });
+  const batchTransactionData = await batchBuilder.build();
+  const zksync = await walletData.zkSync();
+  const batchTransaction = await zksync.submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature])
+  return batchTransaction;
 };
 
 /**
@@ -187,29 +185,33 @@ export const unlockToken = async (address: Address, store: any) => {
  * @param store
  * @returns {Promise<void>}
  */
-export const changePubKey = async (feeToken: TokenSymbol, fee: BigNumber, store: any) => {
+export const changePubKeyGetTx = async (feeToken: TokenSymbol, fee: BigNumber, store: any) => {
   const syncWallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
+  const nonce = await syncWallet!.getNonce("committed");
   if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
-    const changePubkey = await syncWallet?.setSigningKey({
+    const changePubkey = await syncWallet!.signSetSigningKey({
       feeToken,
       fee,
-      nonce: "committed",
+      nonce,
       ethAuthType: "Onchain",
     });
-    await changePubkey?.awaitReceipt();
+    return changePubkey.tx;
   } else {
-    const changePubkey = await syncWallet!.setSigningKey({
+    const changePubkey = await syncWallet!.signSetSigningKey({
       feeToken,
       fee,
+      nonce: nonce+1,
       ethAuthType: "ECDSA",
     });
-    await changePubkey.awaitReceipt();
+    console.log('changePubkey', changePubkey);
+    return changePubkey.tx;
   }
-  
+  /*
   const isSigningKeySet = await syncWallet?.isSigningKeySet();
   store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
 
   const newAccountState = await syncWallet?.getAccountState();
   walletData.set({ accountState: newAccountState });
+  */
 };
