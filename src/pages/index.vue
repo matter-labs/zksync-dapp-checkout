@@ -56,7 +56,7 @@
 
     <connected-wallet/>
 
-    <note v-if="accountLocked">
+    <note class="mb-2" v-if="accountLocked">
       <template slot="icon">
         <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"/>
       </template>
@@ -136,7 +136,7 @@ import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
-import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
+import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
 
 export default Vue.extend({
   components: {
@@ -203,23 +203,13 @@ export default Vue.extend({
         try {
           let transactionsList = [] as Array<ZkSyncTransaction>;
           transactionsList.push(...transactionData.transactions);
-          /* if(this.accountLocked) {
-            const changePubKeyTX = await changePubKeyGetTx(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
-            console.log('changePubKeyTX', changePubKeyTX);
-            transactionsList.unshift({
-              to: (changePubKeyTX as ChangePubKey).address,
-              amount: "0",
-              fee: (changePubKeyTX as Transfer).fee,
-              token: this.transactionData.feeToken,
-            });
-          } */
           const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.accountLocked, this.$store);
           console.log("batch transaction", transactions);
 
           const manager = ZkSyncCheckoutManager.getManager();
           // We need to send the tx hashes to the client long before the
           // awaitReceipt is called
-          const hashes = transactions.map((tx) => tx.txHash);
+          const hashes = transactions.filter((tx: any) => tx.txData.tx.type==='Transfer').map((tx: any) => tx.txHash);
           // The last hash is of the fee transaction
           manager.notifyHashes(hashes.slice(0,-1));
 

@@ -1,7 +1,68 @@
 import { walletData } from '@/plugins/walletData';
-import { submitSignedTransactionsBatch } from 'zksync/src/wallet';
-import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction } from '@/plugins/types';
+import { Address, ETHOperation, ZKSyncTxError, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction, Provider } from '@/plugins/types';
 import { BigNumber, BigNumberish } from 'ethers';
+import { SignedTransaction, TransactionReceipt, TxEthSignature } from 'zksync/src/types';
+
+
+class Transaction {
+  state: 'Sent' | 'Committed' | 'Verified' | 'Failed';
+  error?: ZKSyncTxError;
+
+  // @ts-ignore
+  constructor(public txData, public txHash: string, public sidechainProvider: Provider) {
+    this.state = 'Sent';
+  }
+
+  async awaitReceipt(): Promise<TransactionReceipt> {
+    this.throwErrorIfFailedState();
+
+    // @ts-ignore
+    if (this.state !== 'Sent') return;
+
+    const receipt = await this.sidechainProvider.notifyTransaction(this.txHash, 'COMMIT');
+
+    if (!receipt.success) {
+      this.setErrorState(new ZKSyncTxError(`zkSync transaction failed: ${receipt.failReason}`, receipt));
+      this.throwErrorIfFailedState();
+    }
+
+    this.state = 'Committed';
+    return receipt;
+  }
+
+  async awaitVerifyReceipt(): Promise<TransactionReceipt> {
+    await this.awaitReceipt();
+    const receipt = await this.sidechainProvider.notifyTransaction(this.txHash, 'VERIFY');
+
+    this.state = 'Verified';
+    return receipt;
+  }
+
+  private setErrorState(error: ZKSyncTxError) {
+    this.state = 'Failed';
+    this.error = error;
+  }
+
+  private throwErrorIfFailedState() {
+    if (this.state === 'Failed') throw this.error;
+  }
+}
+
+
+export const submitSignedTransactionsBatch = async (
+  provider: Provider,
+  signedTxs: SignedTransaction[],
+  ethSignatures?: TxEthSignature[]
+): Promise<Transaction[]> => {
+  const transactionHashes = await provider.submitTxsBatch(
+    signedTxs.map((tx) => {
+      return { tx: tx.tx, signature: tx.ethereumSignature };
+    }),
+    // @ts-ignore
+    ethSignatures
+  );
+  return transactionHashes.map((txHash, idx) => new Transaction(signedTxs[idx], txHash, provider));
+}
 
 /**
  * Transaction processing action
@@ -30,7 +91,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
       token: (tx.token as string),
     });
   }
-  batchBuilder.addTransfer({ //Fee tx
+  batchBuilder.addTransfer({
     fee: fee,
     nonce,
     amount: 0,
@@ -38,9 +99,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
     token: feeToken,
   });
   const batchTransactionData = await batchBuilder.build();
-  // @ts-ignore: Unreachable code error
-  const batchTransaction = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
-  return batchTransaction;
+  return await submitSignedTransactionsBatch(<Provider>syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
 };
 
 /**
@@ -164,6 +223,7 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, st
   //store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse as ETHOperation;
 };
+
 
 /**
  * Unlock token action method
