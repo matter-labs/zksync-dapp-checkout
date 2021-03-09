@@ -193,8 +193,14 @@ export default Vue.extend({
           // We need to send the tx hashes to the client long before the
           // awaitReceipt is called
           const hashes = transactions.filter((tx: any) => tx.txData.tx.type==='Transfer').map((tx: any) => tx.txHash);
-          // The last hash is of the fee transaction
-          manager.notifyHashes(hashes.slice(0,-1));
+
+          // There are both setSigningKey at the begining and the fee at the end
+          if (transactions.length == transactionsList.length + 2) {
+            manager.notifyHashes(hashes.slice(1, -1));
+          } else {
+            // There is only fee tx
+            manager.notifyHashes(hashes.slice(0, -1));
+          }
 
           // @ts-ignore
           this.finalTransactions.push(...transactions);
