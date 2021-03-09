@@ -119,13 +119,13 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction } from "@/plugins/types";
+import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction} from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
-import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
+import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
 
 export default Vue.extend({
   components: {
@@ -172,7 +172,7 @@ export default Vue.extend({
       }
     },
     getTokenByID(id: number) {
-      return this.$store.getters["tokens/getTokenByID"](id).symbol;
+      return this.$store.getters["tokens/getTokenByID"](id)?.symbol;
     },
     getTxLink(hash: string) {
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;

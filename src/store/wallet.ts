@@ -526,13 +526,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
   },
   async checkLockedState({ commit }): Promise<boolean> {
     const syncWallet = walletData.get().syncWallet;
-    if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
-      const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
-      if (!isOnchainAuthSigningKeySet) {
-        const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
-        await onchainAuthTransaction?.wait();
-      }
-    }
     const isSigningKeySet = await syncWallet!.isSigningKeySet();
     commit("setAccountLockedState", !isSigningKeySet);
     return !isSigningKeySet;
