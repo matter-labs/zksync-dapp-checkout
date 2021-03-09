@@ -1,24 +1,25 @@
-import { walletData } from "@/plugins/walletData";
-import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, ZkSyncTransaction, Transfer, Nonce } from "@/plugins/types";
-import { BigNumber, BigNumberish } from "ethers";
+import { walletData } from '@/plugins/walletData';
+import { submitSignedTransactionsBatch } from 'zksync/src/wallet';
+import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction } from '@/plugins/types';
+import { BigNumber, BigNumberish } from 'ethers';
+import { Provider } from 'zksync/src/provider';
 
 /**
  * Transaction processing action
  *
- * @param {Address} address
- * @param {TokenSymbol} token
+ * @param transactions
  * @param {TokenSymbol} feeToken
- * @param {GweiBalance} amountBigValue
- * @param {GweiBalance} feeBigValue
+ * @param fee
+ * @param changePubKey
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
 export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: Boolean, store: any) => {
-  const syncWallet = walletData.get().syncWallet;
+  const syncWallet: Wallet|undefined = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
   const nonce = await syncWallet!.getNonce("committed");
   let batchBuilder = syncWallet!.batchBuilder(nonce);
-  if(changePubKey===true) {
+  if(changePubKey) {
     const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
     batchBuilder.addChangePubKey({feeToken, ethAuthType, fee: store.getters["checkout/getAccountUnlockFee"]});
   }
@@ -39,8 +40,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
   });
   const batchTransactionData = await batchBuilder.build();
   const zksync = await walletData.zkSync();
-  const batchTransaction = await zksync.submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature])
-  return batchTransaction;
+  return await submitSignedTransactionsBatch(<Provider>walletData.get()!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
 };
 
 /**
@@ -170,7 +170,7 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, st
  *
  * @param {Address} address
  * @param store
- * @returns {Promise<ContractTransaction>}
+ * @returns {Promise<any>}
  */
 export const unlockToken = async (address: Address, store: any) => {
   const wallet = walletData.get().syncWallet;
@@ -182,10 +182,11 @@ export const unlockToken = async (address: Address, store: any) => {
  * Change pub key method
  *
  * @param {TokenSymbol} feeToken
+ * @param fee
  * @param store
  * @returns {Promise<void>}
  */
-export const changePubKeyGetTx = async (feeToken: TokenSymbol, fee: BigNumber, store: any) => {
+export const changePubKeyGetTx = async (feeToken: TokenSymbol, fee: BigNumber |string, store: any) => {
   const syncWallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
   const nonce = await syncWallet!.getNonce("committed");

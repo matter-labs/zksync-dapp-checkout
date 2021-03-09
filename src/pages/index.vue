@@ -132,6 +132,7 @@ import Vue from "vue";
 
 import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, Transfer, ZkSyncTransaction, ChangePubKey } from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
+import { submitSignedTransactionsBatch } from "zksync/src/wallet";
 import { changePubKeyGetTx, transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
