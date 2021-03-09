@@ -3,7 +3,7 @@
     <modal v-model="modal">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square"></i>
+          <i class="fad fa-info-square"/>
           <div>Insufficient funds in the on-chain wallet to deposit</div>
         </div>
       </template>
@@ -27,15 +27,15 @@
       <template slot="footer">
         <div class="flex items-center justify-center flex-wrap gap-2">
           <defbtn outline @click="modal=false">
-            <i class="far fa-arrow-left"></i>
+            <i class="far fa-arrow-left"/>
             <span>Cancel and return</span>
           </defbtn>
           <defbtn outline @click="modal=false">
             <span>Disconnect</span>
-            <i class="far fa-power-off"></i>
+            <i class="far fa-power-off"/>
           </defbtn>
           <defbtn @click="modal=false">
-            <i class="far fa-sync-alt"></i>
+            <i class="far fa-sync-alt"/>
             <span>All is done. Reload the checkout</span>
           </defbtn>
         </div>
@@ -45,7 +45,7 @@
     <modal :value="errorModal!==false" @close="errorModal=false">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square"></i>
+          <i class="fad fa-info-square"/>
           <div>{{errorModal.headline}}</div>
         </div>
       </template>
@@ -78,11 +78,11 @@
       <div class="mainBtnsContainer">
         <div class="mainBtns">
           <defbtn v-if="accountLocked" :loader="loading" :disabled="loading" @click="nextStep()">
-            <i class="fas fa-unlock-alt"></i>
+            <i class="fas fa-unlock-alt"/>
             <span>Activate the account</span>
           </defbtn>
           <defbtn v-else :disabled="!transferAllowed" :loading="loading" @click="nextStep()">
-            <i class="fas fa-paper-plane"></i>
+            <i class="fas fa-paper-plane"/>
             <span>Complete payment</span>
           </defbtn>
         </div>
