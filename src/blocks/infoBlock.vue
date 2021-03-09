@@ -1,13 +1,12 @@
 <template>
   <aside class="infoBlockContainer bg-white h-screen">
     <div class="infoBlock md:min-h-screen py-4 md:py-10 px-5 md:px-10">
-      <header>
+      <header class="md:mb-6">
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
           <div class="text-violet text-2xl font-bold">Checkout</div>
         </div>
       </header>
-      <div class="lg:mt-5"></div>
       <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
         <template slot="left-top">
           <div class="headline">{{item.description}}</div>
@@ -22,7 +21,7 @@
           </div>
         </template>
       </values-block>
-      <div class="w-full border-b-2 border-light mt-1 lg:mt-3"></div>
+      <div class="w-full border-b-1 border-light mt-1 lg:mt-3"></div>
       <values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
         <template slot="left-top">
           <div class="flex items-center">
@@ -54,7 +53,7 @@
           </template>
         </values-block>
       </max-height>
-      <div class="w-full border-b-2 border-light mt-1 lg:mt-3"></div>
+      <div class="w-full border-b-1 border-light mt-1 lg:mt-3"></div>
       <div class="mt-2 lg:mt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">
         <div class="flex-2">
           <div class="flex items-center">

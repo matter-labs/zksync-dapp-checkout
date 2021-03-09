@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="connectedWallet md:py-4 flex items-center">
+    <div class="connectedWallet flex items-center">
       <i class="text-gray text-4xl mr-3 far fa-wallet"/>
       <values-block>
         <template slot="left-top">
