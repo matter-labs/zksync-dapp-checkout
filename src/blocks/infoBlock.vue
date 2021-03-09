@@ -6,18 +6,7 @@
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
           <div class="text-violet text-2xl font-bold">Checkout</div>
         </div>
-        <span class="mobileOnly" @click="modal=true">
-          <i class="text-xl fal fa-shield-check"></i>
-        </span>
       </header>
-      <note class="hidden md:block mt-3 lg:mt-7">
-        <template slot="icon">
-          <i class="text-gray text-base lg:text-lg fal fa-comment-alt-exclamation"></i>
-        </template>
-        <template slot="default">
-          <div class="text-dark2 font-light text-xs lg:text-sm">By using zkSync: Checkout Gateway, you agree to accept full responsibility. See our <a class="lightLink" target="_blank" href="https://zksync.io/legal/terms.html#overview">Terms of Service</a> and <a class="lightLink" target="_blank" href="https://zksync.io/legal/privacy.html#introduction">Privacy Policy</a> for the details.</div>
-        </template>
-      </note>
       <div class="lg:mt-5"></div>
       <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
         <template slot="left-top">
@@ -91,7 +80,7 @@
       <div class="footerContainer hidden md:block">
         <footer>
           <div class="poweredBy flex justify-center items-center pt-5">
-            <div class="text-lg font-firaCondensed font-medium uppercase text-violet mr-3">Powered by</div>
+            <div class="text-md font-firaCondensed font-medium uppercase text-violet mr-3">Powered by</div>
             <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync">
           </div>
           <div class="poweredBy flex justify-center items-center mt-3">
@@ -117,7 +106,6 @@ export default Vue.extend({
     return {
       totalOpened: false,
       feesOpened: false,
-      modal: false,
     };
   },
   computed: {

@@ -76,10 +76,12 @@
           <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{'error': !enoughDepositAmount}">
             <template slot="default">
               <defbtn v-if="initialBalance.unlocked===true" @click="deposit()">
-                <i class="fal fa-arrow-to-right"/><span>Deposit</span>
+                <i class="fal fa-arrow-to-right"/>
+                <span>Deposit</span>
               </defbtn>
               <defbtn v-else @click="unlock()">
-                <i class="fas fa-unlock-alt"/><span>Unlock</span>
+                <i class="fas fa-unlock-alt"/>
+                <span>Unlock</span>
               </defbtn>
             </template>
           </amount-input>
@@ -263,21 +265,14 @@ export default Vue.extend({
           this.step = "default";
           const createErrorModal = (text: string) => {
             this.errorModal = {
-              headline: `Depositing ${this.token} error`,
+              headline: `Depositing token error`,
               text,
             };
           };
-          if (error.message) {
-            if (!error.message.includes("User denied")) {
-              if (error.message.includes("Fee Amount is not packable")) {
-                createErrorModal("Fee Amount is not packable");
-              } else if (error.message.includes("Transaction Amount is not packable")) {
-                createErrorModal("Transaction Amount is not packable");
-              }
-            }
-          } else {
-            createErrorModal("Unknown error. Try again later.");
-          }
+          createErrorModal(
+            error.message && !error.message.includes("User denied") ? (error.message.includes("Fee Amount is not packable") ? "Fee Amount is not packable"
+              : "Transaction Amount is not packable") : "Unknown error. Try again later."
+          );
         }
       }
     },

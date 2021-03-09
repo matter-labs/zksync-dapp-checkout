@@ -6,6 +6,10 @@
     .mainBtns {
       display: flex;
       justify-content: center;
+      button.defbtn.filled
+      {
+        padding: 7px 12px 7px 7px;
+      }
     }
   }
 
