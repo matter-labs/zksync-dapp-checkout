@@ -241,7 +241,8 @@ export default Vue.extend({
           // We need to send the tx hashes to the client long before the
           // awaitReceipt is called
           const hashes = transactions.map((tx) => tx.txHash);
-          manager.notifyHashes(hashes);
+          // The last hash is of the fee transaction
+          manager.notifyHashes(hashes.slice(0,-1));
 
           this.finalTransactions.push(...transactions);
           this.subStep = "committing";
