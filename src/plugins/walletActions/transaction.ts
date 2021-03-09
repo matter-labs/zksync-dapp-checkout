@@ -81,8 +81,6 @@ export const submitSignedTransactionsBatch = async (
 export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: Boolean, store: any) => {
   const syncWallet: Wallet|undefined = walletData.get().syncWallet;
 
-
-
   await store.dispatch("wallet/restoreProviderConnection");
   const nonce = await syncWallet!.getNonce("committed");
   let batchBuilder = syncWallet!.batchBuilder(nonce);

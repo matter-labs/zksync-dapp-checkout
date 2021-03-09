@@ -179,7 +179,7 @@ export default Vue.extend({
       }
     },
     getTokenByID(id: number) {
-      return this.$store.getters["tokens/getTokenByID"](id).symbol;
+      return this.$store.getters["tokens/getTokenByID"](id)?.symbol;
     },
     getTxLink(hash: string) {
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
