@@ -15,7 +15,11 @@ import MaxHeight from "@/components/MaxHeight.vue";
 
 import { GweiBalance, TokenSymbol } from "@/plugins/types";
 import { BigNumber } from "ethers";
-import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
+
+import { ZkSyncCheckoutManager } from 'zksync-checkout-internal';
+
+const checkoutManager = ZkSyncCheckoutManager.getManager();
+checkoutManager.startCheckout((e) => console.log(`Err ${e} has occured`));
 
 Vue.use(VueScrollTo);
 
