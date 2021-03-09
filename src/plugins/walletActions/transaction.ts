@@ -191,33 +191,22 @@ export const changePubKey = async (feeToken: TokenSymbol, fee: BigNumber, store:
   const syncWallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
   if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
-    const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
-    if (!isOnchainAuthSigningKeySet) {
-      const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
-      await onchainAuthTransaction?.wait();
-    }
-
-    const isSigningKeySet = await syncWallet!.isSigningKeySet();
-    if (!isSigningKeySet) {
-      const changePubkey = await syncWallet?.setSigningKey({
-        feeToken,
-        fee,
-        nonce: "committed",
-        ethAuthType: "Onchain",
-      });
-      await changePubkey?.awaitReceipt();
-    }
+    const changePubkey = await syncWallet?.setSigningKey({
+      feeToken,
+      fee,
+      nonce: "committed",
+      ethAuthType: "Onchain",
+    });
+    await changePubkey?.awaitReceipt();
   } else {
-    const isSigningKeySet = await syncWallet!.isSigningKeySet();
-    if (!isSigningKeySet) {
-      const changePubkey = await syncWallet!.setSigningKey({
-        feeToken,
-        fee,
-        ethAuthType: "ECDSA",
-      });
-      await changePubkey.awaitReceipt();
-    }
+    const changePubkey = await syncWallet!.setSigningKey({
+      feeToken,
+      fee,
+      ethAuthType: "ECDSA",
+    });
+    await changePubkey.awaitReceipt();
   }
+  
   const isSigningKeySet = await syncWallet?.isSigningKeySet();
   store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
 
