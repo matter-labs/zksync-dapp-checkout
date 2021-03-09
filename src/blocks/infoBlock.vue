@@ -1,23 +1,7 @@
 <template>
   <aside class="infoBlockContainer bg-white h-screen">
-
-    <modal v-model="modal">
-      <template slot="header">
-        <div class="withIcon">
-          <i class="text-gray fad fa-comment-alt-exclamation"></i>
-          <div class="text-xl">Information</div>
-        </div>
-      </template>
-      <template slot="default">
-        <div class="text-dark2 font-light">By using zkSync: Checkout Gateway, you agree to accept full responsibility. See our <a class="lightLink" target="_blank" href="https://zksync.io/legal/terms.html#overview">Terms of Service</a> and <a class="lightLink" target="_blank" href="https://zksync.io/legal/privacy.html#introduction">Privacy Policy</a> for the details.</div>
-      </template>
-    </modal>
-
     <div class="infoBlock md:min-h-screen py-4 md:py-10 px-5 md:px-10">
       <header>
-        <span class="mobileOnly" @click="modal=true">
-          <i class="text-xl far fa-arrow-left"></i>
-        </span>
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
           <div class="text-violet text-2xl font-bold">Checkout</div>
@@ -99,7 +83,6 @@
             <div class="md:flex flex-col items-end">
             <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 mt-2">
               <div>{{ item | formatToken(token) }} {{token}}</div>
-              <!-- <img class="ml-1 w-4 h-4 object-contain" src="/tokens/eth.svg" alt="ETH"> -->
             </div>
           </div>
           </max-height>
@@ -138,13 +121,13 @@ export default Vue.extend({
     };
   },
   computed: {
-    transactionData: function(): TransactionData {
+    transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
-    allFees: function(): Array<TransactionFee> {
+    allFees(): Array<TransactionFee> {
       return this.$store.getters["checkout/getAllFees"];
     },
-    totalFees: function(): GweiBalance {
+    totalFees(): GweiBalance {
       const allFees = this.allFees;
       let totalFeeBigNum = BigNumber.from("0");
       for (const item of allFees) {
@@ -152,20 +135,20 @@ export default Vue.extend({
       }
       return totalFeeBigNum.toString();
     },
-    totalUSD: function(): string {
+    totalUSD(): string {
       const transactionData = this.transactionData;
       const allFees = this.allFees;
       const tokensPrices = this.tokensPrices;
       let totalUSD = 0;
       for (const item of [...transactionData.transactions, ...allFees]) {
-        totalUSD += (+tokensPrices[item.token].price)*(+utils.handleFormatToken(item.token, (item.amount as string)));
+        totalUSD += +tokensPrices[item.token].price * +utils.handleFormatToken(item.token, item.amount as string);
       }
       return totalUSD < 0.01 ? `<0.01` : `~${totalUSD.toFixed(2)}`;
     },
-    totalByToken: function(): TotalByToken {
+    totalByToken(): TotalByToken {
       return this.$store.getters["checkout/getTotalByToken"];
     },
-    tokensPrices: function(): TokenPrices {
+    tokensPrices(): TokenPrices {
       return this.$store.getters["tokens/getTokenPrices"];
     },
   },
