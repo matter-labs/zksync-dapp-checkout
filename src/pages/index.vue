@@ -215,7 +215,7 @@ export default Vue.extend({
             });
           } */
           const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.accountLocked, this.$store);
-          console.log("transaction", transactions);
+          console.log("batch transaction", transactions);
 
           const manager = ZkSyncCheckoutManager.getManager();
           // We need to send the tx hashes to the client long before the
@@ -224,6 +224,7 @@ export default Vue.extend({
           // The last hash is of the fee transaction
           manager.notifyHashes(hashes.slice(0,-1));
 
+          // @ts-ignore: Unreachable code error
           this.finalTransactions.push(...transactions);
           this.subStep = "committing";
 

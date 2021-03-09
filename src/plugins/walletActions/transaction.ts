@@ -1,6 +1,8 @@
 import { walletData } from "@/plugins/walletData";
 import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, ZkSyncTransaction, Transfer, Nonce } from "@/plugins/types";
 import { BigNumber, BigNumberish } from "ethers";
+// @ts-ignore
+import { submitSignedTransactionsBatch } from "zksync/src/wallet";
 
 /**
  * Transaction processing action
@@ -38,8 +40,8 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
     token: feeToken,
   });
   const batchTransactionData = await batchBuilder.build();
-  const zksync = await walletData.zkSync();
-  const batchTransaction = await zksync.submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature])
+  // @ts-ignore: Unreachable code error
+  const batchTransaction = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   return batchTransaction;
 };
 
