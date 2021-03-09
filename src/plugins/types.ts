@@ -254,7 +254,7 @@ export declare class Transaction {
   private throwErrorIfFailedState;
 }
 
-export declare class ZKSyncTxError extends Error {
+declare class ZKSyncTxError extends Error {
   value: PriorityOperationReceipt | TransactionReceipt;
   constructor(message: string, value: PriorityOperationReceipt | TransactionReceipt);
 }

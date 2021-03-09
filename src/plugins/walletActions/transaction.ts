@@ -1,8 +1,12 @@
 import { walletData } from '@/plugins/walletData';
-import { Address, ETHOperation,ZKSyncTxError, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction, Provider } from '@/plugins/types';
+import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction, Provider } from '@/plugins/types';
 import { BigNumber, BigNumberish } from 'ethers';
-import { SignedTransaction, TransactionReceipt, TxEthSignature } from 'zksync/src/types';
+import { PriorityOperationReceipt, SignedTransaction, TransactionReceipt, TxEthSignature } from 'zksync/src/types';
 
+declare class ZKSyncTxError extends Error {
+  value: PriorityOperationReceipt | TransactionReceipt;
+  constructor(message: string, value: PriorityOperationReceipt | TransactionReceipt);
+}
 
 class Transaction {
   state: 'Sent' | 'Committed' | 'Verified' | 'Failed';

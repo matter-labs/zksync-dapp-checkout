@@ -224,6 +224,7 @@ export default Vue.extend({
           // The last hash is of the fee transaction
           manager.notifyHashes(hashes.slice(0,-1));
 
+          // @ts-ignore
           this.finalTransactions.push(...transactions);
           this.subStep = "committing";
 
