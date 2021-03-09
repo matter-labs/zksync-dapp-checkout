@@ -16,8 +16,8 @@
         </template>
         <template slot="right-top">
           <div class="flex md:flex-col whitespace-nowrap">
-            <div class="value mr-2 md:mr-0">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
-            <div class="secondaryValue">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
+            <div class="value mr-2 md:mr-0">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
+            <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
           </div>
         </template>
       </values-block>
@@ -34,8 +34,8 @@
         <template slot="right-top">
           <div class="flex items-center">
             <div class="flex md:flex-col">
-              <div class="value mr-2 md:mr-0">{{ totalFees | formatToken('ETH') }} ETH</div>
-              <div class="secondaryValue">{{ totalFees | formatUsdAmount(tokensPrices['ETH'] && tokensPrices['ETH'].price, 'ETH') }}</div>
+              <div class="value mr-2 md:mr-0">{{ totalFees | formatUsdAmount(tokensPrices['ETH'] && tokensPrices['ETH'].price, 'ETH') }}</div>
+              <div class="secondaryValue">{{ totalFees | formatToken('ETH') }} ETH</div>
             </div>
           </div>
         </template>
@@ -47,8 +47,8 @@
           </template>
           <template slot="right-top">
             <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
-              <div class="secondaryValue">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
+              <div class="value mr-2 md:mr-0">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
+              <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
             </div>
           </template>
         </values-block>
@@ -65,7 +65,7 @@
         </div>
         <div class="flex-1 flex flex-col items-end">
           <div class="font-firaCondensed font-bold text-lg text-violet md:mt-1">
-            {{totalUSD}} USD
+            ${{totalUSD}}
           </div>
           <max-height v-model="totalOpened" :update-value="allFees.length">
             <div class="md:flex flex-col items-end">

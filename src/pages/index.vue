@@ -96,7 +96,7 @@
     </div>
     <div v-else-if="step==='success'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Thank you!</div>
-      <success-mark class="w-11/12 max-w-xxs mx-auto py-5" />
+      <success-mark class="w-11/12 max-w-xxs mx-auto py-5 bigSuccessMark" />
       <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="text-lightviolet underline" href="https://zksync.io/" target="_blank">zkSync
       </a></div>
       <line-table-header class="mt-4 md:mt-7 mb-2">
@@ -115,10 +115,12 @@
             <div class="amount">{{ item.txData.tx.fee==='0'?item.txData.tx.amount:item.txData.tx.fee | formatToken(getTokenByID(item.txData.tx.token)) }}</div>
           </template>
           <template slot="third">
-            <a class="transactionLink" :href="getTxLink(item.txHash)" target="_blank">
-              <span v-if="item.txData.tx.fee!=='0'" class="text-gray text-xs col-span-2">Fee transaction</span>
-              <span class="text-xxs text-dark2">{{item.txHash}}</span>
-              <i class="text-xs text-violet pl-1 fas fa-external-link"></i>
+            <a class="transactionLink linkDefault" :href="getTxLink(item.txHash)" target="_blank">
+<!--              <span v-if="item.txData.tx.fee!=='0'" class="text-gray text-xs col-span-2">Fee transaction</span>-->
+              <span class="text-xxs text-right">
+                {{item.txHash | formatTransaction}}
+                <i class="text-xs text-violet pl-1 fas fa-external-link"/>
+              </span>
             </a>
           </template>
         </line-block>
@@ -259,5 +261,10 @@ export default Vue.extend({
       }
     },
   },
+  filters: {
+    formatTransaction(value: String) {
+      return value.replace('sync-tx:', '');
+    }
+  }
 });
 </script>

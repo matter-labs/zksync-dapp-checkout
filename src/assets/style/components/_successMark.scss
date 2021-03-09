@@ -1,4 +1,12 @@
 .animatedCheckmark {
   margin-top: -8%;
   margin-bottom: -8%;
+
+  &.bigSuccessMark {
+    svg {
+      width: 185px !important;
+      height: 185px !important;
+      margin: 20px auto;
+    }
+  }
 }

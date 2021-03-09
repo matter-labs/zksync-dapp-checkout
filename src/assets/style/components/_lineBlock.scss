@@ -12,6 +12,18 @@
       width: max-content;
       justify-self: end;
     }
+    .loaderSpinnerContainer
+    {
+      margin-right: 7px;
+    }
+    .text-red
+    {
+      margin-right: 5px;
+    }
+    .text-gray
+    {
+      text-transform: capitalize;
+    }
     .address
     {
       font-family: "Fira Code", "sans-serif";
@@ -73,7 +85,10 @@
     grid-auto-rows: max-content;
     align-items: center;
     grid-column-gap: 5px;
-
+    font-weight: 300 !important;
+    i.fas{
+      font-weight: 300 !important;
+    }
     a {
       white-space: nowrap;
       text-overflow: ellipsis;

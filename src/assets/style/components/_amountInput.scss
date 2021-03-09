@@ -27,7 +27,7 @@
     } */
 
     &.focused {
-      border-color: $dark;
+      border-color: $violet;
       .leftSide {
         .inputContainer {
           .penIcon {
@@ -97,6 +97,10 @@
           font-weight: 400;
           font-size: 14px;
         }
+      }
+      @media screen and (max-width: $breakpoint1)
+      {
+        max-width: 100px;
       }
 
       .sizeSpan {
