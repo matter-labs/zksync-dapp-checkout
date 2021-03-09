@@ -35,7 +35,6 @@
           <div class="flex items-center">
             <div class="flex md:flex-col">
               <div class="value mr-2 md:mr-0">{{ totalFees | formatUsdAmount(tokensPrices['ETH'] && tokensPrices['ETH'].price, 'ETH') }}</div>
-              <div class="secondaryValue">{{ totalFees | formatToken('ETH') }} ETH</div>
             </div>
           </div>
         </template>
@@ -92,7 +91,6 @@
     </div>
   </aside>
 </template>
-
 
 <script lang="ts">
 import Vue from "vue";
