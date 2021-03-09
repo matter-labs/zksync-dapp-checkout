@@ -16,6 +16,11 @@ import MaxHeight from "@/components/MaxHeight.vue";
 import { TokenSymbol } from "@/plugins/types";
 import { BigNumber } from "ethers";
 
+import { ZkSyncCheckoutManager } from 'zksync-checkout-internal';
+
+const checkoutManager = ZkSyncCheckoutManager.getManager();
+checkoutManager.startCheckout((e) => console.log(`Err ${e} has occured`));
+
 Vue.use(VueScrollTo);
 
 Vue.component("Note", Note);
@@ -44,7 +49,7 @@ Vue.filter("formatTokenPretty", (value: string, symbol: TokenSymbol) => {
  * Implementation of the tokenFormatter as a global filter
  */
 Vue.filter("formatUsdAmount", (value: string | BigNumber, price: string, symbol: TokenSymbol) => {
-  return utils.getFormattedTotalPrice(Number(price), +utils.handleFormatToken(symbol, <string>value));
+  return utils.getFormattedTotalPrice(Number(price), +utils.handleFormatToken(symbol, value.toString()));
 });
 
 /**

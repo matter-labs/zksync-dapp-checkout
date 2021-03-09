@@ -130,6 +130,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
 
 import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction } from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
