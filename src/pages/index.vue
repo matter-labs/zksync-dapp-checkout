@@ -69,9 +69,9 @@
 
     <div v-if="step==='main'" class="w-full">
       <line-table-header class="mt-4 md:mt-7 mb-2">
-        <template slot="first">To Pay</template>
-        <template slot="second">L2 Balance</template>
-        <template slot="first:md">To Pay / L2 Balance</template>
+        <template slot="first">To pay</template>
+        <template slot="second">L2 balance</template>
+        <template slot="first:md">To pay / L2 balance</template>
         <template slot="right">Deposit from mainnet</template>
       </line-table-header>
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />

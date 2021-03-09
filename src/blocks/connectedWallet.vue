@@ -4,7 +4,7 @@
       <i class="text-gray text-4xl mr-3 far fa-wallet"/>
       <values-block>
         <template slot="left-top">
-          <div class="headline">My Wallet</div>
+          <div class="headline">My wallet</div>
         </template>
         <template slot="left-bottom">
           <div class="address">{{ownAddress}}</div>

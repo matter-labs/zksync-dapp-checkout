@@ -2,11 +2,11 @@
   display: flex;
   width: max-content;
   height: 30px;
-  font-size: 12px;
+  font-size: 14px;
   padding: 0 15px;
   background-color: $violet;
   border-radius: 4px;
-  font-weight: 500;
+  font-weight: 400;
   white-space: nowrap;
   transition: $transition;
   outline: none !important;
@@ -44,7 +44,7 @@
     background-color: #F6F8FA;
     transition-property: color, border-color, background-color, box-shadow;
     will-change: color, border-color, background-color, box-shadow;
-    border: 1px solid #E1E4E8;
+    border: 0.5px solid #E1E4E8;
 
     &:disabled {
       background-color: $white;

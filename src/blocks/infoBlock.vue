@@ -21,7 +21,7 @@
           </div>
         </template>
       </values-block>
-      <div class="w-full border-b-1 border-light mt-1 lg:mt-3"></div>
+      <div class="w-full border-b-2 border-light mt-1 lg:mt-3"/>
       <values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
         <template slot="left-top">
           <div class="flex items-center">
@@ -53,11 +53,11 @@
           </template>
         </values-block>
       </max-height>
-      <div class="w-full border-b-1 border-light mt-1 lg:mt-3"></div>
+      <div class="w-full border-b-2 border-light mt-1 lg:mt-3"></div>
       <div class="mt-2 lg:mt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">
         <div class="flex-2">
           <div class="flex items-center">
-            <div class="font-firaCondensed font-bold text-xl md:text-2xl text-dark">Total amount</div>
+            <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark">Total amount</div>
             <span class="ml-3">
               <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"></i>
             </span>
