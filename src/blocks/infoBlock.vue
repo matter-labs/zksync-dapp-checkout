@@ -125,6 +125,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import utils from "@/plugins/utils";
 import { TransactionData, TransactionFee, TokenPrices, TotalByToken, GweiBalance } from "@/plugins/types";
 import { BigNumber } from "ethers";
 
@@ -156,11 +157,8 @@ export default Vue.extend({
       const allFees = this.allFees;
       const tokensPrices = this.tokensPrices;
       let totalUSD = 0;
-      for (const item of transactionData.transactions) {
-        totalUSD += parseFloat(this.$options.filters!.formatUsdAmount(item.amount, tokensPrices[item.token].price, item.token).replaceAll(/[~$<]/g, ""));
-      }
-      for (const item of allFees) {
-        totalUSD += parseFloat(this.$options.filters!.formatUsdAmount(item.amount, tokensPrices[item.token].price, item.token).replaceAll(/[~$<]/g, ""));
+      for (const item of [...transactionData.transactions, ...allFees]) {
+        totalUSD += (+tokensPrices[item.token].price)*(+utils.handleFormatToken(item.token, (item.amount as string)));
       }
       return totalUSD < 0.01 ? `<0.01` : `~${totalUSD.toFixed(2)}`;
     },
