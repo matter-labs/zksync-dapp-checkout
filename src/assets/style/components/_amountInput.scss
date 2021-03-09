@@ -44,6 +44,10 @@
 
   &.error {
     border-color: $red !important;
+
+    .leftSide .inputContainer input {
+      color: $red;
+    }
   }
 
   &.hasUnderInput {
@@ -130,7 +134,6 @@
       font-size: 9px;
       line-height: 12px;
       font-family: $firaCondensed;
-      pointer-events: none;
     }
   }
 

@@ -7,7 +7,12 @@
 
   .infoBlock {
     position: relative;
-    height: 44px;
+
+    header {
+      @media screen and (min-width: $mobile+1) {
+        height: 45px;
+      }
+    }
 
     .footerContainer {
       z-index: 1;

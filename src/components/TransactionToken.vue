@@ -14,7 +14,7 @@
           <strong>{{ depositBigNumber | formatTokenPretty(token) }} {{token}}</strong>
           to zkSync L2 account.
           Your on-chain balance is
-          <strong class="cursor-pointer" @click="setDepositMaxAmount();modal='';">{{ initialBalance.rawBalance | formatTokenPretty(token) }}{{token}}</strong>.
+          <strong class="cursor-pointer" @click="setDepositMaxAmount();modal='';">{{ initialBalance.rawBalance | formatToken(token) }} {{token}}</strong>.
         </div>
         <div v-else-if="modal==='insufficientL1Min'" class="text-sm"><b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> will not be enough to commit the
           transaction. The minimal amount is:
@@ -74,8 +74,11 @@
             <i class="fas fa-unlock-alt"/><span>Unlock</span>
           </defbtn>
           <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{'error': !enoughDepositAmount}">
+            <template slot="underInput">
+              <div class="minAmount text-xxs" @click="setDepositMinAmount()">Min: {{ needToDeposit | formatToken(token) }}</div>
+            </template>
             <template slot="default">
-              <defbtn v-if="initialBalance.unlocked===true" @click="deposit()">
+              <defbtn v-if="initialBalance.unlocked===true" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
                 <i class="fal fa-arrow-to-right"/>
                 <span>Deposit</span>
               </defbtn>
