@@ -10,7 +10,7 @@ export default async (context: any) => {
       {
         to: '0x2D9835a1C1662559975B00AEA00e326D1F9f13d0',
         token: 'ETH',
-        amount: '8000000000000',
+        amount: '79998000000000000',
         description: 'For bananas',
       },
       {

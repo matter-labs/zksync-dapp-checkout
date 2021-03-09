@@ -174,7 +174,8 @@ export default Vue.extend({
       return this.$store.getters["wallet/isAccountLocked"];
     },
     transferAllowed(): Boolean {
-      for (const [state] of Object.entries(this.tokenItemsValid)) {
+      console.log(Object.entries(this.tokenItemsValid));
+      for (const [token, state] of Object.entries(this.tokenItemsValid)) {
         if (!state) {
           return false;
         }

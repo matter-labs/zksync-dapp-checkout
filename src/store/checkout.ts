@@ -48,7 +48,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
   getAccountUnlockFee(state): false | BigNumber {
     return state.accountUnlockedFee;
   },
-  getAllFees(state: /* Vuex store state */ any, rootGetters: /* Vuex store getters */ any): Array<TransactionFee> {
+  getAllFees(state: /* Vuex store state */ any, getters, rootState, rootGetters: /* Vuex store getters */ any): Array<TransactionFee> {
     const allFees = [] as Array<TransactionFee>;
     allFees.push(state.transactionBatchFee);
     if (state.accountUnlockedFee && rootGetters["wallet/isAccountLocked"]) {
