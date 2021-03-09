@@ -3,7 +3,7 @@
     <modal v-model="modal">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square"></i>
+          <i class="fad fa-info-square"/>
           <div>Insufficient funds in the on-chain wallet to deposit</div>
         </div>
       </template>
@@ -27,15 +27,15 @@
       <template slot="footer">
         <div class="flex items-center justify-center flex-wrap gap-2">
           <defbtn outline @click="modal=false">
-            <i class="far fa-arrow-left"></i>
+            <i class="far fa-arrow-left"/>
             <span>Cancel and return</span>
           </defbtn>
           <defbtn outline @click="modal=false">
             <span>Disconnect</span>
-            <i class="far fa-power-off"></i>
+            <i class="far fa-power-off"/>
           </defbtn>
           <defbtn @click="modal=false">
-            <i class="far fa-sync-alt"></i>
+            <i class="far fa-sync-alt"/>
             <span>All is done. Reload the checkout</span>
           </defbtn>
         </div>
@@ -45,7 +45,7 @@
     <modal :value="errorModal!==false" @close="errorModal=false">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square"></i>
+          <i class="fad fa-info-square"/>
           <div>{{errorModal.headline}}</div>
         </div>
       </template>
@@ -58,7 +58,7 @@
 
     <note v-if="accountLocked">
       <template slot="icon">
-        <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"></i>
+        <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"/>
       </template>
       <template slot="default">
         <div class="text-gray text-xs lg:text-sm">
@@ -93,14 +93,14 @@
     <div v-else-if="step==='success'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Thank you!</div>
       <success-mark class="w-11/12 max-w-xxs mx-auto py-5 bigSuccessMark" />
-      <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="text-lightviolet underline" href="https://zksync.io/" target="_blank">zkSync
-      </a></div>
-      <line-table-header class="mt-4 md:mt-7 mb-2">
+      <div class="text-md text-center font-light pt-2">
+        Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a>
+      </div>
+      <line-table-header class="mt-10 md:mt-7 mb-2">
         <template slot="first">Paid</template>
-        <template slot="second">
-          <div class="text-right">TX Hash</div>
-        </template>
-        <template slot="first:md">Paid / TX Hash</template>
+        <template slot="second"></template>
+        <template slot="first:md">&nbsp;</template>
+        <template slot="right">Paid / TX Hash</template>
       </line-table-header>
       <template v-for="(item,index) in finalTransactions">
         <line-block :key="index">
@@ -221,7 +221,8 @@ export default Vue.extend({
           // We need to send the tx hashes to the client long before the
           // awaitReceipt is called
           const hashes = transactions.map((tx) => tx.txHash);
-          manager.notifyHashes(hashes);
+          // The last hash is of the fee transaction
+          manager.notifyHashes(hashes.slice(0,-1));
 
           this.finalTransactions.push(...transactions);
           this.subStep = "committing";
