@@ -56,17 +56,6 @@
 
     <connected-wallet/>
 
-    <note class="mb-2" v-if="accountLocked">
-      <template slot="icon">
-        <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"/>
-      </template>
-      <template slot="default">
-        <div class="text-gray text-xs lg:text-sm">
-          To start using your account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by verifying ETH signatures with zero-knowledge proofs. Please bear with us!
-        </div>
-      </template>
-    </note>
-
     <div v-if="step==='main'" class="w-full">
       <line-table-header class="mt-4 md:mt-7 mb-2">
         <template slot="first">To pay</template>
@@ -161,17 +150,11 @@ export default Vue.extend({
     };
   },
   computed: {
-    zkBalances(): Array<Balance> {
-      return this.$store.getters["wallet/getzkBalances"];
-    },
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
     totalByToken(): TotalByToken {
       return this.$store.getters["checkout/getTotalByToken"];
-    },
-    accountLocked(): Boolean {
-      return this.$store.getters["wallet/isAccountLocked"];
     },
     transferAllowed(): Boolean {
       for (const [token, state] of Object.entries(this.tokenItemsValid)) {
@@ -203,7 +186,7 @@ export default Vue.extend({
         try {
           let transactionsList = [] as Array<ZkSyncTransaction>;
           transactionsList.push(...transactionData.transactions);
-          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.accountLocked, this.$store);
+          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
           console.log("batch transaction", transactions);
 
           const manager = ZkSyncCheckoutManager.getManager();
@@ -213,7 +196,7 @@ export default Vue.extend({
           // The last hash is of the fee transaction
           manager.notifyHashes(hashes.slice(0,-1));
 
-          // @ts-ignore: Unreachable code error
+          // @ts-ignore
           this.finalTransactions.push(...transactions);
           this.subStep = "committing";
 
