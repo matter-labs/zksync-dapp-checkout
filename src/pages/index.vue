@@ -123,8 +123,6 @@
         </line-block>
       </template>
     </div>
-
-
   </div>
 </template>
 

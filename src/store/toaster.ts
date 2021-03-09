@@ -6,14 +6,14 @@ export const state = () => ({});
 export type ToasterModuleState = ReturnType<typeof state>;
 
 export const actions: ActionTree<ToasterModuleState, RootState> = {
-  message(messageText) {
+  message({ commit }, messageText) {
     // @ts-ignore: Unreachable code error
     this.$toast.show(messageText, {
       type: "default",
       duration: 3000,
     });
   },
-  success(messageText) {
+  success({ commit }, messageText) {
     // @ts-ignore: Unreachable code error
     this.$toast.success(messageText, {
       duration: 3000,
@@ -43,7 +43,7 @@ export const actions: ActionTree<ToasterModuleState, RootState> = {
     });
   },
 
-  error(messageText) {
+  error({ dispatch }, messageText) {
     // @ts-ignore: Unreachable code error
     this.$toast.error(messageText, {
       icon: {
