@@ -80,10 +80,20 @@ export const submitSignedTransactionsBatch = async (
  */
 export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: Boolean, store: any) => {
   const syncWallet: Wallet|undefined = walletData.get().syncWallet;
+
+
+
   await store.dispatch("wallet/restoreProviderConnection");
   const nonce = await syncWallet!.getNonce("committed");
   let batchBuilder = syncWallet!.batchBuilder(nonce);
   if(changePubKey) {
+    if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
+      const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
+      if (!isOnchainAuthSigningKeySet) {
+        const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
+        await onchainAuthTransaction?.wait();
+      }
+    }
     const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
     batchBuilder.addChangePubKey({feeToken, ethAuthType, fee: store.getters["checkout/getAccountUnlockFee"]});
   }
