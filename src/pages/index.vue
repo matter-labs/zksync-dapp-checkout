@@ -119,14 +119,13 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, Transfer, ZkSyncTransaction, ChangePubKey } from "@/plugins/types";
+import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction} from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { changePubKeyGetTx, transactionBatch } from "@/plugins/walletActions/transaction";
+import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
-import { ChangePubkeyTypes } from "~/../node_modules/zksync/build/types";
 
 export default Vue.extend({
   components: {
