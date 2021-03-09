@@ -99,10 +99,11 @@
       <success-mark class="w-11/12 max-w-xxs mx-auto py-5 bigSuccessMark" />
       <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync
       </a></div>
-      <line-table-header class="mt-4 md:mt-7 mb-2">
+      <line-table-header class="mt-10 md:mt-7 mb-2">
         <template slot="first">Paid</template>
-        <template slot="second">TX Hash</template>
-        <template slot="first:md">Paid / TX Hash</template>
+        <template slot="second"></template>
+        <template slot="first:md">&nbsp;</template>
+        <template slot="right">Paid / TX Hash</template>
       </line-table-header>
       <template v-for="(item,index) in finalTransactions">
         <line-block :key="index">
@@ -112,7 +113,7 @@
             </div>
           </template>
           <template slot="second">
-            <div class="amount">{{ item.txData.tx.fee==='0'?item.txData.tx.amount:item.txData.tx.fee | (getTokenByID(item.txData.tx.token)) }}</div>
+            <div class="amount">{{ item.txData.tx.fee==='0'?item.txData.tx.amount:item.txData.tx.fee | formatToken(getTokenByID(item.txData.tx.token)) }}</div>
           </template>
           <template slot="third">
             <a class="transactionLink linkDefault" :href="getTxLink(item.txHash)" target="_blank">
