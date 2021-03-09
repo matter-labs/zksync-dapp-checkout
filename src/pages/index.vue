@@ -237,9 +237,16 @@ export default Vue.extend({
         try {
           const transactions = await transactionBatch(transactionData.transactions, transactionData.feeToken, getTransactionFee.amount, this.$store);
           console.log('transaction', transactions);
+          
+          const manager = ZkSyncCheckoutManager.getManager();
+          // We need to send the tx hashes to the client long before the 
+          // awaitReceipt is called
+          const hashes = transactions.map((tx) => tx.txHash);
+          manager.notifyHashes(hashes);
+
           this.finalTransactions.push(...transactions);
           this.substep = "commiting";
-          await transactions[0].awaitReceipt();/* Not sure if required. Wait for the first transaction (at least) to be confirmed */
+          await transactions[0].awaitReceipt();
           this.step = "success";
         } catch (error) {
           this.step = "main";
