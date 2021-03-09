@@ -7,7 +7,6 @@ export default async (context: any) => {
     ...state,
     fromAddress: state.userAddress
   });
-  console.log(state);
   await context.store.dispatch("wallet/getProviders");
   await context.store.dispatch("checkout/getTransactionBatchFee");
   await context.store.dispatch("tokens/loadAllTokens");
