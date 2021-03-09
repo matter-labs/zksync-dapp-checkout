@@ -74,7 +74,7 @@
         <template slot="first:md">To Pay / L2 Balance</template>
         <template slot="right">Deposit from mainnet</template>
       </line-table-header>
-      <transaction-token v-model="tokenItemsValid[token]" v-for="(total, token) in totalByToken" :key="token" :token="token" :total="total.toString()" />
+      <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
           <defbtn v-if="accountLocked" :loader="loading" :disabled="loading" @click="nextStep()">
@@ -90,8 +90,8 @@
     </div>
     <div v-else-if="step==='transfer'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-dark text-center pt-5 md:pt-10">Payment</div>
-      <div class="text-lg text-center pt-2" v-if="substep==='waitingUserConfirmation'">Confirm the transaction to transfer</div>
-      <div class="text-lg text-center pt-2" v-else-if="substep==='commiting'">Waiting for the transaction to be mined...</div>
+      <div v-if="substep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Confirm the transaction to transfer</div>
+      <div v-else-if="substep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
       <loader class="mx-auto mt-6" size="md" color="violet" />
     </div>
     <div v-else-if="step==='success'" class="w-full">
@@ -115,7 +115,7 @@
           </template>
           <template slot="third">
             <a class="transactionLink" :href="getTxLink(item.txHash)" target="_blank">
-              <span class="text-gray text-xs col-span-2" v-if="item.txData.tx.fee!=='0'">Fee transaction</span>
+              <span v-if="item.txData.tx.fee!=='0'" class="text-gray text-xs col-span-2">Fee transaction</span>
               <span class="text-xxs text-dark2">{{item.txHash}}</span>
               <i class="text-xs text-violet pl-1 fas fa-external-link"></i>
             </a>
@@ -133,8 +133,7 @@ import Vue from "vue";
 
 import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction } from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { changePubKey } from "@/plugins/walletActions/transaction";
-import { transactionBatch } from "@/plugins/walletActions/transaction";
+import { changePubKey, transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
@@ -147,11 +146,11 @@ export default Vue.extend({
   data() {
     return {
       modal: false,
-      step: "main",/* main, transfer, success */
-      substep: "",/* waitingUserConfirmation, commiting */
+      step: "main" /* main, transfer, success */,
+      substep: "" /* waitingUserConfirmation, committing */,
       loading: false,
       tokenItemsValid: {} as {
-        [token: string]: Boolean
+        [token: string]: Boolean;
       },
       finalTransactions: [] as Array<Transaction>,
       errorModal: false as
@@ -176,8 +175,8 @@ export default Vue.extend({
       return this.$store.getters["wallet/isAccountLocked"];
     },
     transferAllowed(): Boolean {
-      for(const [token, state] of Object.entries(this.tokenItemsValid)) {
-        if(!state) {
+      for (const [state] of Object.entries(this.tokenItemsValid)) {
+        if (!state) {
           return false;
         }
       }
@@ -195,7 +194,7 @@ export default Vue.extend({
       }
     },
     getTokenByID(id: number) {
-      return this.$store.getters['tokens/getTokenByID'](id).symbol;
+      return this.$store.getters["tokens/getTokenByID"](id).symbol;
     },
     getTxLink(hash: string) {
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
@@ -203,7 +202,7 @@ export default Vue.extend({
     async changePubKey() {
       this.loading = true;
       try {
-        await changePubKey(this.transactionData.feeToken, this.$store.getters['checkout/getAccountUnlockFee'], this.$store);
+        await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
         await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
       } catch (error) {
         const createErrorModal = (text: string) => {
@@ -214,10 +213,9 @@ export default Vue.extend({
         };
         if (error.message) {
           if (!error.message.includes("User denied")) {
-            if(error.message.includes("Account does not exist in the zkSync network")) {
+            if (error.message.includes("Account does not exist in the zkSync network")) {
               createErrorModal("Please, make deposit or request tokens in order to activate the account.");
-            }
-            else {
+            } else {
               createErrorModal(error.message);
             }
           }
@@ -228,17 +226,17 @@ export default Vue.extend({
       this.loading = false;
     },
     async transfer() {
-      if(this.transferAllowed) {
+      if (this.transferAllowed) {
         const transactionData = this.transactionData;
         const getTransactionFee = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
         this.step = "transfer";
         this.substep = "waitingUserConfirmation";
         try {
           const transactions = await transactionBatch(transactionData.transactions, transactionData.feeToken, getTransactionFee.amount, this.$store);
-          console.log('transaction', transactions);
+          console.log("transaction", transactions);
           this.finalTransactions.push(...transactions);
-          this.substep = "commiting";
-          await transactions[0].awaitReceipt();/* Not sure if required. Wait for the first transaction (at least) to be confirmed */
+          this.substep = "committing";
+          await transactions[0].awaitReceipt(); /* Not sure if required. Wait for the first transaction (at least) to be confirmed */
           this.step = "success";
         } catch (error) {
           this.step = "main";
@@ -246,13 +244,13 @@ export default Vue.extend({
             if (!error.message.includes("User denied")) {
               this.errorModal = {
                 headline: "Transfer error",
-                text: error.message
+                text: error.message,
               };
             }
           } else {
             this.errorModal = {
               headline: "Transfer error",
-              text: "Unknow error. Try again later."
+              text: "Unknow error. Try again later.",
             };
           }
         }

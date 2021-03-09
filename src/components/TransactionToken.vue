@@ -9,8 +9,16 @@
         </div>
       </template>
       <template slot="default">
-        <div v-if="modal==='insufficientL1Deposit'" class="text-sm">On-chain wallet has insufficient funds to deposit <b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> to zkSync L2 account. Your on-chain balance is <b class="cursor-pointer" @click="setDepositMaxAmount();modal='';">{{ initialBalance.rawBalance | formatTokenPretty(token) }} {{ token }}</b>.</div>
-        <div v-else-if="modal==='insufficientL1Min'" class="text-sm"><b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> will not be enough to commit the transaction. The minimal amount is:</div>
+        <div v-if="modal==='insufficientL1Deposit'" class="text-sm">On-chain wallet has insufficient funds to deposit <b>{{ depositBigNumber | formatTokenPretty(token) }} {{
+            token
+          }}</b> to zkSync L2 account. Your on-chain balance is <b class="cursor-pointer"
+                                                                   @click="setDepositMaxAmount();modal='';">{{ initialBalance.rawBalance | formatTokenPretty(token) }} {{
+            token
+          }}</b>.
+        </div>
+        <div v-else-if="modal==='insufficientL1Min'" class="text-sm"><b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> will not be enough to commit the
+          transaction. The minimal amount is:
+        </div>
         <values-block class="mt-3 cursor-pointer" @click="setDepositMinAmount(); modal=''">
           <template slot="left-top">
             <div class="headline">Minimal amount to deposit</div>
@@ -28,11 +36,11 @@
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square"></i>
-          <div>{{errorModal.headline}}</div>
+          <div>{{ errorModal.headline }}</div>
         </div>
       </template>
       <template slot="default">
-        <div class="text-sm">{{errorModal.text}}</div>
+        <div class="text-sm">{{ errorModal.text }}</div>
       </template>
     </modal>
 
@@ -42,7 +50,7 @@
       <template slot="first">
         <div class="tokenItem">
           <!-- <img src="/tokens/btc.svg" alt="BTC" class="tokenImg"> -->
-          <div class="tokenName">{{token}}</div>
+          <div class="tokenName">{{ token }}</div>
         </div>
       </template>
       <template slot="second">
@@ -53,10 +61,10 @@
       </template>
       <template v-if="step==='default'">
         <template v-if="enoughZkBalance" slot="right">
-          <success-mark class="w-8 h-8" />
+          <success-mark class="w-8 h-8"/>
         </template>
         <template v-else slot="right">
-          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs font-medium">Insufficient {{token}} mainnet balance</div>
+          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs font-medium">Insufficient {{ token }} mainnet balance</div>
           <defbtn v-else-if="!enoughWithInitialBalance && !initialBalance.unlocked" @click="unlock()"><i class="fas fa-unlock-alt"></i><span>Unlock</span></defbtn>
           <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{'error': !enoughDepositAmount}">
             <template slot="default">
@@ -68,23 +76,23 @@
       </template>
       <template v-else-if="step==='depositing'">
         <template slot="right">
-          <div class="flex items-center" v-if="substep==='waitingUserConfirmation'">
+          <div v-if="substep==='waitingUserConfirmation'" class="flex items-center">
             <div class="text-gray text-xs font-medium">Confirm the deposit</div>
           </div>
-          <div class="flex items-center" v-else-if="substep==='commiting' || substep==='confirming'">
-            <div class="text-gray text-xs font-medium mr-2">{{substep==='commiting'?'Commiting transaction':'Confirming transaction'}}...</div>
-            <loader color="gray" size="sm" />
+          <div v-else-if="substep==='committing' || substep==='confirming'" class="flex items-center">
+            <div class="text-gray text-xs font-medium mr-2">{{ substep === "committing" ? "Committing transaction" : "Confirming transaction" }}...</div>
+            <loader color="gray" size="sm"/>
           </div>
         </template>
       </template>
       <template v-else-if="step==='unlocking'">
         <template slot="right">
-          <div class="flex items-center" v-if="substep==='waitingUserConfirmation'">
+          <div v-if="substep==='waitingUserConfirmation'" class="flex items-center">
             <div class="text-gray text-xs font-medium">Confirm the transaction</div>
           </div>
-          <div class="flex items-center" v-else-if="substep==='commiting'">
-            <div class="text-gray text-xs font-medium mr-2">Commiting transaction...</div>
-            <loader color="gray" size="sm" />
+          <div v-else-if="substep==='committing'" class="flex items-center">
+            <div class="text-gray text-xs font-medium mr-2">Committing transaction...</div>
+            <loader color="gray" size="sm"/>
           </div>
         </template>
       </template>
@@ -93,12 +101,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
-import { Balance, GweiBalance, Address, TokenPrices, ActiveDepositInterface } from "@/plugins/types";
+import { Address, Balance, GweiBalance, TokenPrices } from "@/plugins/types";
+import utils from "@/plugins/utils";
 import { deposit, unlockToken } from "@/plugins/walletActions/transaction";
 import { BigNumber } from "ethers";
-import utils from "@/plugins/utils";
+import Vue from "vue";
 
 export default Vue.extend({
   props: {
@@ -121,7 +128,7 @@ export default Vue.extend({
         text: "",
       },
       step: "default" /* default, depositing, unlocking */,
-      substep: "" /* depositing: [waitingUserConfirmation,depositing,commiting], unlocking: [waitingUserConfirmation,commiting,confirming] */,
+      substep: "" /* depositing: [waitingUserConfirmation,depositing,committing], unlocking: [waitingUserConfirmation,committing,confirming] */,
       depositAmount: "",
     };
   },
@@ -155,9 +162,6 @@ export default Vue.extend({
     enoughZkBalance(): Boolean {
       return BigNumber.from(this.zkBalance.rawBalance).gte(this.total);
     },
-    /* activeDeposits(): ActiveDepositInterface {
-      return this.$store.getters["transaction/getActiveDeposits"] as ActiveDepositInterface;
-    }, */
 
     /**
      * Returns (L1+L2 balance >= Total to pay)
@@ -167,7 +171,7 @@ export default Vue.extend({
     },
 
     /**
-     * Returns (Inputed deposit amount >= L1 Balance)
+     * Returns (Inputted deposit amount >= L1 Balance)
      */
     enoughOnInitialToDeposit(): Boolean {
       if (!this.depositAmount) {
@@ -182,7 +186,7 @@ export default Vue.extend({
     },
 
     /**
-     * Returns (Inputed deposit amount >= Total to pay - L2 balance)
+     * Returns (Inputted deposit amount >= Total to pay - L2 balance)
      */
     enoughDepositAmount(): Boolean {
       if (!this.depositAmount) {
@@ -200,35 +204,16 @@ export default Vue.extend({
     enoughZkBalance: {
       immediate: true,
       handler(val) {
-        if(val===true && this.step==='default') {
-          this.$emit('input', true);
-        }
-        else {
-          this.$emit('input', false);
+        if (val === true && this.step === "default") {
+          this.$emit("input", true);
+        } else {
+          this.$emit("input", false);
         }
       },
     },
     step(val) {
-      if(this.enoughZkBalance===true && val==='default') {
-        this.$emit('input', true);
-      }
-      else {
-        this.$emit('input', false);
-      }
+      this.$emit("input", this.enoughZkBalance && val === "default");
     },
-    /* activeDeposits: {
-      immediate: true,
-      handler(val, oldVal) {
-        if (!val) {
-          return;
-        }
-        if (val.hasOwnProperty(this.token)) {
-          this.step = "depositing";
-        } else if (this.step === "depositing" && oldVal.hasOwnProperty(this.token)) {
-          this.step = "default";
-        }
-      },
-    }, */
   },
   mounted() {
     if (!this.enoughZkBalance) {
@@ -236,11 +221,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    /* setDepositMaxAmount() {
-      if (!this.enoughZkBalance && this.step === "default") {
-        this.depositAmount = utils.handleFormatTokenPretty(this.token, BigNumber.from(this.initialBalance.rawBalance).toString());
-      }
-    }, */
     setDepositMaxAmount() {
       this.depositAmount = utils.handleFormatToken(this.token, this.initialBalance.rawBalance.toString());
     },
@@ -263,7 +243,7 @@ export default Vue.extend({
           this.substep = "waitingUserConfirmation";
           this.step = "depositing";
           const transferTransaction = await deposit(this.token, this.depositBigNumber, this.$store);
-          this.substep = "commiting";
+          this.substep = "committing";
           await transferTransaction.awaitEthereumTxCommit();
           this.substep = "confirming";
           await transferTransaction.awaitReceipt();
@@ -296,7 +276,7 @@ export default Vue.extend({
         this.substep = "waitingUserConfirmation";
         this.step = "unlocking";
         const unlockTransaction = await unlockToken(this.initialBalance.address as Address, this.$store);
-        this.substep = "commiting";
+        this.substep = "committing";
         await unlockTransaction.wait();
         await this.$store.dispatch("wallet/getInitialBalances", true);
         this.step = "default";

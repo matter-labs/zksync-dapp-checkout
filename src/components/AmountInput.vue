@@ -142,13 +142,6 @@ export default Vue.extend({
         return;
       }
 
-      /* if (this.maxAmount) {
-        if (inputAmount.gt(this.maxAmount)) {
-          this.error = `Not enough ${this.token} to ${this.type} requested amount`;
-          return;
-        }
-      } */
-
       if (this.type === "transfer" && !utils.isAmountPackable(inputAmount.toString())) {
         this.error = "Max supported precision for transfers exceeded";
         return;

@@ -1,6 +1,6 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
 import { ZkSyncTransaction, Address, TokenSymbol, TransactionData, TransactionFee, TotalByToken } from "@/plugins/types";
-import { closestPackableTransactionAmount } from 'zksync';
+import { closestPackableTransactionAmount } from "zksync";
 import { BigNumber } from "ethers";
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
@@ -17,11 +17,11 @@ export type CheckoutModuleState = ReturnType<typeof state>;
 
 export const mutations: MutationTree<CheckoutModuleState> = {
   setTransactionData(state, { transactions, fromAddress, feeToken }: TransactionData) {
-    state.transactions = transactions.map(tx => {
+    state.transactions = transactions.map((tx) => {
       return {
         ...tx,
-        amount: closestPackableTransactionAmount(tx.amount).toString()
-      }
+        amount: closestPackableTransactionAmount(tx.amount).toString(),
+      };
     });
     state.fromAddress = fromAddress;
     state.feeToken = feeToken;
@@ -48,7 +48,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
   getAccountUnlockFee(state): false | BigNumber {
     return state.accountUnlockedFee;
   },
-  getAllFees(state: /* Vuex store state */ any, getters, rootState, rootGetters: /* Vuex store getters */ any): Array<TransactionFee> {
+  getAllFees(state: /* Vuex store state */ any, rootGetters: /* Vuex store getters */ any): Array<TransactionFee> {
     const allFees = [] as Array<TransactionFee>;
     allFees.push(state.transactionBatchFee);
     if (state.accountUnlockedFee && rootGetters["wallet/isAccountLocked"]) {
@@ -62,7 +62,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     return allFees;
   },
   getTotalByToken(state, getters): TotalByToken {
-    const allFees = getters['getAllFees'];
+    const allFees = getters.getAllFees;
     const totalByToken = new Map();
     const addToTotalByToken = (amount: BigNumber, token: TokenSymbol) => {
       if (totalByToken.has(token)) {

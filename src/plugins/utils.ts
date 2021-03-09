@@ -47,8 +47,8 @@ const handleFormatTokenPretty = (symbol: TokenSymbol, amount: GweiBalance) => {
     }
   }
   let newVal = `${symbolsArrInt}.${symbolsArrDecimal}`;
-  if(newVal.length<firstFormated.length) {
-    newVal+='...'
+  if (newVal.length < firstFormated.length) {
+    newVal += "...";
   }
   return newVal;
 };
