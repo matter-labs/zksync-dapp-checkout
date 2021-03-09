@@ -112,7 +112,7 @@
             </div>
           </template>
           <template slot="second">
-            <div class="amount">{{ item.txData.tx.fee==='0'?item.txData.tx.amount:item.txData.tx.fee | formatToken(getTokenByID(item.txData.tx.token)) }}</div>
+            <div class="amount">{{ item.txData.tx.fee==='0'?item.txData.tx.amount:item.txData.tx.fee | (getTokenByID(item.txData.tx.token)) }}</div>
           </template>
           <template slot="third">
             <a class="transactionLink linkDefault" :href="getTxLink(item.txHash)" target="_blank">
@@ -138,6 +138,7 @@ import { changePubKey, transactionBatch } from "@/plugins/walletActions/transact
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
+import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
 
 export default Vue.extend({
   components: {
@@ -221,7 +222,7 @@ export default Vue.extend({
             }
           }
         } else {
-          createErrorModal("Unknow error. Try again later.");
+          createErrorModal("Unknown error. Try again later.");
         }
       }
       this.loading = false;
