@@ -1,8 +1,23 @@
 import { walletData } from '@/plugins/walletData';
-import { submitSignedTransactionsBatch } from 'zksync/src/wallet';
-import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction } from '@/plugins/types';
+import { Address, ETHOperation, GweiBalance, TokenSymbol, Transaction, Tx, Wallet, ZkSyncTransaction, Provider } from '@/plugins/types';
 import { BigNumber, BigNumberish } from 'ethers';
-import { Provider } from 'zksync/src/provider';
+import { SignedTransaction, TxEthSignature } from 'zksync/src/types';
+
+
+export const submitSignedTransactionsBatch = async (
+  provider: Provider,
+  signedTxs: SignedTransaction[],
+  ethSignatures?: TxEthSignature[]
+): Promise<Transaction[]> => {
+  const transactionHashes = await provider.submitTxsBatch(
+    signedTxs.map((tx) => {
+      return { tx: tx.tx, signature: tx.ethereumSignature };
+    }),
+    // @ts-ignore
+    ethSignatures
+  );
+  return transactionHashes.map((txHash, idx) => new Transaction(signedTxs[idx], txHash, provider));
+}
 
 /**
  * Transaction processing action
@@ -164,6 +179,7 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, st
   //store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse as ETHOperation;
 };
+
 
 /**
  * Unlock token action method
