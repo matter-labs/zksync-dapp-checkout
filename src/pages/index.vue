@@ -97,7 +97,7 @@
     <div v-else-if="step==='success'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Thank you!</div>
       <success-mark class="w-11/12 max-w-xxs mx-auto py-5 bigSuccessMark" />
-      <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="text-lightviolet underline" href="https://zksync.io/" target="_blank">zkSync
+      <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync
       </a></div>
       <line-table-header class="mt-4 md:mt-7 mb-2">
         <template slot="first">Paid</template>
