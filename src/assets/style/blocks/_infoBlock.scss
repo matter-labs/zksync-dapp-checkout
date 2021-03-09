@@ -3,10 +3,11 @@
   width: 100%;
   box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
   overflow: auto;
+  height: 100%;
 
   .infoBlock {
     position: relative;
-    height: max-content;
+    height: 44px;
 
     .footerContainer {
       z-index: 1;
@@ -19,13 +20,14 @@
         bottom: 0;
         width: 100%;
         height: auto;
+        opacity: 0.6;
       }
     }
 
     footer {
       position: absolute;
       left: 0;
-      bottom: 40px;
+      bottom: 25px;
       width: 100%;
       height: max-content;
     }
@@ -46,5 +48,10 @@
         justify-content: space-between;
       }
     }
+  }
+  .linkDefault
+  {
+    font-size: 14px;
+    font-weight: 300;
   }
 }
