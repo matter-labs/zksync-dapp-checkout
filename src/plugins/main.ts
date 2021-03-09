@@ -13,13 +13,13 @@ import ValuesBlock from "@/components/ValuesBlock.vue";
 import Modal from "@/components/Modal.vue";
 import MaxHeight from "@/components/MaxHeight.vue";
 
-import { TokenSymbol } from "@/plugins/types";
+import { GweiBalance, TokenSymbol } from "@/plugins/types";
 import { BigNumber } from "ethers";
 
-import { ZkSyncCheckoutManager } from 'zksync-checkout-internal';
+import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
 
 const checkoutManager = ZkSyncCheckoutManager.getManager();
-checkoutManager.startCheckout((e) => console.log(`Err ${e} has occured`));
+checkoutManager.startCheckout((e) => console.log(`Error ${e} has occurred`));
 
 Vue.use(VueScrollTo);
 
@@ -38,10 +38,10 @@ Vue.component("SuccessMark", SuccessMark);
 /**
  * Implementation of the tokenFormatter as a global filter
  */
-Vue.filter("formatToken", (value: string, symbol: TokenSymbol) => {
+Vue.filter("formatToken", (value: GweiBalance | BigNumber, symbol: TokenSymbol) => {
   return utils.handleFormatToken(symbol, value);
 });
-Vue.filter("formatTokenPretty", (value: string, symbol: TokenSymbol) => {
+Vue.filter("formatTokenPretty", (value: GweiBalance | BigNumber, symbol: TokenSymbol) => {
   return utils.handleFormatTokenPretty(symbol, value);
 });
 

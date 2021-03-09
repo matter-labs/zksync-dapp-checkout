@@ -41,6 +41,18 @@ export interface ForcedExit {
   signature: Signature;
 }
 
+export interface ChangePubKey {
+  type: "ChangePubKey";
+  accountId: number;
+  account: Address;
+  newPkHash: PubKeyHash;
+  feeToken: number;
+  fee: BigNumberish;
+  nonce: number;
+  signature: Signature;
+  ethSignature: string;
+}
+
 export interface DepositsInterface {
   [tokenSymbol: string]: Array<SinglDepositsInterface>;
 }
@@ -144,6 +156,11 @@ export interface Tx {
   confirmCount: number;
   created_at: Date;
 }
+
+export declare type EthSignerType = {
+  verificationMethod: "ECDSA" | "ERC-1271";
+  isSignedMsgPrefixed: boolean;
+};
 
 export declare class Signer {
   readonly privateKey: Uint8Array;
@@ -285,11 +302,6 @@ export interface AccountState {
   };
 }
 
-export declare type EthSignerType = {
-  verificationMethod: "ECDSA" | "ERC-1271";
-  isSignedMsgPrefixed: boolean;
-};
-
 export interface TxEthSignature {
   type: "EthereumSignature" | "EIP1271Signature";
   signature: string;
@@ -305,18 +317,6 @@ export interface Withdraw {
   fee: BigNumberish;
   nonce: number;
   signature: Signature;
-}
-
-export interface ChangePubKey {
-  type: "ChangePubKey";
-  accountId: number;
-  account: Address;
-  newPkHash: PubKeyHash;
-  feeToken: number;
-  fee: BigNumberish;
-  nonce: number;
-  signature: Signature;
-  ethSignature: string;
 }
 
 export interface CloseAccount {
@@ -388,6 +388,31 @@ export interface BatchFee {
 
 export declare function getDefaultProvider(network: "localhost" | "rinkeby" | "ropsten" | "mainnet", transport?: "WS" | "HTTP"): Promise<Provider>;
 
+export declare abstract class AbstractJSONRPCTransport {
+  abstract request(method: string, params: any): Promise<any>;
+  subscriptionsSupported(): boolean;
+  subscribe(subMethod: string, subParams: any, unsubMethod: string, cb: (data: any) => void): Promise<Subscription>;
+  abstract disconnect(): any;
+  abstract ws: {
+    isOpened: boolean;
+    open(): Promise<any>;
+  };
+}
+
+export declare class TokenSet {
+  private tokensBySymbol;
+  constructor(tokensBySymbol: Tokens);
+  private resolveTokenObject;
+  isTokenTransferAmountPackable(tokenLike: TokenLike, amount: string): boolean;
+  isTokenTransactionFeePackable(tokenLike: TokenLike, amount: string): boolean;
+  formatToken(tokenLike: TokenLike, amount: BigNumberish): string;
+  parseToken(tokenLike: TokenLike, amount: string): BigNumber;
+  resolveTokenDecimals(tokenLike: TokenLike): number;
+  resolveTokenId(tokenLike: TokenLike): number;
+  resolveTokenAddress(tokenLike: TokenLike): TokenAddress;
+  resolveTokenSymbol(tokenLike: TokenLike): TokenSymbol;
+}
+
 export declare class Provider {
   transport: AbstractJSONRPCTransport;
   contractAddress: ContractAddress;
@@ -426,31 +451,6 @@ export declare class ETHProxy {
   private mainContract;
   constructor(ethersProvider: ethers.providers.Provider, contractAddress: ContractAddress);
   resolveTokenId(token: TokenAddress): Promise<number>;
-}
-
-export declare class TokenSet {
-  private tokensBySymbol;
-  constructor(tokensBySymbol: Tokens);
-  private resolveTokenObject;
-  isTokenTransferAmountPackable(tokenLike: TokenLike, amount: string): boolean;
-  isTokenTransactionFeePackable(tokenLike: TokenLike, amount: string): boolean;
-  formatToken(tokenLike: TokenLike, amount: BigNumberish): string;
-  parseToken(tokenLike: TokenLike, amount: string): BigNumber;
-  resolveTokenDecimals(tokenLike: TokenLike): number;
-  resolveTokenId(tokenLike: TokenLike): number;
-  resolveTokenAddress(tokenLike: TokenLike): TokenAddress;
-  resolveTokenSymbol(tokenLike: TokenLike): TokenSymbol;
-}
-
-export declare abstract class AbstractJSONRPCTransport {
-  abstract request(method: string, params: any): Promise<any>;
-  subscriptionsSupported(): boolean;
-  subscribe(subMethod: string, subParams: any, unsubMethod: string, cb: (data: any) => void): Promise<Subscription>;
-  abstract disconnect(): any;
-  abstract ws: {
-    isOpened: boolean;
-    open(): Promise<any>;
-  };
 }
 
 declare class Subscription {

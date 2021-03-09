@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="connectedWallet md:py-4 flex items-center">
-      <i class="text-gray text-4xl mr-3 far fa-wallet"></i>
+      <i class="text-gray text-4xl mr-3 far fa-wallet"/>
       <values-block>
         <template slot="left-top">
           <div class="headline">My Wallet</div>
@@ -13,11 +13,11 @@
           <div class="flex items-center flex-col md:flex-row">
             <defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" to="///wallet.zksync.io">
               <span>Open wallet</span>
-              <i class="fas fa-external-link"></i>
+              <i class="fas fa-external-link"/>
             </defbtn>
             <defbtn outline @click="logout()">
               <span class="text-red">Disconnect</span>
-              <i class="text-red far fa-times"></i>
+              <i class="text-red far fa-times"/>
             </defbtn>
           </div>
         </template>

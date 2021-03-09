@@ -90,8 +90,8 @@
     </div>
     <div v-else-if="step==='transfer'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-dark text-center pt-5 md:pt-10">Payment</div>
-      <div v-if="substep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Confirm the transaction to transfer</div>
-      <div v-else-if="substep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
+      <div v-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Confirm the transaction to transfer</div>
+      <div v-else-if="subStep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
       <loader class="mx-auto mt-6" size="md" color="violet" />
     </div>
     <div v-else-if="step==='success'" class="w-full">
@@ -146,7 +146,7 @@ export default Vue.extend({
     return {
       modal: false,
       step: "main" /* main, transfer, success */,
-      substep: "" /* waitingUserConfirmation, committing */,
+      subStep: "" /* waitingUserConfirmation, committing */,
       loading: false,
       tokenItemsValid: {} as {
         [token: string]: Boolean;
@@ -229,7 +229,7 @@ export default Vue.extend({
         const transactionData = this.transactionData;
         const getTransactionFee = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
         this.step = "transfer";
-        this.substep = "waitingUserConfirmation";
+        this.subStep = "waitingUserConfirmation";
         try {
           const transactions = await transactionBatch(transactionData.transactions, transactionData.feeToken, getTransactionFee.amount, this.$store);
           console.log("transaction", transactions);
@@ -240,9 +240,9 @@ export default Vue.extend({
           const hashes = transactions.map((tx) => tx.txHash);
           manager.notifyHashes(hashes);
           this.finalTransactions.push(...transactions);
-          this.substep = "commiting";
+          this.subStep = "commiting";
           await transactions[0].awaitReceipt();
-          this.substep = "committing";
+          this.subStep = "committing";
           await transactions[0].awaitReceipt(); /* Not sure if required. Wait for the first transaction (at least) to be confirmed */
           this.step = "success";
         } catch (error) {
