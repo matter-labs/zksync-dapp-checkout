@@ -56,17 +56,6 @@
 
     <connected-wallet/>
 
-    <note v-if="accountLocked">
-      <template slot="icon">
-        <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"/>
-      </template>
-      <template slot="default">
-        <div class="text-gray text-xs lg:text-sm">
-          To start using your account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by verifying ETH signatures with zero-knowledge proofs. Please bear with us!
-        </div>
-      </template>
-    </note>
-
     <div v-if="step==='main'" class="w-full">
       <line-table-header class="mt-4 md:mt-7 mb-2">
         <template slot="first">To pay</template>
