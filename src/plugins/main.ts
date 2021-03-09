@@ -39,10 +39,10 @@ Vue.component("SuccessMark", SuccessMark);
  * Implementation of the tokenFormatter as a global filter
  */
 Vue.filter("formatToken", (value: GweiBalance | BigNumber, symbol: TokenSymbol) => {
-  return utils.handleFormatToken(symbol, value);
+  return utils.handleFormatToken(symbol, <string>value);
 });
 Vue.filter("formatTokenPretty", (value: GweiBalance | BigNumber, symbol: TokenSymbol) => {
-  return utils.handleFormatTokenPretty(symbol, value);
+  return utils.handleFormatTokenPretty(symbol, <string>value);
 });
 
 /**
