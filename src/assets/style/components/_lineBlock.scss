@@ -12,29 +12,30 @@
       width: max-content;
       justify-self: end;
     }
+    .address
+    {
+      font-family: "Fira Code", "sans-serif";
+      color: #3C4257;
+      font-size: 0.65rem;
+      line-height: 1.4;
+      font-weight: 300;
+      letter-spacing: -0.025em;
+    }
   }
 
   .tokenItem {
     display: flex;
     align-items: center;
 
-    .tokenImg {
-      display: block;
-      height: 16px;
-      width: 16px;
-      object-fit: contain;
-      margin-right: 5px;
-    }
-
     .tokenName {
-      font-weight: 600;
+      font-weight: 400;
       color: $majorDark;
-      font-size: 12px;
+      font-size: 16px;
     }
   }
 
   .amount {
-    font-weight: 600;
+    font-weight: 400;
     font-size: 16px;
     color: $black2;
     width: max-content;
