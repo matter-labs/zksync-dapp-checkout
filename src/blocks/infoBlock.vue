@@ -130,7 +130,7 @@ export default Vue.extend({
       for (const item of [...transactionData.transactions, ...allFees]) {
         totalUSD += +tokensPrices[item.token].price * +utils.handleFormatToken(item.token, item.amount as string);
       }
-      return totalUSD < 0.01 ? `<0.01` : `~${totalUSD.toFixed(2)}`;
+      return totalUSD < 0.01 ? `<0.01` : `${totalUSD.toFixed(2)}`;
     },
     totalByToken(): TotalByToken {
       return this.$store.getters["checkout/getTotalByToken"];
