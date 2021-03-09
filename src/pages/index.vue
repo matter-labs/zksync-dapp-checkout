@@ -58,7 +58,7 @@
 
     <note v-if="accountLocked">
       <template slot="icon">
-        <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"></i>
+        <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"/>
       </template>
       <template slot="default">
         <div class="text-gray text-xs lg:text-sm">

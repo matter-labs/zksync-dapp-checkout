@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script type="text/javascript" src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/zksync-checkout@0.0.8/dist/main.js"></script>
+  <button onclick="f()">Click me</button>
+  <script type="text/javascript">
+    async function f() {
+
+      const local = '/';
+     // const local = '//localhost:3000';
+      let cm = new ZkSyncCheckout.CheckoutManager('rinkeby', local);
+
+      const constants = ZkSyncCheckout.Constants;
+
+      const transactions = [
+        {
+          to: '0x3DE136E2Faf28e764292CdFc26c89ca7F36d80A3',
+          token: 'USDC',
+          amount: '10000',
+          description: 'Present from St Nicolas'
+        },
+        {
+          to: '0xc0F5794f94C4DF17C60D0b4b04eAB20640fCC683',
+          token: 'USDC',
+          amount: '100000',
+          description: 'Some random commission',
+          semanticType: 'FeeOrCommission'
+        },
+      ];
+
+      const hashes = await cm.zkSyncBatchCheckout(
+        transactions,
+        'USDC',
+      );
+
+      cm.wait(hashes).then(data => console.log(data));
+
+    }
+
+
+
+  </script>
+</body>
+</html>
