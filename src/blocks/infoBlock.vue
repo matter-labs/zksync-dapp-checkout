@@ -4,7 +4,7 @@
       <header class="md:mb-6">
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
-          <div class="text-violet text-2xl font-bold">zkCheckout <sup class="text-sm font-light">{{currentNetworkName}}</sup></div>
+          <div class="text-violet text-2xl font-bold">zkCheckout <sup class="text-sm font-light" v-if="currentNetworkName !== 'mainnet'">{{currentNetworkName}}</sup></div>
         </div>
       </header>
       <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
