@@ -129,8 +129,8 @@
       <div class="mainBtnsContainer">
         <div class="mainBtns">
           <defbtn :disabled="!transferAllowed" @click="close()">
-            <i class="fas fa-angle-left"></i>
-            <span>Back to the website</span>
+            <i class="fad fa-times-circle"/>
+            <span>Close</span>
           </defbtn>
         </div>
       </div>
