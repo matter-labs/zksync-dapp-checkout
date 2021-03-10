@@ -20,10 +20,6 @@
     {
       margin-right: 5px;
     }
-    .text-gray
-    {
-      text-transform: capitalize;
-    }
     .address
     {
       font-family: "Fira Code", "sans-serif";
@@ -55,11 +51,11 @@
     width: max-content;
     min-width: 30px;
     white-space: nowrap;
+    text-overflow: ellipsis;
     transition: color $transition;
     will-change: color;
     position: relative;
-    &:after
-    {
+    &:after {
       position: absolute;
       z-index: 10;
       height: 100%;

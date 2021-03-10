@@ -141,11 +141,12 @@ export default Vue.extend({
       if (this.subStep === "waitingUserConfirmation") {
         return "Confirm operation";
       }
-      if (this.subStep === "committing" || this.subStep === "confirming") {
-        return this.subStep + " transaction...";
+      if (this.subStep === "committing")
+      {
+        return "Committing transaction...";
       }
       if (this.subStep === "confirming") {
-        return "Committing transaction...";
+        return "Confirming transaction...";
       }
       return "";
     },
@@ -231,7 +232,7 @@ export default Vue.extend({
       },
     },
     step(val) {
-      this.$emit("input", this.enoughZkBalance && val === "default");
+      this.$emit("input", (this.enoughZkBalance===true && val === "default"));
     },
   },
   mounted() {
