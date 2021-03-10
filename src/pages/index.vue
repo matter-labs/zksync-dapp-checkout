@@ -85,20 +85,21 @@
       <div class="text-md text-center font-light pt-2">
         Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a>
       </div>
+      <div class="mainBtnsContainer">
+        <div class="mainBtns">
+          <defbtn :disabled="!transferAllowed" @click="close()">
+            <i class="fas fa-times"/>
+            <span>Close</span>
+          </defbtn>
+        </div>
+      </div>
       <line-table-header class="mt-10 md:mt-7 mb-2">
         <template slot="first">Paid</template>
         <template slot="second"></template>
         <template slot="first:md">&nbsp;</template>
         <template slot="right">Paid / TX Hash</template>
       </line-table-header>
-      <div class="mainBtnsContainer">
-        <div class="mainBtns">
-          <defbtn :disabled="!transferAllowed" @click="close()">
-            <i class="fad fa-times-circle"/>
-            <span>Close</span>
-          </defbtn>
-        </div>
-      </div>
+
       <template v-for="(item,index) in finalTransactions">
         <line-block :key="index">
           <template slot="first">

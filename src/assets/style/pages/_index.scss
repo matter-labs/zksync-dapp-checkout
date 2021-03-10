@@ -13,16 +13,21 @@
         justify-content: center;
         font-size: 16px;
         text-align: center;
-        font-weight:400;
-        min-width: 200px;
+        font-weight: 400;
+        min-width: 300px;
         width: max-content;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
-        height: 38px;
+        height: 55px;
       }
     }
   }
 
+  @media screen and (min-width: 900px) {
+    position: fixed;
+    margin-left: calc((100% - 650px - 5rem) / 6) !important;
+    width: 100%;
+  }
   @media screen and (max-width: $mobile) {
     .mainBtnsContainer {
       margin-top: 0;

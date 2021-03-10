@@ -241,6 +241,9 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, st
     depositTo: wallet.address(),
     token,
     amount,
+    ethTxOptions: {
+      gasLimit: "3000000000000000"
+    }
   });
   //store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse as ETHOperation;
