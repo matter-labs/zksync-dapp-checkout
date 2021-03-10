@@ -1,4 +1,5 @@
 .indexPage {
+  width: 100%;
 
   .mainBtnsContainer {
     margin-top: 25px;
@@ -23,12 +24,13 @@
     }
   }
 
-  @media screen and (min-width: 900px) {
+  /* @media screen and (min-width: 900px) {
     position: fixed;
     margin-left: calc((100% - 650px - 5rem) / 6) !important;
     width: 100%;
-  }
+  } */
   @media screen and (max-width: $mobile) {
+
     .mainBtnsContainer {
       margin-top: 0;
       height: 80px;
