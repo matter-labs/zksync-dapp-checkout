@@ -57,6 +57,18 @@
     <connected-wallet/>
 
     <div v-if="step==='main'" class="w-full">
+
+      <note class="mt-5" v-if="isAccountLocked">
+        <template slot="icon">
+          <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"></i>
+        </template>
+        <template slot="default">
+          <div class="text-gray text-xs lg:text-sm">
+            To start using your account you need to sign a new zkSync public key with your Ethereum wallet.
+          </div>
+        </template>
+      </note>
+
       <line-table-header class="mt-5 md:mt-7 mb-2">
         <template slot="first">To pay</template>
         <template slot="second">L2 balance</template>
