@@ -56,17 +56,6 @@
 
     <connected-wallet/>
 
-    <note v-if="isAccountLocked">
-      <template slot="icon">
-        <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"></i>
-      </template>
-      <template slot="default">
-        <div class="text-gray text-xs lg:text-sm">
-          To start using your account you need to sign a new zkSync public key with your Ethereum wallet.
-        </div>
-      </template>
-    </note>
-
     <div v-if="step==='main'" class="w-full">
       <line-table-header class="mt-5 md:mt-7 mb-2">
         <template slot="first">To pay</template>
@@ -198,7 +187,28 @@ export default Vue.extend({
   methods: {
     async makeTransfer() {
       if (this.isAccountLocked) {
-        await this.changePubKey();
+        try {
+            await this.changePubKey();
+        } catch (error) {
+          console.log(error)
+          const createErrorModal = (text: string) => {
+            this.errorModal = {
+              headline: `Activating account error`,
+              text,
+            };
+          };
+          if (error.message) {
+            if (!error.message.includes("User denied")) {
+              if (error.message.includes("Account does not exist in the zkSync network")) {
+                createErrorModal("Please, make deposit or request tokens in order to activate the account.");
+              } else {
+                createErrorModal(error.message);
+              }
+            }
+          } else {
+            createErrorModal("Unknown error. Try again later.");
+          }
+        }
       }
       await this.transfer();
 
@@ -214,29 +224,9 @@ export default Vue.extend({
         return
       }
       this.loading = true;
-      try {
+
         await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
         this.pubKeySigned = true;
-      } catch (error) {
-        console.log(error)
-        const createErrorModal = (text: string) => {
-          this.errorModal = {
-            headline: `Activating account error`,
-            text,
-          };
-        };
-        if (error.message) {
-          if (!error.message.includes("User denied")) {
-            if (error.message.includes("Account does not exist in the zkSync network")) {
-              createErrorModal("Please, make deposit or request tokens in order to activate the account.");
-            } else {
-              createErrorModal(error.message);
-            }
-          }
-        } else {
-          createErrorModal("Unknown error. Try again later.");
-        }
-      }
       this.loading = false;
     },
     async transfer() {
@@ -257,7 +247,7 @@ export default Vue.extend({
           const hashes = transactions.map((tx: any) => tx.txHash);
 
 
-          // There are both setSigningKey at the begining and the fee at the end
+          // There are both setSigningKey at the beginning and the fee at the end
           if (transactions.length == transactionsList.length + 2) {
             manager.notifyHashes(hashes.slice(1, -1));
           } else {
