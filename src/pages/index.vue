@@ -66,7 +66,7 @@
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn v-if="accountLocked" :loader="loading" :disabled="loading" @click="nextStep()">
+          <defbtn v-if="isAccountLocked" :loader="loading" :disabled="loading" @click="changePubKey()">
             <i class="fas fa-unlock-alt"/>
             <span>Activate the account</span>
           </defbtn>
@@ -189,6 +189,7 @@ export default Vue.extend({
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
     },
     async changePubKey() {
+      if(this.loading===true){return}
       this.loading = true;
       try {
         await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
