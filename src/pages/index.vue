@@ -209,6 +209,7 @@ export default Vue.extend({
       this.loading = true;
       try {
         await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
+//        this.$store.commit("wallet/")["wallet/isAccountLocked"]
       } catch (error) {
         const createErrorModal = (text: string) => {
           this.errorModal = {
@@ -239,7 +240,7 @@ export default Vue.extend({
         try {
           let transactionsList = [] as Array<ZkSyncTransaction>;
           transactionsList.push(...transactionData.transactions);
-          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, !this.isAccountLocked, this.$store);
+          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.$store);
           console.log("batch transaction", transactions);
 
           const manager = ZkSyncCheckoutManager.getManager();
