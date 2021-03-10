@@ -249,3 +249,37 @@ export const unlockToken = async (address: Address, store: any) => {
   await store.dispatch("wallet/restoreProviderConnection");
   return await wallet!.approveERC20TokenDeposits(address as string);
 };
+
+/**
+ * Change pub key method
+ *
+ * @param {TokenSymbol} feeToken
+ * @param store
+ * @returns {Promise<void>}
+ */
+ export const changePubKey = async (feeToken: TokenSymbol, fee: BigNumber, store: any) => {
+  const syncWallet = walletData.get().syncWallet;
+  await store.dispatch("wallet/restoreProviderConnection");
+  if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
+    const changePubkey = await syncWallet?.setSigningKey({
+      feeToken,
+      fee,
+      nonce: "committed",
+      ethAuthType: "Onchain",
+    });
+    await changePubkey?.awaitReceipt();
+  } else {
+    const changePubkey = await syncWallet!.setSigningKey({
+      feeToken,
+      fee,
+      ethAuthType: "ECDSA",
+    });
+    await changePubkey.awaitReceipt();
+  }
+
+  const isSigningKeySet = await syncWallet?.isSigningKeySet();
+  store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
+
+  const newAccountState = await syncWallet?.getAccountState();
+  walletData.set({ accountState: newAccountState });
+};
