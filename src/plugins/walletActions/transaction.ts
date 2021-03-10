@@ -237,13 +237,15 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
  */
 export const deposit = async (token: TokenSymbol, amount: string | BigNumber, store: any): Promise<ETHOperation> => {
   const wallet = walletData.get().syncWallet;
+  console.log(token)
+  const ethTxOptions = token.toLowerCase() === 'eth' ? {} : {
+    gasLimit: "160000"
+  }
   const depositResponse = await wallet?.depositToSyncFromEthereum({
     depositTo: wallet.address(),
     token,
     amount,
-    ethTxOptions: {
-      gasLimit: "150000"
-    }
+    ethTxOptions: ethTxOptions
   });
   //store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse as ETHOperation;
