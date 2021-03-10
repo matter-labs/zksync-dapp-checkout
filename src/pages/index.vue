@@ -256,8 +256,14 @@ export default Vue.extend({
           // awaitReceipt is called
           const hashes = transactions.map((tx: any) => tx.txHash);
 
-          // There is only fee tx
-          manager.notifyHashes(hashes.slice(0, -1));
+
+          // There are both setSigningKey at the begining and the fee at the end
+          if (transactions.length == transactionsList.length + 2) {
+            manager.notifyHashes(hashes.slice(1, -1));
+          } else {
+            // There is only fee tx
+            manager.notifyHashes(hashes.slice(0, -1));
+          }
 
           // @ts-ignore
           this.finalTransactions.push(...transactions);
