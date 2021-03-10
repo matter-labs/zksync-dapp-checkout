@@ -77,10 +77,10 @@
       </div>
       <div class="footerContainer hidden md:block">
         <footer>
-          <div class="poweredBy flex justify-center items-center pt-5">
+          <a class="poweredBy flex justify-center items-center pt-5" href="https://zksync.io" target="_blank">
             <div class="text-md text-violet mr-3">Powered by</div>
             <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync"/>
-          </div>
+          </a>
           <div class="poweredBy flex justify-center items-center mt-3">
             <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
             <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault ml-5">Privacy Policy</a>
