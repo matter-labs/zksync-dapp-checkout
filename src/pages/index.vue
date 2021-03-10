@@ -61,7 +61,7 @@
         <template slot="first">To pay</template>
         <template slot="second">L2 balance</template>
         <template slot="first:md">To pay / L2 balance</template>
-        <template slot="right">Deposit from <strong>{{currentNetworkName}}</strong></template>
+        <template slot="right"></template>
       </line-table-header>
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
@@ -75,12 +75,12 @@
     </div>
     <div v-else-if="step==='transfer'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-dark text-center pt-5 md:pt-10">Payment</div>
-      <div v-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Confirm the transaction to transfer</div>
+      <div v-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in the popup</div>
       <div v-else-if="subStep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
       <loader class="mx-auto mt-6" size="md" color="violet" />
     </div>
     <div v-else-if="step==='success'" class="w-full">
-      <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Thank you!</div>
+      <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Done. Thank you!</div>
       <success-mark class="w-11/12 max-w-xxs mx-auto py-5 bigSuccessMark" />
       <div class="text-md text-center font-light pt-2">
         Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a>
@@ -91,6 +91,14 @@
         <template slot="first:md">&nbsp;</template>
         <template slot="right">Paid / TX Hash</template>
       </line-table-header>
+      <div class="mainBtnsContainer">
+        <div class="mainBtns">
+          <defbtn :disabled="!transferAllowed" @click="close()">
+            <i class="fad fa-times-circle"/>
+            <span>Close</span>
+          </defbtn>
+        </div>
+      </div>
       <template v-for="(item,index) in finalTransactions">
         <line-block :key="index">
           <template slot="first">
@@ -112,14 +120,6 @@
           </template>
         </line-block>
       </template>
-      <div class="mainBtnsContainer">
-        <div class="mainBtns">
-          <defbtn :disabled="!transferAllowed" @click="close()">
-            <i class="fad fa-times-circle"/>
-            <span>Close</span>
-          </defbtn>
-        </div>
-      </div>
     </div>
   </div>
 </template>

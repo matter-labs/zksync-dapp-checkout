@@ -78,7 +78,7 @@
       <div class="footerContainer hidden md:block">
         <footer>
           <div class="poweredBy flex justify-center items-center pt-5">
-            <div class="text-md font-firaCondensed uppercase text-violet mr-3">Powered by</div>
+            <div class="text-md text-violet mr-3">Powered by</div>
             <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync"/>
           </div>
           <div class="poweredBy flex justify-center items-center mt-3">
