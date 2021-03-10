@@ -57,11 +57,11 @@
     <connected-wallet/>
 
     <div v-if="step==='main'" class="w-full">
-      <line-table-header class="mt-4 md:mt-7 mb-2">
+      <line-table-header class="mt-5 md:mt-7 mb-2">
         <template slot="first">To pay</template>
         <template slot="second">L2 balance</template>
         <template slot="first:md">To pay / L2 balance</template>
-        <template slot="right">Deposit from mainnet</template>
+        <template slot="right">Deposit from <strong>{{currentNetworkName}}</strong></template>
       </line-table-header>
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
@@ -120,7 +120,7 @@
 import Vue from "vue";
 
 import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction} from "@/plugins/types";
-import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
+import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
@@ -150,6 +150,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    currentNetworkName(): string {
+      return ETHER_NETWORK_LABEL_LOWERCASED;
+    },
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },

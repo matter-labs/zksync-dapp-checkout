@@ -69,7 +69,7 @@
           <success-mark class="w-8 h-8"/>
         </template>
         <template v-else slot="right">
-          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs font-medium">Insufficient {{ token }} mainnet balance</div>
+          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs">Insufficient <strong>{{ token }} {{currentNetworkName}}</strong> balance</div>
           <defbtn v-else-if="!enoughWithInitialBalance && !initialBalance.unlocked" @click="unlock()">
             <i class="fas fa-unlock-alt"/><span>Unlock</span>
           </defbtn>
@@ -96,6 +96,7 @@
 
 <script lang="ts">
 import { Address, Balance, GweiBalance, TokenPrices } from "@/plugins/types";
+import { ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { deposit, unlockToken } from "@/plugins/walletActions/transaction";
 import { BigNumber } from "ethers";
@@ -127,6 +128,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    currentNetworkName(): string {
+      return ETHER_NETWORK_LABEL_LOWERCASED;
+    },
     isInProgress(): boolean {
       return this.step !== "default";
     },
