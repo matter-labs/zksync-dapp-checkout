@@ -193,7 +193,7 @@ export default Vue.extend({
       this.loading = true;
       try {
         await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
-        await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
+        console.log('asd', 1);
       } catch (error) {
         const createErrorModal = (text: string) => {
           this.errorModal = {
