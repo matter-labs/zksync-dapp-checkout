@@ -136,7 +136,7 @@
     "prepare_ci_mainnet": "yarn ci && sh cli-process-env.sh 'mainnet'",
     "start": "nuxt start",
     "build": "nuxt build",
-    "build:stage": "yarn prepare_ci_ropsten && yarn generate --fail-on-error",
+    "build:stage": "yarn prepare_ci && yarn generate --fail-on-error",
     "format": "prettier --write",
     "lint-ts": "eslint --fix \"**/*.{ts, js, vue}\"",
     "lint-css": "stylelint --fix \"**/*.scss\"",
