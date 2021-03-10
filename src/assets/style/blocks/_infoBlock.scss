@@ -8,6 +8,10 @@
   .infoBlock {
     position: relative;
 
+    sup {
+      top: -1em;
+    }
+
     header {
       @media screen and (min-width: $mobile+1) {
         height: 45px;
@@ -37,8 +41,8 @@
       height: max-content;
     }
   }
-  .zkSyncLogoFull
-  {
+
+  .zkSyncLogoFull {
     height: 2.5rem;
   }
 
@@ -48,6 +52,7 @@
 
     .infoBlock {
       height: auto;
+
       header {
         display: flex;
         align-items: center;
@@ -55,8 +60,8 @@
       }
     }
   }
-  .linkDefault
-  {
+
+  .linkDefault {
     font-size: 14px;
     font-weight: 300;
   }

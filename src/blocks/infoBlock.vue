@@ -4,7 +4,7 @@
       <header class="md:mb-6">
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
-          <div class="text-violet text-2xl font-bold">Checkout</div>
+          <div class="text-violet text-2xl font-bold">zkCheckout <sup class="text-sm font-light">{{currentNetworkName}}</sup></div>
         </div>
       </header>
       <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
@@ -27,14 +27,14 @@
           <div class="flex items-center">
             <div class="headline big">Fees</div>
             <span class="ml-3">
-              <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${feesOpened===true?-180:0}deg)`}"></i>
+              <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${feesOpened===true?-180:0}deg)`}"/>
             </span>
           </div>
         </template>
         <template slot="right-top">
           <div class="flex items-center">
             <div class="flex md:flex-col">
-              <div class="value mr-2 md:mr-0">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+              <div class="value md:mr-0">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
             </div>
           </div>
         </template>
@@ -58,7 +58,7 @@
           <div class="flex items-center">
             <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark">Total amount</div>
             <span class="ml-3">
-              <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"></i>
+              <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"/>
             </span>
           </div>
         </div>
@@ -78,8 +78,8 @@
       <div class="footerContainer hidden md:block">
         <footer>
           <div class="poweredBy flex justify-center items-center pt-5">
-            <div class="text-md font-firaCondensed font-medium uppercase text-violet mr-3">Powered by</div>
-            <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync">
+            <div class="text-md font-firaCondensed uppercase text-violet mr-3">Powered by</div>
+            <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync"/>
           </div>
           <div class="poweredBy flex justify-center items-center mt-3">
             <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
@@ -97,6 +97,7 @@ import Vue from "vue";
 import utils from "@/plugins/utils";
 import { TransactionData, TransactionFee, TokenPrices, TotalByToken, GweiBalance } from "@/plugins/types";
 import { BigNumber } from "ethers";
+import {ETHER_NETWORK_LABEL_LOWERCASED, } from "~/plugins/build";
 
 export default Vue.extend({
   data() {
@@ -106,6 +107,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    currentNetworkName(): string {
+      return ETHER_NETWORK_LABEL_LOWERCASED;
+    },
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },

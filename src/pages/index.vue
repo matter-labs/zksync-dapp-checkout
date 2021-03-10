@@ -57,7 +57,7 @@
     <connected-wallet/>
 
     <div v-if="step==='main'" class="w-full">
-      <line-table-header class="mt-4 md:mt-7 mb-2">
+      <line-table-header class="mt-5 md:mt-7 mb-2">
         <template slot="first">To pay</template>
         <template slot="second">L2 balance</template>
         <template slot="first:md">To pay / L2 balance</template>
