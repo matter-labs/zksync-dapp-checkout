@@ -69,7 +69,7 @@
           <success-mark class="w-8 h-8"/>
         </template>
         <template v-else slot="right">
-          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs font-medium">Insufficient {{ token }} {{currentNetwork}} balance</div>
+          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs">Insufficient <strong>{{ token }} {{currentNetworkName}}</strong> balance</div>
           <defbtn v-else-if="!enoughWithInitialBalance && !initialBalance.unlocked" @click="unlock()">
             <i class="fas fa-unlock-alt"/><span>Unlock</span>
           </defbtn>
@@ -128,7 +128,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    currentNetwork(): string {
+    currentNetworkName(): string {
       return ETHER_NETWORK_LABEL_LOWERCASED;
     },
     isInProgress(): boolean {
@@ -140,9 +140,11 @@ export default Vue.extend({
     lineStateText(): string {
       if (this.subStep === "waitingUserConfirmation") {
         return "Confirm operation";
-      } else if (this.subStep === "committing" || this.subStep === "confirming") {
+      }
+      if (this.subStep === "committing" || this.subStep === "confirming") {
         return this.subStep + " transaction...";
-      } else if (this.subStep === "confirming") {
+      }
+      if (this.subStep === "confirming") {
         return "Committing transaction...";
       }
       return "";
