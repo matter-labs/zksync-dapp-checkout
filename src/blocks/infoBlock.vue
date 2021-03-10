@@ -21,60 +21,64 @@
           </div>
         </template>
       </values-block>
-      <div class="w-full border-b-2 border-light mt-1 lg:mt-3"/>
-      <values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
-        <template slot="left-top">
-          <div class="flex items-center">
-            <div class="headline big">Fees</div>
-            <span class="ml-3">
-              <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${feesOpened===true?-180:0}deg)`}"/>
-            </span>
-          </div>
-        </template>
-        <template slot="right-top">
-          <div class="flex items-center">
-            <div class="flex md:flex-col">
-              <div class="value md:mr-0">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
-            </div>
-          </div>
-        </template>
-      </values-block>
-      <max-height v-model="feesOpened" :update-value="allFees.length">
-        <values-block v-for="(item, index) in allFees" :key="index" class="mt-1 lg:mt-3">
-          <template slot="left-top">
-            <div class="headline">{{item.name}}</div>
-          </template>
-          <template slot="right-top">
-            <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
-              <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
-            </div>
-          </template>
-        </values-block>
-      </max-height>
-      <div class="w-full border-b-2 border-light mt-1 lg:mt-3"></div>
-      <div class="mt-2 lg:mt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">
-        <div class="flex-2">
-          <div class="flex items-center">
-            <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark">Total amount</div>
-            <span class="ml-3">
-              <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"/>
-            </span>
-          </div>
-        </div>
-        <div class="flex-1 flex flex-col items-end">
-          <div class="font-firaCondensed font-bold text-lg text-violet md:mt-1">
-            {{totalUSD}}
-          </div>
-          <max-height v-model="totalOpened" :update-value="allFees.length">
-            <div class="md:flex flex-col items-end">
-            <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 mt-2">
-              <div>{{ item | formatToken(token) }} {{token}}</div>
-            </div>
-          </div>
+      <transition name="fade">
+        <div class="w-full" v-if="loggedIn">
+          <div class="w-full border-b-2 border-light mt-1 lg:mt-3"/>
+          <values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
+            <template slot="left-top">
+              <div class="flex items-center">
+                <div class="headline big">Fees</div>
+                <span class="ml-3">
+                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${feesOpened===true?-180:0}deg)`}"/>
+                </span>
+              </div>
+            </template>
+            <template slot="right-top">
+              <div class="flex items-center">
+                <div class="flex md:flex-col">
+                  <div class="value md:mr-0">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+                </div>
+              </div>
+            </template>
+          </values-block>
+          <max-height v-model="feesOpened" :update-value="allFees.length">
+            <values-block v-for="(item, index) in allFees" :key="index" class="mt-1 lg:mt-3">
+              <template slot="left-top">
+                <div class="headline">{{item.name}}</div>
+              </template>
+              <template slot="right-top">
+                <div class="flex md:flex-col whitespace-nowrap">
+                  <div class="value mr-2 md:mr-0">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
+                  <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
+                </div>
+              </template>
+            </values-block>
           </max-height>
+          <div class="w-full border-b-2 border-light mt-1 lg:mt-3"></div>
+          <div class="mt-2 lg:mt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">
+            <div class="flex-2">
+              <div class="flex items-center">
+                <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark">Total amount</div>
+                <span class="ml-3">
+                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"/>
+                </span>
+              </div>
+            </div>
+            <div class="flex-1 flex flex-col items-end">
+              <div class="font-firaCondensed font-bold text-lg text-violet md:mt-1">
+                {{totalUSD}}
+              </div>
+              <max-height v-model="totalOpened" :update-value="allFees.length">
+                <div class="md:flex flex-col items-end">
+                <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 mt-2">
+                  <div>{{ item | formatToken(token) }} {{token}}</div>
+                </div>
+              </div>
+              </max-height>
+            </div>
+          </div>
         </div>
-      </div>
+      </transition>
       <div class="footerContainer hidden md:block">
         <footer>
           <a class="poweredBy flex justify-center items-center pt-5" href="https://zksync.io" target="_blank">
@@ -107,6 +111,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    loggedIn(): boolean {
+      return this.$store.getters["account/loggedIn"];
+    },
     currentNetworkName(): string {
       return ETHER_NETWORK_LABEL_LOWERCASED;
     },
