@@ -172,6 +172,7 @@ export default Vue.extend({
     },
     transferAllowed(): Boolean {
       for (const [token, state] of Object.entries(this.tokenItemsValid)) {
+        console.log(state);
         if (!state) {
           return false;
         }
