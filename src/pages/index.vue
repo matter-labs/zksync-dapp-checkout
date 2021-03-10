@@ -56,7 +56,7 @@
 
     <connected-wallet/>
 
-    <note v-if="isAccountLocked && !pubKeySigned">
+    <note v-if="isAccountLocked">
       <template slot="icon">
         <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"></i>
       </template>
@@ -68,23 +68,19 @@
     </note>
 
     <div v-if="step==='main'" class="w-full">
-      <line-table-header class="mt-5 md:mt-7 mb-2" v-if="!isAccountLocked || pubKeySigned">
+      <line-table-header class="mt-5 md:mt-7 mb-2">
         <template slot="first">To pay</template>
         <template slot="second">L2 balance</template>
         <template slot="first:md">To pay / L2 balance</template>
         <template slot="right">Deposit from <strong>{{currentNetworkName}}</strong></template>
       </line-table-header>
-      <template v-if="!isAccountLocked || pubKeySigned">
+      <template>
         <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token"
                           :total="total.toString()" />
       </template>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn v-if="isAccountLocked && !pubKeySigned" :loader="loading" :disabled="loading" @click="changePubKey()">
-            <i class="fas fa-unlock-alt"/>
-            <span>Sign zkSync public key</span>
-          </defbtn>
-          <defbtn v-else :disabled="!transferAllowed" @click="transfer()">
+          <defbtn :disabled="loading || !transferAllowed" :loader="loading" @click="makeTransfer()">
             <i class="fas fa-paper-plane"></i>
             <span>Complete payment</span>
           </defbtn>
@@ -200,6 +196,11 @@ export default Vue.extend({
     },
   },
   methods: {
+    async makeTransfer() {
+      await this.changePubKey();
+      await this.transfer();
+
+    },
     getTokenByID(id: number) {
       return this.$store.getters["tokens/getTokenByID"](id)?.symbol;
     },
@@ -215,6 +216,7 @@ export default Vue.extend({
         await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
         this.pubKeySigned = true;
       } catch (error) {
+        console.log(error)
         const createErrorModal = (text: string) => {
           this.errorModal = {
             headline: `Activating account error`,
@@ -262,6 +264,7 @@ export default Vue.extend({
           await transactions[0].awaitReceipt(); /* Not sure if required. Wait for the first transaction (at least) to be confirmed */
           this.step = "success";
         } catch (error) {
+          console.log(error)
           this.step = "main";
           if (error.message) {
             if (!error.message.includes("User denied")) {

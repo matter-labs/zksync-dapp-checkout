@@ -6,9 +6,8 @@ export const batchData = {
   get: (): any => {
     return batchBuilder;
   },
-  create: async (): Promise<void> => {
+  create: async (nonce: number): Promise<void> => {
     const syncWallet = walletData.get().syncWallet;
-    /* const nonce = await syncWallet!.getNonce("committed"); */
-    batchBuilder = syncWallet!.batchBuilder(/* nonce */);
+    batchBuilder = syncWallet!.batchBuilder(nonce);
   },
 };

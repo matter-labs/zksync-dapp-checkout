@@ -75,7 +75,6 @@ export const submitSignedTransactionsBatch = async (
  * @param transactions
  * @param {TokenSymbol} feeToken
  * @param fee
- * @param changePubKey
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
@@ -83,8 +82,9 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
   const syncWallet: Wallet|undefined = walletData.get().syncWallet;
 
   await store.dispatch("wallet/restoreProviderConnection");
+  const nonce = await syncWallet!.getNonce("committed");
   if(!batchData.get()) {
-    await batchData.create();
+    await batchData.create(nonce);
   }
   let batchBuilder = batchData.get();
   for(const tx of transactions) {
@@ -249,16 +249,18 @@ export const unlockToken = async (address: Address, store: any) => {
  * @param store
  * @returns {Promise<void>}
  */
- export const changePubKey = async (feeToken: TokenSymbol, fee: BigNumber, store: any) => {
+export const changePubKey = async (feeToken: TokenSymbol, fee: BigNumber, store: any) => {
   await store.dispatch("wallet/restoreProviderConnection");
+  const wallet = walletData.get().syncWallet;
+  const nonce = await wallet!.getNonce("committed");
   if(!batchData.get()) {
-    await batchData.create();
+    await batchData.create(nonce);
   }
   const batchBuilder = batchData.get();
   if(batchBuilder.txs.find((tx: any) => tx.type === 'ChangePubKey')) {
     return batchBuilder;
   }
-  const wallet = walletData.get().syncWallet;
+
   if (wallet?.ethSignerType?.verificationMethod === "ERC-1271") {
     const isOnchainAuthSigningKeySet = await wallet!.isOnchainAuthSigningKeySet();
     if (!isOnchainAuthSigningKeySet) {
@@ -266,7 +268,16 @@ export const unlockToken = async (address: Address, store: any) => {
       await onchainAuthTransaction?.wait();
     }
   }
+
   const ethAuthType = wallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-  const result = await batchBuilder.addChangePubKey({feeToken, ethAuthType, fee});
-  console.log(result);
+  const signedTx = await wallet!.signSetSigningKey({
+    feeToken,
+    fee: await store.getters["checkout/getAccountUnlockFee"],
+    nonce: nonce,
+    ethAuthType: ethAuthType === 'ECDSA' ? 'ECDSALegacyMessage' : 'ECDSA'
+  });
+  batchBuilder.addChangePubKey({
+    ...signedTx.tx,
+    alreadySigned: true
+  });
 };
