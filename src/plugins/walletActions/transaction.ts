@@ -240,7 +240,10 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, st
   const depositResponse = await wallet?.depositToSyncFromEthereum({
     depositTo: wallet.address(),
     token,
-    amount
+    amount,
+    ethTxOptions: {
+      gasLimit: "150000"
+    }
   });
   //store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse as ETHOperation;
