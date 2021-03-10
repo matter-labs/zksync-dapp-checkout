@@ -75,7 +75,7 @@
     </div>
     <div v-else-if="step==='transfer'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-dark text-center pt-5 md:pt-10">Payment</div>
-      <div v-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in the popup</div>
+      <div v-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow instructions in the popup</div>
       <div v-else-if="subStep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
       <loader class="mx-auto mt-6" size="md" color="violet" />
     </div>
