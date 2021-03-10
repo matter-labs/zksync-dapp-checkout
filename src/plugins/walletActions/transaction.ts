@@ -254,6 +254,10 @@ export const unlockToken = async (address: Address, store: any) => {
   if(!batchData.get()) {
     await batchData.create();
   }
+  const batchBuilder = batchData.get();
+  if(batchBuilder.txs.find((tx: any) => tx.type === 'ChangePubKey')) {
+    return batchBuilder;
+  }
   const wallet = walletData.get().syncWallet;
   if (wallet?.ethSignerType?.verificationMethod === "ERC-1271") {
     const isOnchainAuthSigningKeySet = await wallet!.isOnchainAuthSigningKeySet();
@@ -262,7 +266,6 @@ export const unlockToken = async (address: Address, store: any) => {
       await onchainAuthTransaction?.wait();
     }
   }
-  const batchBuilder = batchData.get();
   const ethAuthType = wallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
   const result = await batchBuilder.addChangePubKey({feeToken, ethAuthType, fee});
   console.log(result);
