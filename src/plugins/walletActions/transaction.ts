@@ -82,8 +82,9 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
   const syncWallet: Wallet|undefined = walletData.get().syncWallet;
 
   await store.dispatch("wallet/restoreProviderConnection");
-  const nonce = await syncWallet!.getNonce("committed");
-  if(!batchData.get()) {
+
+  if(!store.getters["wallet/isAccountLocked"]) {
+    const nonce = await syncWallet!.getNonce("committed");
     await batchData.create(nonce);
   }
   let batchBuilder = batchData.get();
@@ -253,9 +254,7 @@ export const changePubKey = async (feeToken: TokenSymbol, fee: BigNumber, store:
   await store.dispatch("wallet/restoreProviderConnection");
   const wallet = walletData.get().syncWallet;
   const nonce = await wallet!.getNonce("committed");
-  if(!batchData.get()) {
-    await batchData.create(nonce);
-  }
+  await batchData.create(nonce);
   const batchBuilder = batchData.get();
   if(batchBuilder.txs.find((tx: any) => tx.type === 'ChangePubKey')) {
     return batchBuilder;
