@@ -56,7 +56,7 @@
 
     <connected-wallet/>
 
-    <note v-if="isAccountLocked">
+    <note v-if="isAccountLocked && !pubKeySigned">
       <template slot="icon">
         <i class="pl-1 text-base lg:text-lg text-gray far fa-unlock-alt"></i>
       </template>
@@ -68,18 +68,19 @@
     </note>
 
     <div v-if="step==='main'" class="w-full">
-      <line-table-header class="mt-5 md:mt-7 mb-2" v-if="!isAccountLocked">
+      <line-table-header class="mt-5 md:mt-7 mb-2" v-if="!isAccountLocked || pubKeySigned">
         <template slot="first">To pay</template>
         <template slot="second">L2 balance</template>
         <template slot="first:md">To pay / L2 balance</template>
         <template slot="right">Deposit from <strong>{{currentNetworkName}}</strong></template>
       </line-table-header>
-      <transaction-token v-if="!isAccountLocked" v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
+      <transaction-token v-if="!isAccountLocked || pubKeySigned" v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token"
+                         :total="total.toString()" />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn v-if="isAccountLocked" :loader="loading" :disabled="loading" @click="changePubKey()">
+          <defbtn v-if="isAccountLocked && !pubKeySigned" :loader="loading" :disabled="loading" @click="changePubKey()">
             <i class="fas fa-unlock-alt"/>
-            <span>Sign the key</span>
+            <span>Sign zkSync public key</span>
           </defbtn>
           <defbtn v-else :disabled="!transferAllowed" @click="transfer()">
             <i class="fas fa-paper-plane"></i>
@@ -161,6 +162,7 @@ export default Vue.extend({
       loading: false,
       step: "main" /* main, transfer, success */,
       subStep: "" /* waitingUserConfirmation, committing */,
+      pubKeySigned: false,
       tokenItemsValid: {} as {
         [token: string]: Boolean;
       },
@@ -209,6 +211,7 @@ export default Vue.extend({
       this.loading = true;
       try {
         await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
+        this.pubKeySigned = true;
 //        this.$store.commit("wallet/")["wallet/isAccountLocked"]
       } catch (error) {
         const createErrorModal = (text: string) => {

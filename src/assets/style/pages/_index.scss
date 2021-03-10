@@ -8,7 +8,6 @@
       justify-content: center;
       button.defbtn.filled
       {
-        padding: 7px 12px 7px 7px;
         line-height: 1.4;
         position: static;
         justify-content: center;
@@ -16,6 +15,7 @@
         text-align: center;
         font-weight:400;
         min-width: 200px;
+        width: max-content;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         height: 38px;
