@@ -93,7 +93,17 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
       }
     }
     const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-    batchBuilder.addChangePubKey({feeToken, ethAuthType, fee: store.getters["checkout/getAccountUnlockFee"]});
+    
+    const signedTx = await syncWallet!.signSetSigningKey({
+        feeToken,
+        fee: await store.getters["checkout/getAccountUnlockFee"],
+        nonce: nonce,
+        ethAuthType: ethAuthType === 'ECDSA' ? 'ECDSALegacyMessage' : 'ECDSA'
+    });
+    batchBuilder.addChangePubKey({
+      ...signedTx.tx,
+      alreadySigned: true
+    });
   }
   for(const tx of transactions) {
     batchBuilder.addTransfer({
