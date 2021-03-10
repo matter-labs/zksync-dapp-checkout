@@ -262,8 +262,9 @@ export const unlockToken = async (address: Address, store: any) => {
       await onchainAuthTransaction?.wait();
     }
   }
+  const batchBuilder = batchData.get();
   const ethAuthType = wallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-  const result = await batchData.get().addChangePubKey({feeToken, ethAuthType, fee});
+  const result = await batchBuilder.addChangePubKey({feeToken, ethAuthType, fee});
   console.log(result);
   store.commit("wallet/setAccountLockedState", false);
 };
