@@ -232,7 +232,7 @@ export default Vue.extend({
       },
     },
     step(val) {
-      this.$emit("input", this.enoughZkBalance && val === "default");
+      this.$emit("input", (this.enoughZkBalance===true && val === "default"));
     },
   },
   mounted() {
