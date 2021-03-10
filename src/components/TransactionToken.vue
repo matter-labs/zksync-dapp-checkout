@@ -66,7 +66,9 @@
       </template>
       <template v-else>
         <template v-if="enoughZkBalance" slot="right">
-          <success-mark class="w-8 h-8"/>
+          <!-- <div class="flex items-center">Complete  -->
+            <success-mark class="w-8 h-8"/>
+          <!-- </div> -->
         </template>
         <template v-else slot="right">
           <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs font-medium">Insufficient {{ token }} mainnet balance</div>
