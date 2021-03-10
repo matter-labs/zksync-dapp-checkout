@@ -140,11 +140,9 @@ export default Vue.extend({
     lineStateText(): string {
       if (this.subStep === "waitingUserConfirmation") {
         return "Confirm operation";
-      }
-      if (this.subStep === "committing" || this.subStep === "confirming") {
+      } else if (this.subStep === "committing" || this.subStep === "confirming") {
         return this.subStep + " transaction...";
-      }
-      if (this.subStep === "confirming") {
+      } else if (this.subStep === "confirming") {
         return "Committing transaction...";
       }
       return "";

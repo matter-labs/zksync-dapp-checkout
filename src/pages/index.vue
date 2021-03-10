@@ -66,7 +66,11 @@
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn :disabled="!transferAllowed" @click="transfer()">
+          <defbtn v-if="accountLocked" :loader="loading" :disabled="loading" @click="nextStep()">
+            <i class="fas fa-unlock-alt"/>
+            <span>Activate the account</span>
+          </defbtn>
+          <defbtn v-else :disabled="!transferAllowed" @click="transfer()">
             <i class="fas fa-paper-plane"></i>
             <span>Complete payment</span>
           </defbtn>
@@ -129,7 +133,7 @@ import Vue from "vue";
 
 import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction} from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { transactionBatch } from "@/plugins/walletActions/transaction";
+import { changePubKey, transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
@@ -143,6 +147,7 @@ export default Vue.extend({
   data() {
     return {
       modal: false,
+      loading: false,
       step: "main" /* main, transfer, success */,
       subStep: "" /* waitingUserConfirmation, committing */,
       tokenItemsValid: {} as {
@@ -182,6 +187,32 @@ export default Vue.extend({
     },
     getTxLink(hash: string) {
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
+    },
+    async changePubKey() {
+      this.loading = true;
+      try {
+        await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
+        await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
+      } catch (error) {
+        const createErrorModal = (text: string) => {
+          this.errorModal = {
+            headline: `Activating account error`,
+            text,
+          };
+        };
+        if (error.message) {
+          if (!error.message.includes("User denied")) {
+            if (error.message.includes("Account does not exist in the zkSync network")) {
+              createErrorModal("Please, make deposit or request tokens in order to activate the account.");
+            } else {
+              createErrorModal(error.message);
+            }
+          }
+        } else {
+          createErrorModal("Unknown error. Try again later.");
+        }
+      }
+      this.loading = false;
     },
     async transfer() {
       if (this.transferAllowed) {
