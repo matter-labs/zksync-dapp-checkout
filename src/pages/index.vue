@@ -80,7 +80,7 @@
       </template>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn :disabled="loading || !transferAllowed" :loader="loading" @click="makeTransfer()">
+          <defbtn :disabled="!transferAllowed" @click="makeTransfer()">
             <i class="fas fa-paper-plane"></i>
             <span>Complete payment</span>
           </defbtn>
@@ -197,7 +197,9 @@ export default Vue.extend({
   },
   methods: {
     async makeTransfer() {
-      await this.changePubKey();
+      if (this.isAccountLocked) {
+        await this.changePubKey();
+      }
       await this.transfer();
 
     },
