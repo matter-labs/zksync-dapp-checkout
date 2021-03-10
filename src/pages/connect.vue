@@ -3,8 +3,7 @@
     <div class="font-bold text-center text-3xl text-dark">Connect to zkSync</div>
     <div class="tileContainer mx-auto mt-5" @click="customWallet()">
       <div class="tile">
-        <img src="/tokens/eth.svg" alt="External">
-        <i class="tileIcon fas fa-lock"></i>
+        <img src="/tokens/eth.svg" alt="External"/>
       </div>
       <div class="tileName">Connect your wallet</div>
     </div>
@@ -14,7 +13,7 @@
 <script>
 export default {
   methods: {
-    customWallet: async function () {
+    async customWallet() {
       const onboard = this.$store.getters["wallet/getOnboard"];
       onboard.config({
         darkMode: false,

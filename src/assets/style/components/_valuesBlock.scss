@@ -33,7 +33,7 @@
     color: $dark;
     font-size: 16px;
     line-height: 1.37;
-    font-weight: 500;
+    font-weight: 400;
 
     &.big {
       font-size: 20px;
@@ -42,9 +42,9 @@
 
   .value {
     color: $black2;
-    font-size: 12px;
-    line-height: 1.5;
-    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.4;
+    font-weight: 400;
 
     &.big {
       font-size: 16px;
@@ -53,9 +53,16 @@
 
   .secondaryValue {
     color: $gray;
-    font-size: 12px;
-    line-height: 1.5;
+    font-size: 0.65rem;
+    line-height: 1.4;
+    font-weight: 300;
+    letter-spacing: -0.025em;
+    @media screen and (max-width: $breakpoint1) {
+      font-size: 14px;
+      line-height: 22px;
+    }
   }
+
 
   /* @media screen and (max-width: $breakpoint1) {
     &.bottomOnHover {

@@ -2087,6 +2087,74 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@matterlabs/zksync-dapp-checkout@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@matterlabs/zksync-dapp-checkout@workspace:."
+  dependencies:
+    "@babel/core": ^7.13.8
+    "@babel/preset-env": ^7.13.9
+    "@babel/runtime": ^7.13.9
+    "@ethersproject/logger": ^5.0.9
+    "@matterlabs/zk-wallet-onboarding": ^1.18.6
+    "@nuxt/types": ^2.15.2
+    "@nuxt/typescript-build": ^2.0.6
+    "@nuxt/typescript-runtime": ^2.0.0
+    "@nuxtjs/axios": latest
+    "@nuxtjs/dotenv": 1.4.1
+    "@nuxtjs/eslint-config-typescript": ^5.0.0
+    "@nuxtjs/google-gtag": ^1.0.4
+    "@nuxtjs/pwa": ^3.3.5
+    "@nuxtjs/sentry": ^5.0.2
+    "@nuxtjs/tailwindcss": ^3.4.2
+    "@nuxtjs/toast": latest
+    "@sentry/webpack-plugin": ^1.14.0
+    "@tailwindcss/postcss7-compat": ^2.0.3
+    "@types/jest": ^26.0.20
+    "@types/js-cookie": ^2.2.6
+    "@walletconnect/web3-provider": ^1.3.6
+    autoprefixer: ^9
+    babel-core: ^7.0.0-bridge.0
+    commitlint: ^11.0.0
+    dotenv: 8.2.0
+    eslint: ^7.21.0
+    eslint-config-prettier: ^7.2.0
+    eslint-plugin-prettier-vue: ^2.1.1
+    eslint-plugin-vue: ^7.7.0
+    ethereum-blockies-base64: ^1.0.2
+    ethers: ^5.0.31
+    fork-ts-checker-webpack-plugin: ^6.1.0
+    fs-extra: ^9.1.0
+    js-cookie: ^2.2.1
+    lottie-web: ^5.7.6
+    moment: ^2.29.1
+    node-sass: latest
+    nuxt: ^2.15.2
+    nuxt-i18n: ^6.20.4
+    nuxt-social-meta: ^0.0.5
+    nuxt-webfontloader: ^1.1.0
+    nuxt-webpackdashboard: ^2.0.1
+    prettier: ^2.2.1
+    sass-loader: ^10.1.1
+    stylelint: ^13.11.0
+    surge: ^0.21.7
+    tailwindcss: ^1.9.6
+    vue: ^2.6.12
+    vue-qrcode: ^0.3.5
+    vue-scrollto: ^2.20.0
+    vuex: ^3.6.2
+    web3: ^1.3.4
+    webpack: ^5.11.1
+    zksync: ^0.10.5
+    zksync-checkout: ^0.0.11
+    zksync-checkout-internal: ^0.0.4
+  dependenciesMeta:
+    "@sentry/webpack-plugin":
+      optional: true
+    fs-extra:
+      optional: true
+  languageName: unknown
+  linkType: soft
+
 "@metamask/safe-event-emitter@npm:^2.0.0":
   version: 2.0.0
   resolution: "@metamask/safe-event-emitter@npm:2.0.0"
@@ -2586,7 +2654,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxtjs/axios@npm:latest":
+"@nuxtjs/axios@latest":
   version: 5.13.1
   resolution: "@nuxtjs/axios@npm:5.13.1"
   dependencies:
@@ -2701,7 +2769,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxtjs/toast@npm:latest":
+"@nuxtjs/toast@latest":
   version: 3.3.1
   resolution: "@nuxtjs/toast@npm:3.3.1"
   dependencies:
@@ -3175,9 +3243,11 @@ __metadata:
   linkType: hard
 
 "@types/browserslist@npm:*":
-  version: 4.8.0
-  resolution: "@types/browserslist@npm:4.8.0"
-  checksum: 66f867fdc17989c96472498bf842315d7c720547f7ba7fe4a733f8186feedd754be563e9bc9ace83e3a583a0893c7d342843d1479ec12f53c837d001a2edd9e5
+  version: 4.15.0
+  resolution: "@types/browserslist@npm:4.15.0"
+  dependencies:
+    browserslist: "*"
+  checksum: a05bc0764ce069a0b32f7a908103c17bf944fd70b150b1242624e041424e14c4a0e46bf27fa1372d81b1504ce1160c5b1e0b8b142a41469c1d31a402adc0542c
   languageName: node
   linkType: hard
 
@@ -6190,19 +6260,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^3.2.6":
-  version: 3.2.8
-  resolution: "browserslist@npm:3.2.8"
-  dependencies:
-    caniuse-lite: ^1.0.30000844
-    electron-to-chromium: ^1.3.47
-  bin:
-    browserslist: ./cli.js
-  checksum: f5f5fb11330fef2e374345c3629bedd0676bdda3a6c2d228d9b5935d3fb1182a6f373ea4f0d19a1efc4b3d01eadcc29afe02f71af7e8664f77d68fb77c862066
-  languageName: node
-  linkType: hard
-
-"browserslist@npm:^4.0.0, browserslist@npm:^4.12.0, browserslist@npm:^4.14.5, browserslist@npm:^4.16.3, browserslist@npm:^4.6.4":
+"browserslist@npm:*, browserslist@npm:^4.0.0, browserslist@npm:^4.12.0, browserslist@npm:^4.14.5, browserslist@npm:^4.16.3, browserslist@npm:^4.6.4":
   version: 4.16.3
   resolution: "browserslist@npm:4.16.3"
   dependencies:
@@ -6214,6 +6272,18 @@ __metadata:
   bin:
     browserslist: cli.js
   checksum: dfab0d3c3d9a3517cf3f8a274bc4e8245f3a02c1a5ae2a0e01498273d363952d11ee09fdce3b0ce551f6cab9d619ed2d9facf7b6471c9190df949a5ad39665c5
+  languageName: node
+  linkType: hard
+
+"browserslist@npm:^3.2.6":
+  version: 3.2.8
+  resolution: "browserslist@npm:3.2.8"
+  dependencies:
+    caniuse-lite: ^1.0.30000844
+    electron-to-chromium: ^1.3.47
+  bin:
+    browserslist: ./cli.js
+  checksum: f5f5fb11330fef2e374345c3629bedd0676bdda3a6c2d228d9b5935d3fb1182a6f373ea4f0d19a1efc4b3d01eadcc29afe02f71af7e8664f77d68fb77c862066
   languageName: node
   linkType: hard
 
@@ -7097,12 +7167,12 @@ __metadata:
   linkType: hard
 
 "color-string@npm:^1.5.4":
-  version: 1.5.4
-  resolution: "color-string@npm:1.5.4"
+  version: 1.5.5
+  resolution: "color-string@npm:1.5.5"
   dependencies:
     color-name: ^1.0.0
     simple-swizzle: ^0.2.2
-  checksum: 181ab2a0a13dc87b13db1bceab8585c159f1cbf169c4210df61d24349f90e5f6087a18c8c12842dbdd5d4cff9a1008ef86c153201429bc456fb7bf9c9495d366
+  checksum: 3d7799f70d389214757c83bdc27380081dbeee18f90148b883ff7e86e9a599c68ccb8a956b7175e761dcd98d1061fdc58ca89ca4b1f6ca20f8ce05cc8c4e564a
   languageName: node
   linkType: hard
 
@@ -7984,14 +8054,14 @@ __metadata:
   linkType: hard
 
 "debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.0.1, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:~4.3.1":
-  version: 4.3.2
-  resolution: "debug@npm:4.3.2"
+  version: 4.3.1
+  resolution: "debug@npm:4.3.1"
   dependencies:
     ms: 2.1.2
   peerDependenciesMeta:
     supports-color:
       optional: true
-  checksum: 5543570879e2274f6725d4285a034d6e0822d35faefc6f55965933fb440e8c21eb3a0bef934e66f4b6b491f898ee2de37cab980e9d4fd61372136c19d3ce4527
+  checksum: 0d41ba5177510e8b388dfd7df143ab0f9312e4abdaba312595461511dac88e9ef8101939d33b4e6d37e10341af6a5301082e4d7d6f3deb4d57bc05fc7d296fad
   languageName: node
   linkType: hard
 
@@ -8554,9 +8624,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.47, electron-to-chromium@npm:^1.3.649":
-  version: 1.3.681
-  resolution: "electron-to-chromium@npm:1.3.681"
-  checksum: c30f0f2aea9fbe3dcea90565ceca643c4c339021d7a4bc18d3920116b175d217383161ec2aa8051604a9fdea24da124b8a76fb8b509e27579746423aed054ce7
+  version: 1.3.682
+  resolution: "electron-to-chromium@npm:1.3.682"
+  checksum: 9ceb3a72a4ff0c239889d7d1aba0a02ee3d19540e6e0cc63906f03dae931b01f390e54a723f52f94fc35835b1352b746850315a56057dd596c3f8d43635c0c44
   languageName: node
   linkType: hard
 
@@ -9674,7 +9744,7 @@ __metadata:
 
 "ethereumjs-abi@git+https://github.com/ethereumjs/ethereumjs-abi.git":
   version: 0.6.8
-  resolution: "ethereumjs-abi@https://github.com/ethereumjs/ethereumjs-abi.git#commit=1a27c59c15ab1e95ee8e5c4ed6ad814c49cc439e"
+  resolution: "ethereumjs-abi@git+https://github.com/ethereumjs/ethereumjs-abi.git#commit=1a27c59c15ab1e95ee8e5c4ed6ad814c49cc439e"
   dependencies:
     bn.js: ^4.11.8
     ethereumjs-util: ^6.0.0
@@ -12922,11 +12992,11 @@ fsevents@~2.3.1:
   linkType: hard
 
 "jiti@npm:^1.3.0":
-  version: 1.6.0
-  resolution: "jiti@npm:1.6.0"
+  version: 1.6.2
+  resolution: "jiti@npm:1.6.2"
   bin:
     jiti: bin/jiti.js
-  checksum: 47ff8524ac9652ebff1f01520b1e0e27dd4e4843f88becfbf24612449180d54a796667142c06060c7b8c8a66fd82d57d836b22349a27ce355d193bab92c36a52
+  checksum: 7f4fd984268f37a00765dd4c9f5253d63aa5d67035971a482a5cf81ddf5863b6f14a0adc4665de18c99793c4108f34b505984fb71a020f3ee00cb60b56fab4f0
   languageName: node
   linkType: hard
 
@@ -15043,7 +15113,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"node-sass@npm:latest":
+node-sass@latest:
   version: 5.0.0
   resolution: "node-sass@npm:5.0.0"
   dependencies:
@@ -20505,13 +20575,13 @@ resolve@~1.17.0:
   linkType: hard
 
 "trezor-connect@npm:^8.1.9":
-  version: 8.1.24
-  resolution: "trezor-connect@npm:8.1.24"
+  version: 8.1.25
+  resolution: "trezor-connect@npm:8.1.25"
   dependencies:
     "@babel/runtime": ^7.12.5
     events: ^3.2.0
     whatwg-fetch: ^3.5.0
-  checksum: 2f786deb1a9c055d4e013f7059d394d46e2d434582bea8d3a28c861a4f60c621796eec4058b4778526599af6b53e22a0c0310f8805d4481c5755add56cf2baad
+  checksum: 9428f4a9096aeeef236ab4d68cfffe5f978255941bab7afca7b361fae9eba0ed468227e902c8a032d1a61f135296379c4196a3b04d94c126fd9b82dfc8ff6f85
   languageName: node
   linkType: hard
 
@@ -20813,9 +20883,9 @@ typescript@~4.1:
   linkType: hard
 
 "ufo@npm:^0.6.7":
-  version: 0.6.7
-  resolution: "ufo@npm:0.6.7"
-  checksum: 3eb0381b77461f0cd19de0c68d568f558368975f59e249b4bdcb76a3de6e4ef3739cd7e42b43c6ca49c0004ed145b4ebef7d8c30a46b35d7b6d20b4341f5a733
+  version: 0.6.9
+  resolution: "ufo@npm:0.6.9"
+  checksum: 02b23de693f495c8e39f8d20f46052e61c4af3606259a282cf055fcf581c81ed976827c56f8578380bdd776bc66796ec66eb056d9ec3d4a82a9b253c4dbb3868
   languageName: node
   linkType: hard
 
@@ -21280,9 +21350,9 @@ typescript@~4.1:
   linkType: hard
 
 "v8-compile-cache@npm:^2.0.3, v8-compile-cache@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "v8-compile-cache@npm:2.2.0"
-  checksum: 1efc9946401fcad7a67619b520d8d12e31c7138090ffd9f98af9b919461fa23d947ecef0eab89cca4037c01d29d25a389ab6c0fac70ee4ed030443b08cdf6cff
+  version: 2.3.0
+  resolution: "v8-compile-cache@npm:2.3.0"
+  checksum: b56f83d9ff14187562badc4955dadeef53ff3abde478ce60759539dd8d5472a91fce9db6083fc2450e54cef6f2110c1a28d8c12162dbf575a6cfcb846986904b
   languageName: node
   linkType: hard
 
@@ -22879,71 +22949,27 @@ typescript@~4.1:
   languageName: node
   linkType: hard
 
-"zkCheckout@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "zkCheckout@workspace:."
+"zksync-checkout-internal@npm:^0.0.4":
+  version: 0.0.4
+  resolution: "zksync-checkout-internal@npm:0.0.4"
   dependencies:
-    "@babel/core": ^7.13.8
-    "@babel/preset-env": ^7.13.9
-    "@babel/runtime": ^7.13.9
-    "@ethersproject/logger": ^5.0.9
-    "@matterlabs/zk-wallet-onboarding": ^1.18.6
-    "@nuxt/types": ^2.15.2
-    "@nuxt/typescript-build": ^2.0.6
-    "@nuxt/typescript-runtime": ^2.0.0
-    "@nuxtjs/axios": latest
-    "@nuxtjs/dotenv": 1.4.1
-    "@nuxtjs/eslint-config-typescript": ^5.0.0
-    "@nuxtjs/google-gtag": ^1.0.4
-    "@nuxtjs/pwa": ^3.3.5
-    "@nuxtjs/sentry": ^5.0.2
-    "@nuxtjs/tailwindcss": ^3.4.2
-    "@nuxtjs/toast": latest
-    "@sentry/webpack-plugin": ^1.14.0
-    "@tailwindcss/postcss7-compat": ^2.0.3
-    "@types/jest": ^26.0.20
-    "@types/js-cookie": ^2.2.6
-    "@walletconnect/web3-provider": ^1.3.6
-    autoprefixer: ^9
-    babel-core: ^7.0.0-bridge.0
-    commitlint: ^11.0.0
-    dotenv: 8.2.0
-    eslint: ^7.21.0
-    eslint-config-prettier: ^7.2.0
-    eslint-plugin-prettier-vue: ^2.1.1
-    eslint-plugin-vue: ^7.7.0
-    ethereum-blockies-base64: ^1.0.2
-    ethers: ^5.0.31
-    fork-ts-checker-webpack-plugin: ^6.1.0
-    fs-extra: ^9.1.0
-    js-cookie: ^2.2.1
-    lottie-web: ^5.7.6
-    moment: ^2.29.1
-    node-sass: latest
-    nuxt: ^2.15.2
-    nuxt-i18n: ^6.20.4
-    nuxt-social-meta: ^0.0.5
-    nuxt-webfontloader: ^1.1.0
-    nuxt-webpackdashboard: ^2.0.1
-    prettier: ^2.2.1
-    sass-loader: ^10.1.1
-    stylelint: ^13.11.0
-    surge: ^0.21.7
-    tailwindcss: ^1.9.6
-    vue: ^2.6.12
-    vue-qrcode: ^0.3.5
-    vue-scrollto: ^2.20.0
-    vuex: ^3.6.2
-    web3: ^1.3.4
-    webpack: ^5.11.1
-    zksync: ^0.9.0
-  dependenciesMeta:
-    "@sentry/webpack-plugin":
-      optional: true
-    fs-extra:
-      optional: true
-  languageName: unknown
-  linkType: soft
+    zksync: ^0.8.1
+  peerDependencies:
+    zksync-checkout: 0.0.7
+  checksum: aaaf483529f8f19e0c17d390b244b4a232dc261421fe092150c303a0cbdf0573fd8dcc37d1440b1ed364435ec8a7f57d5a21d7150a564b6db7ff4258fbf5b701
+  languageName: node
+  linkType: hard
+
+"zksync-checkout@npm:^0.0.11":
+  version: 0.0.11
+  resolution: "zksync-checkout@npm:0.0.11"
+  dependencies:
+    zksync: ^0.8.1
+  peerDependencies:
+    ethers: ^5.0.19
+  checksum: d505129ca2bb3dfdfab4aa30a2ff758a8614f7bb57d9029c1ecbe36d567748c92098455e68182afa8d11a1b85f8f3002fd4779ca55b9191c92c50e3b3e81f7d4
+  languageName: node
+  linkType: hard
 
 "zksync-crypto@npm:^0.4.2":
   version: 0.4.5
@@ -22952,9 +22978,31 @@ typescript@~4.1:
   languageName: node
   linkType: hard
 
-"zksync@npm:^0.9.0":
-  version: 0.9.0
-  resolution: "zksync@npm:0.9.0"
+"zksync-crypto@npm:^0.5.4":
+  version: 0.5.4
+  resolution: "zksync-crypto@npm:0.5.4"
+  checksum: 54b3905e65f2a375a05c7a4cd9403900e8d1a58e9bc3c97ca97299aa845a736bfcf481ff0c60353dd70e94ba57b9842027cb920ce5a69dee81da3ad721ee61ef
+  languageName: node
+  linkType: hard
+
+"zksync@npm:^0.10.5":
+  version: 0.10.5
+  resolution: "zksync@npm:0.10.5"
+  dependencies:
+    axios: ^0.21.1
+    websocket: ^1.0.30
+    websocket-as-promised: ^1.1.0
+    zksync-crypto: ^0.5.4
+  peerDependencies:
+    "@ethersproject/logger": ^5.0.0
+    ethers: ^5.0.0
+  checksum: d074deace8daa17ffd5aa265a0bbeaa75bd35d34356a3d8af4f4188d28b3c37d6b482207a5b476b535ee66d7b6991c4c79558040cd92e7d461771c42d4bda1fa
+  languageName: node
+  linkType: hard
+
+"zksync@npm:^0.8.1":
+  version: 0.8.4
+  resolution: "zksync@npm:0.8.4"
   dependencies:
     axios: ^0.21.1
     websocket: ^1.0.30
@@ -22963,7 +23011,7 @@ typescript@~4.1:
   peerDependencies:
     "@ethersproject/logger": ^5.0.0
     ethers: ^5.0.0
-  checksum: 5a2b3014e49ddf6a34979a0b54f9ffbe9a26572c06fd480fe37819d0c235e3db2686e98cc0b499d1b013410da3aacc398040ab4b956c5d42f386465be5de9951
+  checksum: d5122c13f25d7a773d038d7ba643e55f600b1b8615ab215ae0a91c22b00fe1b8217f844b4567b52faad3843a4173b8be4714891c5ee275dcdc528f965b6061b2
   languageName: node
   linkType: hard
 

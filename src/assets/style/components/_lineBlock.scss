@@ -12,40 +12,59 @@
       width: max-content;
       justify-self: end;
     }
+    .loaderSpinnerContainer
+    {
+      margin-right: 7px;
+    }
+    .text-red
+    {
+      margin-right: 5px;
+    }
+    .text-gray
+    {
+      text-transform: capitalize;
+    }
+    .address
+    {
+      font-family: "Fira Code", "sans-serif";
+      color: #3C4257;
+      font-size: 0.65rem;
+      line-height: 1.4;
+      font-weight: 300;
+      letter-spacing: -0.025em;
+    }
   }
 
   .tokenItem {
     display: flex;
     align-items: center;
 
-    .tokenImg {
-      display: block;
-      height: 16px;
-      width: 16px;
-      object-fit: contain;
-      margin-right: 5px;
-    }
-
     .tokenName {
-      font-weight: 600;
+      font-weight: 400;
       color: $majorDark;
-      font-size: 12px;
+      font-size: 16px;
     }
   }
 
   .amount {
-    font-weight: 600;
+    max-width: 100%;
+    overflow: hidden;
+    font-weight: 400;
     font-size: 16px;
     color: $black2;
+    width: max-content;
+    min-width: 30px;
     white-space: nowrap;
-
-    &.disabled {
-      opacity: 0.25;
-    }
-
-    .amountType {
-      /* color: $gray;
-      font-size: 12px; */
+    transition: color $transition;
+    will-change: color;
+    position: relative;
+    &:after
+    {
+      position: absolute;
+      z-index: 10;
+      height: 100%;
+      width: 2px;
+      background: rgba(255,255,255,0.3);
     }
   }
 
@@ -66,6 +85,23 @@
   .amountInputGroup {
     position: relative;
     left: 4px;
+  }
+
+  .transactionLink {
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    grid-auto-flow: row;
+    grid-auto-rows: max-content;
+    align-items: center;
+    grid-column-gap: 5px;
+
+    .txHash {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   }
 
   @media screen and (max-width: $mobile) {
@@ -96,10 +132,9 @@
       }
 
       .tokenItem {
-
-        display: flex;
+        /* display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: center; */
 
         .tokenImg {
           margin-right: 0;

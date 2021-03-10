@@ -7,13 +7,13 @@
   padding-right: 2px;
   display: flex;
   align-items: center;
-  border-color: transparent;
+  border: 1px solid $light;
   transition: $transition;
   transition-property: border-color;
   will-change: border-color;
 
   &:not(:disabled) {
-    &:hover, &.focused {
+    /* &:hover, &.focused {
       border-color: $light;
 
       .leftSide {
@@ -24,9 +24,10 @@
           }
         }
       }
-    }
+    } */
 
     &.focused {
+      border-color: $violet;
       .leftSide {
         .inputContainer {
           .penIcon {
@@ -43,6 +44,10 @@
 
   &.error {
     border-color: $red !important;
+
+    .leftSide .inputContainer input {
+      color: $red;
+    }
   }
 
   &.hasUnderInput {
@@ -69,7 +74,7 @@
       input, .sizeSpan {
         display: block;
         font-family: $firaSans;
-        font-size: 12px;
+        font-size: 16px;
         font-weight: 600;
       }
 
@@ -78,7 +83,7 @@
         left: 2px;
         height: 100%;
         width: 0;
-        min-width: 46px;
+        min-width: 50px;
         line-height: 18px;
         color: $black2;
         text-align: right;
@@ -94,7 +99,12 @@
         &::placeholder {
           color: $gray;
           font-weight: 400;
+          font-size: 14px;
         }
+      }
+      @media screen and (max-width: $breakpoint1)
+      {
+        max-width: 100px;
       }
 
       .sizeSpan {
@@ -108,11 +118,10 @@
 
       .penIcon {
         transition: $transition;
-        transition-property: width, opacity, color;
-        will-change: width, opacity, color;
+        transition-property: color;
+        will-change: color;
         color: transparentize($color: $gray, $amount: 0.4);
-        width: 0;
-        opacity: 0;
+        width: 15px;
         pointer-events: none;
 
         i {
@@ -129,7 +138,6 @@
       font-size: 9px;
       line-height: 12px;
       font-family: $firaCondensed;
-      pointer-events: none;
     }
   }
 

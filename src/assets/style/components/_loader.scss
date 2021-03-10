@@ -22,6 +22,11 @@
     will-change: transform;
 
     &.color {
+      &-white {
+        border-color: $white;
+        border-left-color: transparent;
+      }
+
       &-violet {
         border-color: $violet;
         border-left-color: transparent;
@@ -46,12 +51,19 @@
           width: 4rem;
           height: 4rem;
         }
+        & {
+          border-width: .35rem;
+        }
       }
 
       &-sm {
         &, &::after {
-          width: 3rem;
-          height: 3rem;
+          width: 1.15rem;
+          height: 1.15rem;
+        }
+
+        & {
+          border-width: .15rem;
         }
       }
 

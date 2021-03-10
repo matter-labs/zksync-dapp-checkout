@@ -3,10 +3,20 @@
   width: 100%;
   box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
   overflow: auto;
+  height: 100%;
 
   .infoBlock {
     position: relative;
-    height: max-content;
+
+    sup {
+      top: -1em;
+    }
+
+    header {
+      @media screen and (min-width: $mobile+1) {
+        height: 45px;
+      }
+    }
 
     .footerContainer {
       z-index: 1;
@@ -19,16 +29,21 @@
         bottom: 0;
         width: 100%;
         height: auto;
+        opacity: 0.6;
       }
     }
 
     footer {
       position: absolute;
       left: 0;
-      bottom: 40px;
+      bottom: 25px;
       width: 100%;
       height: max-content;
     }
+  }
+
+  .zkSyncLogoFull {
+    height: 2.5rem;
   }
 
   @media screen and (max-width: $mobile) {
@@ -36,11 +51,18 @@
     height: max-content;
 
     .infoBlock {
+      height: auto;
+
       header {
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
     }
+  }
+
+  .linkDefault {
+    font-size: 14px;
+    font-weight: 300;
   }
 }

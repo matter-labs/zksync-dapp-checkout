@@ -77,7 +77,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main"],
+  plugins: ["@/plugins/main","@/plugins/setCheckoutData"],
 
   router: {
     middleware: ["wallet"],
@@ -214,6 +214,7 @@ export default {
           black2: "#3C4257",
           black: "#000",
           violet: "#5436D6",
+          lightviolet: "#7860df",
           red: "#F25F5C",
           green: "#057A55",
         },
@@ -226,6 +227,10 @@ export default {
             },
           ],
         },
+        maxWidth: {
+          ...tailwindDefault.maxWidth,
+          'xxs': '15rem'
+        },
         fontFamily: {
           ...tailwindDefault.fontFamily,
           firaCode: ["Fira Code", "sans-serif"],
@@ -235,10 +240,10 @@ export default {
           ...tailwindDefault.screens,
           lg: "1101px",
         },
-        transitionTimingFunction: {
+        /* transitionTimingFunction: {
           ...tailwindDefault.transitionTimingFunction,
           ease: "ease",
-        },
+        }, */
         /* extend: {
           width: {
             '72': '18rem',

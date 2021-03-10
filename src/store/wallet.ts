@@ -26,7 +26,7 @@ interface feesInterface {
   };
 }
 
-let getTransactionHistoryAgain = false;
+const getTransactionHistoryAgain = false;
 
 export const state = () => ({
   onboard: false as any,
@@ -317,20 +317,34 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       listVerified = newAccountState?.verified.balances || {};
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
+    const totalByToken = this.getters["checkout/getTotalByToken"];
+    let usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
-    for (const tokenSymbol in listCommitted) {
+    for (const tokenSymbol of usedTokens) {
       const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
-      const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
-      const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
-      tokensList.push({
-        symbol: tokenSymbol,
-        status: committedBalance !== verifiedBalance ? "Pending" : "Verified",
-        balance: committedBalance,
-        rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
-        verifiedBalance,
-        tokenPrice: price,
-        restricted: +committedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol),
-      } as Balance);
+      if (listCommitted.hasOwnProperty(tokenSymbol)) {
+        const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
+        const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
+        tokensList.push({
+          symbol: tokenSymbol,
+          status: committedBalance !== verifiedBalance ? "Pending" : "Verified",
+          balance: committedBalance,
+          rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
+          verifiedBalance,
+          tokenPrice: price,
+          restricted: +committedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol),
+        } as Balance);
+      } else {
+        tokensList.push({
+          symbol: tokenSymbol,
+          status: "Pending",
+          balance: "0",
+          rawBalance: BigNumber.from("0"),
+          verifiedBalance: "0",
+          tokenPrice: price,
+          restricted: true,
+        } as Balance);
+      }
     }
     commit("setZkTokens", {
       lastUpdated: new Date().getTime(),
@@ -359,12 +373,18 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     if (!syncWallet || !accountState) {
       return localList.list;
     }
-    const loadedTokens = await this.dispatch("tokens/loadTokensAndBalances");
+    const loadedTokens = await this.dispatch("tokens/loadAllTokens");
+    const totalByToken = this.getters["checkout/getTotalByToken"];
+    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
-    const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key) => {
-      const currentToken = loadedTokens.tokens[key];
+    const loadInitialBalancesPromises = usedTokens.map(async (key) => {
+      const currentToken = loadedTokens[key];
       try {
+        let unlocked = true;
         const balance = await syncWallet.getEthereumBalance(key);
+        if (key !== "ETH") {
+          unlocked = await syncWallet.isERC20DepositsApproved(currentToken.address);
+        }
         return {
           id: currentToken.id,
           address: currentToken.address,
@@ -372,6 +392,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
           rawBalance: balance,
           formattedBalance: utils.handleFormatToken(currentToken.symbol, balance.toString()),
           symbol: currentToken.symbol,
+          unlocked,
         };
       } catch (error) {
         this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
@@ -381,14 +402,11 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       // @todo insert sentry logging
       return [];
     });
-    const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.sortBalancesById) as Array<Token>;
-    const balancesEmpty = balancesResults.filter((token) => token && token.rawBalance.lte(0)).sort(utils.sortBalancesById) as Array<Token>;
-    balances.push(...balancesEmpty);
     commit("setTokensList", {
       lastUpdated: new Date().getTime(),
-      list: balances,
+      list: balancesResults,
     });
-    return balances;
+    return balancesResults as Array<Token>;
   },
 
   /**
@@ -426,18 +444,9 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
         lastUpdated: new Date().getTime(),
         list: options.offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
       });
-      for (const tx of fetchTransactionHistory.data) {
-        if (tx.hash && tx.hash.includes("sync-tx:") && !tx.verified && !tx.fail_reason) {
-          this.dispatch("transaction/watchTransaction", { transactionHash: tx.hash, existingTransaction: true });
-        }
-      }
       return fetchTransactionHistory.data;
     } catch (error) {
       this.dispatch("toaster/error", error.message);
-      // @ts-ignore: Unreachable code error
-      getTransactionHistoryAgain = setTimeout(() => {
-        dispatch("getTransactionsHistory", true);
-      }, 15000);
       return localList.list;
     }
   },
@@ -515,10 +524,16 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
     }
   },
-  async checkLockedState({ commit }): Promise<void> {
+  async checkLockedState({ commit }): Promise<boolean> {
     const syncWallet = walletData.get().syncWallet;
     const isSigningKeySet = await syncWallet!.isSigningKeySet();
     commit("setAccountLockedState", !isSigningKeySet);
+    return !isSigningKeySet;
+  },
+  async getProviders({ commit }): Promise<void> {
+    const zksync = await walletData.zkSync();
+    const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
+    walletData.set({ syncProvider });
   },
   async walletRefresh({ getters, dispatch }, firstSelect = true): Promise<boolean> {
     try {
@@ -545,6 +560,11 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       if (getAccounts.length === 0) {
         return false;
       }
+      const transactionData = this.getters["checkout/getTransactionData"];
+      if (transactionData.fromAddress && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
+        this.commit("setCurrentModal", "wrongAccountAddress");
+        return false;
+      }
       if (walletData.get().syncWallet) {
         this.commit("account/setAddress", walletData.get().syncWallet!.address());
         this.commit("account/setLoggedIn", true);
@@ -561,22 +581,22 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
 
       const zksync = await walletData.zkSync();
-      const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
-      const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
+      await dispatch("restoreProviderConnection");
+      const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, walletData.get().syncProvider);
 
       this.commit("account/setLoadingHint", "loadingData");
       const accountState = await syncWallet.getAccountState();
 
-      walletData.set({ syncProvider, syncWallet, accountState, ethWallet });
+      walletData.set({ syncWallet, accountState, ethWallet });
 
-      await this.dispatch("tokens/loadTokensAndBalances");
       await dispatch("getzkBalances", accountState);
+      await dispatch("getInitialBalances", true);
 
       await dispatch("checkLockedState");
+      await this.dispatch("checkout/getAccountUnlockFee");
 
       await watcher.changeNetworkSet(dispatch, this);
 
-      this.commit("contacts/getContactsFromStorage");
       this.commit("account/setAddress", syncWallet.address());
       this.commit("account/setLoggedIn", true);
       return true;
@@ -599,18 +619,19 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       // @todo add sentry report
       console.log("forceRefreshData | getzkBalances error", err);
     });
-    await dispatch("getTransactionsHistory", { force: true }).catch((err) => {
+    /* await dispatch("getTransactionsHistory", { force: true }).catch((err) => {
       // @todo add sentry report
       console.log("forceRefreshData | getTransactionsHistory error", err);
-    });
+    }); */
   },
   async logout({ commit, getters }): Promise<void> {
     const onboard = getters.getOnboard;
     onboard.walletReset();
-    walletData.set({ syncProvider: null, syncWallet: null, accountState: null });
+    walletData.set({ syncWallet: null, accountState: null });
     localStorage.removeItem("selectedWallet");
     this.commit("account/setLoggedIn", false);
     this.commit("account/setSelectedWallet", "");
+    /* this.commit('checkout/setAccountUnlockFee', false); */
     commit("clearDataStorage");
   },
 };
