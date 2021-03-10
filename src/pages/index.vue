@@ -74,8 +74,10 @@
         <template slot="first:md">To pay / L2 balance</template>
         <template slot="right">Deposit from <strong>{{currentNetworkName}}</strong></template>
       </line-table-header>
-      <transaction-token v-if="!isAccountLocked || pubKeySigned" v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token"
-                         :total="total.toString()" />
+      <template v-if="!isAccountLocked || pubKeySigned">
+        <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token"
+                          :total="total.toString()" />
+      </template>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
           <defbtn v-if="isAccountLocked && !pubKeySigned" :loader="loading" :disabled="loading" @click="changePubKey()">
@@ -212,7 +214,6 @@ export default Vue.extend({
       try {
         await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
         this.pubKeySigned = true;
-//        this.$store.commit("wallet/")["wallet/isAccountLocked"]
       } catch (error) {
         const createErrorModal = (text: string) => {
           this.errorModal = {
