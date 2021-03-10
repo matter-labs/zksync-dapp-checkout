@@ -63,13 +63,10 @@
         <template slot="first:md">To pay / L2 balance</template>
         <template slot="right">Deposit from <strong>{{currentNetworkName}}</strong></template>
       </line-table-header>
-      <template>
-        <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token"
-                          :total="total.toString()" />
-      </template>
+      <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn :disabled="!transferAllowed" @click="makeTransfer()">
+          <defbtn :disabled="!transferAllowed" @click="nextStep()">
             <i class="fas fa-paper-plane"></i>
             <span>Complete payment</span>
           </defbtn>
@@ -130,9 +127,9 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, TransactionFee, Transaction, ZkSyncTransaction} from "@/plugins/types";
+import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction} from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
-import { changePubKey, transactionBatch } from "@/plugins/walletActions/transaction";
+import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
@@ -146,10 +143,8 @@ export default Vue.extend({
   data() {
     return {
       modal: false,
-      loading: false,
       step: "main" /* main, transfer, success */,
       subStep: "" /* waitingUserConfirmation, committing */,
-      pubKeySigned: false,
       tokenItemsValid: {} as {
         [token: string]: Boolean;
       },
@@ -185,49 +180,16 @@ export default Vue.extend({
     },
   },
   methods: {
-    async makeTransfer() {
-      if (this.isAccountLocked) {
-        try {
-            await this.changePubKey();
-        } catch (error) {
-          console.log(error)
-          const createErrorModal = (text: string) => {
-            this.errorModal = {
-              headline: `Activating account error`,
-              text,
-            };
-          };
-          if (error.message) {
-            if (!error.message.includes("User denied")) {
-              if (error.message.includes("Account does not exist in the zkSync network")) {
-                createErrorModal("Please, make deposit or request tokens in order to activate the account.");
-              } else {
-                createErrorModal(error.message);
-              }
-            }
-          } else {
-            createErrorModal("Unknown error. Try again later.");
-          }
+    nextStep() {
+      if (this.step === "main") {
+        this.transfer();
         }
-      }
-      await this.transfer();
-
     },
     getTokenByID(id: number) {
       return this.$store.getters["tokens/getTokenByID"](id)?.symbol;
     },
     getTxLink(hash: string) {
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
-    },
-    async changePubKey() {
-      if(this.loading){
-        return
-      }
-      this.loading = true;
-
-        await changePubKey(this.transactionData.feeToken, this.$store.getters["checkout/getAccountUnlockFee"], this.$store);
-        this.pubKeySigned = true;
-      this.loading = false;
     },
     async transfer() {
       if (this.transferAllowed) {
@@ -238,16 +200,15 @@ export default Vue.extend({
         try {
           let transactionsList = [] as Array<ZkSyncTransaction>;
           transactionsList.push(...transactionData.transactions);
-          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.$store);
+          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
           console.log("batch transaction", transactions);
 
           const manager = ZkSyncCheckoutManager.getManager();
           // We need to send the tx hashes to the client long before the
           // awaitReceipt is called
-          const hashes = transactions.map((tx: any) => tx.txHash);
+          const hashes = transactions.filter((tx: any) => tx.txData.tx.type==='Transfer').map((tx: any) => tx.txHash);
 
-
-          // There are both setSigningKey at the beginning and the fee at the end
+          // There are both setSigningKey at the begining and the fee at the end
           if (transactions.length == transactionsList.length + 2) {
             manager.notifyHashes(hashes.slice(1, -1));
           } else {
@@ -262,7 +223,6 @@ export default Vue.extend({
           await transactions[0].awaitReceipt(); /* Not sure if required. Wait for the first transaction (at least) to be confirmed */
           this.step = "success";
         } catch (error) {
-          console.log(error)
           this.step = "main";
           if (error.message) {
             if (!error.message.includes("User denied")) {

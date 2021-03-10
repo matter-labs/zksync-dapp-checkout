@@ -1,5 +1,4 @@
 import { walletData } from '@/plugins/walletData';
-import { batchData } from '@/plugins/batchData';
 import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction, Provider } from '@/plugins/types';
 import { BigNumber, BigNumberish } from 'ethers';
 import { PriorityOperationReceipt, SignedTransaction, TransactionReceipt, TxEthSignature } from 'zksync/src/types';
@@ -75,19 +74,37 @@ export const submitSignedTransactionsBatch = async (
  * @param transactions
  * @param {TokenSymbol} feeToken
  * @param fee
+ * @param changePubKey
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
-export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, store: any) => {
+export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: Boolean, store: any) => {
   const syncWallet: Wallet|undefined = walletData.get().syncWallet;
 
   await store.dispatch("wallet/restoreProviderConnection");
-
-  if(!store.getters["wallet/isAccountLocked"]) {
     const nonce = await syncWallet!.getNonce("committed");
-    await batchData.create(nonce);
+  let batchBuilder = syncWallet!.batchBuilder(nonce);
+  if(changePubKey) {
+    if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
+      const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
+      if (!isOnchainAuthSigningKeySet) {
+        const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
+        await onchainAuthTransaction?.wait();
+      }
+    }
+
+    const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
+    const signedTx = await syncWallet!.signSetSigningKey({
+      feeToken,
+      fee: await store.getters["checkout/getAccountUnlockFee"],
+      nonce: nonce,
+      ethAuthType: ethAuthType === 'ECDSA' ? 'ECDSALegacyMessage' : 'ECDSA'
+    });
+    batchBuilder.addChangePubKey({
+      ...signedTx.tx,
+      alreadySigned: true
+    });
   }
-  let batchBuilder = batchData.get();
   for(const tx of transactions) {
     batchBuilder.addTransfer({
       fee: 0,
@@ -98,6 +115,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
   }
   batchBuilder.addTransfer({
     fee: fee,
+    nonce,
     amount: 0,
     to: syncWallet!.address(),
     token: feeToken,
@@ -240,43 +258,4 @@ export const unlockToken = async (address: Address, store: any) => {
   const wallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
   return await wallet!.approveERC20TokenDeposits(address as string);
-};
-
-/**
- * Change pub key method
- *
- * @param {TokenSymbol} feeToken
- * @param fee
- * @param store
- * @returns {Promise<void>}
- */
-export const changePubKey = async (feeToken: TokenSymbol, fee: BigNumber, store: any) => {
-  await store.dispatch("wallet/restoreProviderConnection");
-  const wallet = walletData.get().syncWallet;
-  const nonce = await wallet!.getNonce("committed");
-  await batchData.create(nonce);
-  const batchBuilder = batchData.get();
-  if(batchBuilder.txs.find((tx: any) => tx.type === 'ChangePubKey')) {
-    return batchBuilder;
-  }
-
-  if (wallet?.ethSignerType?.verificationMethod === "ERC-1271") {
-    const isOnchainAuthSigningKeySet = await wallet!.isOnchainAuthSigningKeySet();
-    if (!isOnchainAuthSigningKeySet) {
-      const onchainAuthTransaction = await wallet!.onchainAuthSigningKey();
-      await onchainAuthTransaction?.wait();
-    }
-  }
-
-  const ethAuthType = wallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-  const signedTx = await wallet!.signSetSigningKey({
-    feeToken,
-    fee: await store.getters["checkout/getAccountUnlockFee"],
-    nonce: nonce,
-    ethAuthType: ethAuthType === 'ECDSA' ? 'ECDSALegacyMessage' : 'ECDSA'
-  });
-  batchBuilder.addChangePubKey({
-    ...signedTx.tx,
-    alreadySigned: true
-  });
 };
