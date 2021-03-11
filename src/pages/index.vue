@@ -128,13 +128,14 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction} from "@/plugins/types";
+import {TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction, Wallet} from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
+import {walletData} from "~/plugins/walletData";
 
 export default Vue.extend({
   components: {
@@ -173,7 +174,7 @@ export default Vue.extend({
     },
     transferAllowed(): Boolean {
       for (const [token, state] of Object.entries(this.tokenItemsValid)) {
-        console.log(state);
+//        console.log(state);
         if (!state) {
           return false;
         }
@@ -203,20 +204,27 @@ export default Vue.extend({
           let transactionsList = [] as Array<ZkSyncTransaction>;
           transactionsList.push(...transactionData.transactions);
           const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
-          console.log("batch transaction", transactions);
+//          console.log("batch transaction", transactions);
 
           const manager = ZkSyncCheckoutManager.getManager();
-          // We need to send the tx hashes to the client long before the
-          // awaitReceipt is called
-          const hashes = transactions.filter((tx: any) => tx.txData.tx.type==='Transfer').map((tx: any) => tx.txHash);
 
-          // There are both setSigningKey at the begining and the fee at the end
-          if (transactions.length == transactionsList.length + 2) {
-            manager.notifyHashes(hashes.slice(1, -1));
-          } else {
-            // There is only fee tx
-            manager.notifyHashes(hashes.slice(0, -1));
-          }
+          /**
+           *  We need to send the tx hashes to the client long before the awaitReceipt is called
+           */
+//          console.log(transactions);
+          const syncWallet: Wallet|undefined = walletData.get().syncWallet;
+
+          const hashes = transactions.filter((tx: any) => {
+            /**
+             * The very best way to filter exactly our fee transaction is to filter it by specific recipient not blind cut.
+             * + filtering anything but transfer
+             */
+            return (tx.txData.tx.type === "Transfer" && tx.txData.tx.to !== syncWallet!.address());
+          }).map((tx: any) => tx.txHash);
+
+//          console.log("checking the list of transactions (expected, formed and if the length is equal)", transactionsList, hashes, transactionsList.length === hashes.length);
+          manager.notifyHashes(hashes);
+
 
           // @ts-ignore
           this.finalTransactions.push(...transactions);
