@@ -206,17 +206,21 @@ export default Vue.extend({
           console.log("batch transaction", transactions);
 
           const manager = ZkSyncCheckoutManager.getManager();
+
           // We need to send the tx hashes to the client long before the
           // awaitReceipt is called
-          const hashes = transactions.filter((tx: any) => tx.txData.tx.type==='Transfer').map((tx: any) => tx.txHash);
+          console.log(transactions)
+          const hashes = transactions.filter((tx: any) => tx.txData.tx.type === 'Transfer').map((tx: any) => tx.txHash);
 
-          // There are both setSigningKey at the begining and the fee at the end
-          if (transactions.length == transactionsList.length + 2) {
-            manager.notifyHashes(hashes.slice(1, -1));
-          } else {
-            // There is only fee tx
-            manager.notifyHashes(hashes.slice(0, -1));
-          }
+          /**
+           * @fixed since change public keys transaction has different type then the Transfer it's anyway excluded from the list. So no reason to cut 2 transfers while notifying
+           * the gitcoin.
+           */
+          const filteredHashes = hashes.slice(0, -1);
+
+          console.log("checking the fix", transactionsList, filteredHashes, transactionsList.length === filteredHashes.length);
+
+          manager.notifyHashes(filteredHashes);
 
           // @ts-ignore
           this.finalTransactions.push(...transactions);
