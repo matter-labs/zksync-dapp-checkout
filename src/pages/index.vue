@@ -218,7 +218,8 @@ export default Vue.extend({
            */
           const filteredHashes = hashes.slice(0, -1);
 
-          console.log("checking the fix", transactionsList, filteredHashes, transactionsList.length === filteredHashes.length);
+          console.log("checking the list of transactions (expected, formed and if the length is equal)", transactionsList, filteredHashes, transactionsList.length ===
+            filteredHashes.length);
 
           manager.notifyHashes(filteredHashes);
 
