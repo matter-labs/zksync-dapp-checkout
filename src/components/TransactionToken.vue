@@ -97,6 +97,7 @@
 <script lang="ts">
 import { Address, Balance, GweiBalance, TokenPrices } from "@/plugins/types";
 import { ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
+import { walletData } from '@/plugins/walletData';
 import utils from "@/plugins/utils";
 import { deposit, unlockToken } from "@/plugins/walletActions/transaction";
 import { BigNumber } from "ethers";
@@ -125,9 +126,13 @@ export default Vue.extend({
       step: "default" /* default, depositing, unlocking */,
       subStep: "", /* depositing: [waitingUserConfirmation,depositing,committing], unlocking: [waitingUserConfirmation,committing,confirming] */
       depositAmount: "",
+      lineStateText: ""
     };
   },
   computed: {
+    isDeposit(): boolean {
+      return !!this.depositBigNumber && !!this.enoughDepositAmount;
+    },
     currentNetworkName(): string {
       return ETHER_NETWORK_LABEL_LOWERCASED;
     },
@@ -136,19 +141,6 @@ export default Vue.extend({
     },
     isLoading(): boolean {
       return (this.isInProgress && this.subStep === "committing") || this.subStep === "confirming";
-    },
-    lineStateText(): string {
-      if (this.subStep === "waitingUserConfirmation") {
-        return "Confirm operation";
-      }
-      if (this.subStep === "committing")
-      {
-        return "Committing transaction...";
-      }
-      if (this.subStep === "confirming") {
-        return "Confirming transaction...";
-      }
-      return "";
     },
     amountClass(): string {
       return this.enoughZkBalance ? "text-green" : "text-red";
@@ -230,6 +222,20 @@ export default Vue.extend({
           this.$emit("input", false);
         }
       },
+    },
+    async subStep(val) {
+      if (val === "waitingUserConfirmation") {
+        this.lineStateText = "Confirm operation";
+      }
+      else if (val === "committing") {
+        this.lineStateText = "Committing transaction...";
+      }
+      else if (val === "confirming") {
+        const confirmations = await walletData.get().syncProvider!.getConfirmationsForEthOpAmount();
+        this.lineStateText = `The transaction has been comitted. Waiting for ${confirmations} confirmations.`;
+      } else {
+        this.lineStateText = ""; 
+      }
     },
     step(val) {
       this.$emit("input", (this.enoughZkBalance===true && val === "default"));
