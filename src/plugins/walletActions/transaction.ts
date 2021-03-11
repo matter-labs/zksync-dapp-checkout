@@ -237,7 +237,7 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
  */
 export const deposit = async (token: TokenSymbol, amount: string | BigNumber, store: any): Promise<ETHOperation> => {
   const wallet = walletData.get().syncWallet;
-  console.log(token)
+  // console.log(token)
   const ethTxOptions = token.toLowerCase() === 'eth' ? {} : {
     gasLimit: "160000"
   }
