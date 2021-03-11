@@ -128,13 +128,14 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction} from "@/plugins/types";
+import {TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction, Wallet} from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
+import {walletData} from "~/plugins/walletData";
 
 export default Vue.extend({
   components: {
@@ -207,21 +208,24 @@ export default Vue.extend({
 
           const manager = ZkSyncCheckoutManager.getManager();
 
-          // We need to send the tx hashes to the client long before the
-          // awaitReceipt is called
-          console.log(transactions)
-          const hashes = transactions.filter((tx: any) => tx.txData.tx.type === 'Transfer').map((tx: any) => tx.txHash);
-
           /**
-           * @fixed since change public keys transaction has different type then the Transfer it's anyway excluded from the list. So no reason to cut 2 transfers while notifying
-           * the gitcoin.
+           *  We need to send the tx hashes to the client long before the awaitReceipt is called
            */
-          const filteredHashes = hashes.slice(0, -1);
+          console.log(transactions);
+          const syncWallet: Wallet|undefined = walletData.get().syncWallet;
 
-          console.log("checking the list of transactions (expected, formed and if the length is equal)", transactionsList, filteredHashes, transactionsList.length ===
-            filteredHashes.length);
+          const hashes = transactions.filter((tx: any) => {
+            /**
+             * The very best way to filter exactly our fee transaction is to filter it by specific recipient not blind cut.
+             * + filtering anything but transfer
+             */
+            return (tx.txData.tx.type === "Transfer" && tx.txData.tx.to !== syncWallet!.address());
+          }).map((tx: any) => tx.txHash);
 
-          manager.notifyHashes(filteredHashes);
+          console.log("checking the list of transactions (expected, formed and if the length is equal)", transactionsList, hashes, transactionsList.length ===
+            hashes.length);
+          manager.notifyHashes(hashes);
+
 
           // @ts-ignore
           this.finalTransactions.push(...transactions);
