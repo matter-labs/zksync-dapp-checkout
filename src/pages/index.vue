@@ -239,7 +239,6 @@ export default Vue.extend({
               }
               return false;
             });
-            console.log("test", endHashes);
             endHashes = validHashes.map((tx: any) => tx.txHash);
           }
           else
