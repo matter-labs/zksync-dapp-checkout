@@ -231,21 +231,23 @@ export default Vue.extend({
             const validHashes = hashes.filter((tx: any) => {
               for(let x in transactionsList)
               {
-                if (tx.txData.tx.to == transactionsList[x].to && tx.txData.tx.amount === transactionsList[x].amount && tx.txData.token === transactionsList[x].token)
+                console.log(x, transactionList[x]);
+                if (tx.txData.tx.to == transactionsList[x].to && tx.txData.tx.amount === transactionsList[x].amount)
                 {
                   return true;
                 };
               }
               return false;
             });
-            endHashes = validHashes.map((tx: any) => tx.txHash);
             console.log("test", endHashes);
+            endHashes = validHashes.map((tx: any) => tx.txHash);
           }
           else
           {
             endHashes = hashes.map((tx: any) => tx.txHash);
             console.log("test 2", endHashes);
           }
+
           manager.notifyHashes(endHashes);
 
 
