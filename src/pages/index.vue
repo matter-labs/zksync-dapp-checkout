@@ -222,9 +222,10 @@ export default Vue.extend({
             return (tx.txData.tx.type === "Transfer");
           });
 
+          let validHashes = hashes;
           if (hashes.length !== transactionsList.length)
           {
-            hashes.filter((tx: any) => {
+            validHashes = hashes.filter((tx: any) => {
               for(let x in transactionsList)
               {
                 if (tx.txData.tx.to == transactionsList[x].to && tx.txData.tx.amount === transactionsList[x].amount && tx.txData.token === transactionsList[x].token)
@@ -235,7 +236,7 @@ export default Vue.extend({
               return false;
             });
           }
-          const endHashes = hashes.map((tx: any) => tx.txHash);
+          const endHashes = validHashes.map((tx: any) => tx.txHash);
 
           console.log("checking the list of transactions (expected, formed and if the length is equal)", transactionsList, endHashes, transactionsList.length === endHashes.length);
           manager.notifyHashes(endHashes);
