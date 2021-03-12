@@ -231,8 +231,8 @@ export default Vue.extend({
                 {
                   return true;
                 };
-                return false;
-              })
+              }
+              return false;
             });
           }
           const endHashes = hashes.map((tx: any) => tx.txHash);
