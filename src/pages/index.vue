@@ -219,11 +219,26 @@ export default Vue.extend({
              * The very best way to filter exactly our fee transaction is to filter it by specific recipient not blind cut.
              * + filtering anything but transfer
              */
-            return (tx.txData.tx.type === "Transfer" && tx.txData.tx.to !== syncWallet!.address());
-          }).map((tx: any) => tx.txHash);
+            return (tx.txData.tx.type === "Transfer");
+          });
 
-//          console.log("checking the list of transactions (expected, formed and if the length is equal)", transactionsList, hashes, transactionsList.length === hashes.length);
-          manager.notifyHashes(hashes);
+          if (hashes.length !== transactionsList.length)
+          {
+            hashes.filter((tx: any) => {
+              for(let x in transactionsList)
+              {
+                if (tx.txData.tx.to == transactionsList[x].to && tx.txData.tx.amount === transactionsList[x].amount && tx.txData.token === transactionsList[x].token)
+                {
+                  return true;
+                };
+                return false;
+              })
+            });
+          }
+          const endHashes = hashes.map((tx: any) => tx.txHash);
+
+          console.log("checking the list of transactions (expected, formed and if the length is equal)", transactionsList, endHashes, transactionsList.length === endHashes.length);
+          manager.notifyHashes(endHashes);
 
 
           // @ts-ignore
