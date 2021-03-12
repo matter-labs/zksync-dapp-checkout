@@ -107,17 +107,47 @@
     const transactions = [
       {
         to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
-        token: "ETH",
+        token: "DAI",
         amount: "1000000000",
         description: "For apples",
       },
       {
         to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
         token: "ETH",
-        amount: "1000000000",
+        amount: "1000000",
         description: "For bananas",
         semanticType: "FeeOrComission"
-      }
+      },
+      {
+        to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
+        token: "DAI",
+        amount: "10000000",
+        description: "For apples",
+      },
+      {
+        to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
+        token: "DAI",
+        amount: "10000000",
+        description: "For apples",
+      },
+      {
+        to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
+        token: "DAI",
+        amount: "1000",
+        description: "For apples",
+      },
+      {
+        to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
+        token: "DAI",
+        amount: "1000000",
+        description: "For apples",
+      },
+      {
+        to: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0",
+        token: "DAI",
+        amount: "10000",
+        description: "For apples",
+      },
     ];
 
     const hashes = await cm.zkSyncBatchCheckout(

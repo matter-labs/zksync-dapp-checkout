@@ -204,7 +204,7 @@ export default Vue.extend({
           let transactionsList = [] as Array<ZkSyncTransaction>;
           transactionsList.push(...transactionData.transactions);
           const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
-//          console.log("batch transaction", transactions);
+          console.log("Batch transaction", transactionsList);
 
           const manager = ZkSyncCheckoutManager.getManager();
 
@@ -214,51 +214,36 @@ export default Vue.extend({
 //          console.log(transactions);
           const syncWallet: Wallet|undefined = walletData.get().syncWallet;
 
-          let hashes = transactions.filter((tx: any) => {
+          /* let hashes = transactions.filter((tx: any) => { */
             /**
              * The very best way to filter exactly our fee transaction is to filter it by specific recipient not blind cut.
              * + filtering anything but transfer
              */
-            return (tx.txData.tx.type === "Transfer");
-          });
+            /* return (tx.txData.tx.type === "Transfer");
+          }); */
 
-          if (hashes.length !== transactionsList.length)
+          /* if (hashes.length !== transactionsList.length)
           {
-            hashes = transactions.filter((tx: any) => {
+            hashes = transactions.filter((tx: any) => { */
             /**
              * The very best way to filter exactly our fee transaction is to filter it by specific recipient not blind cut.
              * + filtering anything but transfer
              */
-              return (tx.txData.tx.to !== syncWallet!.address());
+              /* return (tx.txData.tx.to !== syncWallet!.address());
             });
-          }
-
-          // console.log('list: ', transactionsList);
-          // console.log("hashes", hashes);
-          // let endHashes = [];
-          // if (hashes.length !== transactionsList.length)
-          // {
-          //   console.log("hh", hashes);
-          //   const validHashes = hashes.filter((tx: any) => {
-          //     for(let <any> x in transactionsList)
-          //     {
-          //       console.log(x, transactionList[x]);
-          //       if (tx.txData.tx.to == transactionsList[x].to && tx.txData.tx.amount === transactionsList[x].amount)
-          //       {
-          //         return true;
-          //       };
-          //     }
-          //     return false;
-          //   });
-          //   endHashes = validHashes.map((tx: any) => tx.txHash);
-          // }
-          // else
-          // {
-          //   endHashes = hashes.map((tx: any) => tx.txHash);
-          //   console.log("test 2", endHashes);
-          // }
-
-          manager.notifyHashes(hashes.map((tx: any) => tx.txHash));
+          } */
+          let endHashes = [];
+          const validHashes = transactions.filter((tx: any) => {
+            for(const singleTx of transactionsList) {
+              if (tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() && tx.txData.tx.amount === singleTx.amount) {
+                return true;
+              };
+            }
+            return false;
+          });
+          endHashes = validHashes.map((tx: any) => tx.txHash)
+          console.log('Sent hashes', endHashes);
+          manager.notifyHashes(endHashes);
 
 
           // @ts-ignore
