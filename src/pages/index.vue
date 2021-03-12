@@ -224,6 +224,7 @@ export default Vue.extend({
 
           console.log('list: ', transactionsList);
           console.log("hashes", hashes);
+          let endHashes = [];
           if (hashes.length !== transactionsList.length)
           {
             console.log("hh", hashes);
@@ -237,12 +238,12 @@ export default Vue.extend({
               }
               return false;
             });
-            const endHashes = validHashes.map((tx: any) => tx.txHash);
+            endHashes = validHashes.map((tx: any) => tx.txHash);
             console.log("test", endHashes);
           }
           else
           {
-            const endHashes = hashes.map((tx: any) => tx.txHash);
+            endHashes = hashes.map((tx: any) => tx.txHash);
             console.log("test 2", endHashes);
           }
           manager.notifyHashes(endHashes);
