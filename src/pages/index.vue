@@ -208,32 +208,11 @@ export default Vue.extend({
 
           const manager = ZkSyncCheckoutManager.getManager();
 
-          /**
-           *  We need to send the tx hashes to the client long before the awaitReceipt is called
-           */
-//          console.log(transactions);
-          const syncWallet: Wallet|undefined = walletData.get().syncWallet;
-
-          /* let hashes = transactions.filter((tx: any) => { */
-            /**
-             * The very best way to filter exactly our fee transaction is to filter it by specific recipient not blind cut.
-             * + filtering anything but transfer
-             */
-            /* return (tx.txData.tx.type === "Transfer");
-          }); */
-
-          /* if (hashes.length !== transactionsList.length)
-          {
-            hashes = transactions.filter((tx: any) => { */
-            /**
-             * The very best way to filter exactly our fee transaction is to filter it by specific recipient not blind cut.
-             * + filtering anything but transfer
-             */
-              /* return (tx.txData.tx.to !== syncWallet!.address());
-            });
-          } */
           let endHashes = [];
           const validHashes = transactions.filter((tx: any) => {
+            if(tx.txData.tx.type!=='Transfer') {
+              return false;
+            }
             for(const singleTx of transactionsList) {
               if (typeof(tx.txData.tx.to)==='string' && typeof(singleTx.to)==='string' && tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() && tx.txData.tx.amount === singleTx.amount) {
                 return true;
