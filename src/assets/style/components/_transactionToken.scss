@@ -8,13 +8,11 @@
     will-change: opacity, height, color;
     transition-property: opacity, height, color;
     overflow: hidden;
-    pointer-events: none;
   }
   &.focused,&.error {
     .underInput .minAmount {
       height: 12px;
       opacity: 1;
-      pointer-events: all;
       cursor: pointer;
     }
   }

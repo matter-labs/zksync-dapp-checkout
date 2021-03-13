@@ -217,6 +217,7 @@ export default {
           lightviolet: "#7860df",
           red: "#F25F5C",
           green: "#057A55",
+          yellow: "#fbbf24",
         },
         fontSize: {
           ...tailwindDefault.fontSize,
