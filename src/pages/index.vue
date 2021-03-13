@@ -235,7 +235,7 @@ export default Vue.extend({
           let endHashes = [];
           const validHashes = transactions.filter((tx: any) => {
             for(const singleTx of transactionsList) {
-              if (tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() && tx.txData.tx.amount === singleTx.amount) {
+              if (typeof(tx.txData.tx.to)==='string' && typeof(singleTx.to)==='string' && tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() && tx.txData.tx.amount === singleTx.amount) {
                 return true;
               };
             }
