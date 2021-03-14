@@ -11,7 +11,7 @@
       </template>
       <template slot="default">
         <div v-if="modal==='insufficientL1Deposit'" class="text-sm">On-chain wallet has insufficient funds to deposit
-          <strong>{{ depositBigNumber | formatTokenPretty(token) }} {{token}}</strong>
+          <strong>{{ depositBigNumber | formatToken(token) }} {{token}}</strong>
           to zkSync L2 account.
           Your on-chain balance is
           <strong class="cursor-pointer" @click="setDepositMaxAmount();modal='';">{{ initialBalance.rawBalance | formatToken(token) }} {{token}}</strong>.

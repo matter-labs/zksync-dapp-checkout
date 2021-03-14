@@ -3,14 +3,9 @@ import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTran
 import { BigNumber, BigNumberish } from 'ethers';
 import { PriorityOperationReceipt, SignedTransaction, TransactionReceipt, TxEthSignature } from 'zksync/src/types';
 
-declare class ZKSyncTxError extends Error {
-  value: PriorityOperationReceipt | TransactionReceipt;
-  constructor(message: string, value: PriorityOperationReceipt | TransactionReceipt);
-}
-
 class Transaction {
   state: 'Sent' | 'Committed' | 'Verified' | 'Failed';
-  error?: ZKSyncTxError;
+  error?: string;
 
   // @ts-ignore
   constructor(public txData, public txHash: string, public sidechainProvider: Provider) {
@@ -26,7 +21,7 @@ class Transaction {
     const receipt = await this.sidechainProvider.notifyTransaction(this.txHash, 'COMMIT');
 
     if (!receipt.success) {
-      this.setErrorState(new ZKSyncTxError(`zkSync transaction failed: ${receipt.failReason}`, receipt));
+      this.setErrorState(`zkSync transaction failed: ${receipt.failReason}`/* , receipt */);
       this.throwErrorIfFailedState();
     }
 
@@ -42,7 +37,7 @@ class Transaction {
     return receipt;
   }
 
-  private setErrorState(error: ZKSyncTxError) {
+  private setErrorState(error: string) {
     this.state = 'Failed';
     this.error = error;
   }
@@ -238,7 +233,7 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
 export const deposit = async (token: TokenSymbol, amount: string | BigNumber, store: any): Promise<ETHOperation> => {
   const wallet = walletData.get().syncWallet;
   // console.log(token)
-  const ethTxOptions = token.toLowerCase() === 'eth' ? {} : {
+  const ethTxOptions = token?.toLowerCase() === 'eth' ? {} : {
     gasLimit: "160000"
   }
   const depositResponse = await wallet?.depositToSyncFromEthereum({
