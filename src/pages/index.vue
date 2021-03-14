@@ -9,7 +9,7 @@
       </template>
       <template slot="default">
         <div class="text-sm">
-          The transaction fee has changed
+          The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.
         </div>
         <values-block class="mt-3">
           <template slot="left-top">
@@ -163,7 +163,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      modal: false as (false | string) /* false, feeChanged */,
+      modal: "feeChanged" as (false | string) /* false, feeChanged */,
       step: "main" /* main, transfer, success */,
       subStep: "" /* processing, waitingUserConfirmation, committing */,
       tokenItemsValid: {} as {

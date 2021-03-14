@@ -89,7 +89,7 @@
               <div class="minAmount text-xxs" @click="setDepositMinAmount()">Min: {{ needToDeposit | formatToken(token) }}</div>
             </template>
             <template slot="default">
-              <defbtn v-if="initialBalance.unlocked===true" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
+              <defbtn v-if="initialBalance.unlocked" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
                 <i class="fal fa-arrow-to-right"/>
                 <span>Deposit</span>
               </defbtn>

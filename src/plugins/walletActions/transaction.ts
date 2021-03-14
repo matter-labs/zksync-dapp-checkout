@@ -257,5 +257,6 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, st
 export const unlockToken = async (address: Address, store: any) => {
   const wallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
-  return await wallet!.approveERC20TokenDeposits(address as string);
+  const unlockTransaction = await wallet!.approveERC20TokenDeposits(address as string);
+  return unlockTransaction;
 };
