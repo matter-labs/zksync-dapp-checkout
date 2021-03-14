@@ -9,7 +9,7 @@
       </template>
       <template slot="default">
         <div class="text-sm">
-          The transaction fee changed
+          The transaction fee has changed
         </div>
         <values-block class="mt-3">
           <template slot="left-top">
@@ -17,8 +17,8 @@
           </template>
           <template slot="right-top">
             <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ transactionFees.previous | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
-              <div class="secondaryValue">{{ transactionFees.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+              <div class="value mr-2 md:mr-0">{{ transactionFees.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+              <div class="secondaryValue">{{ transactionFees.previous | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
             </div>
           </template>
         </values-block>
@@ -28,8 +28,8 @@
           </template>
           <template slot="right-top">
             <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ transactionFees.new | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
-              <div class="secondaryValue">{{ transactionFees.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+              <div class="value mr-2 md:mr-0">{{ transactionFees.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+              <div class="secondaryValue">{{ transactionFees.new | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
             </div>
           </template>
         </values-block>
@@ -70,7 +70,7 @@
           </template>
           <template slot="default">
             <div class="text-sm text-gray font-light">
-              10% were added by default to the minimum deposit amount to take into account the risk of fluctuating transaction fees.<br>
+              The default amount to deposit is 10% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br>
             </div>
           </template>
         </note>
