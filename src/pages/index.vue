@@ -163,7 +163,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      modal: "feeChanged" as (false | string) /* false, feeChanged */,
+      modal: false as (false | string) /* false, feeChanged */,
       step: "main" /* main, transfer, success */,
       subStep: "" /* processing, waitingUserConfirmation, committing */,
       tokenItemsValid: {} as {
