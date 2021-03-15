@@ -1,42 +1,48 @@
 <template>
   <div class="indexPage">
-    <modal v-model="modal">
+    <modal :value="modal==='feeChanged'" @close="modal=false">
       <template slot="header">
-        <div class="withIcon text-red">
+        <div class="withIcon text-warning text-yellow">
           <i class="fad fa-info-square"/>
-          <div>Insufficient funds in the on-chain wallet to deposit</div>
+          <div>Fee changed</div>
         </div>
       </template>
       <template slot="default">
-        <div class="text-sm">On-chain wallet has insufficient funds to deposit minimal amount to zkSync L2 account. Top it up your on-chain wallet with minimal amount:</div>
+        <div class="text-sm">
+          The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.
+        </div>
         <values-block class="mt-3">
           <template slot="left-top">
-            <div class="headline">Minimal amount to deposit</div>
-          </template>
-          <template slot="left-bottom">
-            <div class="address hidden md:block">0xc0f97CC918C9d6fA4E9fc6be61a6a06589D199b2</div>
+            <div class="headline">Previous fee</div>
           </template>
           <template slot="right-top">
             <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">6.051 LINK</div>
-              <div class="secondaryValue">23.45 $</div>
+              <div class="value mr-2 md:mr-0">{{ transactionFees.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+              <div class="secondaryValue">{{ transactionFees.previous | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
+            </div>
+          </template>
+        </values-block>
+        <values-block class="mt-3">
+          <template slot="left-top">
+            <div class="headline">New fee</div>
+          </template>
+          <template slot="right-top">
+            <div class="flex md:flex-col whitespace-nowrap">
+              <div class="value mr-2 md:mr-0">{{ transactionFees.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+              <div class="secondaryValue">{{ transactionFees.new | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
             </div>
           </template>
         </values-block>
       </template>
       <template slot="footer">
         <div class="flex items-center justify-center flex-wrap gap-2">
-          <defbtn outline @click="modal=false">
+          <defbtn outline @click="modal=false;cancelTransfer();">
             <i class="far fa-arrow-left"/>
-            <span>Cancel and return</span>
+            <span>Cancel payment</span>
           </defbtn>
-          <defbtn outline @click="modal=false">
-            <span>Disconnect</span>
-            <i class="far fa-power-off"/>
-          </defbtn>
-          <defbtn @click="modal=false">
-            <i class="far fa-sync-alt"/>
-            <span>All is done. Reload the checkout</span>
+          <defbtn @click="modal=false;transfer();">
+            <i class="fas fa-paper-plane"/>
+            <span>Complete payment</span>
           </defbtn>
         </div>
       </template>
@@ -57,7 +63,20 @@
     <connected-wallet/>
 
     <div v-if="step==='main'" class="w-full">
-      <line-table-header class="mt-5 md:mt-7 mb-2">
+      <max-height class="mt-5 md:mt-7" :value="!transferAllowed">
+        <note>
+          <template slot="icon">
+            <i class="text-gray text-xl fal fa-info-square"></i>
+          </template>
+          <template slot="default">
+            <div class="text-sm text-gray font-light">
+              The default amount to deposit is 10% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br>
+            </div>
+          </template>
+        </note>
+      </max-height>
+
+      <line-table-header class="mt-5 mb-2">
         <template slot="first">To pay</template>
         <template slot="second">L2 balance</template>
         <template slot="first:md">To pay / L2 balance</template>
@@ -66,7 +85,7 @@
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn :disabled="!transferAllowed" @click="nextStep()">
+          <defbtn :disabled="!transferAllowed" @click="preTransfer()">
             <i class="fas fa-paper-plane"></i>
             <span>Complete payment</span>
           </defbtn>
@@ -75,7 +94,8 @@
     </div>
     <div v-else-if="step==='transfer'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-dark text-center pt-5 md:pt-10">Payment</div>
-      <div v-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in the popup</div>
+      <div v-if="subStep==='processing'" class="text-lg text-center pt-2">Processing...</div>
+      <div v-else-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in the popup</div>
       <div v-else-if="subStep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
       <loader class="mx-auto mt-6" size="md" color="violet" />
     </div>
@@ -128,14 +148,13 @@
 <script lang="ts">
 import Vue from "vue";
 
-import {TransactionData, TotalByToken, Balance, TransactionFee, Transaction, ZkSyncTransaction, Wallet} from "@/plugins/types";
+import { TransactionData, TotalByToken, TransactionFee, Transaction, ZkSyncTransaction, TokenPrices } from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
-import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
-import {walletData} from "~/plugins/walletData";
+import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
 
 export default Vue.extend({
   components: {
@@ -144,9 +163,9 @@ export default Vue.extend({
   },
   data() {
     return {
-      modal: false,
+      modal: false as (false | string) /* false, feeChanged */,
       step: "main" /* main, transfer, success */,
-      subStep: "" /* waitingUserConfirmation, committing */,
+      subStep: "" /* processing, waitingUserConfirmation, committing */,
       tokenItemsValid: {} as {
         [token: string]: Boolean;
       },
@@ -157,6 +176,10 @@ export default Vue.extend({
             headline: string;
             text: string;
           },
+      transactionFees: {
+        previous: "0",
+        new: "0",
+      }
     };
   },
   computed: {
@@ -174,36 +197,69 @@ export default Vue.extend({
     },
     transferAllowed(): Boolean {
       for (const [token, state] of Object.entries(this.tokenItemsValid)) {
-//        console.log(state);
         if (!state) {
           return false;
         }
       }
       return true;
     },
+    tokensPrices(): TokenPrices {
+      return this.$store.getters["tokens/getTokenPrices"];
+    },
   },
   methods: {
-    nextStep() {
-      if (this.step === "main") {
-        this.transfer();
-        }
-    },
     getTokenByID(id: number) {
       return this.$store.getters["tokens/getTokenByID"](id)?.symbol;
     },
     getTxLink(hash: string) {
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
     },
+    async preTransfer() {
+      this.step = "transfer";
+      this.subStep = "processing";
+      try {
+        const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
+        await this.$store.dispatch('checkout/getTransactionBatchFee');
+        const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
+        if(transactionFeesPrevious !== transactionFeesNew) {
+          this.transactionFees = {
+            previous: transactionFeesPrevious,
+            new: transactionFeesNew
+          }
+          this.modal = "feeChanged";
+        }
+        else {
+          this.transfer();
+        }
+      } catch (error) {
+        this.step = "main";
+        this.modal = false;
+        if (error.message) {
+          this.errorModal = {
+            headline: "Payment error",
+            text: error.message,
+          };
+        } else {
+          this.errorModal = {
+            headline: "Payment error",
+            text: "Unknown error. Try again later.",
+          };
+        }
+      }
+    },
+    cancelTransfer() {
+      this.step = "main";
+    },
     async transfer() {
       if (this.transferAllowed) {
         const transactionData = this.transactionData;
-        const getTransactionFee = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
         this.step = "transfer";
         this.subStep = "waitingUserConfirmation";
         try {
           let transactionsList = [] as Array<ZkSyncTransaction>;
           transactionsList.push(...transactionData.transactions);
-          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, getTransactionFee.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
+          const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
+          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, transactionFees.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
           console.log("Batch transaction", transactionsList);
 
           const manager = ZkSyncCheckoutManager.getManager();

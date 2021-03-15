@@ -30,6 +30,17 @@
             </div>
           </template>
         </values-block>
+        <values-block class="mt-3 cursor-pointer" @click="setDepositRecommendedAmount(); modal=''">
+          <template slot="left-top">
+            <div class="headline">Recommended deposit amount</div>
+          </template>
+          <template slot="right-top">
+            <div class="flex md:flex-col whitespace-nowrap">
+              <div class="value mr-2 md:mr-0">{{ recommendedDeposit | formatToken(token) }} {{ token }}</div>
+              <div class="secondaryValue">{{ recommendedDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}</div>
+            </div>
+          </template>
+        </values-block>
       </template>
     </modal>
 
@@ -78,7 +89,7 @@
               <div class="minAmount text-xxs" @click="setDepositMinAmount()">Min: {{ needToDeposit | formatToken(token) }}</div>
             </template>
             <template slot="default">
-              <defbtn v-if="initialBalance.unlocked===true" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
+              <defbtn v-if="initialBalance.unlocked" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
                 <i class="fal fa-arrow-to-right"/>
                 <span>Deposit</span>
               </defbtn>
@@ -154,7 +165,7 @@ export default Vue.extend({
     initialBalance(): Balance {
       return this.$store.getters["wallet/getInitialBalances"].find((e: Balance) => e.symbol === this.token);
     },
-    depositBigNumber(): GweiBalance | BigNumber {
+    depositBigNumber(): GweiBalance {
       if (!this.depositAmount) {
         return "";
       }
@@ -164,9 +175,18 @@ export default Vue.extend({
         return "";
       }
     },
-    needToDeposit(): GweiBalance | BigNumber {
+    needToDeposit(): GweiBalance {
       try {
         return BigNumber.from(this.total).sub(this.zkBalance.rawBalance).toString();
+      } catch (error) {
+        return "";
+      }
+    },
+    recommendedDeposit(): GweiBalance {
+      try {
+        const minDeposit = BigNumber.from(this.needToDeposit);
+        /* Add 10% to take into account the risk of fluctuating transaction fees */
+        return minDeposit.add(minDeposit.div("10")).toString();
       } catch (error) {
         return "";
       }
@@ -243,7 +263,7 @@ export default Vue.extend({
   },
   mounted() {
     if (!this.enoughZkBalance) {
-      this.setDepositMinAmount();
+      this.setDepositRecommendedAmount();
     }
   },
   methods: {
@@ -252,6 +272,9 @@ export default Vue.extend({
     },
     setDepositMinAmount() {
       this.depositAmount = utils.handleFormatToken(this.token, this.needToDeposit);
+    },
+    setDepositRecommendedAmount() {
+      this.depositAmount = utils.handleFormatToken(this.token, this.recommendedDeposit);
     },
     async deposit() {
       if (!this.enoughOnInitialToDeposit) {
