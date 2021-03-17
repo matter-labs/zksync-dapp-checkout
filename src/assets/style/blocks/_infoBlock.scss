@@ -1,19 +1,12 @@
-@import "../variables";
-
 .infoBlockContainer {
   z-index: 4;
   width: 100%;
-  height: 100%;
-  overflow: auto;
   box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
+  overflow: auto;
+  height: 100%;
 
   .infoBlock {
     position: relative;
-
-    .valuesBlockContainer
-    {
-      align-items: flex-start;
-    }
 
     sup {
       top: -1em;
@@ -30,10 +23,10 @@
       height: 145px;
 
       .zkSyncFooter {
-        position: absolute;
-        bottom: 0;
-        left: 0;
         z-index: -1;
+        position: absolute;
+        left: 0;
+        bottom: 0;
         width: 100%;
         height: auto;
         opacity: 0.6;
@@ -42,8 +35,8 @@
 
     footer {
       position: absolute;
-      bottom: 25px;
       left: 0;
+      bottom: 25px;
       width: 100%;
       height: max-content;
     }
@@ -57,11 +50,6 @@
     /* box-shadow: none; */
     height: max-content;
 
-    .valuesBlockContainer {
-      .valuesBlockLeft {
-        max-width: 70%;
-      }
-    }
     .infoBlock {
       height: auto;
 
@@ -74,7 +62,7 @@
   }
 
   .linkDefault {
-    font-weight: 300;
     font-size: 14px;
+    font-weight: 300;
   }
 }

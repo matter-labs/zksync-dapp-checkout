@@ -1,5 +1,6 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { TokenPrices, Tokens, TokenSymbol, TokenItem } from "@/plugins/types";
+import { Address, Token, TokenPrices, Tokens, TokenSymbol, TokenItem } from "@/plugins/types";
+import { BigNumberish } from "ethers";
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
 
@@ -50,6 +51,15 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
           return state.allTokens[symbol];
+        }
+      }
+    };
+  },
+  getTokenBySymbol(state): Function {
+    return (symbol: TokenSymbol): TokenItem | undefined => {
+      for (const tokenProp in state.allTokens) {
+        if (state.allTokens[tokenProp].symbol === symbol) {
+          return state.allTokens[tokenProp];
         }
       }
     };

@@ -187,6 +187,7 @@ export declare class Wallet {
       nonce?: Nonce;
     }[],
   ): Promise<Transaction[]>;
+  batchBuilder: any;
 
   batchBuilder: any;
 

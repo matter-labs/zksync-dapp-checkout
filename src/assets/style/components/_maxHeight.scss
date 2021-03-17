@@ -4,14 +4,10 @@
   transition: height $transition2;
   will-change: height;
 
+  @media (min-width: $mobile) {
+    &.mobile {
+      height: auto !important;
+    }
+  }
 }
 
-@media (min-width: $mobile) {
-  .maxHeightBlock {
-    height: auto !important;
-  }
-  .far.fa-angle-down
-  {
-    display: none;
-  }
-}

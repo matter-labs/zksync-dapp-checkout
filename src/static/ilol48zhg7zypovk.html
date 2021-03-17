@@ -91,48 +91,42 @@
 <body>
 <div class="connectContainer routeMain">
   <h1 class="font-bold text-center text-3xl text-dark">zkCheckout Payment Gateway</h1>
-
   <h2>Initiate and launch the checkout for testing purposes</h2>
-  <script type="text/javascript">
-    let network = "rinkeby";
-    if (window.location.href.search("zksync.io") !== -1)
-    {
-      network = "mainnet";
-    }
-  </script>
-
   <div style="display: flex; justify-content: space-between; align-items: center">
-    <button onclick="f(network)" id="launchBtn" style="background-color: blueviolet">Initiate the checkout</button>
+    <button onclick="f('rinkeby')" style="background-color: blueviolet">Start “rinkeby” testing</button>
   </div>
 </div>
 <script type="text/javascript">
-  document.querySelector('#launchBtn').innerHTML = `Start&nbsp;<strong>${network}</strong>&nbsp;testing`;
   async function f(network) {
 
-    let cm = new ZkSyncCheckout.CheckoutManager(network, "/");
+    const local = `/`;
+    let cm = new ZkSyncCheckout.CheckoutManager(network, local);
+
+    const constants = ZkSyncCheckout.Constants;
+
     const transactions = [
       {
         to: "0xaDDF10E1F4BaA96E007f61448b70A3033c9b45D3",
         token: "DAI",
-        amount: "100000",
+        amount: "100000000",
         description: "VoskCoin Youtube - Ethereum Education",
       },
       {
         to: "0xaDDF10E1F4BaA96E007f61448b70A3033c9b45D3",
         token: "ETH",
-        amount: "100000",
+        amount: "19000000000000",
         description: "Getting Started With NFTs - Video Tutorials on Non-Fungible Tokens by VoskCoin",
       },
       {
         to: "0xaDDF10E1F4BaA96E007f61448b70A3033c9b45D3",
         token: "ETH",
-        amount: "100000",
+        amount: "19000000000000",
         description: "Gitcoin Grants Round 9 + Dev Fund",
       },
       {
         to: "0xaDDF10E1F4BaA96E007f61448b70A3033c9b45D3",
-        token: "WBTC",
-        amount: "100000",
+        token: "ETH",
+        amount: "19000000000000",
         description: "Gitcoin Grants Round 8 + Dev Fund",
       },
     ];
@@ -141,8 +135,11 @@
       transactions,
       "ETH",
     );
+
     cm.wait(hashes).then(data => console.log(data));
   }
+
+
 </script>
 </body>
 </html>

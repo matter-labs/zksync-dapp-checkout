@@ -1,23 +1,39 @@
-# [zkSync.io](https://zksync.io/) &middot; [zkSync docs](https://zksync.io/) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT)
+# [zkCheckout dApp](https://link.zksync.io) &middot; [zkSync.io](https://zksync.io/)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT)
 
-# Website zkSync.io
+# zkCheckout — trustable permissionless DeFi payment gateway 
 
-First public release of the updated zkSync.io landing page design
+zkCheckout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.
+
+**[Learn more →](https://zksync.io/api/sdk/checkout/)**
 
 ## CHANGELOG.md
 
-### v.2.1.1 🗓 1.03.2021
+### v.2.0.2
 
 ---
+* first-fix of the issue reported by the Gitlab
+* re-designed way of hash-reporting for the batch (more stable and solid way to filter fee-transfer and report same list of the transfers as requested)
 
-* Partners block addded
-* Tables purified
-* Code optimized
+### v.2.0.1
+
+---
+* improved deposit reporting (showing the user left number of confirmations)
+
+### v.2.0.0
+
+---
+This is like complete new version of the checkout:
+* added batch-transaction manager support
+* restyled UI
+* redesigned UX
+* batchManager support added
+* the latest version of the wallet is connected
+* the bunch of smaller improvements released
 
 ## Build Setup
 
 ``` bash
-# install dependencies && populate .env file as of RINKEBY connection (clear install)
+# install dependencies && populate .env file as of ROPSTEN connection (clear install)
 $ yarn prepare_ci
 
 # serve with hot reload at localhost:3000
@@ -40,86 +56,11 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 * [Nuxt.js](https://nuxtjs.org)
 * [TS Lang](https://www.typescriptlang.org)
 * [Vue.js](https://vuejs.org)
+* [Vuex](https://vuex.vuejs.org)
 
-# zkSync docs
+### Libraries used  
 
-This repository contains the zkSync documentation hosted on <zksync.io>.
-
-## Local testing
-
-```bash
-yarn
-yarn docs:dev
-```
-
-## Development
-
-CI pipeline will check that the files are formatted according to `prettier`, `markdownlint` founds no issues in document and spelling is correct. Also, there should be no dead
-links.
-
-You can check it locally as follows:
-
-```bash
-yarn
-yarn md:lint
-yarn md:deadlinks
-yarn fmt:check
-yarn cspell
-```
-
-If `cspell` doesn't recognize a word but you're sure that it's correct, consider adding it to the `cspell-zksync.txt`.
-
-## Deployment
-
-`master` branch is automatically deployed to <https://console.firebase.google.com/u/0/project/zksync-js-docs>
-
-# Deploying altogether
-
-> will do:
-
-* install node modules;
-* prepare, test and build documentation;
-* prepare and build nuxt.js-version of the landing page of zksync.io/index.html
-* afterwards all contained into the `dist` folder will be deployed in form of the static website
-
-```bash
-yarn zk-ci-prepare
-yarn firebase deploy
-```
-
-# Extra documentation
-
-## cSpell
-
-Configuration in `.cSpell.json`:
-
-* `version` — version of the setting file, always **0.1**
-* `language` — language - current active spelling language
-* `words[]` — words - list of words to be always considered correct
-* `dictionaries[]`
-
-```
-"dictionaryDefinitions": [
-    {
-      "name": "zksync", "path": "./cspell-zksync.txt"
-    }
-]
-```
-
-```bash
-{
-  
-  "version": "0.1",
-  // language - current active spelling language
-  "language": "en",
-  // words - list of words to be always considered correct
-  "words": [],
-  "dictionaries": ["typescript", "zksync"],
-  //
-  "dictionaryDefinitions": [
-  { 
-    "name": "zksync", "path": "./cspell-zksync.txt"
-  }
-]
-}
-```
+* [zkCheckout lib](https://www.npmjs.com/package/zksync-checkout): our open sourced NPM-package
+* [zkSyncjs lib](https://www.npmjs.com/package/zksync-checkout): our open sourced NPM-package
+* [zkLink service](https://link.zksync.io/?MHhhMDcyRTYxNDMyODY2NWJlN0UyRjIxNjZCRTFBN2JBMTk1RjhiZTQ0fERBSXwxMDA): bit.ly for payment links on zkSync
+* [ethers.js lib](https://docs.ethers.io/v5/): a simple to use Web3 Provider Bridge as a single JavaScript file

@@ -7,8 +7,8 @@ export default async (context) => {
     }
     return;
   }
-  await (async () => {
-    const onboardResult = await context.store?.dispatch("wallet/onboard");
+  (async () => {
+    const onboardResult = await context.store.dispatch("wallet/onboard");
     if (onboardResult !== true) {
       await context.store.dispatch("wallet/logout");
       if (context.route.matched[0].path !== "/connect") {

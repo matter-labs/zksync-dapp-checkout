@@ -1,5 +1,3 @@
-@import "../variables";
-
 @keyframes rotate {
   0% {
     transform: rotate(0deg);
@@ -15,8 +13,8 @@
   overflow: hidden;
 
   .loaderSpinner {
-    position: relative;
     font-size: 10px;
+    position: relative;
     text-indent: -9999em;
     border: .5rem solid;
     transform: translateZ(0);
@@ -53,7 +51,9 @@
           width: 4rem;
           height: 4rem;
         }
-        border-width: .35rem;
+        & {
+          border-width: .35rem;
+        }
       }
 
       &-sm {
@@ -61,7 +61,10 @@
           width: 1.15rem;
           height: 1.15rem;
         }
-        border-width: .15rem;
+
+        & {
+          border-width: .15rem;
+        }
       }
 
       &-xs {
@@ -69,7 +72,10 @@
           width: .85rem;
           height: .85rem;
         }
-        border-width: .12rem;
+
+        & {
+          border-width: .12rem;
+        }
       }
     }
 

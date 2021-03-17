@@ -77,7 +77,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
+  plugins: ["@/plugins/main","@/plugins/setCheckoutData"],
 
   router: {
     middleware: ["wallet"],
@@ -85,12 +85,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [
-    "@nuxt/typescript-build",
-    "@nuxtjs/stylelint-module",
-    "@nuxtjs/tailwindcss",
-    ["@nuxtjs/dotenv", { path: __dirname }],
-  ],
+  buildModules: ["@nuxt/typescript-build", "@nuxtjs/tailwindcss", ["@nuxtjs/dotenv", { path: __dirname }]],
 
   /*
    ** Nuxt.js modules
@@ -146,7 +141,7 @@ export default {
     action: {
       text: "OK",
       onClick: (event, toastObject) => {
-        toastObject?.goAway(100);
+        toastObject.goAway(100);
       },
     },
   },
@@ -235,7 +230,7 @@ export default {
         },
         maxWidth: {
           ...tailwindDefault.maxWidth,
-          xxs: "15rem",
+          'xxs': '15rem'
         },
         fontFamily: {
           ...tailwindDefault.fontFamily,
@@ -265,12 +260,6 @@ export default {
             '96': '24rem',
           },
         }, */
-      },
-      variants: {
-        extend: {
-          visibility: ['hover', 'focus'],
-          flex: ['hover', 'focus'],
-        }
       },
       /* variants: {
         extends: {

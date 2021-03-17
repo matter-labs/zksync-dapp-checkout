@@ -1,19 +1,19 @@
 .amountInputGroup {
   .underInput .minAmount {
-    width: max-content;
     height: 0;
-    padding-left: 6px;
-    overflow: hidden;
     opacity: 0;
+    width: max-content;
+    padding-left: 6px;
     transition: $transition;
-    transition-property: opacity, height, color;
     will-change: opacity, height, color;
+    transition-property: opacity, height, color;
+    overflow: hidden;
   }
   &.focused,&.error {
     .underInput .minAmount {
       height: 12px;
-      cursor: pointer;
       opacity: 1;
+      cursor: pointer;
     }
   }
   &.error {
