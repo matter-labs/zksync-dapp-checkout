@@ -1,8 +1,20 @@
 <template>
-  <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]" @click.self="focusInput()">
+  <div
+    class="amountInputGroup border rounded"
+    :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]" @click.self="focusInput()">
     <div class="leftSide" @click="focusInput()">
       <div class="inputContainer">
-        <input ref="input" v-model="inputtedAmount" :style="{'width': `${width}px`}" :disabled="disabled" type="text" placeholder="Amount" maxlength="15" @focus="focused=true" @blur="focused=false" @keyup.enter="$emit('enter')">
+        <input
+          ref="input"
+          v-model="inputtedAmount"
+          :disabled="disabled"
+          :style="{'width': `${width}px`}"
+          maxlength="15"
+          placeholder="Amount"
+          type="text"
+          @blur="focused=false"
+          @focus="focused=true"
+          @keyup.enter="$emit('enter')">
         <span ref="sizeSpan" class="sizeSpan">{{inputtedAmount}}</span>
         <div class="penIcon">
           <i class="fad fa-pen"/>
@@ -35,11 +47,6 @@ export default Vue.extend({
       default: "",
       required: false,
     },
-    /* maxAmount: {
-      type: String,
-      default: "",
-      required: false,
-    }, */
     token: {
       type: String,
       default: "",
@@ -86,15 +93,6 @@ export default Vue.extend({
       }
       this.emitValue(this.inputtedAmount);
     },
-    /* maxAmount: {
-      deep: true,
-      handler() {
-        if (!this.inputtedAmount) {
-          return;
-        }
-        this.emitValue(this.inputtedAmount);
-      },
-    }, */
     value(val) {
       if (!this.error || (this.error && !!val)) {
         this.inputtedAmount = val;
@@ -109,11 +107,7 @@ export default Vue.extend({
         return;
       }
       this.validateAmount(val);
-      if (!this.error) {
-        this.$emit("input", val);
-      } else {
-        this.$emit("input", "");
-      }
+      this.$emit("input", this.error ? "" :  val);
     },
     validateAmount(val: string): void {
       if (!val || !parseFloat(val as string)) {
@@ -148,21 +142,20 @@ export default Vue.extend({
       }
       this.error = "";
     },
-
-    /* Misc */
     focusInput(): void {
-      if (this.disabled || this.focused) {
-        return;
+      if (!this.disabled && !this.focused) {
+        (this.$refs.input as HTMLElement)?.focus();
       }
-      (this.$refs.input as HTMLElement).focus();
     },
     calcWidth(): void {
       const sizeSpan = this.$refs.sizeSpan;
       if (!sizeSpan) {
         return;
       }
-      const inputSize = (sizeSpan as HTMLElement).getBoundingClientRect().width;
-      this.width = inputSize + 4;
+      const inputSize = (sizeSpan as HTMLElement).getBoundingClientRect()?.width as number | undefined;
+      if (inputSize) {
+        this.width = inputSize + 4;
+      }
     },
   },
 });

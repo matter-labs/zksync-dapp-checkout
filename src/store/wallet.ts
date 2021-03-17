@@ -318,7 +318,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
     const totalByToken = this.getters["checkout/getTotalByToken"];
-    let usedTokens = Object.entries(totalByToken).map((e) => e[0]);
+    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
     for (const tokenSymbol of usedTokens) {
       const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
@@ -561,7 +561,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
         return false;
       }
       const transactionData = this.getters["checkout/getTransactionData"];
-      if (typeof(transactionData.fromAddress)==='string' && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
+      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
         this.commit("setCurrentModal", "wrongAccountAddress");
         return false;
       }

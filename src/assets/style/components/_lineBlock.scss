@@ -1,16 +1,18 @@
+@import "../variables";
+
 .lineContainer {
+  display: grid;
+  grid-column-gap: 5px;
+  grid-template-rows: 100%;
+  grid-template-columns: 65px 90px 1fr max-content;
+  align-items: center;
   width: 100%;
   min-height: 40px;
-  display: grid;
-  grid-template-columns: 65px 90px 1fr max-content;
-  grid-template-rows: 100%;
-  grid-column-gap: 5px;
-  align-items: center;
 
   .lineItem {
     &:last-child {
-      width: max-content;
       justify-self: end;
+      width: max-content;
     }
     .loaderSpinnerContainer
     {
@@ -22,11 +24,11 @@
     }
     .address
     {
-      font-family: "Fira Code", "sans-serif";
       color: #3C4257;
-      font-size: 0.65rem;
-      line-height: 1.4;
       font-weight: 300;
+      font-size: 0.65rem;
+      font-family: "Fira Code", sans-serif;
+      line-height: 1.4;
       letter-spacing: -0.025em;
     }
   }
@@ -36,30 +38,30 @@
     align-items: center;
 
     .tokenName {
-      font-weight: 400;
       color: $majorDark;
+      font-weight: 400;
       font-size: 16px;
     }
   }
 
   .amount {
-    max-width: 100%;
-    overflow: hidden;
-    font-weight: 400;
-    font-size: 16px;
-    color: $black2;
+    position: relative;
     width: max-content;
     min-width: 30px;
+    max-width: 100%;
+    overflow: hidden;
+    color: $black2;
+    font-weight: 400;
+    font-size: 16px;
     white-space: nowrap;
     text-overflow: ellipsis;
     transition: color $transition;
     will-change: color;
-    position: relative;
     &:after {
       position: absolute;
       z-index: 10;
-      height: 100%;
       width: 2px;
+      height: 100%;
       background: rgba(255,255,255,0.3);
     }
   }
@@ -84,27 +86,27 @@
   }
 
   .transactionLink {
+    display: grid;
+    grid-auto-rows: max-content;
+    grid-auto-flow: row;
+    grid-column-gap: 5px;
+    grid-template-columns: 1fr max-content;
+    align-items: center;
     width: 100%;
     height: auto;
-    display: grid;
-    grid-template-columns: 1fr max-content;
-    grid-auto-flow: row;
-    grid-auto-rows: max-content;
-    align-items: center;
-    grid-column-gap: 5px;
 
     .txHash {
+      overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      overflow: hidden;
     }
   }
 
   @media screen and (max-width: $mobile) {
-    padding: 5px 0;
+    grid-template-areas: "token L2 rightSide" "token L1 rightSide";
     grid-template-rows: repeat(2, 1fr);
     grid-template-columns: 45px 1fr max-content;
-    grid-template-areas: "token L2 rightSide" "token L1 rightSide";
+    padding: 5px 0;
 
     .lineItem {
       &:nth-child(1) {

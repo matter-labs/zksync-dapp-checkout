@@ -161,9 +161,14 @@ export default Vue.extend({
     connectedWallet,
     lineTableHeader,
   },
+  filters: {
+    formatTransaction(value: String) {
+      return value.replace("sync-tx:", "");
+    },
+  },
   data() {
     return {
-      modal: false as (false | string) /* false, feeChanged */,
+      modal: false as false | string /* false, feeChanged */,
       step: "main" /* main, transfer, success */,
       subStep: "" /* processing, waitingUserConfirmation, committing */,
       tokenItemsValid: {} as {
@@ -179,7 +184,7 @@ export default Vue.extend({
       transactionFees: {
         previous: "0",
         new: "0",
-      }
+      },
     };
   },
   computed: {
@@ -219,16 +224,15 @@ export default Vue.extend({
       this.subStep = "processing";
       try {
         const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
-        await this.$store.dispatch('checkout/getTransactionBatchFee');
+        await this.$store.dispatch("checkout/getTransactionBatchFee");
         const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
-        if(transactionFeesPrevious !== transactionFeesNew) {
+        if (transactionFeesPrevious !== transactionFeesNew) {
           this.transactionFees = {
             previous: transactionFeesPrevious,
-            new: transactionFeesNew
-          }
+            new: transactionFeesNew,
+          };
           this.modal = "feeChanged";
-        }
-        else {
+        } else {
           this.transfer();
         }
       } catch (error) {
@@ -256,30 +260,39 @@ export default Vue.extend({
         this.step = "transfer";
         this.subStep = "waitingUserConfirmation";
         try {
-          let transactionsList = [] as Array<ZkSyncTransaction>;
+          const transactionsList = [] as Array<ZkSyncTransaction>;
           transactionsList.push(...transactionData.transactions);
           const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
-          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, transactionFees.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
+          const transactions = await transactionBatch(
+            transactionsList,
+            transactionData.feeToken,
+            transactionFees.amount,
+            this.$store.getters["wallet/isAccountLocked"],
+            this.$store,
+          );
           console.log("Batch transaction", transactionsList);
 
           const manager = ZkSyncCheckoutManager.getManager();
 
           let endHashes = [];
           const validHashes = transactions.filter((tx: any) => {
-            if(tx.txData.tx.type!=='Transfer') {
+            if (tx.txData.tx.type !== "Transfer") {
               return false;
             }
-            for(const singleTx of transactionsList) {
-              if (typeof(tx.txData.tx.to)==='string' && typeof(singleTx.to)==='string' && tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() && tx.txData.tx.amount === singleTx.amount) {
+            for (const singleTx of transactionsList) {
+              if (
+                typeof tx.txData.tx.to === "string" &&
+                typeof singleTx.to === "string" &&
+                tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() &&
+                tx.txData.tx.amount === singleTx.amount
+              ) {
                 return true;
-              };
+              }
             }
             return false;
           });
-          endHashes = validHashes.map((tx: any) => tx.txHash)
-          console.log('Sent hashes', endHashes);
+          endHashes = validHashes.map((tx: any) => tx.txHash);
           manager.notifyHashes(endHashes);
-
 
           // @ts-ignore
           this.finalTransactions.push(...transactions);
@@ -296,8 +309,7 @@ export default Vue.extend({
                   headline: "Payment error",
                   text: "Please, make deposit or request tokens in order to activate the account.",
                 };
-              }
-              else {
+              } else {
                 this.errorModal = {
                   headline: "Payment error",
                   text: error.message,
@@ -317,10 +329,5 @@ export default Vue.extend({
       window.close();
     },
   },
-  filters: {
-    formatTransaction(value: String) {
-      return value.replace('sync-tx:', '');
-    }
-  }
 });
 </script>

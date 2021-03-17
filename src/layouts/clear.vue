@@ -12,9 +12,6 @@ export default {
   components: {
     modals,
   },
-  computed: {
-
-  },
   watch: {
     $route: {
       immediate: true,
@@ -34,7 +31,7 @@ export default {
     },
   },
   mounted() {
-    if (process.client) {
+    if (process ? process.client : undefined) {
       window.history.scrollRestoration = "manual";
     }
   },

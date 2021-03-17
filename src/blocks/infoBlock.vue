@@ -4,7 +4,7 @@
       <header class="md:mb-6">
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
-          <div class="text-violet text-2xl font-bold">zkCheckout <sup class="text-sm font-light" v-if="currentNetworkName !== 'mainnet'">{{currentNetworkName}}</sup></div>
+          <div class="text-violet text-2xl font-bold">zkCheckout <sup v-if="currentNetworkName !== 'mainnet'" class="text-sm font-light">{{currentNetworkName}}</sup></div>
         </div>
       </header>
       <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
@@ -12,17 +12,17 @@
           <div class="headline">{{item.description}}</div>
         </template>
         <template slot="left-bottom">
-          <div class="address hidden lg:block">{{item.to}}</div>
+          <div class="address invisible md:visible">{{item.to}}</div>
         </template>
         <template slot="right-top">
-          <div class="flex md:flex-col whitespace-nowrap">
+          <div class="flex flex-col md:flex-row whitespace-nowrap">
             <div class="value mr-2 md:mr-0">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
             <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
           </div>
         </template>
       </values-block>
       <transition name="fade">
-        <div class="w-full" v-if="loggedIn">
+        <div v-if="loggedIn" class="w-full">
           <div class="w-full border-b-2 border-light mt-1 lg:mt-3"/>
           <values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
             <template slot="left-top">
@@ -101,7 +101,7 @@ import Vue from "vue";
 import utils from "@/plugins/utils";
 import { TransactionData, TransactionFee, TokenPrices, TotalByToken, GweiBalance } from "@/plugins/types";
 import { BigNumber } from "ethers";
-import {ETHER_NETWORK_LABEL_LOWERCASED, } from "~/plugins/build";
+import { ETHER_NETWORK_LABEL_LOWERCASED } from "~/plugins/build";
 
 export default Vue.extend({
   data() {
@@ -123,7 +123,7 @@ export default Vue.extend({
     allFees(): Array<TransactionFee> {
       return this.$store.getters["checkout/getAllFees"];
     },
-    totalFees(): GweiBalance {
+    totalFees(): GweiBalance | String {
       const allFees = this.allFees;
       let totalFeeBigNum = BigNumber.from("0");
       for (const item of allFees) {

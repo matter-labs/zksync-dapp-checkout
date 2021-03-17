@@ -20,27 +20,28 @@ export default Vue.extend({
       default: false,
     },
     updateValue: {
+      type: Number,
       required: false,
-      default: false,
+      default: 0,
     },
   },
   data() {
     return {
       maxHeight: 0,
       someValue: 0,
-      screenWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      screenWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0) as number,
     };
   },
   watch: {
-    toogle: {
+    toggle: {
       immediate: true,
-      handler(val) {
+      handler() {
         this.$nextTick(() => {
           this.recalcHeight();
         });
       },
     },
-    updateValue(val) {
+    updateValue() {
       this.$nextTick(() => {
         this.recalcHeight();
       });
@@ -54,8 +55,8 @@ export default Vue.extend({
   },
   methods: {
     recalcHeight() {
-      this.maxHeight = this.$el.scrollHeight;
-      this.screenWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      this.maxHeight = this.$el.scrollHeight as number;
+      this.screenWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) as number;
     },
   },
 });

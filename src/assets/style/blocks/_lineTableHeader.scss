@@ -1,23 +1,23 @@
 .lineTableHeader {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-rows: 100%;
+  grid-template-columns: 65px 90px 1fr max-content;
+  align-items: center;
   width: 100%;
   height: 29px;
-  display: grid;
-  grid-template-columns: 65px 90px 1fr max-content;
-  grid-template-rows: 100%;
-  grid-gap: 5px;
-  align-items: center;
 
   .tableItem {
-    font-size: 14px;
     color: $black2;
-    font-family: $firaCondensed;
-    &:last-child {
-      width: max-content;
-      justify-self: end;
-    }
-    line-height: 1.4;
     font-weight: 300;
+    font-size: 14px;
+    font-family: $firaCondensed;
+    line-height: 1.4;
     letter-spacing: -0.025em;
+    &:last-child {
+      justify-self: end;
+      width: max-content;
+    }
   }
 
   @media screen and (max-width: $mobile) {
