@@ -1,8 +1,8 @@
 .maxHeightBlock {
   height: 0;
+  overflow: hidden;
   transition: height $transition2;
   will-change: height;
-  overflow: hidden;
 
 }
 

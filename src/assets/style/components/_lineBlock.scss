@@ -1,16 +1,35 @@
+@import "../variables";
+
 .lineContainer {
+  display: grid;
+  grid-column-gap: 5px;
+  grid-template-rows: 100%;
+  grid-template-columns: 65px 90px 1fr max-content;
+  align-items: center;
   width: 100%;
   min-height: 40px;
-  display: grid;
-  grid-template-columns: 65px 90px 1fr max-content;
-  grid-template-rows: 100%;
-  grid-column-gap: 5px;
-  align-items: center;
 
   .lineItem {
     &:last-child {
-      width: max-content;
       justify-self: end;
+      width: max-content;
+    }
+    .loaderSpinnerContainer
+    {
+      margin-right: 7px;
+    }
+    .text-red
+    {
+      margin-right: 5px;
+    }
+    .address
+    {
+      color: #3C4257;
+      font-weight: 300;
+      font-size: 0.65rem;
+      font-family: "Fira Code", sans-serif;
+      line-height: 1.4;
+      letter-spacing: -0.025em;
     }
   }
 
@@ -18,34 +37,32 @@
     display: flex;
     align-items: center;
 
-    .tokenImg {
-      display: block;
-      height: 16px;
-      width: 16px;
-      object-fit: contain;
-      margin-right: 5px;
-    }
-
     .tokenName {
-      font-weight: 600;
       color: $majorDark;
-      font-size: 12px;
+      font-weight: 400;
+      font-size: 16px;
     }
   }
 
   .amount {
-    font-weight: 600;
-    font-size: 16px;
+    position: relative;
+    width: max-content;
+    min-width: 30px;
+    max-width: 100%;
+    overflow: hidden;
     color: $black2;
+    font-weight: 400;
+    font-size: 16px;
     white-space: nowrap;
-
-    &.disabled {
-      opacity: 0.25;
-    }
-
-    .amountType {
-      /* color: $gray;
-      font-size: 12px; */
+    text-overflow: ellipsis;
+    transition: color $transition;
+    will-change: color;
+    &:after {
+      position: absolute;
+      z-index: 10;
+      width: 2px;
+      height: 100%;
+      background: rgba(255,255,255,0.3);
     }
   }
 
@@ -68,11 +85,28 @@
     left: 4px;
   }
 
+  .transactionLink {
+    display: grid;
+    grid-auto-rows: max-content;
+    grid-auto-flow: row;
+    grid-column-gap: 5px;
+    grid-template-columns: 1fr max-content;
+    align-items: center;
+    width: 100%;
+    height: auto;
+
+    .txHash {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
   @media screen and (max-width: $mobile) {
-    padding: 5px 0;
+    grid-template-areas: "token L2 rightSide" "token L1 rightSide";
     grid-template-rows: repeat(2, 1fr);
     grid-template-columns: 45px 1fr max-content;
-    grid-template-areas: "token L2 rightSide" "token L1 rightSide";
+    padding: 5px 0;
 
     .lineItem {
       &:nth-child(1) {
@@ -96,10 +130,9 @@
       }
 
       .tokenItem {
-
-        display: flex;
+        /* display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: center; */
 
         .tokenImg {
           margin-right: 0;

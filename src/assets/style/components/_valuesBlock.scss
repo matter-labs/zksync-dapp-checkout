@@ -1,11 +1,11 @@
 @import "../variables";
 
 .valuesBlockContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   height: max-content;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 
   .valuesBlockSecondary {
     height: max-content;
@@ -20,20 +20,20 @@
   }
 
   .address {
-    font-family: $firaCode;
     color: $black2;
-    font-size: 0.65rem;
-    line-height: 1.4;
     font-weight: 300;
+    font-size: 0.65rem;
+    font-family: $firaCode;
+    line-height: 1.4;
     letter-spacing: -0.025em;
   }
 
   .headline {
-    font-family: $firaCondensed;
     color: $dark;
+    font-weight: 400;
     font-size: 16px;
+    font-family: $firaCondensed;
     line-height: 1.37;
-    font-weight: 500;
 
     &.big {
       font-size: 20px;
@@ -42,9 +42,9 @@
 
   .value {
     color: $black2;
-    font-size: 12px;
-    line-height: 1.5;
-    font-weight: 600;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.4;
 
     &.big {
       font-size: 16px;
@@ -53,9 +53,17 @@
 
   .secondaryValue {
     color: $gray;
-    font-size: 12px;
-    line-height: 1.5;
+    font-weight: 300;
+    font-size: 0.65rem;
+    line-height: 1.4;
+    letter-spacing: -0.025em;
+    white-space: nowrap;
+    @media screen and (max-width: $breakpoint1) {
+      font-size: 14px;
+      line-height: 22px;
+    }
   }
+
 
   /* @media screen and (max-width: $breakpoint1) {
     &.bottomOnHover {

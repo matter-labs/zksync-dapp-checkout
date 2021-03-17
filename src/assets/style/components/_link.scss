@@ -3,23 +3,23 @@
 .lightLink {
   position: relative;
   color: $lightViolet;
+  border-bottom: 1px solid transparent;
   transition: $transition;
   transition-property: color;
   will-change: color;
-  border-bottom: 1px solid transparent;
 
   &::after {
-    content: "";
     position: absolute;
-    width: 100%;
-    height: 1px;
     bottom: 0;
     left: 0;
+    width: 100%;
+    height: 1px;
     background-color: $lightViolet;
-    visibility: hidden;
     transform: scaleX(0);
+    visibility: hidden;
     transition: $transition;
     transition-property: transform, visibility;
+    content: "";
     will-change: transform, visibility;
   }
 
@@ -27,16 +27,16 @@
     color: $violet;
 
     &::after {
-      visibility: visible;
       transform: scaleX(1);
+      visibility: visible;
     }
   }
 }
 
 .linkDefault {
-  font-family: $firaCondensed;
-  font-weight: 600;
   color: $violet;
+  font-weight: 600;
+  font-family: $firaCondensed;
   transition: $transition;
   transition-property: color;
   will-change: color;

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>zkCheckout test launcher</title>
+  <script type="text/javascript" src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/zksync-checkout@0.0.8/dist/main.js"></script>
+  <link data-n-head="1" data-hid="shortcut-icon" rel="shortcut icon" href="/_nuxt/icons/icon_64x64.3fdd8f.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400,500,600%7CFira+Sans+Condensed:200,400,500,600%7CFira+Code:300" media="all">
+  <style>
+    body
+    {
+      margin: 0;
+      padding: 0;
+    }
+    .connectContainer
+    {
+      background-color: rgb(251, 251, 251);
+      color: rgb(60, 66, 87);
+      font-family: "Fira Sans", sans-serif;
+      height: calc(100vh - 80px);
+      overflow: hidden;
+      line-height: 24px;
+      padding: 40px;
+      position: relative;
+      width: calc(100vw - 80px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .connectContainer h1, .connectContainer h2
+    {
+      color:  rgb(36, 57, 85);
+      display: block;
+      font: 700 30px/45px "Fira Sans", sans-serif;
+      height: 45px;
+      text-align: center;
+    }
+    .connectContainer h2
+    {
+      height: 30px;
+      font-size: 20px;
+      line-height: 30px;
+      margin: 20px auto;
+      font-weight: 500;
+    }
+    button
+    {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 7px 12px 7px 7px;
+
+      width: 200px;
+      height: 38px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      appearance: none;
+      border-radius: 4px;
+      border-image-repeat: stretch;
+      border-image-source: none;
+      border: 0 none rgb(255, 255, 255);
+      box-sizing: border-box;
+      color: rgb(255, 255, 255);
+      font: 400 16px/22px "Fira Sans", sans-serif;
+      margin: 20px 10px;
+      min-width: 200px;
+      outline: rgb(255, 255, 255) none 0;
+      text-align: center;
+      text-indent: 0;
+      text-rendering: auto;
+      text-shadow: none;
+      text-transform: none;
+      transition: opacity 0.2s ease;
+      white-space: nowrap;
+      will-change: opacity;
+      word-spacing: 0;
+      writing-mode: horizontal-tb;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    button:hover
+    {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+<div class="connectContainer routeMain">
+  <h1 class="font-bold text-center text-3xl text-dark">zkCheckout Payment Gateway</h1>
+
+  <h2>Initiate and launch the checkout for testing purposes</h2>
+  <script type="text/javascript">
+    let network = "rinkeby";
+    if (window.location.href.search("zksync.io") !== -1)
+    {
+      network = "mainnet";
+    }
+  </script>
+
+  <div style="display: flex; justify-content: space-between; align-items: center">
+    <button onclick="f(network)" id="launchBtn" style="background-color: blueviolet">Initiate the checkout</button>
+  </div>
+</div>
+<script type="text/javascript">
+  document.querySelector('#launchBtn').innerHTML = `Start&nbsp;<strong>${network}</strong>&nbsp;testing`;
+  async function f(network) {
+
+    let cm = new ZkSyncCheckout.CheckoutManager(network, "/");
+    const transactions = [
+      {
+        to: "0xaDDF10E1F4BaA96E007f61448b70A3033c9b45D3",
+        token: "DAI",
+        amount: "100000",
+        description: "VoskCoin Youtube - Ethereum Education",
+      },
+      {
+        to: "0xaDDF10E1F4BaA96E007f61448b70A3033c9b45D3",
+        token: "ETH",
+        amount: "100000",
+        description: "Getting Started With NFTs - Video Tutorials on Non-Fungible Tokens by VoskCoin",
+      },
+      {
+        to: "0xaDDF10E1F4BaA96E007f61448b70A3033c9b45D3",
+        token: "ETH",
+        amount: "100000",
+        description: "Gitcoin Grants Round 9 + Dev Fund",
+      },
+      {
+        to: "0xaDDF10E1F4BaA96E007f61448b70A3033c9b45D3",
+        token: "WBTC",
+        amount: "100000",
+        description: "Gitcoin Grants Round 8 + Dev Fund",
+      },
+    ];
+
+    const hashes = await cm.zkSyncBatchCheckout(
+      transactions,
+      "ETH",
+    );
+    cm.wait(hashes).then(data => console.log(data));
+  }
+</script>
+</body>
+</html>

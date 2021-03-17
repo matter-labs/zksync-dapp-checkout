@@ -1,8 +1,10 @@
+@import "../variables";
+
 .defaultLayout {
-  width: 100%;
   display: grid;
-  grid-template-columns: 43% 1fr;
   grid-template-rows: 100%;
+  grid-template-columns: 43% 1fr;
+  width: 100%;
   @media screen and (min-width: 1300px) {
     grid-template-columns: 600px 1fr;
   }
@@ -19,12 +21,9 @@
   }
 
   @media screen and (max-width: $mobile) {
+    grid-template-rows: max-content 1fr;
+    grid-template-columns: 100%;
     max-width: 650px;
     margin: 0 auto;
-    grid-template-columns: 100%;
-    grid-template-rows: max-content 1fr;
-    &,.routerContainer {
-
-    }
   }
 }

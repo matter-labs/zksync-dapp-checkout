@@ -77,7 +77,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main"],
+  plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
 
   router: {
     middleware: ["wallet"],
@@ -85,7 +85,12 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxt/typescript-build", "@nuxtjs/tailwindcss", ["@nuxtjs/dotenv", { path: __dirname }]],
+  buildModules: [
+    "@nuxt/typescript-build",
+    "@nuxtjs/stylelint-module",
+    "@nuxtjs/tailwindcss",
+    ["@nuxtjs/dotenv", { path: __dirname }],
+  ],
 
   /*
    ** Nuxt.js modules
@@ -141,7 +146,7 @@ export default {
     action: {
       text: "OK",
       onClick: (event, toastObject) => {
-        toastObject.goAway(100);
+        toastObject?.goAway(100);
       },
     },
   },
@@ -214,8 +219,10 @@ export default {
           black2: "#3C4257",
           black: "#000",
           violet: "#5436D6",
+          lightviolet: "#7860df",
           red: "#F25F5C",
           green: "#057A55",
+          yellow: "#fbbf24",
         },
         fontSize: {
           ...tailwindDefault.fontSize,
@@ -226,6 +233,10 @@ export default {
             },
           ],
         },
+        maxWidth: {
+          ...tailwindDefault.maxWidth,
+          xxs: "15rem",
+        },
         fontFamily: {
           ...tailwindDefault.fontFamily,
           firaCode: ["Fira Code", "sans-serif"],
@@ -235,10 +246,10 @@ export default {
           ...tailwindDefault.screens,
           lg: "1101px",
         },
-        transitionTimingFunction: {
+        /* transitionTimingFunction: {
           ...tailwindDefault.transitionTimingFunction,
           ease: "ease",
-        },
+        }, */
         /* extend: {
           width: {
             '72': '18rem',
@@ -254,6 +265,12 @@ export default {
             '96': '24rem',
           },
         }, */
+      },
+      variants: {
+        extend: {
+          visibility: ['hover', 'focus'],
+          flex: ['hover', 'focus'],
+        }
       },
       /* variants: {
         extends: {

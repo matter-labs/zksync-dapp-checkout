@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
+import { Types } from "zksync-checkout";
 
 export declare type Address = string;
 export declare type PubKeyHash = string;
@@ -9,6 +10,23 @@ export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
 export declare type Nonce = number | "committed";
 
+export import ZkSyncTransaction = Types.ZkSyncTransaction;
+
+export type TransactionData = {
+  transactions: Array<ZkSyncTransaction>;
+  fromAddress: Address;
+  feeToken: TokenSymbol;
+};
+export type TransactionFee = {
+  name: string;
+  key: string;
+  amount: BigNumber;
+  token: TokenSymbol;
+  to?: Address;
+};
+export type TotalByToken = {
+  [token: string]: BigNumberish;
+};
 export interface Signature {
   pubKey: string;
   signature: string;
@@ -21,6 +39,19 @@ export interface ForcedExit {
   fee: BigNumberish;
   nonce: number;
   signature: Signature;
+}
+
+export interface DepositsInterface {
+  [tokenSymbol: string]: Array<SinglDepositsInterface>;
+}
+interface SinglDepositsInterface {
+  hash: string;
+  amount: string;
+  status: string;
+  confirmations: number;
+}
+export interface ActiveDepositInterface {
+  [tokenSymbol: string]: BigNumber;
 }
 
 export interface Transfer {
@@ -157,6 +188,8 @@ export declare class Wallet {
     }[],
   ): Promise<Transaction[]>;
 
+  batchBuilder: any;
+
   syncTransfer(transfer: { to: Address; token: TokenLike; amount: BigNumberish; fee?: BigNumberish; nonce?: Nonce }): Promise<Transaction>;
   signWithdrawFromSyncToEthereum(withdraw: { ethAddress: string; token: TokenLike; amount: BigNumberish; fee: BigNumberish; nonce: number }): Promise<SignedTransaction>;
   withdrawFromSyncToEthereum(withdraw: {
@@ -169,8 +202,8 @@ export declare class Wallet {
   }): Promise<Transaction>;
 
   isSigningKeySet(): Promise<boolean>;
-  signSetSigningKey(changePubKey: { feeToken: TokenLike; fee: BigNumberish; nonce: number; onchainAuth: boolean }): Promise<SignedTransaction>;
-  setSigningKey(changePubKey: { feeToken: TokenLike; fee?: BigNumberish; nonce?: Nonce; onchainAuth?: boolean }): Promise<Transaction>;
+  signSetSigningKey(changePubKey: { feeToken: TokenLike; fee: BigNumberish; nonce: number; ethAuthType: string }): Promise<SignedTransaction>;
+  setSigningKey(changePubKey: { feeToken: TokenLike; fee?: BigNumberish; nonce?: Nonce; onchainAuth?: boolean; ethAuthType: string }): Promise<Transaction>;
   isOnchainAuthSigningKeySet(nonce?: Nonce): Promise<boolean>;
   onchainAuthSigningKey(nonce?: Nonce, ethTxOptions?: ethers.providers.TransactionRequest): Promise<ContractTransaction>;
   getCurrentPubKeyHash(): Promise<PubKeyHash>;
@@ -319,13 +352,14 @@ export interface ContractAddress {
 }
 
 export interface Tokens {
-  [tokenSymbol: string]: TokenItem
+  [tokenSymbol: string]: TokenItem;
 }
 export interface TokenItem {
   address: string;
   id: number;
   symbol: string;
   decimals: number;
+  unlocked: boolean;
 }
 
 export interface TokenPrices {

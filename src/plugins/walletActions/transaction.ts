@@ -1,57 +1,117 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
+import { Address, ETHOperation, GweiBalance, Provider, TokenSymbol, Tx, Wallet, ZkSyncTransaction } from "@/plugins/types";
+import { BigNumber, BigNumberish } from "ethers";
+import { SignedTransaction, TransactionReceipt, TxEthSignature } from "zksync/src/types";
+
+class Transaction {
+  state: "Sent" | "Committed" | "Verified" | "Failed";
+  error?: string;
+
+  // @ts-ignore
+  constructor(public txData, public txHash: string, public sidechainProvider: Provider) {
+    this.state = "Sent";
+  }
+
+  async awaitReceipt(): Promise<TransactionReceipt> {
+    this.throwErrorIfFailedState();
+
+    // @ts-ignore
+    if (this.state !== "Sent") return;
+
+    const receipt = await this.sidechainProvider.notifyTransaction(this.txHash, "COMMIT");
+
+    if (!receipt.success) {
+      this.setErrorState(`zkSync transaction failed: ${receipt.failReason}` /* , receipt */);
+      this.throwErrorIfFailedState();
+    }
+
+    this.state = "Committed";
+    return receipt;
+  }
+
+  async awaitVerifyReceipt(): Promise<TransactionReceipt> {
+    await this.awaitReceipt();
+    const receipt = await this.sidechainProvider.notifyTransaction(this.txHash, "VERIFY");
+
+    this.state = "Verified";
+    return receipt;
+  }
+
+  private setErrorState(error: string) {
+    this.state = "Failed";
+    this.error = error;
+  }
+
+  private throwErrorIfFailedState() {
+    if (this.state === "Failed") throw this.error;
+  }
+}
+
+export const submitSignedTransactionsBatch = async (provider: Provider, signedTxs: SignedTransaction[], ethSignatures?: TxEthSignature[]): Promise<Transaction[]> => {
+  const transactionHashes = await provider.submitTxsBatch(
+    signedTxs.map((tx) => {
+      return { tx: tx.tx, signature: tx.ethereumSignature };
+    }),
+    // @ts-ignore
+    ethSignatures,
+  );
+  return transactionHashes.map((txHash, idx) => new Transaction(signedTxs[idx], txHash, provider));
+};
 
 /**
  * Transaction processing action
  *
- * @param {Address} address
- * @param {TokenSymbol} token
+ * @param transactions
  * @param {TokenSymbol} feeToken
- * @param {GweiBalance} amountBigValue
- * @param {GweiBalance} feeBigValue
+ * @param fee
+ * @param changePubKey
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
-export const transaction = async (address: Address, token: TokenSymbol, feeToken: TokenSymbol, amountBigValue: GweiBalance, feeBigValue: GweiBalance, store: any) => {
-  const syncWallet = walletData.get().syncWallet;
-  let nonce = await syncWallet!.getNonce("committed");
-  const transferTx = {
-    fee: 0,
-    nonce,
-    amount: amountBigValue,
-    to: address,
-    token,
-  };
-  nonce += 1;
-  const feeTx = {
-    fee: feeBigValue,
+export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: Boolean, store: any) => {
+  const syncWallet: Wallet | undefined = walletData.get().syncWallet;
+
+  await store.dispatch("wallet/restoreProviderConnection");
+  const nonce = await syncWallet!.getNonce("committed");
+  const batchBuilder = syncWallet!.batchBuilder(nonce);
+  if (changePubKey) {
+    if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
+      const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
+      if (!isOnchainAuthSigningKeySet) {
+        const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
+        await onchainAuthTransaction?.wait();
+      }
+    }
+
+    const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
+    const signedTx = await syncWallet!.signSetSigningKey({
+      feeToken,
+      fee: await store.getters["checkout/getAccountUnlockFee"],
+      nonce,
+      ethAuthType: ethAuthType === "ECDSA" ? "ECDSALegacyMessage" : "ECDSA",
+    });
+    batchBuilder.addChangePubKey({
+      ...signedTx.tx,
+      alreadySigned: true,
+    });
+  }
+  for (const tx of transactions) {
+    batchBuilder.addTransfer({
+      fee: 0,
+      amount: tx.amount,
+      to: tx.to as Address,
+      token: tx.token as string,
+    });
+  }
+  batchBuilder.addTransfer({
+    fee,
     nonce,
     amount: 0,
     to: syncWallet!.address(),
     token: feeToken,
-  };
-
-  /**
-   * @todo: process case when there are 2 transactions
-   */
-  if (token === feeToken) {
-    const transaction = await syncWallet!.syncTransfer({
-      to: address,
-      token,
-      amount: amountBigValue,
-      fee: feeBigValue,
-    });
-    store.dispatch("transaction/watchTransaction", { transactionHash: transaction.txHash, tokenSymbol: token, type: "withdraw" });
-    return transaction;
-  } else {
-    const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
-    for (let a = 0; a < transferTransaction.length; a++) {
-      store.dispatch("transaction/watchTransaction", { transactionHash: transferTransaction[a].txHash, tokenSymbol: a === 0 ? token : feeToken, type: "withdraw" });
-    }
-    if (transferTransaction) {
-      return transferTransaction;
-    }
-  }
+  });
+  const batchTransactionData = await batchBuilder.build();
+  return await submitSignedTransactionsBatch(<Provider>syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
 };
 
 /**
@@ -161,17 +221,35 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
  * Deposit action method
  *
  * @param {TokenSymbol} token
- * @param {GweiBalance} amount
- * @param store
- * @returns {Promise<any>}
+ * @param {string} amount
+ * @returns {Promise<ETHOperation>}
  */
-export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: any) => {
+export const deposit = async (token: TokenSymbol, amount: string | BigNumber): Promise<ETHOperation> => {
   const wallet = walletData.get().syncWallet;
+  const ethTxOptions =
+    token?.toLowerCase() === "eth"
+      ? {}
+      : {
+          gasLimit: "160000",
+        };
   const depositResponse = await wallet?.depositToSyncFromEthereum({
     depositTo: wallet.address(),
     token,
     amount,
+    ethTxOptions,
   });
-  store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
-  return depositResponse;
+  return depositResponse as ETHOperation;
+};
+
+/**
+ * Unlock token action method
+ *
+ * @param {Address} address
+ * @param store
+ * @returns {Promise<any>}
+ */
+export const unlockToken = async (address: Address, store: any) => {
+  const wallet = walletData.get().syncWallet;
+  await store.dispatch("wallet/restoreProviderConnection");
+  return await wallet!.approveERC20TokenDeposits(address as string);
 };

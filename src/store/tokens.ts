@@ -1,6 +1,5 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Token, TokenPrices, Tokens, TokenSymbol, TokenItem } from "@/plugins/types";
-import { BigNumberish } from "ethers";
+import { TokenPrices, Tokens, TokenSymbol, TokenItem } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
 
@@ -47,13 +46,13 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
     return state.allTokens;
   },
   getTokenByID(state): Function {
-    return (id: number): (TokenItem | undefined) => {
+    return (id: number): TokenItem | undefined => {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
           return state.allTokens[symbol];
         }
       }
-    }
+    };
   },
   getRestrictedTokens(state): Tokens {
     return Object.fromEntries(Object.entries(state.allTokens).filter((e: any) => state.restrictedTokens.includes(e[1].symbol)));
@@ -67,48 +66,19 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
 };
 
 export const actions: ActionTree<TokensModuleState, RootState> = {
-  async loadAllTokens({ commit, getters }): Promise<Tokens> {
+  async loadAllTokens({ commit, dispatch, getters }): Promise<Tokens> {
     if (Object.entries(getters.getAllTokens).length === 0) {
       await this.dispatch("wallet/restoreProviderConnection");
       const tokensList = await walletData.get().syncProvider?.getTokens();
+      const totalByToken = this.getters["checkout/getTotalByToken"];
+      const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
+      for (const symbol of usedTokens) {
+        await dispatch("getTokenPrice", symbol);
+      }
       commit("setAllTokens", tokensList);
       return tokensList || {};
     }
     return getters.getAllTokens;
-  },
-
-  async loadTokensAndBalances({
-    dispatch,
-  }): Promise<{
-    tokens: Tokens;
-    zkBalances: Array<Token>;
-  }> {
-    const syncWallet = walletData.get().syncWallet;
-    const accountState = walletData.get().accountState;
-
-    const tokens = await dispatch("loadAllTokens");
-    const zkBalance = accountState?.committed.balances;
-    if (!zkBalance) {
-      return {
-        tokens,
-        zkBalances: [],
-      };
-    }
-    const zkBalances = Object.keys(
-      zkBalance as {
-        [token: string]: BigNumberish;
-      },
-    ).map((key: TokenSymbol) => ({
-      address: tokens[key].address as Address,
-      balance: syncWallet?.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0") as string,
-      symbol: tokens[key].symbol as TokenSymbol,
-      id: tokens[key].id as Number,
-    }));
-
-    return {
-      tokens,
-      zkBalances,
-    };
   },
 
   /**
