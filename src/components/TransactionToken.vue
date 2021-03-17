@@ -336,13 +336,18 @@ export default Vue.extend({
       try {
         this.subStep = "waitingUserConfirmation";
         this.step = "unlocking";
+        console.log("---DEBUG UNLOCKING---");
         const unlockTransaction = await unlockToken(this.initialBalance.address as Address, this.$store);
+        console.log("unlockTransaction", unlockTransaction);
         this.subStep = "committing";
-        await unlockTransaction.wait();
-        await this.$store.dispatch("wallet/getInitialBalances", true);
+        const unlockResult = await unlockTransaction.wait();
+        console.log("unlockResult", unlockResult);
+        const initialBalances = await this.$store.dispatch("wallet/getInitialBalances", true);
+        console.log("initialBalances", initialBalances);
         this.step = "default";
       } catch (error) {
         this.step = "default";
+        console.log("ERROR!!! ", error);
         const createErrorModal = (text: string) => {
           this.errorModal = {
             headline: `Unlocking token error`,
@@ -350,11 +355,9 @@ export default Vue.extend({
           };
         };
         if (error.message)
-          if (!error.message.includes("User denied")) {
-            createErrorModal(error.message);
-          } else {
-            createErrorModal("Unknown error. Try again later.");
-          }
+        {
+          createErrorModal(error.message.includes("User denied") ? "Unknown error. Try again later." : error.message);
+        }
       }
     },
     closeModal() {
