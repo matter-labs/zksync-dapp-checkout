@@ -143,12 +143,6 @@ export default {
     position: "bottom-right",
     duration: 4000,
     iconPack: "fontawesome",
-    action: {
-      text: "OK",
-      onClick: (event, toastObject) => {
-        toastObject?.goAway(100);
-      },
-    },
   },
   i18n: {
     vueI18n: {

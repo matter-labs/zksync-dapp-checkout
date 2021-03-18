@@ -1,65 +1,53 @@
 import { ActionTree } from "vuex";
 import { RootState } from "~/store";
 
-export const state = () => ({});
+export const state = () => ({
+  canonicalConfig: <any>{
+    type: "default",
+    icon: null as any,
+    action: {
+      text: "OK",
+      onClick: (event: any, toastObject: { goAway: (arg0: number) => void; }) => {
+        toastObject?.goAway(100);
+      },
+    },
+  }
+});
 
 export type ToasterModuleState = ReturnType<typeof state>;
 
 export const actions: ActionTree<ToasterModuleState, RootState> = {
-  message({ commit }, messageText) {
+  message({ commit, state }, messageText) {
     // @ts-ignore: Unreachable code error
-    this.$toast.show(messageText, {
-      type: "default",
-      duration: 3000,
-    });
+    this.$toast.show(messageText, state.canonicalConfig);
   },
-  success({ commit }, messageText) {
-    // @ts-ignore: Unreachable code error
-    this.$toast.success(messageText, {
-      duration: 3000,
-      icon: {
-        name: "fa-check",
-      },
-    });
-    const configuration = {
-      position: "bottom-right",
-
-      type: "default",
-      duration: 2000,
-      messageText: "",
+  success({ commit, state }, messageText) {
+    let config = state.canonicalConfig;
+    config.icon = {
+      name: "fa-check",
     };
-    /* if (typeof params === "string") {
-      configuration.messageText = params;
-    } else {
-      configuration = params;
-    } */
+
     // @ts-ignore: Unreachable code error
-    this.$toast.show(configuration.messageText, {
-      type: "default",
-      duration: 3000,
-      icon: {
-        name: "fa-check",
-      },
-    });
+    this.$toast.success(messageText, config);
   },
 
-  error({ dispatch }, messageText) {
+  error({ dispatch, state }, messageText) {
+    let config = state.canonicalConfig;
+    config.icon = {
+      name: "fa-times-circle",
+    };
+    config.duration = null;
     // @ts-ignore: Unreachable code error
-    this.$toast.error(messageText, {
-      icon: {
-        name: "fa-times-circle",
-      },
-      duration: null,
-    });
+    this.$toast.error(messageText, config);
   },
 
-  info({ dispatch }, messageText) {
+  info({ dispatch, state }, messageText) {
+    let config = state.canonicalConfig;
+    config.icon = {
+      name: "fa-times-circle",
+    };
+
     // @ts-ignore: Unreachable code error
-    this.$toast.info(messageText, {
-      icon: {
-        name: "fa-info-circle",
-      },
-      duration: 3000,
-    });
+    this.$toast.info(messageText, config);
   },
 };
