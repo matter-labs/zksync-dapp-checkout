@@ -131,7 +131,7 @@ export default Vue.extend({
       return this.$store.getters["account/loggedIn"];
     },
     networkName(): string {
-      return ETHER_NETWORK_LABEL_LOWERCASED as string === "mainnet" ?? "";
+      return ETHER_NETWORK_LABEL_LOWERCASED === "mainnet" ? ETHER_NETWORK_LABEL_LOWERCASED : "";
     },
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
