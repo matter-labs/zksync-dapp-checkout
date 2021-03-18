@@ -22,32 +22,36 @@ export const actions: ActionTree<ToasterModuleState, RootState> = {
     this.$toast.show(messageText, state.canonicalConfig);
   },
   success({ commit, state }, messageText) {
-    let config = state.canonicalConfig;
-    config.icon = {
-      name: "fa-check",
-    };
-
     // @ts-ignore: Unreachable code error
-    this.$toast.success(messageText, config);
+    this.$toast.success(messageText, {
+      ...state.canonicalConfig, ...{
+        icon: {
+          name: "fa-check",
+        }
+      }
+    });
   },
 
   error({ dispatch, state }, messageText) {
-    let config = state.canonicalConfig;
-    config.icon = {
-      name: "fa-times-circle",
-    };
-    config.duration = null;
     // @ts-ignore: Unreachable code error
-    this.$toast.error(messageText, config);
+    this.$toast.error(messageText, {
+      ...state.canonicalConfig, ...{
+        icon: {
+          name: "fa-times-circle",
+        },
+        duration: null
+      }
+    });
   },
 
   info({ dispatch, state }, messageText) {
-    let config = state.canonicalConfig;
-    config.icon = {
-      name: "fa-times-circle",
-    };
-
     // @ts-ignore: Unreachable code error
-    this.$toast.info(messageText, config);
+    this.$toast.info(messageText, {
+      ...state.canonicalConfig, ...{
+        icon: {
+          name: "fa-times-circle",
+        }
+      }
+    });
   },
 };
