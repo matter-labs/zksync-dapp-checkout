@@ -59,6 +59,9 @@
     letter-spacing: -0.025em;
     white-space: nowrap;
     @media screen and (max-width: $breakpoint1) {
+      position: absolute;
+      right:0;
+      bottom: 0;
       font-size: 14px;
       line-height: 22px;
     }

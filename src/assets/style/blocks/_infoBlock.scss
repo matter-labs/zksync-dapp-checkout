@@ -61,6 +61,16 @@
       .valuesBlockLeft {
         max-width: 70%;
       }
+      .valuesBlockRight .valuesBlockSecondary > div
+      {
+        height: 100%;
+        min-height: 44px;
+      }
+      &.noAddressPadding .valuesBlockRight .valuesBlockSecondary > div
+      {
+        min-height: 0;
+      }
+
     }
     .infoBlock {
       height: auto;

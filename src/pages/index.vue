@@ -93,14 +93,14 @@
       </div>
     </div>
     <div v-else-if="step==='transfer'" class="w-full">
-      <div class="font-firaCondensed font-medium text-3xl text-dark text-center pt-5 md:pt-10">Payment</div>
+      <div class="font-firaCondensed font-medium text-2xl text-dark text-center pt-5 md:pt-10">Payment</div>
       <div v-if="subStep==='processing'" class="text-lg text-center pt-2">Processing...</div>
       <div v-else-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in the popup</div>
       <div v-else-if="subStep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
       <loader class="mx-auto mt-6" size="md" color="violet" />
     </div>
     <div v-else-if="step==='success'" class="w-full">
-      <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Done. Thank you!</div>
+      <div class="font-firaCondensed font-medium text-2xl text-green text-center pt-5 md:pt-10">Done. Thank you!</div>
       <success-mark class="w-11/12 max-w-xxs mx-auto py-5 bigSuccessMark" />
       <div class="text-md text-center font-light pt-2">
         Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a>
@@ -201,7 +201,7 @@ export default Vue.extend({
       return this.$store.getters["checkout/getTotalByToken"];
     },
     transferAllowed(): Boolean {
-      for (const [token, state] of Object.entries(this.tokenItemsValid)) {
+      for (const [state] of Object.entries(this.tokenItemsValid)) {
         if (!state) {
           return false;
         }
@@ -226,14 +226,14 @@ export default Vue.extend({
         const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
         await this.$store.dispatch("checkout/getTransactionBatchFee");
         const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
-        if (transactionFeesPrevious !== transactionFeesNew) {
+        if (transactionFeesPrevious === transactionFeesNew) {
+          await this.transfer();
+        } else {
           this.transactionFees = {
             previous: transactionFeesPrevious,
             new: transactionFeesNew,
           };
           this.modal = "feeChanged";
-        } else {
-          this.transfer();
         }
       } catch (error) {
         this.step = "main";

@@ -2,7 +2,7 @@
   <transition name="fade">
     <div v-if="showLoginContainer" class="loggingInContainer">
       <img class="zkSyncLogoFull h-24" src="/zkSyncLogoFull.svg" alt="zkSync">
-      <h1 class="text-dark text-3xl">Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
+      <h1 class="text-dark text-2xl">Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
       <transition-group v-if="loadingHint" tag="div" name="slide-vertical-fade" class="hint text-gray text-center text-sm mt-2">
         <div
           key="{{hintKey}}"

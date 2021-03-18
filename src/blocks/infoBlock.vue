@@ -1,7 +1,7 @@
 <template>
   <aside class="infoBlockContainer bg-white h-screen">
     <div class="infoBlock md:min-h-screen py-4 md:py-10 px-5 md:px-10">
-      <header class="md:mb-6">
+      <header class="mb-2 md:mb-6">
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
           <div class="text-violet text-2xl font-bold">
@@ -10,7 +10,7 @@
           </div>
         </div>
       </header>
-      <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
+      <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-0 md:mt-2">
         <template slot="left-top">
           <div class="headline">{{item.description}}</div>
         </template>
@@ -18,16 +18,18 @@
           <div class="address invisible md:visible">{{item.to}}</div>
         </template>
         <template slot="right-top">
-          <div class="flex flex-col md:flex-row whitespace-nowrap">
-            <div class="value mr-2 md:mr-0">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
+          <div class="flex flex-col whitespace-nowrap relative">
+            <div class="value md:mr-0">
+              {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
+            </div>
             <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
           </div>
         </template>
       </values-block>
       <transition name="fade">
         <div v-if="loggedIn" class="w-full">
-          <div class="w-full border-b-2 border-light mt-1 lg:mt-3"/>
-          <values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
+          <div class="w-full border-b-2 border-light mt-1 lg:mt-3 items-center"/>
+          <values-block class="mt-1 lg:mt-3 noAddressPadding cursor-pointer" @click="feesOpened=!feesOpened">
             <template slot="left-top">
               <div class="flex items-center">
                 <div class="headline big">Fees</div>
@@ -45,7 +47,7 @@
             <template slot="right-top">
               <div class="flex items-center">
                 <div class="flex md:flex-col">
-                  <div class="value md:mr-0">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+                  <div class="value">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
                 </div>
               </div>
             </template>
@@ -56,8 +58,8 @@
                 <div class="headline">{{item.name}}</div>
               </template>
               <template slot="right-top">
-                <div class="flex md:flex-col whitespace-nowrap">
-                  <div class="value mr-2 md:mr-0">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
+                <div class="flex md:flex-col whitespace-nowrap relative">
+                  <div class="value">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
                   <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
                 </div>
               </template>
@@ -131,7 +133,7 @@ export default Vue.extend({
       return this.$store.getters["account/loggedIn"];
     },
     networkName(): string {
-      return ETHER_NETWORK_LABEL_LOWERCASED === "mainnet" ? ETHER_NETWORK_LABEL_LOWERCASED : "";
+      return ETHER_NETWORK_LABEL_LOWERCASED === "mainnet" ? "" : ETHER_NETWORK_LABEL_LOWERCASED;
     },
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
