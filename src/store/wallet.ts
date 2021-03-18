@@ -243,14 +243,13 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
   async onboard({ commit }): Promise<boolean> {
     const onboard = Onboard(onboardConfig(this));
     commit("setOnboard", onboard);
-    const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
+    const previouslySelectedWallet: any = window.localStorage.getItem("selectedWallet");
     if (!previouslySelectedWallet) {
       this.commit("account/setSelectedWallet", "");
       return false;
-    } else {
-      this.dispatch("toaster/info", "Found previously selected wallet.");
-      this.commit("account/setSelectedWallet", previouslySelectedWallet);
     }
+    this.dispatch("toaster/info", "Found previously selected wallet.");
+    this.commit("account/setSelectedWallet", previouslySelectedWallet);
     return await onboard.walletSelect(previouslySelectedWallet);
   },
 
@@ -274,10 +273,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
    * @return {Promise<[array]|*>}
    */
   async getzkBalances({ commit, dispatch, getters }, { accountState, force = false } = { accountState: undefined, force: false }): Promise<Array<Balance>> {
-    let listCommitted = {} as {
-      [token: string]: BigNumberish;
-    };
-    let listVerified = {} as {
+    let listCommitted, listVerified = {} as {
       [token: string]: BigNumberish;
     };
     const tokensList = [] as Array<Balance>;
@@ -377,7 +373,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     const totalByToken = this.getters["checkout/getTotalByToken"];
     const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
-    const loadInitialBalancesPromises = usedTokens.map(async (key) => {
+    const loadInitialBalancesPromises = usedTokens.map(async (key: string):Promise<any> => {
       const currentToken = loadedTokens[key];
       try {
         let unlocked = true;
@@ -398,7 +394,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
         this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
       }
     });
-    const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
+    const balancesResults = await Promise.all(loadInitialBalancesPromises).catch(() => {
       // @todo insert sentry logging
       return [];
     });
@@ -473,56 +469,48 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     normal: Number;
   }> {
     const savedFees = getters.getFees;
-    if (
-      savedFees &&
-      savedFees.hasOwnProperty(symbol) &&
-      savedFees[symbol].hasOwnProperty(feeSymbol) &&
-      savedFees[symbol][feeSymbol].hasOwnProperty(type) &&
-      savedFees[symbol][feeSymbol][type].hasOwnProperty(address)
-    ) {
+    if (savedFees?.symbol?.feeSymbol?.type?.address) {
       return savedFees[symbol][feeSymbol][type][address];
-    } else {
-      const syncProvider = walletData.get().syncProvider;
-      const syncWallet = walletData.get().syncWallet;
-      await dispatch("restoreProviderConnection");
-      const zksync = await walletData.zkSync();
-      if (type === "withdraw") {
-        if (symbol === feeSymbol) {
-          const foundFeeFast = await syncProvider!.getTransactionFee("FastWithdraw", address, symbol);
-          const foundFeeNormal = await syncProvider!.getTransactionFee("Withdraw", address, symbol);
-          const feesObj = {
-            fast: zksync.closestPackableTransactionFee(foundFeeFast.totalFee),
-            normal: zksync.closestPackableTransactionFee(foundFeeNormal.totalFee),
-          };
-          commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
-          return feesObj;
-        } else {
-          const batchWithdrawFeeFast = await syncProvider!.getTransactionsBatchFee(["FastWithdraw", "Transfer"], [address, syncWallet!.address()], feeSymbol);
-          const batchWithdrawFeeNormal = await syncProvider!.getTransactionsBatchFee(["Withdraw", "Transfer"], [address, syncWallet!.address()], feeSymbol);
-          const feesObj = {
-            fast: zksync.closestPackableTransactionFee(batchWithdrawFeeFast),
-            normal: zksync.closestPackableTransactionFee(batchWithdrawFeeNormal),
-          };
-          commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
-          return feesObj;
-        }
-      } else if (symbol === feeSymbol) {
-        const foundFeeNormal = await syncProvider!.getTransactionFee("Transfer", address, symbol);
-        const totalFeeValue = zksync.closestPackableTransactionFee(foundFeeNormal.totalFee);
+    }
+    const syncProvider = walletData.get().syncProvider;
+    const syncWallet = walletData.get().syncWallet;
+    await dispatch("restoreProviderConnection");
+    const zksync = await walletData.zkSync();
+    if (type === "withdraw") {
+      if (symbol === feeSymbol) {
+        const foundFeeFast = await syncProvider!.getTransactionFee("FastWithdraw", address, symbol);
+        const foundFeeNormal = await syncProvider!.getTransactionFee("Withdraw", address, symbol);
         const feesObj = {
-          normal: totalFeeValue,
+          fast: zksync.closestPackableTransactionFee(foundFeeFast.totalFee),
+          normal: zksync.closestPackableTransactionFee(foundFeeNormal.totalFee),
         };
-        commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
-        return feesObj;
-      } else {
-        const batchTransferFee = await syncProvider!.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet!.address()], feeSymbol);
-        const feesObj = {
-          normal: zksync.closestPackableTransactionFee(batchTransferFee),
-        };
-        commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
+        commit("setFees", {symbol, feeSymbol, type, address, obj: feesObj});
         return feesObj;
       }
+      const batchWithdrawFeeFast = await syncProvider!.getTransactionsBatchFee(["FastWithdraw", "Transfer"], [address, syncWallet!.address()], feeSymbol);
+      const batchWithdrawFeeNormal = await syncProvider!.getTransactionsBatchFee(["Withdraw", "Transfer"], [address, syncWallet!.address()], feeSymbol);
+      const feesObj = {
+        fast: zksync.closestPackableTransactionFee(batchWithdrawFeeFast),
+        normal: zksync.closestPackableTransactionFee(batchWithdrawFeeNormal),
+      };
+      commit("setFees", {symbol, feeSymbol, type, address, obj: feesObj});
+      return feesObj;
     }
+    if (symbol === feeSymbol) {
+      const foundFeeNormal = await syncProvider!.getTransactionFee("Transfer", address, symbol);
+      const totalFeeValue = zksync.closestPackableTransactionFee(foundFeeNormal.totalFee);
+      const feesObj = {
+        normal: totalFeeValue,
+      };
+      commit("setFees", {symbol, feeSymbol, type, address, obj: feesObj});
+      return feesObj;
+    }
+    const batchTransferFee = await syncProvider!.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet!.address()], feeSymbol);
+    const feesObj = {
+      normal: zksync.closestPackableTransactionFee(batchTransferFee),
+    };
+    commit("setFees", {symbol, feeSymbol, type, address, obj: feesObj});
+    return feesObj;
   },
   async checkLockedState({ commit }): Promise<boolean> {
     const syncWallet = walletData.get().syncWallet;
@@ -530,7 +518,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     commit("setAccountLockedState", !isSigningKeySet);
     return !isSigningKeySet;
   },
-  async getProviders({ commit }): Promise<void> {
+  async getProviders({}): Promise<void> {
     const zksync = await walletData.zkSync();
     const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
     walletData.set({ syncProvider });
@@ -561,7 +549,8 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
         return false;
       }
       const transactionData = this.getters["checkout/getTransactionData"];
-      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
+      console.log(transactionData.fromAddress);
+      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress !=="" && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
         this.commit("setCurrentModal", "wrongAccountAddress");
         return false;
       }
@@ -612,7 +601,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     commit("clearDataStorage");
   },
   async forceRefreshData({ dispatch }): Promise<void> {
-    await dispatch("getInitialBalances", true).catch((err) => {
+    await dispatch("getInitialBalances", true).catch(() => {
       // @todo add sentry report
     });
     await dispatch("getzkBalances", { accountState: undefined, force: true }).catch((err) => {
