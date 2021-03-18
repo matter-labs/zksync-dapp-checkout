@@ -123,7 +123,7 @@ export default {
         title: pageTitle,
         site_name: pageTitle,
         description: pageDescription,
-        img: "/social.jpg",
+        img: "https://zksync.io/social.jpg",
         locale: "en_US",
         twitter: "@zksync",
         twitter_card: "https://zksync.io/social.jpg",
