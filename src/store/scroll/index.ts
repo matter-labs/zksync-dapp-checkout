@@ -10,11 +10,7 @@ export type ScrollModuleState = ReturnType<typeof state>;
 
 export const mutations: MutationTree<ScrollModuleState> = {
   setLastScroll(state, lastScroll: Number) {
-    if (!lastScroll) {
-      state.lastScroll = false;
-    } else {
-      state.lastScroll = lastScroll;
-    }
+    state.lastScroll = lastScroll ?? false;
   },
   setLastPath(state, lastPath: String) {
     state.lastPath = lastPath;
