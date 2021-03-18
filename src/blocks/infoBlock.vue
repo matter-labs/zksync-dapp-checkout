@@ -4,7 +4,10 @@
       <header class="md:mb-6">
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
-          <div class="text-violet text-2xl font-bold">zkCheckout <sup v-if="currentNetworkName !== 'mainnet'" class="text-sm font-light">{{currentNetworkName}}</sup></div>
+          <div class="text-violet text-2xl font-bold">
+            zkCheckout
+            <sup v-if="networkName" class="text-sm font-light">{{ networkName }}</sup>
+          </div>
         </div>
       </header>
       <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
@@ -29,7 +32,13 @@
               <div class="flex items-center">
                 <div class="headline big">Fees</div>
                 <span class="ml-3">
-                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${feesOpened===true?-180:0}deg)`}"/>
+                  <i
+                    class="transition-transform ease-ease duration-200 far"
+                     :class="{
+                      'fa-angle-down': !feesOpened,
+                      'fa-angle-up': feesOpened
+                    }"
+                  />
                 </span>
               </div>
             </template>
@@ -60,7 +69,13 @@
               <div class="flex items-center">
                 <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark">Total amount</div>
                 <span class="ml-3">
-                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"/>
+                  <i
+                    :class="{
+                    'fa-angle-down': !totalOpened,
+                    'fa-angle-up': totalOpened
+                  }"
+                    class="transition-transform ease-ease duration-200 far"
+                  />
                 </span>
               </div>
             </div>
@@ -87,10 +102,11 @@
           </a>
           <div class="poweredBy flex justify-center items-center mt-3">
             <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
+            <a target="_blank" href="https://zksync.io/faq" class="linkDefault">FAQ</a>
             <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault ml-5">Privacy Policy</a>
           </div>
         </footer>
-        <img class="zkSyncFooter" src="/zkSyncFooter.svg" alt="zkSync">
+        <img class="zkSyncFooter" src="/zkSyncFooter.svg" alt="zkSync"/>
       </div>
     </div>
   </aside>
@@ -114,8 +130,8 @@ export default Vue.extend({
     loggedIn(): boolean {
       return this.$store.getters["account/loggedIn"];
     },
-    currentNetworkName(): string {
-      return ETHER_NETWORK_LABEL_LOWERCASED;
+    networkName(): string {
+      return ETHER_NETWORK_LABEL_LOWERCASED as string === "mainnet" ?? "";
     },
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
