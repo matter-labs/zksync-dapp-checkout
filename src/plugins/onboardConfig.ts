@@ -2,7 +2,7 @@ import Web3 from "web3";
 import web3Wallet from "@/plugins/web3";
 import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
 
-const APP_NAME = "zkSync Beta";
+const APP_NAME = "zkCheckout payment gateway";
 const EXPLANATION_LINK = "https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message";
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;
 const INFURA_KEY = process.env.APP_WALLET_CONNECT;
@@ -12,8 +12,8 @@ const walletChecks = [{ checkName: "derivationPath" }, { checkName: "accounts" }
 
 const initializedWallets = {
   wallets: [
-    { walletName: "imToken", rpcUrl: RPC_URL },
     { walletName: "metamask", preferred: true },
+    { walletName: "imToken", rpcUrl: RPC_URL, preferred: true },
     {
       walletName: "walletConnect",
       networkId: ETHER_NETWORK_ID,
@@ -21,14 +21,13 @@ const initializedWallets = {
       enableLogging: true,
       preferred: true,
     },
-    // FIXME: enable again
     // { walletName: "authereum" },
     { walletName: "coinbase", preferred: true },
     { walletName: "dapper", preferred: false },
-    {
-      walletName: "ledger",
-      rpcUrl: RPC_URL,
-    },
+    // {
+    //   walletName: "ledger",
+    //   rpcUrl: RPC_URL,
+    // },
     {
       walletName: "lattice",
       rpcUrl: RPC_URL,
@@ -46,6 +45,7 @@ const initializedWallets = {
       label: "Portis",
     },
     { walletName: "opera" },
+    { walletName: "tokenpocket", rpcUrl: RPC_URL },
     { walletName: "operaTouch" },
     { walletName: "torus" },
     { walletName: "status" },
@@ -58,13 +58,12 @@ const initializedWallets = {
   ],
 };
 export default (ctx: any) => {
-  const colorTheme = localStorage.getItem("colorTheme");
   return {
     hideBranding: true,
     blockPollingInterval: 400000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
-    darkMode: colorTheme === "dark",
+    darkMode: false,
     subscriptions: {
       wallet: (wallet: any) => {
         if (wallet && wallet.provider) {
@@ -75,7 +74,7 @@ export default (ctx: any) => {
           ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
           window.localStorage.setItem("selectedWallet", wallet.name);
         }
-        wallet.provider;
+        return wallet?.provider;
       },
     },
     walletSelect: {
