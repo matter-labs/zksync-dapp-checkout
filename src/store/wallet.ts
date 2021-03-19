@@ -273,7 +273,8 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
    * @return {Promise<[array]|*>}
    */
   async getzkBalances({ commit, dispatch, getters }, { accountState, force = false } = { accountState: undefined, force: false }): Promise<Array<Balance>> {
-    let listCommitted, listVerified = {} as {
+    let listCommitted;
+    let listVerified = {} as {
       [token: string]: BigNumberish;
     };
     const tokensList = [] as Array<Balance>;
@@ -373,27 +374,29 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     const totalByToken = this.getters["checkout/getTotalByToken"];
     const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
-    const loadInitialBalancesPromises = usedTokens.map(async (key: string):Promise<any> => {
-      const currentToken = loadedTokens[key];
-      try {
-        let unlocked = true;
-        const balance = await syncWallet.getEthereumBalance(key);
-        if (key !== "ETH") {
-          unlocked = await syncWallet.isERC20DepositsApproved(currentToken.address);
+    const loadInitialBalancesPromises = usedTokens.map(
+      async (key: string): Promise<any> => {
+        const currentToken = loadedTokens[key];
+        try {
+          let unlocked = true;
+          const balance = await syncWallet.getEthereumBalance(key);
+          if (key !== "ETH") {
+            unlocked = await syncWallet.isERC20DepositsApproved(currentToken.address);
+          }
+          return {
+            id: currentToken.id,
+            address: currentToken.address,
+            balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
+            rawBalance: balance,
+            symbol: currentToken.symbol,
+            unlocked,
+            unlockedAmount: BigNumber.from("10"),
+          };
+        } catch (error) {
+          this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
         }
-        return {
-          id: currentToken.id,
-          address: currentToken.address,
-          balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
-          rawBalance: balance,
-          formattedBalance: utils.handleFormatToken(currentToken.symbol, balance.toString()),
-          symbol: currentToken.symbol,
-          unlocked,
-        };
-      } catch (error) {
-        this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
-      }
-    });
+      },
+    );
     const balancesResults = await Promise.all(loadInitialBalancesPromises).catch(() => {
       // @todo insert sentry logging
       return [];
@@ -484,7 +487,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
           fast: zksync.closestPackableTransactionFee(foundFeeFast.totalFee),
           normal: zksync.closestPackableTransactionFee(foundFeeNormal.totalFee),
         };
-        commit("setFees", {symbol, feeSymbol, type, address, obj: feesObj});
+        commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
         return feesObj;
       }
       const batchWithdrawFeeFast = await syncProvider!.getTransactionsBatchFee(["FastWithdraw", "Transfer"], [address, syncWallet!.address()], feeSymbol);
@@ -493,7 +496,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
         fast: zksync.closestPackableTransactionFee(batchWithdrawFeeFast),
         normal: zksync.closestPackableTransactionFee(batchWithdrawFeeNormal),
       };
-      commit("setFees", {symbol, feeSymbol, type, address, obj: feesObj});
+      commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
       return feesObj;
     }
     if (symbol === feeSymbol) {
@@ -502,14 +505,14 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       const feesObj = {
         normal: totalFeeValue,
       };
-      commit("setFees", {symbol, feeSymbol, type, address, obj: feesObj});
+      commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
       return feesObj;
     }
     const batchTransferFee = await syncProvider!.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet!.address()], feeSymbol);
     const feesObj = {
       normal: zksync.closestPackableTransactionFee(batchTransferFee),
     };
-    commit("setFees", {symbol, feeSymbol, type, address, obj: feesObj});
+    commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
     return feesObj;
   },
   async checkLockedState({ commit }): Promise<boolean> {
@@ -550,7 +553,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
       const transactionData = this.getters["checkout/getTransactionData"];
       console.log(transactionData.fromAddress);
-      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress !=="" && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
+      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress !== "" && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
         this.commit("setCurrentModal", "wrongAccountAddress");
         return false;
       }

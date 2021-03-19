@@ -1,15 +1,15 @@
 module.exports = {
   root: true,
   extends: [
-    'plugin:vue/recommended',
-    '@nuxtjs/eslint-config-typescript',
-    'plugin:prettier-vue/recommended',
+    "plugin:vue/recommended",
+    "@nuxtjs/eslint-config-typescript",
+    "plugin:prettier-vue/recommended",
     // Do not add `'prettier/vue'` if you don't want to use prettier for `<template>` blocks
-    'prettier/vue',
+    "prettier/vue",
   ],
 
   settings: {
-    'prettier-vue': {
+    "prettier-vue": {
       // Settings for how to process Vue SFC Blocks
       SFCBlocks: {
         /**
@@ -38,13 +38,13 @@ module.exports = {
         // Settings for how to process custom blocks
         customBlocks: {
           // Treat the `<docs>` block as a `.markdown` file
-          docs: { lang: 'markdown' },
+          docs: { lang: "markdown" },
 
           // Treat the `<config>` block as a `.json` file
-          config: { lang: 'json' },
+          config: { lang: "json" },
 
           // Treat the `<module>` block as a `.js` file
-          module: { lang: 'js' },
+          module: { lang: "js" },
 
           // Ignore `<comments>` block (omit it or set it to `false` to ignore the block)
           comments: false,
@@ -61,7 +61,7 @@ module.exports = {
       fileInfoOptions: {
         // Path to ignore file (default: `'.prettierignore'`)
         // Notice that the ignore file is only used for this plugin
-        ignorePath: '.testignore',
+        ignorePath: ".testignore",
 
         // Process the files in `node_modules` or not (default: `false`)
         withNodeModules: false,
@@ -69,16 +69,18 @@ module.exports = {
     },
   },
   rules: {
-    'prettier-vue/prettier': [
-      'error',
+    "prettier-vue/prettier": [
+      "error",
       {
         semi: true,
-        trailingComma: 'all',
+        trailingComma: "all",
         singleQuote: false,
         jsxSingleQuote: false,
         printWidth: 180,
         tabWidth: 2,
       },
     ],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["off"],
   },
 };

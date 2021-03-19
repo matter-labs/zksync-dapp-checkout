@@ -82,14 +82,12 @@ export interface Balance {
 export interface Token {
   address: Address;
   balance: string | BigNumber;
+  rawBalance: BigNumber;
   symbol: TokenSymbol;
   id: Number;
-  formattedBalance?: string;
+  unlocked: boolean;
+  unlockedAmount: BigNumber;
 }
-
-/*
-{ id: any; address: any; balance: BigNumber; formattedBalance: string; symbol: any; }
-*/
 export interface zksync {
   closestPackableTransactionAmount(num: DecimalBalance): GweiBalance;
 }
