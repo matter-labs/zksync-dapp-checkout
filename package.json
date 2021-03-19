@@ -75,7 +75,7 @@
     "vue-scrollto": "^2.20.0",
     "vuex": "^3.6.2",
     "web3": "^1.3.4",
-    "zksync": "^0.10.5",
+    "zksync": "0.10.5",
     "zksync-checkout": "^0.0.11",
     "zksync-checkout-internal": "^0.0.4"
   },
