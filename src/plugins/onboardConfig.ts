@@ -7,6 +7,9 @@ const EXPLANATION_LINK = "https://zksync.io/faq/wallets.html#what-if-my-wallet-i
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;
 const INFURA_KEY = process.env.APP_WALLET_CONNECT;
 const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
+
+const walletChecks = [{ checkName: "derivationPath" }, { checkName: "accounts" }, { checkName: "connect" }, { checkName: "network" }];
+
 const initializedWallets = {
   wallets: [
     { walletName: "imToken", rpcUrl: RPC_URL },
@@ -65,7 +68,7 @@ export default (ctx: any) => {
     subscriptions: {
       wallet: (wallet: any) => {
         if (wallet && wallet.provider) {
-          wallet.provider.autoRefreshOnNetworkChange = false;
+          wallet.provider.autoRefreshOnNetworkChange = true;
         }
         web3Wallet.set(new Web3(wallet.provider));
         if (process.client) {
@@ -78,6 +81,7 @@ export default (ctx: any) => {
     walletSelect: {
       wallets: initializedWallets.wallets,
     },
+    walletCheck: walletChecks,
     popupContent: {
       dismiss: "Dismiss",
       teaser: "Can't find your wallet?",
