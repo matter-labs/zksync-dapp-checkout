@@ -1,6 +1,6 @@
 import { Provider, Wallet, AccountState } from "@/plugins/types";
 
-interface walletData {
+interface iWalletData extends Object {
   [key: string]: object | undefined;
   syncProvider?: Provider;
   syncWallet?: Wallet;
@@ -8,7 +8,13 @@ interface walletData {
   zkSync?: object;
 }
 
-const internalWalletData: walletData = {
+interface iWalletCaller extends Object {
+  get(): iWalletData;
+  set(val: iWalletData): void;
+  zkSync: any;
+}
+
+const internalWalletData: iWalletData = {
   syncProvider: undefined,
   syncWallet: undefined,
   accountState: undefined,
@@ -19,7 +25,7 @@ const internalWalletData: walletData = {
  * Wrapper for the major Providers
  * @type {{accountState: null, syncProvider: null, syncWallet: null, zkSync: any|null}}
  */
-export const walletData = {
+export const walletData: iWalletCaller = {
   /**
    * @return {Promise<null|*>}
    */
@@ -32,10 +38,10 @@ export const walletData = {
     }
     return internalWalletData.zkSync;
   },
-  get: (): walletData => {
+  get: (): iWalletData => {
     return internalWalletData;
   },
-  set: (val: object): void => {
+  set: (val: iWalletData): void => {
     for (const [key, value] of Object.entries(val)) {
       internalWalletData[key] = value;
     }

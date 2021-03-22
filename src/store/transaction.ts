@@ -87,15 +87,15 @@ export const getters: GetterTree<TransactionModuleState, RootState> = {
       [tokenSymbol: string]: BigNumber;
     };
     for (const tokenSymbol in deposits) {
-      activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter((tx) => tx.status === "Initiated");
+      activeDeposits.tokenSymbol = deposits.tokenSymbol.filter((tx) => tx.status === "Initiated");
     }
     for (const tokenSymbol in activeDeposits) {
-      if (activeDeposits[tokenSymbol].length > 0) {
-        if (!finalDeposits[tokenSymbol]) {
-          finalDeposits[tokenSymbol] = BigNumber.from("0");
+      if (activeDeposits?.tokenSymbol.length > 0) {
+        if (!finalDeposits?.tokenSymbol) {
+          finalDeposits.tokenSymbol = BigNumber.from("0");
         }
-        for (const tx of activeDeposits[tokenSymbol]) {
-          finalDeposits[tokenSymbol] = finalDeposits[tokenSymbol].add(tx.amount);
+        for (const tx of activeDeposits.tokenSymbol) {
+          finalDeposits.tokenSymbol = finalDeposits.tokenSymbol.add(tx.amount);
         }
       }
     }
@@ -110,13 +110,13 @@ export const actions: ActionTree<TransactionModuleState, RootState> = {
         return;
       }
       if (!existingTransaction) {
-        const committedTransaction = await walletData.get().syncProvider!.notifyTransaction(transactionHash, "COMMIT");
+        await walletData.get().syncProvider!.notifyTransaction(transactionHash, "COMMIT");
         commit("updateTransactionStatus", { hash: transactionHash, status: "Commited" });
         dispatch("requestBalancesUpdate");
       } else {
         commit("updateTransactionStatus", { hash: transactionHash, status: "Commited" });
       }
-      const verifiedTransaction = await walletData.get().syncProvider!.notifyTransaction(transactionHash, "VERIFY");
+      await walletData.get().syncProvider!.notifyTransaction(transactionHash, "VERIFY");
       commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       dispatch("requestBalancesUpdate");
     } catch (error) {
@@ -126,10 +126,10 @@ export const actions: ActionTree<TransactionModuleState, RootState> = {
   async watchDeposit({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: string; amount: string }): Promise<void> {
     try {
       commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
-      const committedDeposit = await depositTx.awaitEthereumTxCommit();
+      await depositTx.awaitEthereumTxCommit();
       dispatch("requestBalancesUpdate");
       // commit('updateDepositStatus', {hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: 'Initiated', confirmations: commitedDeposit.confirmations});
-      const depositReceipt = await depositTx.awaitReceipt();
+      await depositTx.awaitReceipt();
       dispatch("requestBalancesUpdate");
       commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Commited" });
       const depositVerifyReceipt = await depositTx.awaitVerifyReceipt();

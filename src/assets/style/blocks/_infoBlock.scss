@@ -10,8 +10,7 @@
   .infoBlock {
     position: relative;
 
-    .valuesBlockContainer
-    {
+    .valuesBlockContainer {
       align-items: flex-start;
     }
 
@@ -51,6 +50,22 @@
 
   .zkSyncLogoFull {
     height: 2.5rem;
+
+  }
+
+  .valuesBlockContainer {
+    .valuesBlockRight .valuesBlockSecondary > div {
+      height: 100%;
+      min-height: 36px;
+    }
+
+    .valuesBlockLeft {
+      max-width: 70%;
+    }
+
+    &.noAddressPadding .valuesBlockRight .valuesBlockSecondary > div {
+      min-height: 0;
+    }
   }
 
   @media screen and (max-width: $mobile) {
@@ -58,16 +73,15 @@
     height: max-content;
 
     .valuesBlockContainer {
-      .valuesBlockLeft {
-        max-width: 70%;
+      margin: 0;
+
+      .valuesBlockRight .valuesBlockSecondary > div {
+        .secondaryValue {
+          font-size: 0.65rem !important;
+        }
       }
-      .valuesBlockRight .valuesBlockSecondary > div
-      {
-        height: 100%;
-        min-height: 44px;
-      }
-      &.noAddressPadding .valuesBlockRight .valuesBlockSecondary > div
-      {
+
+      &.noAddressPadding .valuesBlockRight .valuesBlockSecondary > div {
         min-height: 0;
       }
 
@@ -82,9 +96,9 @@
       }
     }
   }
+}
 
-  .linkDefault {
-    font-weight: 300;
-    font-size: 14px;
-  }
+.linkDefault {
+  font-weight: 300;
+  font-size: 14px;
 }

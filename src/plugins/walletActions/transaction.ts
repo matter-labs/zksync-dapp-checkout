@@ -87,8 +87,8 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
     const signedTx = await syncWallet!.signSetSigningKey({
       feeToken,
       fee: await store.getters["checkout/getAccountUnlockFee"],
-      nonce,
-      ethAuthType: ethAuthType === "ECDSA" ? "ECDSALegacyMessage" : "ECDSA",
+      nonce: nonce,
+      ethAuthType: ethAuthType === 'ECDSA' ? 'ECDSALegacyMessage' : 'ECDSA'
     });
     batchBuilder.addChangePubKey({
       ...signedTx.tx,
@@ -99,7 +99,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
     batchBuilder.addTransfer({
       fee: 0,
       amount: tx.amount,
-      to: tx.to as Address,
+      to: (tx.to as Address),
       token: tx.token as string,
     });
   }
@@ -246,10 +246,11 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber): P
  *
  * @param {Address} address
  * @param store
+ * @param totalAllowed
  * @returns {Promise<any>}
  */
-export const unlockToken = async (address: Address, store: any) => {
+export const unlockToken = async (address: Address, store: any, totalAllowed?: BigNumber) => {
   const wallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
-  return await wallet!.approveERC20TokenDeposits(address as string);
+  return await wallet!.approveERC20TokenDeposits(address as string, totalAllowed);
 };

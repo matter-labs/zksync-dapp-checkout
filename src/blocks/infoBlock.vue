@@ -53,7 +53,7 @@
             </template>
           </values-block>
           <max-height v-model="feesOpened" :update-value="allFees.length">
-            <values-block v-for="(item, index) in allFees" :key="index" class="mt-1 lg:mt-3">
+            <values-block v-for="(item, index) in allFees" :key="index" class="mt-1">
               <template slot="left-top">
                 <div class="headline">{{item.name}}</div>
               </template>

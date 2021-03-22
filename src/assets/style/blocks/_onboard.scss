@@ -1,6 +1,12 @@
 @import "../variables";
 
 .bn-onboard-modal {
+
+  .bn-onboard-custom.bn-onboard-modal-content
+  {
+    width: 100%;
+  }
+
   z-index: 4;
   @media screen and (min-width: $mobile) {
     left: 43% !important;
@@ -116,6 +122,11 @@
     visibility: hidden !important;
   }
   @media screen and (max-width: $mobile) {
+    button.bn-onboard-modal.bn-onboard-modal-content
+    {
+      margin: 0.25rem 0;
+      padding: 0.5rem;
+    }
     .bn-onboard-modal-content
     {
       padding-bottom: 0;

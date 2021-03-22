@@ -9,6 +9,9 @@
 
   .valuesBlockSecondary {
     height: max-content;
+    @media screen and (max-width: $mobile) {
+      height: 100%;
+    }
   }
 
   .valuesBlockRight {
@@ -34,6 +37,9 @@
     font-size: 16px;
     font-family: $firaCondensed;
     line-height: 1.37;
+    @media screen and (max-width: $mobile) {
+      font-size: 0.8rem;
+    }
 
     &.big {
       font-size: 20px;
@@ -62,9 +68,9 @@
       position: absolute;
       right:0;
       bottom: 0;
-      font-size: 14px;
-      line-height: 22px;
+      line-height: initial;
     }
+
   }
 
 

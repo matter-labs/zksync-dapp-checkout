@@ -80,10 +80,8 @@
           </div>
         </template>
         <template v-else slot="right">
-          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs">
-            Insufficient <strong>{{ token }} {{currentNetworkName}}</strong> balance
-          </div>
-          <amount-input v-else-if="(!enoughWithInitialBalance && !initialBalance.unlocked) || !enoughUnlockedMin" ref="amountInput" v-model="unlockAmount" :token="token" type="deposit" :class="{'error': !enoughUnlockedMin}">
+          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs">Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance</div>
+          <amount-input v-else-if="unlockRequired" ref="amountInput" v-model="unlockAmount" :token="token" type="deposit">
             <template slot="underInput">
               <div class="text-xxs" @click="setDepositMinAmount()">Allowance</div>
             </template>
@@ -164,6 +162,21 @@ export default Vue.extend({
     amountClass(): string {
       return this.enoughZkBalance ? "text-green" : "text-red";
     },
+    unlockRequired(): boolean {
+      //ETH doesn't require unlock
+      if (this.token.toLowerCase() === "eth")
+      {
+        return false;
+      }
+      if (this.enoughDepositAmount) {
+        return false;
+      }
+      if (!this.initialBalance.unlocked) {
+        return true;
+      }
+      return !this.enoughUnlockedMin;
+
+    },
     tokensPrices(): TokenPrices {
       return this.$store.getters["tokens/getTokenPrices"];
     },
@@ -182,16 +195,6 @@ export default Vue.extend({
       }
       try {
         return utils.parseToken(this.token, this.depositAmount).toString();
-      } catch (error) {
-        return "";
-      }
-    },
-    unlockBigNumber(): GweiBalance {
-      if (!this.unlockAmount) {
-        return "";
-      }
-      try {
-        return utils.parseToken(this.token, this.unlockAmount).toString();
       } catch (error) {
         return "";
       }
@@ -278,7 +281,11 @@ export default Vue.extend({
      */
     enoughUnlockedMin(): Boolean {
       try {
-        return BigNumber.from(this.needToDeposit).lte(this.initialBalance.unlockedAmount);
+        console.log(this.token)
+        if (this.token !== "ETH") {
+          return BigNumber.from(this.needToDeposit).lte(this.initialBalance.unlockedAmount);
+        }
+        return true;
       } catch (error) {
         return false;
       }
@@ -345,7 +352,7 @@ export default Vue.extend({
       this.depositAmount = utils.handleFormatToken(this.token, this.recommendedDeposit);
     },
     setUnlockCurrentAmount() {
-      this.unlockAmount = utils.handleFormatToken(this.token, this.initialBalance.unlockedAmount.toString());
+      this.unlockAmount = utils.handleFormatToken(this.token, this.total);
     },
     async deposit() {
       if (!this.enoughOnInitialToDeposit) {
@@ -392,7 +399,7 @@ export default Vue.extend({
         this.subStep = "waitingUserConfirmation";
         this.step = "unlocking";
         console.log("---DEBUG UNLOCKING---");
-        const unlockTransaction = await unlockToken(this.initialBalance.address as Address, this.$store);
+        const unlockTransaction = await unlockToken(this.initialBalance.address as Address, this.$store, this.unlockAmount);
         console.log("unlockTransaction", unlockTransaction);
         this.subStep = "committing";
         const unlockResult = await unlockTransaction.wait();

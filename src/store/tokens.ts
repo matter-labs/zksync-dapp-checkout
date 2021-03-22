@@ -48,8 +48,8 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
   getTokenByID(state): Function {
     return (id: number): TokenItem | undefined => {
       for (const symbol in state.allTokens) {
-        if (state.allTokens[symbol].id === id) {
-          return state.allTokens[symbol];
+        if (state.allTokens?.symbol.id === id) {
+          return state.allTokens.symbol;
         }
       }
     };

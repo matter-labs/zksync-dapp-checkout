@@ -187,6 +187,7 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
     return state.initialTokens;
   },
   getInitialBalances(state): Array<Balance> {
+    console.log(state.initialTokens.list);
     return state.initialTokens.list;
   },
   getzkList(state): { lastUpdated: Number; list: Array<Balance> } {
@@ -616,10 +617,10 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       console.log("forceRefreshData | getTransactionsHistory error", err);
     }); */
   },
-  async logout({ commit, getters }): Promise<void> {
+  logout({ commit, getters }): void {
     const onboard = getters.getOnboard;
     onboard.walletReset();
-    walletData.set({ syncWallet: null, accountState: null });
+    walletData.set({ syncWallet: undefined, accountState: undefined });
     localStorage.removeItem("selectedWallet");
     this.commit("account/setLoggedIn", false);
     this.commit("account/setSelectedWallet", "");
