@@ -23,7 +23,7 @@
     .address
     {
       font-family: "Fira Code", "sans-serif";
-      color: #3C4257;
+      color: $black2;
       font-size: 0.65rem;
       line-height: 1.4;
       font-weight: 300;
@@ -55,13 +55,6 @@
     transition: color $transition;
     will-change: color;
     position: relative;
-    &:after {
-      position: absolute;
-      z-index: 10;
-      height: 100%;
-      width: 2px;
-      background: rgba(255,255,255,0.3);
-    }
   }
 
   .alert {
@@ -128,15 +121,25 @@
       }
 
       .tokenItem {
-        /* display: flex;
-        flex-direction: column;
-        align-items: center; */
-
         .tokenImg {
           margin-right: 0;
           margin-bottom: 2px;
         }
       }
     }
+  }
+}
+
+.darkMode .lineContainer {
+  .lineItem {
+    .address {
+      color: $gray;
+    }
+  }
+  .tokenItem .tokenName {
+    color: $white;
+  }
+  .amount {
+    color: $gray;
   }
 }

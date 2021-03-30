@@ -1,6 +1,6 @@
 .bn-onboard-modal {
   z-index: 4;
-
+  background-color: transparent !important;
   @media screen and (min-width: $mobile) {
     width: 57% !important;
     left: 43% !important;

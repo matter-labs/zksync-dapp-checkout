@@ -1,8 +1,8 @@
 <template>
   <transition name="fade">
     <div v-if="loggingIn || loggedInAnimation===true" class="loggingInContainer">
-      <img class="zkSyncLogoFull h-24" src="/zkSyncLogoFull.svg" alt="zkSync">
-      <h1 class="text-dark text-3xl">Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
+      <logo class="h-16" />
+      <h1 class="text-dark useDarkMode text-3xl mt-3">Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
       <transition-group v-if="loadingHint" tag="div" name="slide-vertical-fade" class="hint text-gray text-center text-sm mt-2">
         <div v-if="loggedInAnimation === true" key="loggedInAnimation" class="text-green">Wallet successfully connected!</div>
         <div v-else-if="loadingHint === 'followInstructions'" key="followInstructions">Follow the instructions in your wallet</div>
@@ -17,9 +17,11 @@
 
 <script lang="ts">
 import Vue from "vue";
+import Logo from "@/blocks/logo.vue";
 
 let loggedInAnimationTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
+  components: { Logo },
   data() {
     return {
       loggedInAnimation: false,

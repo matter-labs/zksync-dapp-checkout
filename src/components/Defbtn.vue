@@ -1,9 +1,9 @@
 <template>
-  <button v-if="!to" class="defbtn" :class="[outline===true?'outline':'filled']" v-on="$listeners">
+  <button v-if="!to" class="defbtn" :class="[outline===true?'outline':'filled',{'disabled': disabled}]" :disabled="disabled" v-on="$listeners">
     <slot/>
     <loader v-if="loader" size="xs" :color="outline===true?'gray':'white'" />
   </button>
-  <nuxt-link v-else :to="to" class="defbtn" :class="[outline===true?'outline':'filled']" v-on="$listeners">
+  <nuxt-link v-else :to="to" class="defbtn" :class="[outline===true?'outline':'filled',{'disabled': disabled}]" v-on="$listeners">
     <slot/>
     <loader v-if="loader" size="xs" :color="outline===true?'gray':'white'"/>
   </nuxt-link>
@@ -18,6 +18,11 @@ export default {
       required: false,
     },
     loader: {
+      default: false,
+      type: Boolean,
+      required: false,
+    },
+    disabled: {
       default: false,
       type: Boolean,
       required: false,

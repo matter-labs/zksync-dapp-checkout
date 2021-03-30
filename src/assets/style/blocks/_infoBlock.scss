@@ -42,10 +42,6 @@
     }
   }
 
-  .zkSyncLogoFull {
-    height: 2.5rem;
-  }
-
   @media screen and (max-width: $mobile) {
     /* box-shadow: none; */
     height: max-content;
@@ -64,5 +60,14 @@
   .linkDefault {
     font-size: 14px;
     font-weight: 300;
+  }
+}
+
+.darkMode .infoBlockContainer {
+  background-color: $darkBlue;
+
+  .linkDefault {
+    font-weight: 400;
+    color: $lightViolet;
   }
 }

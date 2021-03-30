@@ -12,7 +12,7 @@
   outline: none !important;
   align-items: center;
 
-  &:disabled {
+  &.disabled {
     cursor: default;
   }
 
@@ -23,11 +23,11 @@
     transition-property: background-color;
     will-change: background-color;
 
-    &:disabled {
+    &.disabled {
       background-color: transparentize($color: $lightViolet, $amount: 0.3);
     }
 
-    &:not(:disabled) {
+    &:not(.disabled) {
       &:hover {
         background-color: $lightViolet;
       }
@@ -44,15 +44,15 @@
     background-color: #F6F8FA;
     transition-property: color, border-color, background-color, box-shadow;
     will-change: color, border-color, background-color, box-shadow;
-    border: 0.5px solid #E1E4E8;
+    border: 0.5px solid $light;
 
-    &:disabled {
+    &.disabled {
       background-color: $white;
       border-color: $gray;
       color: $gray;
     }
 
-    &:not(:disabled) {
+    &:not(.disabled) {
       box-shadow: 0 2px 2px rgba(28, 5, 77, 0.05), 0 12px 8px rgba(0, 0, 0, 0.02);
 
       &:hover {
@@ -97,5 +97,21 @@
     position: relative;
     top: -.5px;
     margin-left: 8px;
+  }
+}
+
+.darkMode .defbtn {
+  &.outline {
+    color: $lightViolet;
+    background-color: transparentize($color: $gray, $amount: 0.92);
+    border-color: transparent;
+    &.disabled {
+      background-color: transparentize($color: $gray, $amount: 0.97);
+    }
+  }
+  &.filled {
+    &.disabled {
+      background-color: darken($color: $lightViolet, $amount: 25);
+    }
   }
 }

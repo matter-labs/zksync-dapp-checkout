@@ -72,3 +72,16 @@
     }
   }
 }
+
+.darkMode .modalContainer {
+  &.full {
+    background-color: transparentize($color: $darkBlue, $amount: 0.5) !important;
+  }
+  .modalMain {
+    background-color: $darkBlue;
+    border-color: $black2;
+  }
+  .modalFooter {
+    background-color: lighten($color: $darkBlue, $amount: 3);
+  }
+}

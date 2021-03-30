@@ -1,5 +1,3 @@
-@import "../variables";
-
 .amountInputGroup {
   width: max-content;
   height: 36px;
@@ -13,19 +11,6 @@
   will-change: border-color;
 
   &:not(:disabled) {
-    /* &:hover, &.focused {
-      border-color: $light;
-
-      .leftSide {
-        .inputContainer {
-          .penIcon {
-            width: 15px;
-            opacity: 1;
-          }
-        }
-      }
-    } */
-
     &.focused {
       border-color: $violet;
       .leftSide {
@@ -145,5 +130,27 @@
     height: max-content;
     width: max-content;
     padding-left: 7px;
+  }
+}
+
+.darkMode .amountInputGroup {
+  border-color: $dark2;
+  &:not(:disabled).focused {
+    border-color: $lightViolet;
+
+    .leftSide .inputContainer .penIcon {
+      color: $lightViolet;
+    }
+  }
+  .leftSide {
+    .inputContainer input {
+      color: $gray;
+      &::placeholder {
+        color: $dark2;
+      }
+    }
+    .underInput {
+      color: $dark3;
+    }
   }
 }

@@ -5,6 +5,7 @@
     margin-top: 25px;
 
     .mainBtns {
+      z-index: 10;
       display: flex;
       justify-content: center;
       button.defbtn.filled
@@ -24,13 +25,7 @@
     }
   }
 
-  /* @media screen and (min-width: 900px) {
-    position: fixed;
-    margin-left: calc((100% - 650px - 5rem) / 6) !important;
-    width: 100%;
-  } */
   @media screen and (max-width: $mobile) {
-
     .mainBtnsContainer {
       margin-top: 0;
       height: 80px;
@@ -38,7 +33,7 @@
 
       .mainBtns {
         position: fixed;
-        bottom: 0;
+        bottom: -1px;
         left: 0;
         width: 100%;
         background-color: $white;
@@ -47,6 +42,7 @@
 
         .defbtn {
           height: 50px;
+          width: 100% !important;
           font-size: 18px;
           &:last-child {
             width: 100%;
@@ -55,6 +51,14 @@
           }
         }
       }
+    }
+  }
+}
+
+.darkMode .indexPage {
+  @media screen and (max-width: $mobile) {
+    .mainBtnsContainer .mainBtns {
+      background-color: $darkBlue;
     }
   }
 }

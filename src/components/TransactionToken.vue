@@ -24,7 +24,7 @@
             <div class="headline">Minimal amount to deposit</div>
           </template>
           <template slot="right-top">
-            <div class="flex md:flex-col whitespace-nowrap">
+            <div class="flex md:flex-col items-center md:items-end whitespace-nowrap">
               <div class="value mr-2 md:mr-0">{{ needToDeposit | formatToken(token) }} {{ token }}</div>
               <div class="secondaryValue">{{ needToDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}</div>
             </div>
@@ -35,7 +35,7 @@
             <div class="headline">Recommended deposit amount</div>
           </template>
           <template slot="right-top">
-            <div class="flex md:flex-col whitespace-nowrap">
+            <div class="flex md:flex-col items-center md:items-end whitespace-nowrap">
               <div class="value mr-2 md:mr-0">{{ recommendedDeposit | formatToken(token) }} {{ token }}</div>
               <div class="secondaryValue">{{ recommendedDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}</div>
             </div>
@@ -108,7 +108,7 @@
 <script lang="ts">
 import { Address, Balance, GweiBalance, TokenPrices } from "@/plugins/types";
 import { ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
-import { walletData } from '@/plugins/walletData';
+import { walletData } from "@/plugins/walletData";
 import utils from "@/plugins/utils";
 import { deposit, unlockToken } from "@/plugins/walletActions/transaction";
 import { BigNumber } from "ethers";
@@ -135,9 +135,9 @@ export default Vue.extend({
         text: "",
       },
       step: "default" /* default, depositing, unlocking */,
-      subStep: "", /* depositing: [waitingUserConfirmation,depositing,committing], unlocking: [waitingUserConfirmation,committing,confirming] */
+      subStep: "" /* depositing: [waitingUserConfirmation,depositing,committing], unlocking: [waitingUserConfirmation,committing,confirming] */,
       depositAmount: "",
-      lineStateText: ""
+      lineStateText: "",
     };
   },
   computed: {
@@ -246,19 +246,17 @@ export default Vue.extend({
     async subStep(val) {
       if (val === "waitingUserConfirmation") {
         this.lineStateText = "Confirm operation";
-      }
-      else if (val === "committing") {
+      } else if (val === "committing") {
         this.lineStateText = "Committing transaction...";
-      }
-      else if (val === "confirming") {
+      } else if (val === "confirming") {
         const confirmations = await walletData.get().syncProvider!.getConfirmationsForEthOpAmount();
         this.lineStateText = `The transaction has been comitted. Waiting for ${confirmations} confirmations.`;
       } else {
-        this.lineStateText = ""; 
+        this.lineStateText = "";
       }
     },
     step(val) {
-      this.$emit("input", (this.enoughZkBalance===true && val === "default"));
+      this.$emit("input", this.enoughZkBalance === true && val === "default");
     },
   },
   mounted() {
@@ -307,8 +305,11 @@ export default Vue.extend({
             };
           };
           createErrorModal(
-            error.message && !error.message.includes("User denied") ? (error.message.includes("Fee Amount is not packable") ? "Fee Amount is not packable"
-              : "Transaction Amount is not packable") : "Unknown error. Try again later."
+            error.message && !error.message.includes("User denied")
+              ? error.message.includes("Fee Amount is not packable")
+                ? "Fee Amount is not packable"
+                : "Transaction Amount is not packable"
+              : "Unknown error. Try again later.",
           );
         }
       }
@@ -326,8 +327,8 @@ export default Vue.extend({
         this.step = "default";
         const createErrorModal = (text: string) => {
           this.errorModal = {
-              headline: `Unlocking token error`,
-              text,
+            headline: `Unlocking token error`,
+            text,
           };
         };
         if (error.message) {

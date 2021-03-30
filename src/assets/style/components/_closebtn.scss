@@ -13,3 +13,9 @@
     opacity: 0.6;
   }
 }
+
+.darkMode .modalContainer {
+  svg path {
+    fill: $white;
+  }
+}

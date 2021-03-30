@@ -1,5 +1,5 @@
 <template>
-  <div class="lineTableHeader border-b border-light">
+  <div class="lineTableHeader border-b border-light useDarkMode">
     <div class="tableItem"></div>
     <div class="tableItem font-bold hidden md:block"><slot name="first" /></div>
     <div class="tableItem font-light hidden md:block"><slot name="second" /></div>

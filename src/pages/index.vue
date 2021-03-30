@@ -1,6 +1,6 @@
 <template>
   <div class="indexPage">
-    <modal :value="modal==='feeChanged'" @close="modal=false">
+    <modal :value="modal==='feeChanged'" @close="modal=false;cancelTransfer();">
       <template slot="header">
         <div class="withIcon text-warning text-yellow">
           <i class="fad fa-info-square"/>
@@ -16,7 +16,7 @@
             <div class="headline">Previous fee</div>
           </template>
           <template slot="right-top">
-            <div class="flex md:flex-col whitespace-nowrap">
+            <div class="flex md:flex-col items-center md:items-end whitespace-nowrap">
               <div class="value mr-2 md:mr-0">{{ transactionFees.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
               <div class="secondaryValue">{{ transactionFees.previous | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
             </div>
@@ -27,7 +27,7 @@
             <div class="headline">New fee</div>
           </template>
           <template slot="right-top">
-            <div class="flex md:flex-col whitespace-nowrap">
+            <div class="flex md:flex-col md:items-end whitespace-nowrap">
               <div class="value mr-2 md:mr-0">{{ transactionFees.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
               <div class="secondaryValue">{{ transactionFees.new | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
             </div>
@@ -93,7 +93,7 @@
       </div>
     </div>
     <div v-else-if="step==='transfer'" class="w-full">
-      <div class="font-firaCondensed font-medium text-3xl text-dark text-center pt-5 md:pt-10">Payment</div>
+      <div class="font-firaCondensed font-medium text-3xl text-dark useDarkMode text-center pt-5 md:pt-10">Payment</div>
       <div v-if="subStep==='processing'" class="text-lg text-center pt-2">Processing...</div>
       <div v-else-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in the popup</div>
       <div v-else-if="subStep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
@@ -136,7 +136,7 @@
               <div class="font-light txHash text-xxs md:text-right">
                 {{item.txHash | formatTransaction}}
               </div>
-              <i class="text-xs text-violet pl-1 fal fa-external-link"/>
+              <i class="text-xs text-violet useDarkMode pl-1 fal fa-external-link"/>
             </a>
           </template>
         </line-block>
