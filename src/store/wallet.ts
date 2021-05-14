@@ -539,7 +539,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     try {
       /* dispatch("changeNetworkRemove"); */
       const onboard = getters.getOnboard;
-      this.commit("account/setLoadingHint", "followInstructions");
+      this.commit("account/setLoadingHint", "processing");
       let walletCheck = false;
       if (firstSelect) {
         walletCheck = await onboard.walletSelect();
@@ -582,6 +582,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
 
       const zksync = await walletData.zkSync();
       await dispatch("restoreProviderConnection");
+      this.commit("account/setLoadingHint", "followInstructions");
       const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, walletData.get().syncProvider);
 
       this.commit("account/setLoadingHint", "loadingData");

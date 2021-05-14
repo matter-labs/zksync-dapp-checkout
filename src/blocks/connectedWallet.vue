@@ -2,7 +2,7 @@
   <div class="container">
     <div class="connectedWallet flex items-center">
       <i class="text-gray text-4xl mr-3 far fa-wallet"/>
-      <values-block>
+      <zk-values-block>
         <template slot="left-top">
           <div class="headline">My wallet</div>
         </template>
@@ -11,17 +11,17 @@
         </template>
         <template slot="right-top">
           <div class="flex items-center flex-col md:flex-row">
-            <defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="currentNetwork==='rinkeby'?'///stage.zksync.io':'///wallet.zksync.io'">
+            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="currentNetwork==='rinkeby'?'///stage.zksync.io':'///wallet.zksync.io'">
               <span>Open wallet</span>
               <i class="fas fa-external-link"/>
-            </defbtn>
-            <defbtn outline @click="logout()">
+            </zk-defbtn>
+            <zk-defbtn outline @click="logout()">
               <span class="text-red">Disconnect</span>
               <i class="text-red far fa-times"/>
-            </defbtn>
+            </zk-defbtn>
           </div>
         </template>
-      </values-block>
+      </zk-values-block>
     </div>
   </div>
 </template>

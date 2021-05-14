@@ -19,28 +19,28 @@
         <div v-else-if="modal==='insufficientL1Min'" class="text-sm"><b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> will not be enough to commit the
           transaction. The minimal amount is:
         </div>
-        <values-block class="mt-3 cursor-pointer" @click="setDepositMinAmount(); modal=''">
+        <zk-values-block class="mt-3 cursor-pointer" @click="setDepositMinAmount(); modal=''">
           <template slot="left-top">
             <div class="headline">Minimal amount to deposit</div>
           </template>
           <template slot="right-top">
-            <div class="flex md:flex-col items-center md:items-end whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ needToDeposit | formatToken(token) }} {{ token }}</div>
+            <div class="flex flex-col items-end whitespace-nowrap">
+              <div class="value">{{ needToDeposit | formatToken(token) }} {{ token }}</div>
               <div class="secondaryValue">{{ needToDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}</div>
             </div>
           </template>
-        </values-block>
-        <values-block class="mt-3 cursor-pointer" @click="setDepositRecommendedAmount(); modal=''">
+        </zk-values-block>
+        <zk-values-block class="mt-3 cursor-pointer" @click="setDepositRecommendedAmount(); modal=''">
           <template slot="left-top">
             <div class="headline">Recommended deposit amount</div>
           </template>
           <template slot="right-top">
-            <div class="flex md:flex-col items-center md:items-end whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ recommendedDeposit | formatToken(token) }} {{ token }}</div>
+            <div class="flex flex-col items-end whitespace-nowrap">
+              <div class="value">{{ recommendedDeposit | formatToken(token) }} {{ token }}</div>
               <div class="secondaryValue">{{ recommendedDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}</div>
             </div>
           </template>
-        </values-block>
+        </zk-values-block>
       </template>
     </modal>
 
@@ -57,7 +57,7 @@
     </modal>
 
     <!-- Main -->
-    <line-block>
+    <zk-line-block>
       <template slot="first">
         <div class="tokenItem">
           <div class="tokenName">{{ token }}</div>
@@ -72,36 +72,36 @@
       <template v-if="isInProgress" slot="right">
         <div class="flex items-center">
           <div class="text-gray text-xs font-medium" :class="{'mr-2': isLoading}">{{lineStateText}}</div>
-          <loader v-if="isLoading" color="gray" size="sm"/>
+          <zk-loader v-if="isLoading" color="gray" size="sm"/>
         </div>
       </template>
       <template v-else>
         <template v-if="enoughZkBalance" slot="right">
-          <div class="flex justify-between text-xs font-medium mr-2 text-green">Ready <success-mark class="w-8 h-8"/></div>
+          <div class="flex justify-between items-center text-xs font-medium mr-2 text-green">Ready <zk-success-check-mark class="w-8 h-8"/></div>
         </template>
         <template v-else slot="right">
           <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs">Insufficient <strong>{{ token }} {{currentNetworkName}}</strong> balance</div>
-          <defbtn v-else-if="!enoughWithInitialBalance && !initialBalance.unlocked" @click="unlock()">
+          <zk-defbtn v-else-if="!enoughWithInitialBalance && !initialBalance.unlocked" @click="unlock()">
             <i class="fas fa-unlock-alt"/><span>Unlock</span>
-          </defbtn>
+          </zk-defbtn>
           <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{'error': !enoughDepositAmount}">
             <template slot="underInput">
               <div class="minAmount text-xxs" @click="setDepositMinAmount()">Min: {{ needToDeposit | formatToken(token) }}</div>
             </template>
             <template slot="default">
-              <defbtn v-if="initialBalance.unlocked" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
+              <zk-defbtn v-if="initialBalance.unlocked" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
                 <i class="fal fa-arrow-to-right"/>
                 <span>Deposit</span>
-              </defbtn>
-              <defbtn v-else @click="unlock()">
+              </zk-defbtn>
+              <zk-defbtn v-else @click="unlock()">
                 <i class="fas fa-unlock-alt"/>
                 <span>Unlock</span>
-              </defbtn>
+              </zk-defbtn>
             </template>
           </amount-input>
         </template>
       </template>
-    </line-block>
+    </zk-line-block>
   </div>
 </template>
 

@@ -7,7 +7,7 @@
           <div class="text-violet useDarkMode text-2xl font-bold">zkCheckout <sup v-if="currentNetworkName !== 'mainnet'" class="text-sm font-light">{{currentNetworkName}}</sup></div>
         </div>
       </header>
-      <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
+      <zk-values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
         <template slot="left-top">
           <div class="headline">{{item.description}}</div>
         </template>
@@ -15,16 +15,16 @@
           <div class="address hidden lg:block">{{item.to}}</div>
         </template>
         <template slot="right-top">
-          <div class="flex md:flex-col items-center md:items-end whitespace-nowrap">
-            <div class="value mr-2 md:mr-0">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
+          <div class="flex flex-col items-end whitespace-nowrap">
+            <div class="value">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
             <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
           </div>
         </template>
-      </values-block>
+      </zk-values-block>
       <transition name="fade">
         <div v-if="loggedIn" class="w-full">
           <div class="w-full border-b-2 border-light useDarkMode mt-1 lg:mt-3"/>
-          <values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
+          <zk-values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
             <template slot="left-top">
               <div class="flex items-center">
                 <div class="headline big">Fees</div>
@@ -35,24 +35,24 @@
             </template>
             <template slot="right-top">
               <div class="flex items-center">
-                <div class="flex md:flex-col">
-                  <div class="value md:mr-0">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+                <div class="flex flex-col">
+                  <div class="value">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
                 </div>
               </div>
             </template>
-          </values-block>
+          </zk-values-block>
           <max-height v-model="feesOpened" :update-value="allFees.length">
-            <values-block v-for="(item, index) in allFees" :key="index" class="mt-1 lg:mt-3">
+            <zk-values-block v-for="(item, index) in allFees" :key="index" class="mt-1 lg:mt-3">
               <template slot="left-top">
                 <div class="headline">{{item.name}}</div>
               </template>
               <template slot="right-top">
-                <div class="flex md:flex-col items-center md:items-end whitespace-nowrap">
-                  <div class="value mr-2 md:mr-0">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
+                <div class="flex flex-col items-end whitespace-nowrap">
+                  <div class="value">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
                   <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
                 </div>
               </template>
-            </values-block>
+            </zk-values-block>
           </max-height>
           <div class="w-full border-b-2 border-light useDarkMode mt-1 lg:mt-3"></div>
           <div class="mt-2 lg:mt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">

@@ -2,7 +2,7 @@
   <transition name="modal">
     <div v-if="value" class="modalContainer" :class="{'full': !block}" @click.self="close()">
       <div class="modalMain">
-        <closebtn v-if="!block && notClosable===false" @click="close()"/>
+        <zk-closebtn v-if="!block && notClosable===false" @click="close()"/>
         <div v-if="$slots['header']" class="modalHeader">
           <slot name="header"/>
         </div>

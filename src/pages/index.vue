@@ -11,39 +11,39 @@
         <div class="text-sm">
           The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.
         </div>
-        <values-block class="mt-3">
+        <zk-values-block class="mt-3">
           <template slot="left-top">
             <div class="headline">Previous fee</div>
           </template>
           <template slot="right-top">
-            <div class="flex md:flex-col items-center md:items-end whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ transactionFees.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+            <div class="flex flex-col items-end whitespace-nowrap">
+              <div class="value">{{ transactionFees.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
               <div class="secondaryValue">{{ transactionFees.previous | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
             </div>
           </template>
-        </values-block>
-        <values-block class="mt-3">
+        </zk-values-block>
+        <zk-values-block class="mt-3">
           <template slot="left-top">
             <div class="headline">New fee</div>
           </template>
           <template slot="right-top">
-            <div class="flex md:flex-col md:items-end whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ transactionFees.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+            <div class="flex flex-col items-end whitespace-nowrap">
+              <div class="value">{{ transactionFees.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
               <div class="secondaryValue">{{ transactionFees.new | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
             </div>
           </template>
-        </values-block>
+        </zk-values-block>
       </template>
       <template slot="footer">
         <div class="flex items-center justify-center flex-wrap gap-2">
-          <defbtn outline @click="modal=false;cancelTransfer();">
+          <zk-defbtn outline @click="modal=false;cancelTransfer();">
             <i class="far fa-arrow-left"/>
             <span>Cancel payment</span>
-          </defbtn>
-          <defbtn @click="modal=false;transfer();">
+          </zk-defbtn>
+          <zk-defbtn @click="modal=false;transfer();">
             <i class="fas fa-paper-plane"/>
             <span>Complete payment</span>
-          </defbtn>
+          </zk-defbtn>
         </div>
       </template>
     </modal>
@@ -85,32 +85,32 @@
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn :disabled="!transferAllowed" @click="preTransfer()">
+          <zk-defbtn :disabled="!transferAllowed" @click="preTransfer()">
             <i class="fas fa-paper-plane"></i>
             <span>Complete payment</span>
-          </defbtn>
+          </zk-defbtn>
         </div>
       </div>
     </div>
     <div v-else-if="step==='transfer'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-dark useDarkMode text-center pt-5 md:pt-10">Payment</div>
       <div v-if="subStep==='processing'" class="text-lg text-center pt-2">Processing...</div>
-      <div v-else-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in the popup</div>
+      <div v-else-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in your wallet</div>
       <div v-else-if="subStep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
-      <loader class="mx-auto mt-6" size="md" color="violet" />
+      <zk-loader class="mx-auto mt-6" size="md" color="violet" />
     </div>
     <div v-else-if="step==='success'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Done. Thank you!</div>
-      <success-mark class="w-11/12 max-w-xxs mx-auto py-5 bigSuccessMark" />
+      <zk-success-check-mark big class="w-11/12 max-w-xxs mx-auto py-5" />
       <div class="text-md text-center font-light pt-2">
         Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a>
       </div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <defbtn :disabled="!transferAllowed" @click="close()">
-            <i class="fas fa-times"/>
+          <zk-defbtn :disabled="!transferAllowed" @click="close()">
+            <i class="far fa-times"/>
             <span>Close</span>
-          </defbtn>
+          </zk-defbtn>
         </div>
       </div>
       <line-table-header class="mt-10 md:mt-7 mb-2">
@@ -121,7 +121,7 @@
       </line-table-header>
 
       <template v-for="(item,index) in finalTransactions">
-        <line-block :key="index">
+        <zk-line-block :key="index">
           <template slot="first">
             <div class="tokenItem">
               <div class="tokenName">{{getTokenByID(typeof(item.txData.tx.token)==='number'?item.txData.tx.token:item.txData.tx.feeToken)}}</div>
@@ -139,7 +139,7 @@
               <i class="text-xs text-violet useDarkMode pl-1 fal fa-external-link"/>
             </a>
           </template>
-        </line-block>
+        </zk-line-block>
       </template>
     </div>
   </div>
@@ -161,9 +161,14 @@ export default Vue.extend({
     connectedWallet,
     lineTableHeader,
   },
+  filters: {
+    formatTransaction(value: String) {
+      return value.replace("sync-tx:", "");
+    },
+  },
   data() {
     return {
-      modal: false as (false | string) /* false, feeChanged */,
+      modal: false as false | string /* false, feeChanged */,
       step: "main" /* main, transfer, success */,
       subStep: "" /* processing, waitingUserConfirmation, committing */,
       tokenItemsValid: {} as {
@@ -179,7 +184,7 @@ export default Vue.extend({
       transactionFees: {
         previous: "0",
         new: "0",
-      }
+      },
     };
   },
   computed: {
@@ -219,16 +224,15 @@ export default Vue.extend({
       this.subStep = "processing";
       try {
         const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
-        await this.$store.dispatch('checkout/getTransactionBatchFee');
+        await this.$store.dispatch("checkout/getTransactionBatchFee");
         const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
-        if(transactionFeesPrevious !== transactionFeesNew) {
+        if (transactionFeesPrevious !== transactionFeesNew) {
           this.transactionFees = {
             previous: transactionFeesPrevious,
-            new: transactionFeesNew
-          }
+            new: transactionFeesNew,
+          };
           this.modal = "feeChanged";
-        }
-        else {
+        } else {
           this.transfer();
         }
       } catch (error) {
@@ -256,30 +260,40 @@ export default Vue.extend({
         this.step = "transfer";
         this.subStep = "waitingUserConfirmation";
         try {
-          let transactionsList = [] as Array<ZkSyncTransaction>;
+          const transactionsList = [] as Array<ZkSyncTransaction>;
           transactionsList.push(...transactionData.transactions);
           const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
-          const transactions = await transactionBatch(transactionsList, transactionData.feeToken, transactionFees.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
+          const transactions = await transactionBatch(
+            transactionsList,
+            transactionData.feeToken,
+            transactionFees.amount,
+            this.$store.getters["wallet/isAccountLocked"],
+            this.$store,
+          );
           console.log("Batch transaction", transactionsList);
 
           const manager = ZkSyncCheckoutManager.getManager();
 
           let endHashes = [];
           const validHashes = transactions.filter((tx: any) => {
-            if(tx.txData.tx.type!=='Transfer') {
+            if (tx.txData.tx.type !== "Transfer") {
               return false;
             }
-            for(const singleTx of transactionsList) {
-              if (typeof(tx.txData.tx.to)==='string' && typeof(singleTx.to)==='string' && tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() && tx.txData.tx.amount === singleTx.amount) {
+            for (const singleTx of transactionsList) {
+              if (
+                typeof tx.txData.tx.to === "string" &&
+                typeof singleTx.to === "string" &&
+                tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() &&
+                tx.txData.tx.amount === singleTx.amount
+              ) {
                 return true;
-              };
+              }
             }
             return false;
           });
-          endHashes = validHashes.map((tx: any) => tx.txHash)
-          console.log('Sent hashes', endHashes);
+          endHashes = validHashes.map((tx: any) => tx.txHash);
+          console.log("Sent hashes", endHashes);
           manager.notifyHashes(endHashes);
-
 
           // @ts-ignore
           this.finalTransactions.push(...transactions);
@@ -296,8 +310,7 @@ export default Vue.extend({
                   headline: "Payment error",
                   text: "Please, make deposit or request tokens in order to activate the account.",
                 };
-              }
-              else {
+              } else {
                 this.errorModal = {
                   headline: "Payment error",
                   text: error.message,
@@ -317,10 +330,5 @@ export default Vue.extend({
       window.close();
     },
   },
-  filters: {
-    formatTransaction(value: String) {
-      return value.replace('sync-tx:', '');
-    }
-  }
 });
 </script>

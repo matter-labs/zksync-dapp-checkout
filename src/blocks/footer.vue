@@ -32,6 +32,7 @@ export default Vue.extend({
   methods: {
     toogleDarkMode() {
       this.$store.commit("setDarkMode", !this.darkMode);
+      localStorage.setItem("colorTheme", this.darkMode ? "dark" : "light");
     },
   },
 });

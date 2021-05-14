@@ -77,7 +77,10 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main","@/plugins/setCheckoutData"],
+  plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
+
+  // Auto import components: https://go.nuxtjs.dev/config-components
+  components: true,
 
   router: {
     middleware: ["wallet"],
@@ -85,7 +88,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxt/typescript-build", "@nuxtjs/tailwindcss", ["@nuxtjs/dotenv", { path: __dirname }]],
+  buildModules: ["@nuxt/typescript-build", "@nuxtjs/tailwindcss", ["@nuxtjs/dotenv", { path: __dirname }], "matter-zk-ui"],
 
   /*
    ** Nuxt.js modules
@@ -230,7 +233,7 @@ export default {
         },
         maxWidth: {
           ...tailwindDefault.maxWidth,
-          'xxs': '15rem'
+          xxs: "15rem",
         },
         fontFamily: {
           ...tailwindDefault.fontFamily,
