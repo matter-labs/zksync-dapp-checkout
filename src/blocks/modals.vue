@@ -1,6 +1,6 @@
 <template>
   <div class="allModalsContainer">
-    <modal v-if="currentModal==='wrongAccountAddress'" :value="true" @close="closeModal()">
+    <modal v-if="currentModal === 'wrongAccountAddress'" :value="true" @close="closeModal()">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square"></i>
@@ -8,7 +8,9 @@
         </div>
       </template>
       <template slot="default">
-        <div class="text-center">The website that initiated the checkout, expects you to be logged in to the following account: <b>{{transactionData.fromAddress}}</b></div>
+        <div class="text-center">
+          The website that initiated the checkout, expects you to be logged in to the following account: <b>{{ transactionData.fromAddress }}</b>
+        </div>
       </template>
     </modal>
   </div>

@@ -1,11 +1,11 @@
 <template>
-  <button v-if="!to" class="defbtn" :class="[outline===true?'outline':'filled']" v-on="$listeners">
-    <slot/>
-    <loader v-if="loader" size="xs" :color="outline===true?'gray':'white'" />
+  <button v-if="!to" class="defbtn" :class="[outline === true ? 'outline' : 'filled']" v-on="$listeners">
+    <slot />
+    <loader v-if="loader" size="xs" :color="outline === true ? 'gray' : 'white'" />
   </button>
-  <nuxt-link v-else :to="to" class="defbtn" :class="[outline===true?'outline':'filled']" v-on="$listeners">
-    <slot/>
-    <loader v-if="loader" size="xs" :color="outline===true?'gray':'white'"/>
+  <nuxt-link v-else :to="to" class="defbtn" :class="[outline === true ? 'outline' : 'filled']" v-on="$listeners">
+    <slot />
+    <loader v-if="loader" size="xs" :color="outline === true ? 'gray' : 'white'" />
   </nuxt-link>
 </template>
 

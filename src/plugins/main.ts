@@ -1,58 +1,187 @@
-import Vue from "vue";
-import VueScrollTo from "vue-scrollto";
 import utils from "@/plugins/utils";
-import Note from "@/components/Note.vue";
-import Defbtn from "@/components/Defbtn.vue";
-import Closebtn from "@/components/Closebtn.vue";
-import LineBlock from "@/components/LineBlock.vue";
-import TransactionToken from "@/components/TransactionToken.vue";
-import SuccessMark from "@/components/SuccessMark.vue";
-import Loader from "@/components/Loader.vue";
-import AmountInput from "@/components/AmountInput.vue";
-import ValuesBlock from "@/components/ValuesBlock.vue";
-import Modal from "@/components/Modal.vue";
-import MaxHeight from "@/components/MaxHeight.vue";
-
-import { GweiBalance, TokenSymbol } from "@/plugins/types";
 import { BigNumber } from "ethers";
 
+import moment from "moment-timezone";
+
+/**
+ * Decision to switch from FontAwesome (as a web-font, full collection) was based on performance issues.
+ * But replacing it with Remix Icons (same distribution form) wasn't enough.
+ *
+ * Now both packs are redundant and replaceable w/t the wrapping library oh-vue-icons:
+ *  - tree-shaking support
+ *  - access to crypto collection of icons (to improve the UI with token symbols)
+ *  - on-build-transpiling support should solve everything
+ *
+ * @uses remixicon,oh-vue-icons
+ * @link https://oh-vue-icons.netlify.app
+ * @link
+ */
+import OhVueIcon from "oh-vue-icons";
+import {
+  BiDownload,
+  IoWalletOutline,
+  RiAddCircleFill,
+  RiAddFill,
+  RiAddLine,
+  RiArrowDownSLine,
+  RiArrowGoBackLine,
+  RiArrowLeftLine,
+  RiAtLine,
+  RiBook2Line,
+  RiCheckDoubleLine,
+  RiCheckLine,
+  RiClipboardLine,
+  RiCloseCircleFill,
+  RiCloseCircleLine,
+  RiContactsBookLine,
+  RiContactsLine,
+  RiDeleteBinLine,
+  RiGithubFill,
+  RiHandCoinFill,
+  RiHistoryLine,
+  RiLinkUnlinkM,
+  RiLoader5Line,
+  RiMore2Fill,
+  RiMore2Line,
+  RiNpmjsFill,
+  RiPencilFill,
+  RiPencilLine,
+  RiProfileLine,
+  RiQuestionFill,
+  RiQuestionMark,
+  RiReservedFill,
+  RiRestartLine,
+  RiSearchLine,
+  RiSendPlaneFill,
+  RiWalletLine,
+  RiArrowUpSLine,
+  RiExternalLinkLine,
+} from "oh-vue-icons/icons";
+import Vue from "vue";
+
+import VueQrcode from "vue-qrcode";
+import VueScrollTo from "vue-scrollto";
+
+import { ToastAction, ToastOptions } from "vue-toasted";
+import { TokenSymbol } from "zksync/build/types";
+
+Vue.component("VueQrcode", VueQrcode);
+
 Vue.use(VueScrollTo);
-
-Vue.component("Note", Note);
-Vue.component("Defbtn", Defbtn);
-Vue.component("Closebtn", Closebtn);
-Vue.component("LineBlock", LineBlock);
-Vue.component("TransactionToken", TransactionToken);
-Vue.component("Loader", Loader);
-Vue.component("AmountInput", AmountInput);
-Vue.component("ValuesBlock", ValuesBlock);
-Vue.component("Modal", Modal);
-Vue.component("MaxHeight", MaxHeight);
-Vue.component("SuccessMark", SuccessMark);
+OhVueIcon.add(
+  RiAddCircleFill,
+  RiArrowUpSLine,
+  RiArrowDownSLine,
+  BiDownload,
+  IoWalletOutline,
+  RiCloseCircleFill,
+  RiAddCircleFill,
+  RiAtLine,
+  RiCloseCircleLine,
+  RiMore2Fill,
+  RiMore2Line,
+  RiSearchLine,
+  RiHistoryLine,
+  RiCheckDoubleLine,
+  RiCheckLine,
+  RiQuestionFill,
+  RiQuestionMark,
+  RiSendPlaneFill,
+  RiExternalLinkLine,
+  RiPencilLine,
+  RiLinkUnlinkM,
+  RiProfileLine,
+  RiBook2Line,
+  RiContactsBookLine,
+  RiMore2Line,
+  RiWalletLine,
+  RiRestartLine,
+  RiLoader5Line,
+  RiNpmjsFill,
+  RiGithubFill,
+  RiArrowDownSLine,
+  RiArrowLeftLine,
+  RiHandCoinFill,
+  RiAddFill,
+  RiClipboardLine,
+  RiArrowGoBackLine,
+  RiAddLine,
+  RiPencilFill,
+  RiReservedFill,
+  RiContactsLine,
+  RiDeleteBinLine,
+); // Used icons (to reduce bundle-size)
+Vue.component("VIcon", OhVueIcon);
 
 /**
  * Implementation of the tokenFormatter as a global filter
  */
-Vue.filter("formatToken", (value: GweiBalance | BigNumber, symbol: TokenSymbol) => {
-  return utils.handleFormatToken(symbol, <string>value);
-});
-Vue.filter("formatTokenPretty", (value: GweiBalance | BigNumber, symbol: TokenSymbol) => {
-  return utils.handleFormatTokenPretty(symbol, <string>value);
+Vue.filter("formatToken", (value: string | BigNumber | ArrayLike<number> | bigint | number, symbol: TokenSymbol) => {
+  return utils.handleFormatToken(symbol, value?.toString());
 });
 
 /**
  * Implementation of the tokenFormatter as a global filter
  */
-Vue.filter("formatUsdAmount", (value: string | BigNumber, price: string, symbol: TokenSymbol) => {
-  return utils.getFormattedTotalPrice(Number(price), +utils.handleFormatToken(symbol, value.toString()));
+Vue.filter("formatUsdAmount", (value: string | BigNumber, price: number, symbol: TokenSymbol) => {
+  return utils.getFormattedTotalPrice(Number(price), +utils.handleFormatToken(symbol, <string>value));
 });
 
 /**
- * Filtering human-readable time
+ * Format date as a human-readable "XX ago"
  */
-Vue.filter("getTimeString", (value: number) => {
-  const { hours, minutes, seconds } = utils.timeCalc(value);
-  return `${hours ? utils.handleTimeAmount(hours, "hour") : ""}
-              ${minutes ? utils.handleTimeAmount(minutes, "minute") : ""}
-              ${seconds ? utils.handleTimeAmount(seconds, "second") : ""}`;
-});
+Vue.filter("formatTimeAgo", (time: moment.MomentInput) => moment(time).fromNow());
+
+/**
+ * Format date as a human-readable "M/D/YYYY h:mm:ss A"
+ */
+Vue.filter("formatDateTime", (time: moment.MomentInput) => moment(time).format("M/D/YYYY h:mm:ss A"));
+
+/**
+ * Format date as a human-readable "M/D/YYYY h:mm:ss A"
+ */
+Vue.filter("formatSeconds", (time: number) => utils.timeCalc(time));
+
+/**
+ * zkException error reporting toaster registered
+ * @uses vue-toasted npm-package
+ */
+Vue.toasted.register(
+  "zkException",
+  (payload: { message?: string }): string => {
+    return payload.message ?? "Oops...Something went wrong";
+  },
+  <ToastOptions>{
+    duration: 4000,
+    className: "zkToastException",
+    icon: "fa-times-circle",
+    type: "error",
+  },
+);
+
+/**
+ * zkCancel — first implementation of “push” with route action (on testing)
+ * @uses vue-toasted npm-package
+ */
+Vue.toasted.register(
+  "zkCancel",
+  (payload: { message?: string; hasCancelRoute: boolean; name?: string; route?: string }) => {
+    return payload.message ?? "Cancel last operation";
+  },
+  <ToastOptions>{
+    type: "info",
+    duration: 2000,
+    icon: "fa-undo",
+    className: "zkToastInfo",
+    action: [
+      <ToastAction>{
+        text: "Cancel",
+        className: "zkToastActionCancel",
+        push: {
+          name: "/action",
+          dontClose: true,
+        },
+      },
+    ],
+  },
+);

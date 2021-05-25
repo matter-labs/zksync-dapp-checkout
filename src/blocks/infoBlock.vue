@@ -3,42 +3,42 @@
     <div class="infoBlock md:min-h-screen py-4 md:py-10 px-5 md:px-10">
       <header class="mb-2 md:mb-6">
         <div class="flex items-center">
-          <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
+          <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync" />
           <div class="text-violet text-2xl font-bold">
             zkCheckout
             <sup v-if="networkName" class="text-sm font-light">{{ networkName }}</sup>
           </div>
         </div>
       </header>
-      <values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-0 md:mt-2">
+      <values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-0 md:mt-2">
         <template slot="left-top">
-          <div class="headline">{{item.description}}</div>
+          <div class="headline">{{ item.description }}</div>
         </template>
         <template slot="left-bottom">
-          <div class="address invisible md:visible">{{item.to}}</div>
+          <div class="address invisible md:visible">{{ item.to }}</div>
         </template>
         <template slot="right-top">
           <div class="flex flex-col whitespace-nowrap relative">
             <div class="value md:mr-0">
               {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
             </div>
-            <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
+            <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{ item.token }}</div>
           </div>
         </template>
       </values-block>
       <transition name="fade">
         <div v-if="loggedIn" class="w-full">
-          <div class="w-full border-b-2 border-light mt-1 lg:mt-3 items-center"/>
-          <values-block class="mt-1 lg:mt-3 noAddressPadding cursor-pointer" @click="feesOpened=!feesOpened">
+          <div class="w-full border-b-2 border-light mt-1 lg:mt-3 items-center" />
+          <values-block class="mt-1 lg:mt-3 noAddressPadding cursor-pointer" @click="feesOpened = !feesOpened">
             <template slot="left-top">
               <div class="flex items-center">
                 <div class="headline big">Fees</div>
                 <span class="ml-3">
                   <i
                     class="transition-transform ease-ease duration-200 far"
-                     :class="{
+                    :class="{
                       'fa-angle-down': !feesOpened,
-                      'fa-angle-up': feesOpened
+                      'fa-angle-up': feesOpened,
                     }"
                   />
                 </span>
@@ -47,7 +47,9 @@
             <template slot="right-top">
               <div class="flex items-center">
                 <div class="flex md:flex-col">
-                  <div class="value">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+                  <div class="value">
+                    {{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+                  </div>
                 </div>
               </div>
             </template>
@@ -55,27 +57,27 @@
           <max-height v-model="feesOpened" :update-value="allFees.length">
             <values-block v-for="(item, index) in allFees" :key="index" class="mt-1">
               <template slot="left-top">
-                <div class="headline">{{item.name}}</div>
+                <div class="headline">{{ item.name }}</div>
               </template>
               <template slot="right-top">
                 <div class="flex md:flex-col whitespace-nowrap relative">
                   <div class="value">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
-                  <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
+                  <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{ item.token }}</div>
                 </div>
               </template>
             </values-block>
           </max-height>
           <div class="w-full border-b-2 border-light mt-1 lg:mt-3"></div>
-          <div class="mt-2 lg:mt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">
+          <div class="mt-2 lg:mt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
             <div class="flex-2">
               <div class="flex items-center">
                 <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark">Total amount</div>
                 <span class="ml-3">
                   <i
                     :class="{
-                    'fa-angle-down': !totalOpened,
-                    'fa-angle-up': totalOpened
-                  }"
+                      'fa-angle-down': !totalOpened,
+                      'fa-angle-up': totalOpened,
+                    }"
                     class="transition-transform ease-ease duration-200 far"
                   />
                 </span>
@@ -83,14 +85,14 @@
             </div>
             <div class="flex-1 flex flex-col items-end">
               <div class="font-firaCondensed font-bold text-lg text-violet md:mt-1">
-                {{totalUSD}}
+                {{ totalUSD }}
               </div>
               <max-height v-model="totalOpened" :update-value="allFees.length">
                 <div class="md:flex flex-col items-end">
-                <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 mt-2">
-                  <div>{{ item | formatToken(token) }} {{token}}</div>
+                  <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 mt-2">
+                    <div>{{ item | formatToken(token) }} {{ token }}</div>
+                  </div>
                 </div>
-              </div>
               </max-height>
             </div>
           </div>
@@ -100,7 +102,7 @@
         <footer>
           <a class="poweredBy flex justify-center items-center pt-5" href="https://zksync.io" target="_blank">
             <div class="text-md text-violet mr-3">Powered by</div>
-            <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync"/>
+            <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync" />
           </a>
           <div class="poweredBy flex justify-center items-center mt-3">
             <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
@@ -108,7 +110,7 @@
             <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault ml-5">Privacy Policy</a>
           </div>
         </footer>
-        <img class="zkSyncFooter" src="/zkSyncFooter.svg" alt="zkSync"/>
+        <img class="zkSyncFooter" src="/zkSyncFooter.svg" alt="zkSync" />
       </div>
     </div>
   </aside>
@@ -119,7 +121,7 @@ import Vue from "vue";
 import utils from "@/plugins/utils";
 import { TransactionData, TransactionFee, TokenPrices, TotalByToken, GweiBalance } from "@/plugins/types";
 import { BigNumber } from "ethers";
-import { ETHER_NETWORK_LABEL_LOWERCASED } from "~/plugins/build";
+import { ETHER_PRODUCTION, ZK_NETWORK } from "~/plugins/build";
 
 export default Vue.extend({
   data() {
@@ -133,7 +135,7 @@ export default Vue.extend({
       return this.$store.getters["account/loggedIn"];
     },
     networkName(): string {
-      return ETHER_NETWORK_LABEL_LOWERCASED === "mainnet" ? "" : ETHER_NETWORK_LABEL_LOWERCASED;
+      return ETHER_PRODUCTION ? "" : ZK_NETWORK;
     },
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
@@ -141,7 +143,7 @@ export default Vue.extend({
     allFees(): Array<TransactionFee> {
       return this.$store.getters["checkout/getAllFees"];
     },
-    totalFees(): GweiBalance | String {
+    totalFees(): GweiBalance | string {
       const allFees = this.allFees;
       let totalFeeBigNum = BigNumber.from("0");
       for (const item of allFees) {
@@ -157,7 +159,7 @@ export default Vue.extend({
       for (const item of [...transactionData.transactions, ...allFees]) {
         totalUSD += +tokensPrices[item.token].price * +utils.handleFormatToken(item.token, item.amount as string);
       }
-      return totalUSD < 0.01 ? `<$0.01` : `$${totalUSD.toFixed(2)}`;
+      return totalUSD < 0.01 ? "<$0.01" : `$${totalUSD.toFixed(2)}`;
     },
     totalByToken(): TotalByToken {
       return this.$store.getters["checkout/getTotalByToken"];

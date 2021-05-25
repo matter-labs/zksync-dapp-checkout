@@ -1,31 +1,34 @@
 <template>
   <div
     class="amountInputGroup border rounded"
-    :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]" @click.self="focusInput()">
+    :class="[{ hasUnderInput: $slots['underInput'] }, { disabled: disabled }, { error: error }, { focused: focused }]"
+    @click.self="focusInput()"
+  >
     <div class="leftSide" @click="focusInput()">
       <div class="inputContainer">
         <input
           ref="input"
           v-model="inputtedAmount"
           :disabled="disabled"
-          :style="{'width': `${width}px`}"
+          :style="{ width: `${width}px` }"
           maxlength="15"
           placeholder="Amount"
           type="text"
-          @blur="focused=false"
-          @focus="focused=true"
-          @keyup.enter="$emit('enter')">
-        <span ref="sizeSpan" class="sizeSpan">{{inputtedAmount}}</span>
+          @blur="focused = false"
+          @focus="focused = true"
+          @keyup.enter="$emit('enter')"
+        />
+        <span ref="sizeSpan" class="sizeSpan">{{ inputtedAmount }}</span>
         <div class="penIcon">
-          <i class="fad fa-pen"/>
+          <i class="fad fa-pen" />
         </div>
       </div>
       <div class="underInput">
-        <slot name="underInput"/>
+        <slot name="underInput" />
       </div>
     </div>
     <div class="rightSide">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>
@@ -107,7 +110,7 @@ export default Vue.extend({
         return;
       }
       this.validateAmount(val);
-      this.$emit("input", this.error ? "" :  val);
+      this.$emit("input", this.error ? "" : val);
     },
     validateAmount(val: string): void {
       if (!val || !parseFloat(val as string)) {
@@ -123,7 +126,7 @@ export default Vue.extend({
       try {
         inputAmount = utils.parseToken(this.token, val);
       } catch (error) {
-        let errorInfo = `Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help`;
+        let errorInfo = "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
           errorInfo = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
         }

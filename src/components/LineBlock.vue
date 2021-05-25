@@ -1,19 +1,19 @@
 <template>
   <div class="lineContainer" v-on="$listeners">
     <div class="lineItem">
-      <slot name="first"/>
+      <slot name="first" />
     </div>
     <div class="lineItem">
-      <slot name="second"/>
+      <slot name="second" />
     </div>
     <div class="lineItem">
-      <slot name="third"/>
+      <slot name="third" />
     </div>
     <!-- <div class="lineItem">
       <slot />
     </div> -->
     <div class="lineItem">
-      <slot name="right"/>
+      <slot name="right" />
     </div>
   </div>
 </template>

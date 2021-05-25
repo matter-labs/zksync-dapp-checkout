@@ -1,14 +1,14 @@
 <template>
-<div class="defaultLayout min-h-screen">
-  <modals />
-  <info-block />
-  <div class="routerContainer bg-white2 md:min-h-screen py-4 md:py-10 px-5 md:px-10">
-    <logging-in/>
-    <transition v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')" name="fade" mode="out-in">
-      <nuxt class="routeMain"/>
-    </transition>
+  <div class="defaultLayout min-h-screen">
+    <modals />
+    <info-block />
+    <div class="routerContainer bg-white2 md:min-h-screen py-4 md:py-10 px-5 md:px-10">
+      <logging-in />
+      <transition v-if="!loggingIn && (loggedIn || $route.path === '/connect' || $route.path === '/connect/')" name="fade" mode="out-in">
+        <nuxt class="routeMain" />
+      </transition>
+    </div>
   </div>
-</div>
 </template>
 
 <script>

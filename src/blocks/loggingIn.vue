@@ -1,16 +1,14 @@
 <template>
   <transition name="fade">
     <div v-if="showLoginContainer" class="loggingInContainer">
-      <img class="zkSyncLogoFull h-24" src="/zkSyncLogoFull.svg" alt="zkSync">
+      <img class="zkSyncLogoFull h-24" src="/zkSyncLogoFull.svg" alt="zkSync" />
       <h1 class="text-dark text-2xl">Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
       <transition-group v-if="loadingHint" tag="div" name="slide-vertical-fade" class="hint text-gray text-center text-sm mt-2">
-        <div
-          key="{{hintKey}}"
-          :class="{'text-green': loggedInAnimation}">
+        <div key="{{hintKey}}" :class="{ 'text-green': loggedInAnimation }">
           {{ hintText }}
         </div>
       </transition-group>
-      <div class="mt-5"/>
+      <div class="mt-5" />
       <loader size="md" />
       <defbtn class="cancelButton mt-6" @click="cancelLogin()">Cancel</defbtn>
     </div>

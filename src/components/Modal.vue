@@ -1,16 +1,16 @@
 <template>
   <transition name="modal">
-    <div v-if="value" class="modalContainer" :class="{'full': !block}" @click.self="close()">
+    <div v-if="value" class="modalContainer" :class="{ full: !block }" @click.self="close()">
       <div class="modalMain">
-        <closebtn v-if="!block && notClosable===false" @click="close()"/>
+        <closebtn v-if="!block && notClosable === false" @click="close()" />
         <div v-if="$slots['header']" class="modalHeader">
-          <slot name="header"/>
+          <slot name="header" />
         </div>
         <div v-if="$slots['default']" class="modalBody">
-          <slot name="default"/>
+          <slot name="default" />
         </div>
         <div v-if="$slots['footer']" class="modalFooter">
-          <slot name="footer"/>
+          <slot name="footer" />
         </div>
       </div>
     </div>

@@ -1,23 +1,37 @@
 <template>
   <div class="w-full transactionTokenContainer">
     <!-- Modals -->
-    <modal :value="modal==='insufficientL1Deposit' || modal==='insufficientL1Min'" @close="closeModal()">
+    <modal :value="modal === 'insufficientL1Deposit' || modal === 'insufficientL1Min'" @close="closeModal()">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square"/>
+          <i class="fad fa-info-square" />
           <div>Insufficient funds in the on-chain wallet to deposit</div>
         </div>
       </template>
       <template slot="default">
-        <div v-if="modal==='insufficientL1Deposit'" class="text-sm">
+        <div v-if="modal === 'insufficientL1Deposit'" class="text-sm">
           On-chain wallet has insufficient funds to deposit
-          <strong>{{ depositBigNumber | formatToken(token) }} {{token}}</strong>
-          to zkSync L2 account. Your on-chain balance is <strong class="cursor-pointer" @click="setDepositMaxAmount();closeModal();">{{ initialBalance.rawBalance | formatToken(token) }} {{token}}</strong>.
+          <strong>{{ depositBigNumber | formatToken(token) }} {{ token }}</strong>
+          to zkSync L2 account. Your on-chain balance is
+          <strong
+            class="cursor-pointer"
+            @click="
+              setDepositMaxAmount();
+              closeModal();
+            "
+            >{{ initialBalance.rawBalance | formatToken(token) }} {{ token }}</strong
+          >.
         </div>
-        <div v-else-if="modal==='insufficientL1Min'" class="text-sm"><b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> will not be enough to commit the
-          transaction. The minimal amount is:
+        <div v-else-if="modal === 'insufficientL1Min'" class="text-sm">
+          <b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> will not be enough to commit the transaction. The minimal amount is:
         </div>
-        <values-block class="mt-3 cursor-pointer" @click="setDepositMinAmount(); closeModal()">
+        <values-block
+          class="mt-3 cursor-pointer"
+          @click="
+            setDepositMinAmount();
+            closeModal();
+          "
+        >
           <template slot="left-top">
             <div class="headline">Minimal amount to deposit</div>
           </template>
@@ -28,7 +42,13 @@
             </div>
           </template>
         </values-block>
-        <values-block class="mt-3 cursor-pointer" @click="setDepositRecommendedAmount(); closeModal()">
+        <values-block
+          class="mt-3 cursor-pointer"
+          @click="
+            setDepositRecommendedAmount();
+            closeModal();
+          "
+        >
           <template slot="left-top">
             <div class="headline">Recommended deposit amount</div>
           </template>
@@ -42,10 +62,10 @@
       </template>
     </modal>
 
-    <modal :value="modal==='customError'" @close="closeModal()">
+    <modal :value="modal === 'customError'" @close="closeModal()">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square"/>
+          <i class="fad fa-info-square" />
           <div>{{ errorModal.headline }}</div>
         </div>
       </template>
@@ -65,44 +85,46 @@
         <div class="amount">{{ total | formatToken(token) }}</div>
       </template>
       <template slot="third">
-        <div class="amount"><span :class="amountClass">{{ zkBalance.rawBalance | formatTokenPretty(token) }}</span></div>
+        <div class="amount">
+          <span :class="amountClass">{{ zkBalance.rawBalance | formatTokenPretty(token) }}</span>
+        </div>
       </template>
       <template v-if="isInProgress" slot="right">
         <div class="flex items-center">
-          <div class="text-gray text-xs font-medium" :class="{'mr-2': isLoading}">{{lineStateText}}</div>
-          <loader v-if="isLoading" color="gray" size="sm"/>
+          <div class="text-gray text-xs font-medium" :class="{ 'mr-2': isLoading }">{{ lineStateText }}</div>
+          <loader v-if="isLoading" color="gray" size="sm" />
         </div>
       </template>
       <template v-else>
         <template v-if="enoughZkBalance" slot="right">
-          <div class="flex justify-between text-xs font-medium mr-2 text-green">
-            Ready <success-mark class="w-8 h-8"/>
-          </div>
+          <div class="flex justify-between text-xs font-medium mr-2 text-green">Ready <success-mark class="w-8 h-8" /></div>
         </template>
         <template v-else slot="right">
-          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs">Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance</div>
+          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs">
+            Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance
+          </div>
           <amount-input v-else-if="unlockRequired" ref="amountInput" v-model="unlockAmount" :token="token" type="deposit">
             <template slot="underInput">
               <div class="text-xxs" @click="setDepositMinAmount()">Allowance</div>
             </template>
             <template slot="default">
               <defbtn @click="unlock()">
-                <i class="fas fa-unlock-alt"/>
+                <i class="fas fa-unlock-alt" />
                 <span>Unlock</span>
               </defbtn>
             </template>
           </amount-input>
-          <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{'error': !enoughDepositAmount}">
+          <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{ error: !enoughDepositAmount }">
             <template slot="underInput">
               <div class="minAmount text-xxs" @click="setDepositMinAmount()">Min: {{ needToDeposit | formatToken(token) }}</div>
             </template>
             <template slot="default">
               <defbtn v-if="initialBalance.unlocked" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
-                <i class="fal fa-donate"/>
+                <i class="fal fa-donate" />
                 <span>Deposit</span>
               </defbtn>
               <defbtn v-else @click="unlock()">
-                <i class="fas fa-unlock-alt"/>
+                <i class="fas fa-unlock-alt" />
                 <span>Unlock</span>
               </defbtn>
             </template>
@@ -115,7 +137,7 @@
 
 <script lang="ts">
 import { Address, Balance, GweiBalance, TokenPrices, Token } from "@/plugins/types";
-import { ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
+import { ZK_NETWORK } from "@/types/lib";
 import { walletData } from "@/plugins/walletData";
 import utils from "@/plugins/utils";
 import { deposit, unlockToken } from "@/plugins/walletActions/transaction";
@@ -151,7 +173,7 @@ export default Vue.extend({
   },
   computed: {
     currentNetworkName(): string {
-      return ETHER_NETWORK_LABEL_LOWERCASED;
+      return ZK_NETWORK;
     },
     isInProgress(): boolean {
       return this.step !== "default";
@@ -163,9 +185,8 @@ export default Vue.extend({
       return this.enoughZkBalance ? "text-green" : "text-red";
     },
     unlockRequired(): boolean {
-      //ETH doesn't require unlock
-      if (this.token.toLowerCase() === "eth")
-      {
+      // ETH doesn't require unlock
+      if (this.token.toLowerCase() === "eth") {
         return false;
       }
       if (this.enoughDepositAmount) {
@@ -175,7 +196,6 @@ export default Vue.extend({
         return true;
       }
       return !this.enoughUnlockedMin;
-
     },
     tokensPrices(): TokenPrices {
       return this.$store.getters["tokens/getTokenPrices"];
@@ -231,7 +251,7 @@ export default Vue.extend({
      * Returns L2 balance state
      * @return Boolean
      */
-    enoughZkBalance(): Boolean {
+    enoughZkBalance(): boolean {
       return BigNumber.from(this.zkBalance.rawBalance).gte(this.total);
     },
 
@@ -239,7 +259,7 @@ export default Vue.extend({
      * Returns (L1+L2 balance >= Total to pay)
      * @return Boolean
      */
-    enoughWithInitialBalance(): Boolean {
+    enoughWithInitialBalance(): boolean {
       return BigNumber.from(this.zkBalance.rawBalance).add(BigNumber.from(this.initialBalance.rawBalance)).gte(this.total);
     },
 
@@ -247,7 +267,7 @@ export default Vue.extend({
      * Returns (Inputted deposit amount >= L1 Balance)
      * @return Boolean
      */
-    enoughOnInitialToDeposit(): Boolean {
+    enoughOnInitialToDeposit(): boolean {
       if (!this.depositAmount) {
         return true;
       }
@@ -263,7 +283,7 @@ export default Vue.extend({
      * Returns (Inputted deposit amount >= Total to pay - L2 balance)
      * @return Boolean
      */
-    enoughDepositAmount(): Boolean {
+    enoughDepositAmount(): boolean {
       if (!this.depositAmount) {
         return true;
       }
@@ -279,9 +299,9 @@ export default Vue.extend({
      * Enough unlocked min amount. Return (min deposit amount <= token allowed spent amount)
      * @return Boolean
      */
-    enoughUnlockedMin(): Boolean {
+    enoughUnlockedMin(): boolean {
       try {
-        console.log(this.token)
+        console.log(this.token);
         if (this.token !== "ETH") {
           return BigNumber.from(this.needToDeposit).lte(this.initialBalance.unlockedAmount);
         }
@@ -295,7 +315,7 @@ export default Vue.extend({
      * Enough unlocked deposit amount. Return (deposit amount <= token allowed spent amount)
      * @return Boolean
      */
-    enoughUnlockedDeposit(): Boolean {
+    enoughUnlockedDeposit(): boolean {
       if (!this.depositAmount) {
         return true;
       }
@@ -380,7 +400,7 @@ export default Vue.extend({
           this.step = "default";
           const createErrorModal = (text: string) => {
             this.errorModal = {
-              headline: `Depositing token error`,
+              headline: "Depositing token error",
               text,
             };
           };
@@ -412,7 +432,7 @@ export default Vue.extend({
         console.log("ERROR!!! ", error);
         const createErrorModal = (text: string) => {
           this.errorModal = {
-            headline: `Unlocking token error`,
+            headline: "Unlocking token error",
             text,
           };
         };

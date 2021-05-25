@@ -1,23 +1,23 @@
 <template>
   <div class="indexPage">
-    <modal :value="modal==='feeChanged'" @close="modal=false">
+    <modal :value="modal === 'feeChanged'" @close="modal = false">
       <template slot="header">
         <div class="withIcon text-warning text-yellow">
-          <i class="fad fa-info-square"/>
+          <i class="fad fa-info-square" />
           <div>Fee changed</div>
         </div>
       </template>
       <template slot="default">
-        <div class="text-sm">
-          The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.
-        </div>
+        <div class="text-sm">The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.</div>
         <values-block class="mt-3">
           <template slot="left-top">
             <div class="headline">Previous fee</div>
           </template>
           <template slot="right-top">
             <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ transactionFees.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+              <div class="value mr-2 md:mr-0">
+                {{ transactionFees.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+              </div>
               <div class="secondaryValue">{{ transactionFees.previous | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
             </div>
           </template>
@@ -28,7 +28,9 @@
           </template>
           <template slot="right-top">
             <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ transactionFees.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+              <div class="value mr-2 md:mr-0">
+                {{ transactionFees.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+              </div>
               <div class="secondaryValue">{{ transactionFees.new | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
             </div>
           </template>
@@ -36,33 +38,44 @@
       </template>
       <template slot="footer">
         <div class="flex items-center justify-center flex-wrap gap-2">
-          <defbtn outline @click="modal=false;cancelTransfer();">
-            <i class="far fa-arrow-left"/>
+          <defbtn
+            outline
+            @click="
+              modal = false;
+              cancelTransfer();
+            "
+          >
+            <i class="far fa-arrow-left" />
             <span>Cancel payment</span>
           </defbtn>
-          <defbtn @click="modal=false;transfer();">
-            <i class="fas fa-paper-plane"/>
+          <defbtn
+            @click="
+              modal = false;
+              transfer();
+            "
+          >
+            <i class="fas fa-paper-plane" />
             <span>Complete payment</span>
           </defbtn>
         </div>
       </template>
     </modal>
 
-    <modal :value="errorModal!==false" @close="errorModal=false">
+    <modal :value="errorModal !== false" @close="errorModal = false">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square"/>
-          <div>{{errorModal.headline}}</div>
+          <i class="fad fa-info-square" />
+          <div>{{ errorModal.headline }}</div>
         </div>
       </template>
       <template slot="default">
-        <div class="text-sm">{{errorModal.text}}</div>
+        <div class="text-sm">{{ errorModal.text }}</div>
       </template>
     </modal>
 
-    <connected-wallet/>
+    <connected-wallet />
 
-    <div v-if="step==='main'" class="w-full">
+    <div v-if="step === 'main'" class="w-full">
       <max-height class="mt-5 md:mt-7" :value="!transferAllowed">
         <note>
           <template slot="icon">
@@ -70,7 +83,7 @@
           </template>
           <template slot="default">
             <div class="text-sm text-gray font-light">
-              The default amount to deposit is 10% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br>
+              The default amount to deposit is 10% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br />
             </div>
           </template>
         </note>
@@ -92,23 +105,21 @@
         </div>
       </div>
     </div>
-    <div v-else-if="step==='transfer'" class="w-full">
+    <div v-else-if="step === 'transfer'" class="w-full">
       <div class="font-firaCondensed font-medium text-2xl text-dark text-center pt-5 md:pt-10">Payment</div>
-      <div v-if="subStep==='processing'" class="text-lg text-center pt-2">Processing...</div>
-      <div v-else-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in the popup</div>
-      <div v-else-if="subStep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
+      <div v-if="subStep === 'processing'" class="text-lg text-center pt-2">Processing...</div>
+      <div v-else-if="subStep === 'waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in the popup</div>
+      <div v-else-if="subStep === 'committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
       <loader class="mx-auto mt-6" size="md" color="violet" />
     </div>
-    <div v-else-if="step==='success'" class="w-full">
+    <div v-else-if="step === 'success'" class="w-full">
       <div class="font-firaCondensed font-medium text-2xl text-green text-center pt-5 md:pt-10">Done. Thank you!</div>
       <success-mark class="w-11/12 max-w-xxs mx-auto py-5 bigSuccessMark" />
-      <div class="text-md text-center font-light pt-2">
-        Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a>
-      </div>
+      <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a></div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
           <defbtn :disabled="!transferAllowed" @click="close()">
-            <i class="fas fa-times"/>
+            <i class="fas fa-times" />
             <span>Close</span>
           </defbtn>
         </div>
@@ -120,23 +131,29 @@
         <template slot="right">Paid / TX Hash</template>
       </line-table-header>
 
-      <template v-for="(item,index) in finalTransactions">
+      <template v-for="(item, index) in finalTransactions">
         <line-block :key="index">
           <template slot="first">
             <div class="tokenItem">
-              <div class="tokenName">{{getTokenByID(typeof(item.txData.tx.token)==='number'?item.txData.tx.token:item.txData.tx.feeToken)}}</div>
+              <div class="tokenName">{{ getTokenByID(typeof item.txData.tx.token === "number" ? item.txData.tx.token : item.txData.tx.feeToken) }}</div>
             </div>
           </template>
           <template slot="second">
-            <div class="amount">{{ item.txData.tx.fee==='0'?item.txData.tx.amount:item.txData.tx.fee | formatToken(getTokenByID(typeof(item.txData.tx.token)==='number'?item.txData.tx.token:item.txData.tx.feeToken)) }}</div>
+            <div class="amount">
+              {{
+                item.txData.tx.fee === "0"
+                  ? item.txData.tx.amount
+                  : item.txData.tx.fee | formatToken(getTokenByID(typeof item.txData.tx.token === "number" ? item.txData.tx.token : item.txData.tx.feeToken))
+              }}
+            </div>
           </template>
           <template slot="third">
             <a class="transactionLink linkDefault" :href="getTxLink(item.txHash)" target="_blank">
               <!--<span v-if="item.txData.tx.fee!=='0'" class="text-gray text-xs col-span-2">Fee transaction</span>-->
               <div class="font-light txHash text-xxs md:text-right">
-                {{item.txHash | formatTransaction}}
+                {{ item.txHash | formatTransaction }}
               </div>
-              <i class="text-xs text-violet pl-1 fal fa-external-link"/>
+              <i class="text-xs text-violet pl-1 fal fa-external-link" />
             </a>
           </template>
         </line-block>
@@ -149,7 +166,7 @@
 import Vue from "vue";
 
 import { TransactionData, TotalByToken, TransactionFee, Transaction, ZkSyncTransaction, TokenPrices } from "@/plugins/types";
-import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
+import { APP_ZKSYNC_BLOCK_EXPLORER, ZK_NETWORK } from "@/types/lib";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
@@ -162,7 +179,7 @@ export default Vue.extend({
     lineTableHeader,
   },
   filters: {
-    formatTransaction(value: String) {
+    formatTransaction(value: string) {
       return value.replace("sync-tx:", "");
     },
   },
@@ -172,7 +189,7 @@ export default Vue.extend({
       step: "main" /* main, transfer, success */,
       subStep: "" /* processing, waitingUserConfirmation, committing */,
       tokenItemsValid: {} as {
-        [token: string]: Boolean;
+        [token: string]: boolean;
       },
       finalTransactions: [] as Array<Transaction>,
       errorModal: false as
@@ -189,7 +206,7 @@ export default Vue.extend({
   },
   computed: {
     currentNetworkName(): string {
-      return ETHER_NETWORK_LABEL_LOWERCASED;
+      return ZK_NETWORK;
     },
     isAccountLocked(): TransactionData {
       return this.$store.getters["wallet/isAccountLocked"];
@@ -200,7 +217,7 @@ export default Vue.extend({
     totalByToken(): TotalByToken {
       return this.$store.getters["checkout/getTotalByToken"];
     },
-    transferAllowed(): Boolean {
+    transferAllowed(): boolean {
       for (const [state] of Object.entries(this.tokenItemsValid)) {
         if (!state) {
           return false;

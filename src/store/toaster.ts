@@ -7,11 +7,11 @@ export const state = () => ({
     icon: null as any,
     action: {
       text: "OK",
-      onClick: (event: any, toastObject: { goAway: (arg0: number) => void; }) => {
+      onClick: (event: any, toastObject: { goAway: (arg0: number) => void }) => {
         toastObject?.goAway(100);
       },
     },
-  }
+  },
 });
 
 export type ToasterModuleState = ReturnType<typeof state>;
@@ -24,34 +24,37 @@ export const actions: ActionTree<ToasterModuleState, RootState> = {
   success({ commit, state }, messageText) {
     // @ts-ignore: Unreachable code error
     this.$toast.success(messageText, {
-      ...state.canonicalConfig, ...{
+      ...state.canonicalConfig,
+      ...{
         icon: {
           name: "fa-check",
-        }
-      }
+        },
+      },
     });
   },
 
   error({ dispatch, state }, messageText) {
     // @ts-ignore: Unreachable code error
     this.$toast.error(messageText, {
-      ...state.canonicalConfig, ...{
+      ...state.canonicalConfig,
+      ...{
         icon: {
           name: "fa-times-circle",
         },
-        duration: null
-      }
+        duration: null,
+      },
     });
   },
 
   info({ dispatch, state }, messageText) {
     // @ts-ignore: Unreachable code error
     this.$toast.info(messageText, {
-      ...state.canonicalConfig, ...{
+      ...state.canonicalConfig,
+      ...{
         icon: {
           name: "fa-times-circle",
-        }
-      }
+        },
+      },
     });
   },
 };

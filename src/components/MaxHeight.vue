@@ -1,5 +1,5 @@
 <template>
-  <div class="maxHeightBlock" :style="{'height': `${(value===true || (mobileOnly===true && screenWidth>768))?maxHeight:0}px`}">
+  <div class="maxHeightBlock" :style="{ height: `${value === true || (mobileOnly === true && screenWidth > 768) ? maxHeight : 0}px` }">
     <slot />
   </div>
 </template>

@@ -1,7 +1,10 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, DecimalBalance, GweiBalance, TokenSymbol } from "@/plugins/types";
-import { utils as zkUtils } from "zksync";
+import { DecimalBalance, GweiBalance, ZkInBalance, ZKTypeDisplayToken } from "@/types/lib";
+import { IPrototype } from "@inkline/inkline/src/plugin.d";
+
 import { BigNumber, BigNumberish, utils } from "ethers";
+import { utils as zkUtils } from "zksync";
+import { Address, TokenSymbol } from "zksync/build/types";
 
 /**
  *
@@ -9,49 +12,25 @@ import { BigNumber, BigNumberish, utils } from "ethers";
  * @param amount
  * @return {BigNumber|*}
  */
-const parseToken = (symbol: TokenSymbol, amount: DecimalBalance | number) => {
-  /**
-   * skip already bignumber
-   */
-  if (typeof amount === "object") {
-    return amount;
-  }
-  if (typeof amount === "number") {
-    const tokenDecimals = walletData.get().syncProvider!.tokenSet.resolveTokenDecimals(symbol);
-    amount = amount.toFixed(tokenDecimals);
-  }
-  return walletData.get().syncProvider!.tokenSet.parseToken(symbol, amount.toString());
-};
+function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
+  return walletData.get().syncProvider?.tokenSet?.parseToken(symbol, amount.toString()) || BigNumber.from("0");
+}
 
-const handleFormatToken = (symbol: TokenSymbol, amount: any) => {
-  if (!amount || amount === "undefined") return "0";
-  return walletData.get().syncProvider!.tokenSet.formatToken(symbol, amount);
-};
-
-const handleFormatTokenPretty = (symbol: TokenSymbol, amount: GweiBalance) => {
-  const firstFormated = handleFormatToken(symbol, amount);
-  const symbolsArr = firstFormated.split(".");
-  const symbolsArrInt = symbolsArr[0];
-  let symbolsArrDecimal = symbolsArr[1];
-  if (!symbolsArrDecimal || symbolsArrDecimal === "0" || symbolsArrDecimal.length < 5) {
-    return firstFormated;
+/**
+ * Formatting token amount output to human readable string
+ *
+ * @param {TokenSymbol} symbol
+ * @param {GweiBalance} amount
+ * @return {string}
+ */
+function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance): string {
+  if (!amount) return "0";
+  const result: string | undefined = walletData.get().syncProvider?.tokenSet?.formatToken(symbol, amount);
+  if (result === undefined) {
+    return "0";
   }
-  let firstNotZero = -1;
-  for (let a = 0; a < symbolsArrDecimal.length; a++) {
-    if (a > 4 && firstNotZero !== -1) {
-      symbolsArrDecimal = symbolsArrDecimal.substr(0, a);
-      break;
-    }
-    if (firstNotZero === -1 && symbolsArrDecimal[a] !== "0") {
-      firstNotZero = a;
-    }
-  }
-  let newVal = `${symbolsArrInt}.${symbolsArrDecimal}`;
-  if (newVal.length < firstFormated.length) {
-    newVal += "...";
-  }
-  return newVal;
-};
+  return result && result.endsWith(".0") ? result.substr(0, result.length - 2) : result;
+}
 
 export default {
   parseToken,
@@ -61,77 +40,99 @@ export default {
     const minutes = Math.floor(timeInSec / 60) - hours * 60;
     const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
 
-    return {
-      hours,
-      minutes,
-      seconds,
-    };
-  },
+    const strArr = [];
+    if (hours) {
+      strArr.push(`${hours} hours`);
+    }
+    if (minutes) {
+      strArr.push(`${minutes} minutes`);
+    }
+    if (seconds) {
+      strArr.push(`${seconds} seconds`);
+    }
 
-  handleTimeAmount: (time: number, string: string) => `${time} ${string}${time > 1 ? "s" : ""}`,
+    return strArr.join(" ");
+  },
 
   handleFormatToken,
-
-  handleFormatTokenPretty,
-
-  handleFormatTokenPrettyCeil: (symbol: TokenSymbol, amount: GweiBalance) => {
-    const firstFormated = handleFormatTokenPretty(symbol, amount);
-    const symbolsArr = firstFormated.split(".");
-    const symbolsArrInt = symbolsArr[0];
-    const symbolsArrDecimal = symbolsArr[1];
-    if (!symbolsArrDecimal || symbolsArrDecimal === "0" || symbolsArrDecimal.length < 4) {
-      return firstFormated;
-    }
-    /* Converting "14.63316" to "1463316" and adding 1 */
-    const bigNumberString = BigNumber.from(`${symbolsArrInt}${symbolsArrDecimal}`).add("1").toString();
-    /*
-      Knowing previous length of decimal part we get new decimal part.
-      And then add padStart with zeros to handle value like 0.00000001 as it has been changed to just 1 when casting to BigNumber type
-    */
-    const newDecimalPart = bigNumberString
-      .substr(Math.max(0, bigNumberString.length - symbolsArrDecimal.length), bigNumberString.length)
-      .padStart(symbolsArrDecimal.length - 1, "0");
-    /*
-      By getting bigNumberString from index 0 to index bigNumberString.length-newDecimalPart.length
-      we can get an integer part of the new value
-    */
-    return `${symbolsArrInt === "0" ? "0" : bigNumberString.substr(0, bigNumberString.length - newDecimalPart.length)}.${newDecimalPart}`;
-  },
 
   getFormattedTotalPrice: (price: number, amount: number) => {
     const total = price * amount;
     if (!amount || total === 0) {
       return "$0.00";
     }
-    return total < 0.01 ? `<$0.01` : `$${total.toFixed(2)}`;
+    return total < 0.01 ? "<$0.01" : `~$${total.toFixed(2)}`;
   },
 
   /**
-   * @todo Optimize sorting
-   *
    * @param a
    * @param b
    * @return {number}
    */
-  sortBalancesById: (a: any, b: any) => {
-    if (a.hasOwnProperty("id")) {
-      if (a.id < b.id) {
-        return -1;
-      }
-      if (a.id > b.id) {
-        return 1;
-      }
-      return 0;
-    } else {
-      return a.symbol.localeCompare(b.symbol);
+  compareTokensById: (a: ZkInBalance, b: ZkInBalance) => {
+    if (a.id < b.id) {
+      return -1;
+    } else if (a.id > b.id) {
+      return 1;
     }
+    return 0;
   },
 
-  isAmountPackable: (amount: String): boolean => {
-    return zkUtils.isTransactionAmountPackable(amount as BigNumberish);
+  /**
+   * Soring by the token name
+   * @param {ZkInBalance} a
+   * @param {ZkInBalance} b
+   * @returns {number}
+   */
+  sortBalancesAZ: (a: ZkInBalance, b: ZkInBalance) => {
+    return a.symbol.localeCompare(b.symbol);
+  },
+
+  isAmountPackable: (amount: BigNumberish): boolean => {
+    return zkUtils.isTransactionAmountPackable(amount);
   },
 
   validateAddress: (address: Address): boolean => {
     return utils.isAddress(address);
+  },
+
+  searchInArr: (search: string, list: Array<unknown> | ZKTypeDisplayToken[], searchParam: (e: unknown) => string) => {
+    if (!search.trim()) {
+      return list;
+    }
+    search = search.trim().toLowerCase();
+    return list.filter((e) => String(searchParam(e)).toLowerCase().includes(search));
+  },
+
+  filterError: (error: Error): string | undefined => {
+    if (error.message) {
+      if (error.message.includes("User denied")) {
+        return "";
+      } else if (error.message.includes("Fee Amount is not packable")) {
+        return "Fee Amount is not packable";
+      } else if (error.message.includes("Transaction Amount is not packable")) {
+        return "Transaction Amount is not packable";
+      } else if (error.message.length < 60) {
+        return error.message;
+      }
+    }
+  },
+
+  /**
+   * Theme definition moved to the utility plugin
+   * @param {IPrototype} inklineContext
+   * @param {boolean} toggleTheme
+   * @return {"light" | "dark"}
+   */
+  defineTheme(inklineContext: IPrototype, toggleTheme: boolean): "light" | "dark" {
+    let mode: string | null | undefined = localStorage.getItem("colorTheme");
+    if (toggleTheme) {
+      mode = inklineContext.config.variant = mode === "light" ? "dark" : "light";
+    }
+    if (mode && ["light", "dark"].includes(mode)) {
+      inklineContext.config.variant = mode === "light" ? "light" : "dark";
+    }
+    localStorage.setItem("colorTheme", inklineContext.config.variant);
+    return inklineContext.config.variant;
   },
 };

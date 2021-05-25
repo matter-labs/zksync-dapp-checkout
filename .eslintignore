@@ -1,8 +1,16 @@
-# don't ever lint node_modules
-/node_modules/*
-# don't ever lint public
-*.css
-/.nuxt/*
+node_modules
+cypress/*
+.nuxt/*
+src/static/*
+.github/*
+.idea/*
+environments/*
+public/*
+_nuxt/*
+src/static/sw.js
+.eslintrc.js
+tests/*
+*.example
 /src/assets/fonts/*
 /src/assets/imgs/*
 /.github/*

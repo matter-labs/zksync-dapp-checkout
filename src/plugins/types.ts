@@ -84,7 +84,7 @@ export interface Token {
   balance: string | BigNumber;
   rawBalance: BigNumber;
   symbol: TokenSymbol;
-  id: Number;
+  id: number;
   unlocked: boolean;
   unlockedAmount: BigNumber;
 }
