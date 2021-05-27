@@ -14,15 +14,12 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: sh cli-dev.sh ci &&  yarn install --immutable  --immutable-cache
+        run: sh cli-dev.sh ci &&  yarn install --immutable
 
-      - name: "[mainnet] Configuring settings for the mainnet"
-        run: 'yarn prepare_ci_mainnet'
+      - name: Configuring settings for the mainnet
+        run: yarn build:prod
 
-      - name: "[mainnet] Generating static mainnet version"
-        run: 'yarn generate --fail-on-error'
-
-      - name: "[mainnet] Deploy static to the prod-mainnet"
+      - name: Deploy static to the prod-mainnet
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT }}"

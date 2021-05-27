@@ -10,8 +10,8 @@
       ]
     },
     {
-      "site": "rinkeby-beta-zksync-vue",
-      "public": "prod-rinkeby",
+      "target": "prod-rinkeby",
+      "public": "public",
       "ignore": [
         "firebase.json",
         "**/.*",

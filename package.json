@@ -122,23 +122,22 @@
     }
   },
   "lint-fix": [
-    "yarn run lint-style:fix",
-    "yarn run lint-ts:fix",
-    "yarn run format:prettier",
-    "yarn run spell-check"
+    "yarn lint-style:fix",
+    "yarn lint-ts:fix",
+    "yarn format:prettier",
+    "yarn spell-check"
   ],
   "scripts": {
     "local": "sh ./cli-process-env.sh 'rinkeby' 'dev' 1 1",
-    "ci": "sh cli-dev.sh ci &&  yarn install --immutable  --immutable-cache",
+    "ci": "bash cli-dev.sh ci && yarn install --immutable",
     "dev": "yarn local && nuxt",
     "generate": "nuxt generate ",
-    "start:firebase": "firebase serve --only hosting",
     "prepare_ci_rinkeby": "sh cli-process-env.sh 'rinkeby' 'prod' 1",
     "prepare_ci_ropsten": "sh cli-process-env.sh 'ropsten' 'prod' 1",
     "prepare_ci_mainnet": "sh cli-process-env.sh 'mainnet' 'prod' 1",
     "build:prod": "yarn prepare_ci_mainnet && yarn generate --fail-on-error",
     "build:rinkeby": "yarn prepare_ci_rinkeby && yarn generate --fail-on-error",
-    "build:ropsten": "yarn prepare_ci_rinkeby && yarn generate --fail-on-error",
+    "build:ropsten": "yarn prepare_ci_ropsten && yarn generate --fail-on-error",
     "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",
     "format:prettier": "prettier --config .prettierrc.js --ignore-path .prettierignore --write src/**/*.{ts,vue,js}",

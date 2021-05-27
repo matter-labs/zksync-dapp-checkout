@@ -34,10 +34,10 @@ fi
 if [ $CATEGORY == "ci" ]; then
     echo "Yarn pre-deploy garbage collection started"
     echo ""
-    bash cli-dev.sh clean nuxt
+    sh cli-dev.sh clean nuxt
     echo ""
     echo ""
-    bash cli-dev.sh clean yarn
+    sh cli-dev.sh clean yarn
     echo ""
     #echo "Running yarn install "
     #yarn install --immutable
