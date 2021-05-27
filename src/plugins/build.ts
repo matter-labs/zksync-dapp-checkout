@@ -25,9 +25,11 @@ console.log(`This is ${version}, last commit was done at ${GIT_REVISION_DATE}`);
 export const GIT_REVISION: string = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
 export const GIT_REVISION_SHORT: string = GIT_REVISION ? GIT_REVISION.slice(-7) : "";
 export const VERSION: string = version;
-export const ZK_IS_BETA: boolean =
-  process.env.ZK_NETWORK !== undefined || (process.env.ZK_SPECIAL_API !== undefined && (process.env.ZK_SPECIAL_API as string).search("beta") !== -1);
 export const ETHER_NETWORK_NAME: Network = process.env.APP_CURRENT_NETWORK as Network;
+export const ZK_IS_BETA: boolean =
+  ETHER_NETWORK_NAME === "ropsten" ||
+  process.env.ZK_NETWORK !== undefined ||
+  (process.env.ZK_SPECIAL_API !== undefined && (process.env.ZK_SPECIAL_API as string).toLowerCase().search("beta") !== -1);
 /**
  * Should be switched to ETHER_NETWORK_CAPITALIZED
  * @deprecated
@@ -39,7 +41,7 @@ export const ETHER_NETWORK_LABEL_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).t
  */
 export const ETHER_NETWORK_LABEL_LOWERCASED: string = ETHER_NETWORK_NAME.toLowerCase();
 
-export const CURRENT_APP_NAME = `zkSync Wallet${ZK_IS_BETA ? ":beta" : ""}`;
+export const CURRENT_APP_NAME = `zkSync Checkout${ZK_IS_BETA ? ":beta" : ""}`;
 export const ZK_LIB_VERSION: string = dependencies?.zksync ?? "latest";
 
 export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
