@@ -1,5 +1,5 @@
 <template>
-  <div class="maxHeightBlock" :style="{'height': `${(value===true || (mobileOnly===true && screenWidth>768))?maxHeight:0}px`}">
+  <div class="maxHeightBlock" :style="{ height: `${value === true || (mobileOnly === true && screenWidth > 768) ? maxHeight : 0}px` }">
     <slot />
   </div>
 </template>
@@ -32,28 +32,20 @@ export default Vue.extend({
     };
   },
   watch: {
-    toogle: {
-      immediate: true,
-      handler(val) {
-        this.$nextTick(() => {
-          this.recalcHeight();
-        });
-      },
-    },
-    updateValue(val) {
+    updateValue(_val) {
       this.$nextTick(() => {
-        this.recalcHeight();
+        this.reCalcHeight();
       });
     },
   },
   mounted() {
-    window.addEventListener("resize", this.recalcHeight);
+    window.addEventListener("resize", this.reCalcHeight);
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.recalcHeight);
+    window.removeEventListener("resize", this.reCalcHeight);
   },
   methods: {
-    recalcHeight() {
+    reCalcHeight() {
       this.maxHeight = this.$el.scrollHeight;
       this.screenWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     },

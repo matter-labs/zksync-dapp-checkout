@@ -1,5 +1,5 @@
 <template>
-  <div class="animatedCheckmark"></div>
+  <div class="animatedCheckmark" />
 </template>
 
 <script>

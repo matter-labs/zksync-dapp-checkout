@@ -1,23 +1,25 @@
 <template>
   <div class="container">
     <div class="connectedWallet flex items-center">
-      <i class="text-gray text-4xl mr-3 far fa-wallet"/>
+      <i class="text-gray text-4xl mr-3 far fa-wallet" />
       <values-block>
         <template slot="left-top">
           <div class="headline">My wallet</div>
         </template>
         <template slot="left-bottom">
-          <div class="address">{{ownAddress}}</div>
+          <div class="address">
+            {{ ownAddress }}
+          </div>
         </template>
         <template slot="right-top">
           <div class="flex items-center flex-col md:flex-row">
-            <defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="currentNetwork==='rinkeby'?'///stage.zksync.io':'///wallet.zksync.io'">
+            <defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="currentNetwork === 'rinkeby' ? '///stage.zksync.io' : '///wallet.zksync.io'">
               <span>Open wallet</span>
-              <i class="fas fa-external-link"/>
+              <i class="fas fa-external-link" />
             </defbtn>
             <defbtn outline @click="logout()">
               <span class="text-red">Disconnect</span>
-              <i class="text-red far fa-times"/>
+              <i class="text-red far fa-times" />
             </defbtn>
           </div>
         </template>
@@ -41,7 +43,7 @@ export default Vue.extend({
     },
     currentNetwork(): string {
       return ETHER_NETWORK_NAME;
-    }
+    },
   },
   methods: {
     logout(): void {

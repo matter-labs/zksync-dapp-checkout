@@ -16,7 +16,6 @@ import MaxHeight from "@/components/MaxHeight.vue";
 import { GweiBalance, TokenSymbol } from "@/plugins/types";
 import { BigNumber } from "ethers";
 
-
 Vue.use(VueScrollTo);
 
 Vue.component("Note", Note);

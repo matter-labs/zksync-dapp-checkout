@@ -83,7 +83,7 @@ export interface Token {
   address: Address;
   balance: string | BigNumber;
   symbol: TokenSymbol;
-  id: Number;
+  id: number;
   formattedBalance?: string;
 }
 
@@ -187,6 +187,7 @@ export declare class Wallet {
       nonce?: Nonce;
     }[],
   ): Promise<Transaction[]>;
+
   batchBuilder: any;
 
   syncTransfer(transfer: { to: Address; token: TokenLike; amount: BigNumberish; fee?: BigNumberish; nonce?: Nonce }): Promise<Transaction>;

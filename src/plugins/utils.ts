@@ -103,7 +103,7 @@ export default {
     if (!amount || total === 0) {
       return "$0.00";
     }
-    return total < 0.01 ? `<$0.01` : `$${total.toFixed(2)}`;
+    return total < 0.01 ? "<$0.01" : `$${total.toFixed(2)}`;
   },
 
   /**
@@ -127,7 +127,7 @@ export default {
     }
   },
 
-  isAmountPackable: (amount: String): boolean => {
+  isAmountPackable: (amount: string): boolean => {
     return zkUtils.isTransactionAmountPackable(amount as BigNumberish);
   },
 

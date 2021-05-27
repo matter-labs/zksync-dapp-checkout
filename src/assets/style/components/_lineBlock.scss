@@ -12,22 +12,22 @@
       width: max-content;
       justify-self: end;
     }
-    .loaderSpinnerContainer
-    {
+
+    .loaderSpinnerContainer {
       margin-right: 7px;
     }
-    .text-red
-    {
+
+    .text-red {
       margin-right: 5px;
     }
-    .address
-    {
-      font-family: "Fira Code", "sans-serif";
-      color: #3C4257;
-      font-size: 0.65rem;
+
+    .address {
+      font-family: "Fira Code", sans-serif;
+      color: #3c4257;
+      font-size: .65rem;
       line-height: 1.4;
       font-weight: 300;
-      letter-spacing: -0.025em;
+      letter-spacing: -.025em;
     }
   }
 
@@ -55,12 +55,13 @@
     transition: color $transition;
     will-change: color;
     position: relative;
+
     &:after {
       position: absolute;
       z-index: 10;
       height: 100%;
       width: 2px;
-      background: rgba(255,255,255,0.3);
+      background: rgba(255, 255, 255, .3);
     }
   }
 

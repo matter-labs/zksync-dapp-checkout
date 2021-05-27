@@ -139,7 +139,7 @@ export const actions: ActionTree<TransactionModuleState, RootState> = {
       commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Verified" });
     }
   },
-  async requestBalancesUpdate(): Promise<void> {
+  requestBalancesUpdate(): void {
     this.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
     /* this.dispatch("wallet/getTransactionsHistory", { offset: 0, force: true }); */
   },

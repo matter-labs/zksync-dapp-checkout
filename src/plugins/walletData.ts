@@ -1,11 +1,10 @@
 import { Provider, Wallet, AccountState } from "@/plugins/types";
 
 interface walletData {
-  [key: string]: object | undefined;
   syncProvider?: Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
-  zkSync?: object;
+  zkSync?: unknown;
 }
 
 const internalWalletData: walletData = {
@@ -35,8 +34,9 @@ export const walletData = {
   get: (): walletData => {
     return internalWalletData;
   },
-  set: (val: object): void => {
+  set: (val: any): void => {
     for (const [key, value] of Object.entries(val)) {
+      // @ts-ignore
       internalWalletData[key] = value;
     }
   },

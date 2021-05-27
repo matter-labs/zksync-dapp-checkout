@@ -32,28 +32,28 @@ export const state = () => ({
   onboard: false as any,
   isAccountLocked: false,
   zkTokens: {
-    lastUpdated: 0 as Number,
+    lastUpdated: 0 as number,
     list: [] as Array<Balance>,
   },
   initialTokens: {
-    lastUpdated: 0 as Number,
+    lastUpdated: 0 as number,
     list: [] as Array<Balance>,
   },
   tokenPrices: {} as {
     [symbol: string]: {
-      lastUpdated: Number;
-      price: Number;
+      lastUpdated: number;
+      price: number;
     };
   },
   transactionsHistory: {
-    lastUpdated: 0 as Number,
+    lastUpdated: 0 as number,
     list: [] as Array<Transaction>,
   },
   withdrawalProcessingTime: false as
     | false
     | {
-        normal: Number;
-        fast: Number;
+        normal: number;
+        fast: number;
       },
   fees: {} as feesInterface,
 });
@@ -70,7 +70,7 @@ export const mutations: MutationTree<WalletModuleState> = {
   setTokensList(
     state,
     obj: {
-      lastUpdated: Number;
+      lastUpdated: number;
       list: Array<Balance>;
     },
   ) {
@@ -79,7 +79,7 @@ export const mutations: MutationTree<WalletModuleState> = {
   setZkTokens(
     state,
     obj: {
-      lastUpdated: Number;
+      lastUpdated: number;
       list: Array<Balance>;
     },
   ) {
@@ -93,8 +93,8 @@ export const mutations: MutationTree<WalletModuleState> = {
     }: {
       symbol: TokenSymbol;
       obj: {
-        lastUpdated: Number;
-        price: Number;
+        lastUpdated: number;
+        price: number;
       };
     },
   ) {
@@ -103,7 +103,7 @@ export const mutations: MutationTree<WalletModuleState> = {
   setTransactionsList(
     state,
     obj: {
-      lastUpdated: Number;
+      lastUpdated: number;
       list: Array<Transaction>;
     },
   ) {
@@ -112,8 +112,8 @@ export const mutations: MutationTree<WalletModuleState> = {
   setWithdrawalProcessingTime(
     state,
     obj: {
-      normal: Number;
-      fast: Number;
+      normal: number;
+      fast: number;
     },
   ) {
     state.withdrawalProcessingTime = obj;
@@ -183,13 +183,13 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   getOnboard(state): any {
     return state.onboard;
   },
-  getTokensList(state): { lastUpdated: Number; list: Array<Balance> } {
+  getTokensList(state): { lastUpdated: number; list: Array<Balance> } {
     return state.initialTokens;
   },
   getInitialBalances(state): Array<Balance> {
     return state.initialTokens.list;
   },
-  getzkList(state): { lastUpdated: Number; list: Array<Balance> } {
+  getzkList(state): { lastUpdated: number; list: Array<Balance> } {
     return state.zkTokens;
   },
   getzkBalances(state): Array<Balance> {
@@ -202,8 +202,8 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
     state,
   ): {
     [symbol: string]: {
-      lastUpdated: Number;
-      price: Number;
+      lastUpdated: number;
+      price: number;
     };
   } {
     return state.tokenPrices;
@@ -211,7 +211,7 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   getTransactionsList(
     state,
   ): {
-    lastUpdated: Number;
+    lastUpdated: number;
     list: Array<Transaction>;
   } {
     return state.transactionsHistory;
@@ -221,8 +221,8 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   ):
     | false
     | {
-        normal: Number;
-        fast: Number;
+        normal: number;
+        fast: number;
       } {
     return state.withdrawalProcessingTime;
   },
@@ -318,7 +318,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
     const totalByToken = this.getters["checkout/getTotalByToken"];
-    let usedTokens = Object.entries(totalByToken).map((e) => e[0]);
+    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
     for (const tokenSymbol of usedTokens) {
       const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
@@ -377,7 +377,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     const totalByToken = this.getters["checkout/getTotalByToken"];
     const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
-    const loadInitialBalancesPromises = usedTokens.map(async (key) => {
+    const loadInitialBalancesPromises = usedTokens.map(async (key: string) => {
       const currentToken = loadedTokens[key];
       try {
         let unlocked = true;
@@ -399,6 +399,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
     });
     const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
+      console.log(err);
       // @todo insert sentry logging
       return [];
     });
@@ -439,7 +440,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     }
     try {
       const syncWallet = walletData.get().syncWallet;
-      const fetchTransactionHistory = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet?.address()}/history/${options.offset}/25`);
+      const fetchTransactionHistory = await this.app.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet?.address()}/history/${options.offset}/25`);
       commit("setTransactionsList", {
         lastUpdated: new Date().getTime(),
         list: options.offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
@@ -454,13 +455,13 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     getters,
     commit,
   }): Promise<{
-    normal: Number;
-    fast: Number;
+    normal: number;
+    fast: number;
   }> {
     if (getters.getWithdrawalProcessingTime) {
       return getters.getWithdrawalProcessingTime;
     } else {
-      const withdrawTime = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
+      const withdrawTime = await this.app.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
       commit("setWithdrawalProcessingTime", withdrawTime.data);
       return withdrawTime.data;
     }
@@ -469,8 +470,8 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     { getters, commit, dispatch },
     { address, symbol, feeSymbol, type },
   ): Promise<{
-    fast?: Number;
-    normal: Number;
+    fast?: number;
+    normal: number;
   }> {
     const savedFees = getters.getFees;
     if (
@@ -561,7 +562,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
         return false;
       }
       const transactionData = this.getters["checkout/getTransactionData"];
-      if (typeof(transactionData.fromAddress)==='string' && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
+      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress !== "" && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
         this.commit("setCurrentModal", "wrongAccountAddress");
         return false;
       }
@@ -608,11 +609,12 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       return false;
     }
   },
-  async clearDataStorage({ commit }): Promise<void> {
+  clearDataStorage({ commit }): void {
     commit("clearDataStorage");
   },
   async forceRefreshData({ dispatch }): Promise<void> {
     await dispatch("getInitialBalances", true).catch((err) => {
+      console.log(err);
       // @todo add sentry report
     });
     await dispatch("getzkBalances", { accountState: undefined, force: true }).catch((err) => {
@@ -624,7 +626,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       console.log("forceRefreshData | getTransactionsHistory error", err);
     }); */
   },
-  async logout({ commit, getters }): Promise<void> {
+  logout({ commit, getters }): void {
     const onboard = getters.getOnboard;
     onboard.walletReset();
     walletData.set({ syncWallet: null, accountState: null });

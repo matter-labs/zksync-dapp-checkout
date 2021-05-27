@@ -1,7 +1,7 @@
 .infoBlockContainer {
   z-index: 4;
   width: 100%;
-  box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
+  box-shadow: 0 32px 64px rgba(17, 17, 17, .08);
   overflow: auto;
   height: 100%;
 
@@ -29,7 +29,7 @@
         bottom: 0;
         width: 100%;
         height: auto;
-        opacity: 0.6;
+        opacity: .6;
       }
     }
 

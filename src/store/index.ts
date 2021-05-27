@@ -4,7 +4,7 @@ export const state = () => ({
   /**
    * Used to handle modals and simplify the code
    */
-  currentModal: false as String | false,
+  currentModal: false as string | false,
 });
 
 export type RootState = ReturnType<typeof state>;
@@ -16,7 +16,7 @@ export const getters: GetterTree<RootState, RootState> = {
 };
 
 export const mutations: MutationTree<RootState> = {
-  setCurrentModal(state, modalName: false | String) {
+  setCurrentModal(state, modalName: false | string) {
     state.currentModal = modalName;
   },
 };
