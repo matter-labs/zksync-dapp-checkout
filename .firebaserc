@@ -6,7 +6,6 @@
     "zsync-dapp-checkout": {
       "hosting": {
         "prod-mainnet": [
-          "mainnet-checkout-zksync",
           "zsync-dapp-checkout"
         ],
         "prod-rinkeby": [
