@@ -55,6 +55,12 @@
         ]
       }
     ],
+    "named-grid-areas-no-invalid": [
+      true,
+      {
+        "ignore": "*"
+      }
+    ],
     "selector-pseudo-element-colon-notation": null,
     "selector-type-no-unknown": [
       true,
@@ -67,7 +73,7 @@
     "string-quotes": "double",
     "value-no-vendor-prefix": null
   },
-  "ignorePath": "./.stylelintignore",
+  "ignoreDisables": true,
   "ignoreFiles": [
     "*.css",
     "*.eot",

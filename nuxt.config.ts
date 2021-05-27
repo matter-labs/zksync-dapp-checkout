@@ -189,7 +189,6 @@ const config: NuxtConfig = {
    */
   modules: [
     "@nuxtjs/dotenv",
-    "@nuxtjs/pwa",
     "@nuxtjs/axios",
     "@nuxtjs/toast",
     "@nuxtjs/google-gtag",
@@ -384,11 +383,6 @@ const config: NuxtConfig = {
     dir: "public",
     fallback: "404.html",
     devtools: env !== "prod",
-  },
-  pwa: {
-    workbox: {
-      pagesURLPattern: "/_nuxt/",
-    },
   },
 };
 export default config;

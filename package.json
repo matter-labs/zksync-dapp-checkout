@@ -51,13 +51,12 @@
     "@babel/preset-env": "^7.13.9",
     "@babel/runtime": "^7.13.9",
     "@ethersproject/logger": "^5.0.9",
-    "@matterlabs/zk-wallet-onboarding": "^1.18.6",
-    "@nuxt/typescript-runtime": "^2.0.0",
+    "@matterlabs/zk-wallet-onboarding": "1.18.6",
+    "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/axios": "latest",
     "@nuxtjs/google-gtag": "^1.0.4",
-    "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/sentry": "^5.0.2",
-    "@nuxtjs/style-resources": "^1.0.0",
+    "@nuxtjs/style-resources": "latest",
     "@nuxtjs/tailwindcss": "^4.0.1",
     "@nuxtjs/toast": "latest",
     "@types/js-cookie": "^2.2.6",
@@ -67,8 +66,8 @@
     "js-cookie": "^2.2.1",
     "lottie-web": "^5.7.6",
     "moment": "^2.29.1",
-    "nuxt": "^2.15.3",
-    "nuxt-build-optimisations": "^1.0.3",
+    "nuxt": "latest",
+    "nuxt-build-optimisations": "latest",
     "nuxt-i18n": "^6.20.4",
     "nuxt-social-meta": "^0.0.5",
     "nuxt-webfontloader": "^1.1.0",
@@ -77,24 +76,25 @@
     "vue-scrollto": "^2.20.0",
     "vuex": "^3.6.2",
     "web3": "^1.3.4",
-    "zksync": "^0.10.7",
-    "zksync-checkout": "^0.0.11",
-    "zksync-checkout-internal": "^0.0.4"
+    "zksync": "latest",
+    "zksync-checkout": "^0.0.12",
+    "zksync-checkout-internal": "0.0.4"
   },
   "devDependencies": {
-    "@nuxt/types": "^2.15.3",
-    "@nuxt/typescript-build": "^2.0.6",
+    "@nuxt/types": "latest",
+    "@nuxt/typescript-build": "latest",
     "@nuxtjs/dotenv": "1.4.1",
     "@nuxtjs/eslint-config-typescript": "^5.0.0",
     "@tailwindcss/postcss7-compat": "^2.0.3",
-    "@types/eslint-plugin-prettier": "^3",
+    "@types/eslint-plugin-prettier": "3.1.0",
     "@types/jest": "^26.0.20",
     "autoprefixer": "^9",
     "babel-core": "^7.0.0-bridge.0",
     "commitlint": "^11.0.0",
+    "cspell": "latest",
     "dotenv": "8.2.0",
     "eslint": "^7.21.0",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-vue": "^7.7.0",
@@ -118,16 +118,12 @@
       "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
     }
   },
-  "lint-fix": {
-    "*.{css,scss}": [
-      "yarn run lint-style:fix",
-      "yarn run format:prettier"
-    ],
-    "*.{ts,tsx,vue}": [
-      "yarn run lint-ts:fix",
-      "yarn run format:prettier"
-    ]
-  },
+  "lint-fix": [
+    "yarn run lint-style:fix",
+    "yarn run lint-ts:fix",
+    "yarn run format:prettier",
+    "yarn run spell-check"
+  ],
   "scripts": {
     "local": "sh ./cli-process-env.sh 'rinkeby' 'dev' 1 1",
     "ci": "sh cli-dev.sh ci &&  yarn install --immutable  --immutable-cache",
@@ -142,11 +138,11 @@
     "build:ropsten": "yarn prepare_ci_rinkeby && yarn generate --fail-on-error",
     "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",
-    "format:check": "prettier --config .prettierrc.js --ignore-path .gitignore -c src/",
-    "format:prettier": "yarn format:check --write",
-    "lint-ts:check": "eslint -c .eslintrc.js --ext \".js,.ts,.vue\"",
-    "lint-style:check": "stylelint --config .stylelintrc  --ignore-path .stylelintignore",
-    "lint-ts:fix": "yarn run lint-ts:check --fix 'src/**'",
-    "lint-style:fix": "yarn run lint-style:check src/** --fix -f verbose"
+    "format:prettier": "prettier --config .prettierrc.js --ignore-path .prettierignore --write src/**/*.{ts,vue,js}",
+    "lint-ts:check": "eslint --quiet --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
+    "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore --quiet",
+    "lint-ts:fix": "eslint --fix --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
+    "lint-style:fix": "stylelint src/**/*.scss --config '.stylelintrc' --fix -f verbose",
+    "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js} *.md"
   }
 }
