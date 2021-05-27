@@ -1,49 +1,57 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "ES2018",
-    "jsx": "preserve",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "lib": [
-      "ESNext",
-      "ESNext.AsyncIterable",
-      "DOM"
-    ],
-    "esModuleInterop": true,
     "allowJs": true,
-    "sourceMap": true,
-    "strict": true,
-    "noEmit": true,
     "baseUrl": "./src",
+    "checkJs": false,
+    "declaration": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es2019",
+      "dom",
+      "es2019.object",
+      "esnext",
+      "esnext.asynciterable"
+    ],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noImplicitAny": true,
     "paths": {
-      "~/*": [
-        "./*"
-      ],
       "@/*": [
-        "./*"
+        "*"
       ],
-      "~~/*": [
-        "./*"
-      ],
-      "@@/*": [
-        "./*"
+      "~/*": [
+        "*"
       ]
     },
+    "suppressImplicitAnyIndexErrors": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ESNext",
     "types": [
-      "@types/nuxt",
       "@types/node",
       "@nuxt/types",
-      "@nuxtjs/axios",
-      "@nuxt/vue-app",
-      "lodash"
+      "@nuxtjs/sentry",
+      "@nuxt/axios",
+      "@types/jest",
+      "@nuxtjs/toast",
+      "web3-core/types",
+      "@inkline/inkline/types",
+      "nuxt-typed-vuex",
+      "typed-vuex"
     ]
   },
   "exclude": [
-    "node_modules",
-    ".nuxt",
-    "dist",
-    "public",
-    ".github",
-    "environments"
+    "node_modules/*",
+    "dist/*",
+    ".yarn/*",
+    "public/*",
+    ".nuxt/*",
+    ".github/*",
+    "environments/*",
+    "tests/*"
   ]
 }

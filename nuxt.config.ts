@@ -1,24 +1,39 @@
+// noinspection ES6PreferShortImport
+
+import { NuxtConfig } from "@nuxt/types";
+import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+
+import { CURRENT_APP_NAME, ETHER_NETWORK_LABEL_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
+
 require("dotenv").config();
 
 const tailwindDefault = require("tailwindcss/defaultTheme");
 
-const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
-const pageTitle = `${process.env.SITE_TITLE} | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
-const pageDescription = process.env.SITE_DESCRIPTION;
-const pageKeywords = process.env.SITE_KEYWORDS;
-const srcDir = "src";
+const srcDir = "./src/";
 
-export default {
+const env = process.env.APP_ENV ?? "dev";
+const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
+const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
+const pageImg = "/Cover.jpg";
+
+const pageTitleTemplate = `${ETHER_NETWORK_LABEL_CAPITALIZED} v.${VERSION}:${GIT_REVISION_SHORT}`;
+
+const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
+const pageKeywords = process.env.SITE_KEYWORDS ?? "";
+
+const config: NuxtConfig = {
+  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
+  telemetry: false,
   ssr: false,
   target: "static",
-  srcDir: `${srcDir}/`,
+  srcDir: `${srcDir}`,
   vue: {
     config: {
       productionTip: isProduction,
       devtools: !isProduction,
     },
   },
-  env: {
+  env: <NuxtOptionsEnv>{
     ...process.env,
   },
 
@@ -26,8 +41,12 @@ export default {
    ** Headers of the page
    */
   head: {
-    name: pageTitle,
-    titleTemplate: pageTitle,
+    title: pageTitle as string | undefined,
+    titleTemplate: `%s | ${pageTitleTemplate}`,
+    htmlAttrs: {
+      lang: "en",
+      amp: "true",
+    },
     meta: [
       {
         hid: "keywords",
@@ -35,20 +54,73 @@ export default {
         content: pageKeywords,
       },
       {
-        hid: "author",
-        name: "author",
-        content: "https://matter-labs.io",
-      },
-      { "http-equiv": "pragma", content: "no-cache" },
-      { "http-equiv": "cache-control", content: "no-cache , no-store, must-revalidate" },
-      { "http-equiv": "expires", content: "0" },
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      {
         hid: "description",
         name: "description",
         content: pageDescription,
       },
+      {
+        hid: "author",
+        name: "author",
+        content: "https://matter-labs.io",
+      },
+      {
+        hid: "twitter:title",
+        name: "twitter:title",
+        content: pageTitle,
+      },
+      {
+        hid: "twitter:description",
+        name: "twitter:description",
+        content: pageDescription,
+      },
+      {
+        hid: "twitter:image",
+        name: "twitter:image",
+        content: pageImg,
+      },
+      {
+        hid: "twitter:site",
+        name: "twitter:site",
+        content: "@zksync",
+      },
+      {
+        hid: "twitter:creator",
+        name: "twitter:creator",
+        content: "@the_matter_labs",
+      },
+      {
+        hid: "twitter:image:alt",
+        name: "twitter:image:alt",
+        content: pageTitle,
+      },
+      {
+        hid: "og:title",
+        property: "og:title",
+        content: pageTitle,
+      },
+      {
+        hid: "og:description",
+        property: "og:description",
+        content: pageDescription,
+      },
+      {
+        hid: "og:image",
+        property: "og:image",
+        content: "/social.jpg",
+      },
+      {
+        hid: "og:image:secure_url",
+        property: "og:image:secure_url",
+        content: pageImg,
+      },
+      {
+        hid: "og:image:alt",
+        property: "og:image:alt",
+        content: pageTitle,
+      },
+
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
@@ -61,6 +133,7 @@ export default {
         content: "#4e529a",
       },
     ],
+    link: [{ rel: "icon", type: "image/x-icon", href: "/icon.png" }],
   },
 
   /*
@@ -77,7 +150,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main","@/plugins/setCheckoutData"],
+  plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
 
   router: {
     middleware: ["wallet"],
@@ -85,7 +158,31 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxt/typescript-build", "@nuxtjs/tailwindcss", ["@nuxtjs/dotenv", { path: __dirname }]],
+  buildModules: [
+    "nuxt-build-optimisations",
+    "@nuxtjs/style-resources",
+    "@nuxtjs/tailwindcss",
+    [
+      "@nuxt/typescript-build",
+      {
+        typescript: {
+          typeCheck: {
+            async: true,
+            stylelint: {
+              config: [".stylelintrc"],
+              files: "src/**.scss",
+            },
+            eslint: {
+              config: [".eslintrc.js", "tsconfig-eslint.json"],
+              files: "**/*.{ts,js,vue}",
+            },
+            files: "**/*.{ts,vue}",
+          },
+        },
+      },
+    ],
+    ["@nuxtjs/dotenv", { path: __dirname }],
+  ],
 
   /*
    ** Nuxt.js modules
@@ -97,6 +194,7 @@ export default {
     "@nuxtjs/toast",
     "@nuxtjs/google-gtag",
     "nuxt-webfontloader",
+    "@nuxtjs/sentry",
     [
       "nuxt-i18n",
       {
@@ -111,21 +209,6 @@ export default {
         langDir: "./locales/",
       },
     ],
-    [
-      "nuxt-social-meta",
-      {
-        url: "https://checkout.zksync.io",
-        title: pageTitle,
-        site_name: pageTitle,
-        description: pageDescription,
-        img: "/social.jpg",
-        locale: "en_US",
-        twitter: "@zksync",
-        twitter_card: "https://zksync.io/social.jpg",
-        themeColor: "#4e529a",
-      },
-    ],
-    "@nuxtjs/sentry",
   ],
   webfontloader: {
     google: {
@@ -140,7 +223,7 @@ export default {
     iconPack: "fontawesome",
     action: {
       text: "OK",
-      onClick: (event, toastObject) => {
+      onClick: (_event: unknown, toastObject: { goAway: (arg0: number) => void }) => {
         toastObject.goAway(100);
       },
     },
@@ -159,12 +242,14 @@ export default {
     },
   },
   styleResources: {
-    scss: "@/assets/style/_variables.scss",
+    scss: ["@/assets/style/vars/*.scss", "@/assets/style/_variables.scss"],
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
+    disableServerSide: true,
     config: {
       tracesSampleRate: 1.0,
+      environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
     },
   },
   "google-gtag": {
@@ -173,7 +258,7 @@ export default {
       anonymize_ip: true, // anonymize IP
       send_page_view: true, // might be necessary to avoid duplicated page track on page reload
     },
-    debug: false, // enable to track in dev mode
+    debug: env !== "prod", // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
   tailwindcss: {
@@ -197,22 +282,22 @@ export default {
       },
       theme: {
         borderColor: {
-          light: "#E1E4E8",
-          gray: "#8D9AAC",
+          light: "#e1e4e8",
+          gray: "#8d9aac",
         },
         backgroundColor: {
-          white: "#FFFFFF",
-          white2: "#FBFBFB",
-          white3: "#F4F5F7",
-          violet: "#5436D6",
+          white: "#ffffff",
+          white2: "#fbfbfb",
+          white3: "#f4f5f7",
+          violet: "#5436d6",
         },
         textColor: {
-          white: "#FFFFFF",
-          gray: "#8D9AAC",
+          white: "#ffffff",
+          gray: "#8d9aac",
           dark: "#243955",
-          dark2: "#4E566D",
-          black2: "#3C4257",
-          black: "#000",
+          dark2: "#4e566d",
+          black2: "#3c4257",
+          black: "#000000",
           violet: "#5436D6",
           lightviolet: "#7860df",
           red: "#F25F5C",
@@ -230,7 +315,7 @@ export default {
         },
         maxWidth: {
           ...tailwindDefault.maxWidth,
-          'xxs': '15rem'
+          xxs: "15rem",
         },
         fontFamily: {
           ...tailwindDefault.fontFamily,
@@ -287,9 +372,18 @@ export default {
       };
     },
   },
+  buildOptimisations: {
+    profile: env !== "prod" ? "risky" : "experimental",
+    features: {
+      postcssNoPolyfills: isProduction,
+      hardSourcePlugin: isProduction,
+    },
+    esbuildLoaderOptions: "esnext",
+  },
   generate: {
     dir: "public",
     fallback: "404.html",
+    devtools: env !== "prod",
   },
   pwa: {
     workbox: {
@@ -297,3 +391,4 @@ export default {
     },
   },
 };
+export default config;
