@@ -3,7 +3,7 @@
   "name": "@matterlabs/zksync-dapp-checkout",
   "title": "zkCheckout — simple permissionless DeFi payment gateway",
   "description": "zkCheckout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "keywords": [
     "zksync",
     "ethereum",
@@ -30,6 +30,9 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
+  "repository": {
+    "url": "git@github.com:matter-labs/zksync-dapp-checkout.git"
+  },
   "author": "Matter Labs",
   "browserslist": {
     "production": [

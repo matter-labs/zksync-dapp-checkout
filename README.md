@@ -8,6 +8,14 @@ zkCheckout helps anyone permission-less adopt checkout backed by zkSync, receive
 
 ## CHANGELOG.md
 
+### v.2.0.3
+
+---
+* Reconfigured firebase & GitHub Actions deployment flow
+* feat(UX): Non-closable popup shown if no checkout data provided
+* 
+
+
 ### v.2.0.2
 
 ---
@@ -29,6 +37,17 @@ This is like complete new version of the checkout:
 * batchManager support added
 * the latest version of the wallet is connected
 * the bunch of smaller improvements released
+
+## Deployment
+
+zkSync uses firebase hosting for all it's dApps.
+Resource targets for the zkCheckout are:
+```
+[ hosting ]
+prod-mainnet (mainnet-checkout-zksync,zsync-dapp-checkout)
+prod-rinkeby (rinkeby-checkout-zksync)
+prod-ropsten (ropsten-checkout-zksync)
+```
 
 ## Build Setup
 
@@ -61,6 +80,6 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 ### Libraries used  
 
 * [zkCheckout lib](https://www.npmjs.com/package/zksync-checkout): our open sourced NPM-package
-* [zkSyncjs lib](https://www.npmjs.com/package/zksync-checkout): our open sourced NPM-package
+* [zkSync.js lib](https://www.npmjs.com/package/zksync-checkout): our open sourced NPM-package
 * [zkLink service](https://link.zksync.io/?MHhhMDcyRTYxNDMyODY2NWJlN0UyRjIxNjZCRTFBN2JBMTk1RjhiZTQ0fERBSXwxMDA): bit.ly for payment links on zkSync
 * [ethers.js lib](https://docs.ethers.io/v5/): a simple to use Web3 Provider Bridge as a single JavaScript file
