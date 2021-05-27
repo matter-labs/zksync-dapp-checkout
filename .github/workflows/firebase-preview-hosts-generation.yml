@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: sh cli-dev.sh ci &&  yarn install --immutable  --immutable-cache
+        run: sh cli-dev.sh ci &&  yarn install --immutable
 
       - name: Generating static rinkeby version
         run: yarn build:rinkeby

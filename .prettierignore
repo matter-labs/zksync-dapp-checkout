@@ -16,3 +16,4 @@ src/assets/fonts
 *.woff
 *.woff2
 successCheckmark.json
+sw.js

@@ -5,8 +5,7 @@
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync" />
           <div class="text-violet text-2xl font-bold">
-            zkCheckout <sup v-if="!isMainnet" class="text-sm font-light">{{ network }}<span v-if="!isBeta" class="text-xs font-bold text-red ml-1">
-            beta</span></sup>
+            zkCheckout <sup v-if="!isMainnet" class="text-sm font-light">{{ network }}<span v-if="!isBeta" class="text-xs font-bold text-red ml-1"> beta</span></sup>
           </div>
         </div>
       </header>
@@ -116,7 +115,7 @@ import Vue from "vue";
 import utils from "@/plugins/utils";
 import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/plugins/types";
 import { BigNumber } from "ethers";
-import {ETHER_NETWORK_LABEL_LOWERCASED, ETHER_PRODUCTION, ZK_IS_BETA} from "~/plugins/build";
+import { ETHER_NETWORK_LABEL_LOWERCASED, ETHER_PRODUCTION, ZK_IS_BETA } from "~/plugins/build";
 
 export default Vue.extend({
   data() {

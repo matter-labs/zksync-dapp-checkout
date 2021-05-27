@@ -1,4 +1,4 @@
-# [zkCheckout dApp](https://link.zksync.io) &middot; [zkSync.io](https://zksync.io/)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT)
+# [zkCheckout dApp](https://checkout.zksync.io) &middot; [zkSync.io](https://zksync.io/)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT)
 
 # zkCheckout — trustable permissionless DeFi payment gateway 
 
@@ -22,18 +22,22 @@ prod-ropsten (ropsten-checkout-zksync)
 ## Build Setup
 
 ``` bash
-# install dependencies && populate .env file as of ROPSTEN connection (clear install)
-$ yarn prepare_ci
+# install dependencies
+$ yarn install --check-cache
 
-# serve with hot reload at localhost:3000
+# Populate .env file as of RINKEBY connection && serve with hot reload at localhost:3000
 $ yarn dev
 
-# build for dev
-$ build:stage
+# build for stage | rinkeby
+$ sh cli-dev.sh ci && yarn install --immutable
+$ yarn build:rinkeby
 # afterward you'll have prepared distributive in /public folder
 
-# build for production (only if you have firebase:auth) 
-$ cli-deploy-production.sh  
+# build for the mainnet release
+$ sh cli-dev.sh ci && yarn install --immutable
+$ yarn build:prod
+# afterward you'll have prepared distributive in /public folder
+
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).

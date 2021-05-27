@@ -198,9 +198,7 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   getTransactionsHistory(state): Array<Transaction> {
     return state.transactionsHistory.list;
   },
-  getTokenPrices(
-    state,
-  ): {
+  getTokenPrices(state): {
     [symbol: string]: {
       lastUpdated: number;
       price: number;
@@ -208,17 +206,13 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   } {
     return state.tokenPrices;
   },
-  getTransactionsList(
-    state,
-  ): {
+  getTransactionsList(state): {
     lastUpdated: number;
     list: Array<Transaction>;
   } {
     return state.transactionsHistory;
   },
-  getWithdrawalProcessingTime(
-    state,
-  ):
+  getWithdrawalProcessingTime(state):
     | false
     | {
         normal: number;
@@ -451,10 +445,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       return localList.list;
     }
   },
-  async getWithdrawalProcessingTime({
-    getters,
-    commit,
-  }): Promise<{
+  async getWithdrawalProcessingTime({ getters, commit }): Promise<{
     normal: number;
     fast: number;
   }> {

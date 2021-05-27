@@ -32,7 +32,7 @@
 import Vue from "vue";
 
 import { Address } from "@/plugins/types";
-import { ETHER_PRODUCTION} from "@/plugins/build";
+import { ETHER_PRODUCTION } from "@/plugins/build";
 
 export default Vue.extend({
   computed: {
