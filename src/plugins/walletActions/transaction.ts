@@ -1,7 +1,7 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction, Provider } from "@/types/index";
+import { Address, ETHOperation, GweiBalance, Provider, TokenSymbol, Tx, Wallet, ZkSyncTransaction } from "@/types/index";
 import { BigNumber, BigNumberish } from "ethers";
-import { PriorityOperationReceipt, SignedTransaction, TransactionReceipt, TxEthSignature } from "zksync/src/types";
+import { SignedTransaction, TransactionReceipt, TxEthSignature } from "zksync/src/types";
 
 class Transaction {
   state: "Sent" | "Committed" | "Verified" | "Failed";
@@ -222,10 +222,11 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
  *
  * @param {TokenSymbol} token
  * @param {string} amount
- * @param store
+ * @param _store
  * @returns {Promise<ETHOperation>}
  */
-export const deposit = async (token: TokenSymbol, amount: string | BigNumber, §any): Promise<ETHOperation> => {
+// @ts-ignore
+export const deposit = async (token: TokenSymbol, amount: string | BigNumber, _store): Promise<ETHOperation> => {
   const wallet = walletData.get().syncWallet;
   // console.log(token)
   const ethTxOptions =
@@ -238,11 +239,11 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, §
     depositTo: wallet.address(),
     token,
     amount,
-    ethTxOptions,
+    ethTxOptions: ethTxOptions,
   });
   // store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse as ETHOperation;
-}
+};
 
 /**
  * Unlock token action method
@@ -254,6 +255,5 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, §
 export const unlockToken = async (address: Address, store: any) => {
   const wallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
-  const unlockTransaction = await wallet!.approveERC20TokenDeposits(address as string);
-  return unlockTransaction;
+  return await wallet!.approveERC20TokenDeposits(address as string);
 };
