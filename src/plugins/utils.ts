@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, DecimalBalance, GweiBalance, TokenSymbol } from "@/plugins/types";
+import { Address, DecimalBalance, GweiBalance, TokenSymbol } from "@/types/index";
 import { utils as zkUtils } from "zksync";
 import { BigNumber, BigNumberish, utils } from "ethers";
 

@@ -1,6 +1,6 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
 import { walletData } from "@/plugins/walletData";
-import { ETHOperation, DepositsInterface, ActiveDepositInterface } from "@/plugins/types";
+import { ETHOperation, DepositsInterface, ActiveDepositInterface } from "@/types/index";
 import { BigNumber } from "ethers";
 import { RootState } from "~/store";
 
@@ -87,7 +87,7 @@ export const getters: GetterTree<TransactionModuleState, RootState> = {
       [tokenSymbol: string]: BigNumber;
     };
     for (const tokenSymbol in deposits) {
-      activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter((tx) => tx.status === "Initiated");
+      activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter((tx: { status: string }) => tx.status === "Initiated");
     }
     for (const tokenSymbol in activeDeposits) {
       if (activeDeposits[tokenSymbol].length > 0) {
@@ -110,13 +110,13 @@ export const actions: ActionTree<TransactionModuleState, RootState> = {
         return;
       }
       if (!existingTransaction) {
-        const committedTransaction = await walletData.get().syncProvider!.notifyTransaction(transactionHash, "COMMIT");
+        await walletData.get().syncProvider!.notifyTransaction(transactionHash, "COMMIT");
         commit("updateTransactionStatus", { hash: transactionHash, status: "Commited" });
         dispatch("requestBalancesUpdate");
       } else {
         commit("updateTransactionStatus", { hash: transactionHash, status: "Commited" });
       }
-      const verifiedTransaction = await walletData.get().syncProvider!.notifyTransaction(transactionHash, "VERIFY");
+      await walletData.get().syncProvider!.notifyTransaction(transactionHash, "VERIFY");
       commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       dispatch("requestBalancesUpdate");
     } catch (error) {
@@ -126,13 +126,13 @@ export const actions: ActionTree<TransactionModuleState, RootState> = {
   async watchDeposit({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: string; amount: string }): Promise<void> {
     try {
       commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
-      const committedDeposit = await depositTx.awaitEthereumTxCommit();
+      await depositTx.awaitEthereumTxCommit();
       dispatch("requestBalancesUpdate");
       // commit('updateDepositStatus', {hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: 'Initiated', confirmations: commitedDeposit.confirmations});
-      const depositReceipt = await depositTx.awaitReceipt();
+      await depositTx.awaitReceipt();
       dispatch("requestBalancesUpdate");
       commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Commited" });
-      const depositVerifyReceipt = await depositTx.awaitVerifyReceipt();
+      await depositTx.awaitVerifyReceipt();
       dispatch("requestBalancesUpdate");
       commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Verified" });
     } catch (error) {
@@ -141,6 +141,5 @@ export const actions: ActionTree<TransactionModuleState, RootState> = {
   },
   requestBalancesUpdate(): void {
     this.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
-    /* this.dispatch("wallet/getTransactionsHistory", { offset: 0, force: true }); */
   },
 };

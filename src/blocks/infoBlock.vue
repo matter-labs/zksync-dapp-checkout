@@ -5,7 +5,8 @@
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync" />
           <div class="text-violet text-2xl font-bold">
-            zkCheckout <sup v-if="!isMainnet" class="text-sm font-light">{{ network }}<span v-if="!isBeta" class="text-xs font-bold text-red ml-1"> beta</span></sup>
+            zkCheckout <sup v-if="!isMainnet" class="text-sm font-light">{{ network }}
+            <span v-if="isBeta" class="text-xs font-bold text-red ml-1"> beta</span></sup>
           </div>
         </div>
       </header>
@@ -95,16 +96,13 @@
       </transition>
       <div class="footerContainer hidden md:block">
         <footer>
-          <a class="poweredBy flex justify-center items-center pt-5" href="https://zksync.io" target="_blank">
-            <div class="text-md text-violet mr-3">Powered by</div>
-            <img class="zkSyncLogoFull h-12" src="/zkSyncLogoFull.svg" alt="zkSync" />
-          </a>
-          <div class="poweredBy flex justify-center items-center mt-3">
+          <div class="poweredBy flex gap-4 justify-center items-center mt-3">
+            <a target="_blank" href="https://zksync.io" class="linkDefault">zkWallet</a>
+            <a target="_blank" href="https://zksync.io" class="linkDefault">zkSync</a>
             <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
-            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault ml-5">Privacy Policy</a>
+            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault">Privacy Policy</a>
           </div>
         </footer>
-        <img class="zkSyncFooter" src="/zkSyncFooter.svg" alt="zkSync" />
       </div>
     </div>
   </aside>
@@ -113,9 +111,9 @@
 <script lang="ts">
 import Vue from "vue";
 import utils from "@/plugins/utils";
-import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/plugins/types";
+import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import { BigNumber } from "ethers";
-import { ETHER_NETWORK_LABEL_LOWERCASED, ETHER_PRODUCTION, ZK_IS_BETA } from "~/plugins/build";
+import { ETHER_NETWORK_NAME, ETHER_PRODUCTION, ZK_IS_BETA } from "~/plugins/build";
 
 export default Vue.extend({
   data() {
@@ -129,7 +127,7 @@ export default Vue.extend({
       return this.$store.getters["account/loggedIn"];
     },
     network(): string {
-      return ETHER_NETWORK_LABEL_LOWERCASED;
+      return ETHER_NETWORK_NAME;
     },
     isBeta(): boolean {
       return ZK_IS_BETA;

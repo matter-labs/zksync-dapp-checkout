@@ -3,7 +3,7 @@
 import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 
-import { CURRENT_APP_NAME, ETHER_NETWORK_LABEL_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
 
 require("dotenv").config();
 
@@ -16,7 +16,7 @@ const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
 const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
 const pageImg = "/Cover.jpg";
 
-const pageTitleTemplate = `${ETHER_NETWORK_LABEL_CAPITALIZED} v.${VERSION}:${GIT_REVISION_SHORT}`;
+const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED} v.${VERSION}:${GIT_REVISION_SHORT}`;
 
 const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
 const pageKeywords = process.env.SITE_KEYWORDS ?? "";

@@ -141,8 +141,8 @@
 </template>
 
 <script lang="ts">
-import { Address, Balance, GweiBalance, TokenPrices } from "@/plugins/types";
-import { ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
+import { Address, Balance, GweiBalance, TokenPrices } from "@/types/index";
+import { ETHER_NETWORK_NAME } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 import utils from "@/plugins/utils";
 import { deposit, unlockToken } from "@/plugins/walletActions/transaction";
@@ -180,7 +180,7 @@ export default Vue.extend({
       return !!this.depositBigNumber && this.enoughDepositAmount;
     },
     currentNetworkName(): string {
-      return ETHER_NETWORK_LABEL_LOWERCASED;
+      return ETHER_NETWORK_NAME;
     },
     isInProgress(): boolean {
       return this.step !== "default";

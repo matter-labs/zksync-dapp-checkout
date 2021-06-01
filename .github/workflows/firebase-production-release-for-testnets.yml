@@ -26,7 +26,7 @@ jobs:
           projectId: zsync-dapp-checkout
           channelID: live
 
-      - name: Generating static ropsten version
+      - name: Generating static ropsten version [BETA]
         run: yarn build:ropsten
 
       - name: Deploy static to the prod-ropsten

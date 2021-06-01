@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Balance, GweiBalance, Token, TokenSymbol, Transaction } from "@/plugins/types";
+import { Address, Balance, GweiBalance, Token, TokenSymbol, Transaction } from "@/types/index";
 
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 
@@ -8,7 +8,7 @@ import onboardConfig from "@/plugins/onboardConfig";
 import web3Wallet from "@/plugins/web3";
 import utils from "@/plugins/utils";
 import watcher from "@/plugins/watcher";
-import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
+import { ZK_API_BASE, ETHER_NETWORK_NAME } from "@/plugins/build";
 
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
@@ -434,7 +434,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     }
     try {
       const syncWallet = walletData.get().syncWallet;
-      const fetchTransactionHistory = await this.app.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet?.address()}/history/${options.offset}/25`);
+      const fetchTransactionHistory = await this.app.$axios.get(`https://${ZK_API_BASE}/api/v0.1/account/${syncWallet?.address()}/history/${options.offset}/25`);
       commit("setTransactionsList", {
         lastUpdated: new Date().getTime(),
         list: options.offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
@@ -452,7 +452,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     if (getters.getWithdrawalProcessingTime) {
       return getters.getWithdrawalProcessingTime;
     } else {
-      const withdrawTime = await this.app.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
+      const withdrawTime = await this.app.$axios.get(`https://${ZK_API_BASE}/api/v0.1/withdrawal_processing_time`);
       commit("setWithdrawalProcessingTime", withdrawTime.data);
       return withdrawTime.data;
     }

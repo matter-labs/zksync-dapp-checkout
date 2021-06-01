@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { TransactionData } from "@/plugins/types";
+import { TransactionData } from "@/types/index";
 
 export default Vue.extend({
   computed: {

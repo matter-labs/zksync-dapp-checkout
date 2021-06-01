@@ -169,8 +169,8 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, TransactionFee, Transaction, ZkSyncTransaction, TokenPrices } from "@/plugins/types";
-import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
+import { TransactionData, TotalByToken, TransactionFee, Transaction, ZkSyncTransaction, TokenPrices } from "@/types/index";
+import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
@@ -210,7 +210,7 @@ export default Vue.extend({
   },
   computed: {
     currentNetworkName(): string {
-      return ETHER_NETWORK_LABEL_LOWERCASED;
+      return ETHER_NETWORK_NAME;
     },
     isAccountLocked(): TransactionData {
       return this.$store.getters["wallet/isAccountLocked"];

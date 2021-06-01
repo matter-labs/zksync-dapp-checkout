@@ -25,7 +25,7 @@ export type TransactionFee = {
   to?: Address;
 };
 export type TotalByToken = {
-  [token: string]: BigNumberish;
+  [token: string]: BigNumber;
 };
 export interface Signature {
   pubKey: string;

@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction, Provider } from "@/plugins/types";
+import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction, Provider } from "@/types/index";
 import { BigNumber, BigNumberish } from "ethers";
 import { PriorityOperationReceipt, SignedTransaction, TransactionReceipt, TxEthSignature } from "zksync/src/types";
 
@@ -225,7 +225,7 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
  * @param store
  * @returns {Promise<ETHOperation>}
  */
-export const deposit = async (token: TokenSymbol, amount: string | BigNumber, store: any): Promise<ETHOperation> => {
+export const deposit = async (token: TokenSymbol, amount: string | BigNumber, §any): Promise<ETHOperation> => {
   const wallet = walletData.get().syncWallet;
   // console.log(token)
   const ethTxOptions =
@@ -242,7 +242,7 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, st
   });
   // store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse as ETHOperation;
-};
+}
 
 /**
  * Unlock token action method

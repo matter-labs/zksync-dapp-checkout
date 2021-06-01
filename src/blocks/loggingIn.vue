@@ -29,7 +29,7 @@ export default Vue.extend({
     loggingIn(): boolean {
       return this.$store.getters["account/loader"];
     },
-    loggedIn() {
+    loggedIn():boolean {
       return this.$store.getters["account/loggedIn"];
     },
     selectedWallet(): string {
@@ -40,7 +40,7 @@ export default Vue.extend({
     },
   },
   watch: {
-    loggedIn(val) {
+    loggedIn(val):void {
       clearTimeout(loggedInAnimationTimeout);
       if (val === false) {
         this.loggedInAnimation = false;

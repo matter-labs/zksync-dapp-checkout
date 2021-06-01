@@ -1,4 +1,4 @@
-import { Provider, Wallet, AccountState } from "@/plugins/types";
+import { Provider, Wallet, AccountState } from "@/types/index";
 
 interface walletData {
   syncProvider?: Provider;

@@ -13,10 +13,10 @@
         </template>
         <template slot="right-top">
           <div class="flex items-center flex-col md:flex-row">
-            <defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="isProd ? '///stage.zksync.io' : '///wallet.zksync.io'">
+            <a class="mr-2 mb-2 md:mb-0 text-sm md:mr-4" target="_blank" :href="testnetWalletUrl">
               <span>Open wallet</span>
               <i class="fas fa-external-link" />
-            </defbtn>
+            </a>
             <defbtn outline @click="logout()">
               <span class="text-red">Disconnect</span>
               <i class="text-red far fa-times" />
@@ -31,8 +31,8 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { Address } from "@/plugins/types";
-import { ETHER_PRODUCTION } from "@/plugins/build";
+import { Address } from "@/types";
+import {ETHER_NETWORK_NAME, ETHER_PRODUCTION} from "@/plugins/build";
 
 export default Vue.extend({
   computed: {
@@ -43,6 +43,9 @@ export default Vue.extend({
     isProd(): boolean {
       return ETHER_PRODUCTION;
     },
+    testnetWalletUrl(): string {
+      return `https://${this.isProd ? "wallet.zksync.io" : `${ETHER_NETWORK_NAME}.zksync.io`}`
+    }
   },
   methods: {
     logout(): void {

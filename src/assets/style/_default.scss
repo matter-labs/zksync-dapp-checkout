@@ -19,6 +19,12 @@ body {
   min-height: 100vh;
 }
 
+a {
+  &:hover {
+    color: darken($violet, .5)
+  }
+}
+
 head {
   display: none;
 }
