@@ -2,6 +2,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -40,24 +41,28 @@
 
     &.size {
       &-lg {
-        &, &::after {
+        &,
+        &::after {
           width: 5rem;
           height: 5rem;
         }
       }
 
       &-md {
-        &, &::after {
+        &,
+        &::after {
           width: 4rem;
           height: 4rem;
         }
+
         & {
           border-width: .35rem;
         }
       }
 
       &-sm {
-        &, &::after {
+        &,
+        &::after {
           width: 1.15rem;
           height: 1.15rem;
         }
@@ -68,7 +73,8 @@
       }
 
       &-xs {
-        &, &::after {
+        &,
+        &::after {
           width: .85rem;
           height: .85rem;
         }
@@ -79,7 +85,8 @@
       }
     }
 
-    &, &::after {
+    &,
+    &::after {
       border-radius: 50%;
     }
   }

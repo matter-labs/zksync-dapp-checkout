@@ -1,6 +1,6 @@
 import { walletData } from "@/plugins/walletData";
 
-export default async (context) => {
+export default (context) => {
   if (walletData.get().syncWallet) {
     if (context.route.matched[0].path === "/connect") {
       context.redirect("/");

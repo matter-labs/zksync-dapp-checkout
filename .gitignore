@@ -38,9 +38,24 @@ yarn-error.log*
 .reports/
 /src/static/sw.js
 public
-!public/.gitignore
 .nuxt
+*debug.log*
+*error.log*
+/.yarn/cache/
+/.yarn/build-state.yml
+/.yarn/install-state.gz
+/.yarn/unplugged/
+
+# unignore
+!public/.gitignore
+!.yarn/releases/*
+!.yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
+!.yarn/plugins/@yarnpkg/plugin-version.cjs
+/cypress/screenshots/examples/misc.spec.js/
+/cypress/videos/examples/
+/.eslintcache
 /firebase-debug.log
 /report.txt
 /tokens.txt
 /.yarn/
+/temp/src/

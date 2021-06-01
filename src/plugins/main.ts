@@ -13,9 +13,8 @@ import ValuesBlock from "@/components/ValuesBlock.vue";
 import Modal from "@/components/Modal.vue";
 import MaxHeight from "@/components/MaxHeight.vue";
 
-import { GweiBalance, TokenSymbol } from "@/plugins/types";
+import { GweiBalance, TokenSymbol } from "@/types/index";
 import { BigNumber } from "ethers";
-
 
 Vue.use(VueScrollTo);
 

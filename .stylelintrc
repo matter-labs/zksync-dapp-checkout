@@ -1,0 +1,86 @@
+{
+  "extends": [
+    "stylelint-config-standard"
+  ],
+  "plugins": [
+    "stylelint-scss"
+  ],
+  "rules": {
+    "at-rule-no-unknown": null,
+    "block-no-empty": null,
+    "block-opening-brace-newline-after": "always",
+    "color-named": "never",
+    "declaration-block-semicolon-newline-after": "always",
+    "declaration-block-trailing-semicolon": null,
+    "font-family-name-quotes": "always-where-recommended",
+    "font-weight-notation": "numeric",
+    "function-url-quotes": "always",
+    "number-leading-zero": "never",
+    "value-list-comma-newline-before": "never-multi-line",
+    "custom-property-empty-line-before": "never",
+    "indentation": [
+      2,
+      {
+        "indentInsideParens": "once-at-root-twice-in-block"
+      }
+    ],
+    "no-descending-specificity": null,
+    "no-duplicate-selectors": null,
+    "no-empty-source": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ],
+    "font-family-no-missing-generic-family-keyword": null,
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreProperties": [
+          "composes",
+          "all",
+          "-webkit-appearance"
+        ]
+      }
+    ],
+    "scss/at-rule-no-unknown": true,
+    "selector-attribute-quotes": "always",
+    "selector-max-specificity": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": [
+          "local",
+          "global"
+        ]
+      }
+    ],
+    "named-grid-areas-no-invalid": [
+      true,
+      {
+        "ignore": "*"
+      }
+    ],
+    "selector-pseudo-element-colon-notation": null,
+    "selector-type-no-unknown": [
+      true,
+      {
+        "ignore": [
+          "custom-elements"
+        ]
+      }
+    ],
+    "string-quotes": "double",
+    "value-no-vendor-prefix": null
+  },
+  "ignoreDisables": true,
+  "ignoreFiles": [
+    "*.css",
+    "*.eot",
+    "*.svg",
+    "*.ttf",
+    "*.woff",
+    "*.woff2",
+    "successCheckmark.json"
+  ]
+}

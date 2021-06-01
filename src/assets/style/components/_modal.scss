@@ -9,7 +9,7 @@
     height: 100%;
     left: 0;
     top: 0;
-    background-color: transparentize($color: $white, $amount: 0.5) !important;
+    background-color: transparentize($color: $white, $amount: .5) !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -18,10 +18,12 @@
     .modalMain {
       width: 90%;
     }
+
     @media screen and (min-width: $mobile+1) {
       width: 57% !important;
       left: 43% !important;
     }
+
     @media screen and (min-width: 1300px) {
       left: 600px !important;
       width: calc(100% - 600px) !important;
@@ -34,14 +36,15 @@
     max-width: 548px;
     height: max-content;
     background-color: $white;
-    border: 1px solid #E9E8FC;
-    box-shadow: 0px 2px 4px rgba(7, 4, 146, 0.1), 0px 24px 60px rgba(6, 47, 125, 0.05), 0px 12px 24px rgba(27, 59, 119, 0.05);
+    border: 1px solid #e9e8fc;
+    box-shadow: 0 2px 4px rgba(7, 4, 146, .1), 0 24px 60px rgba(6, 47, 125, .05), 0 12px 24px rgba(27, 59, 119, .05);
     border-radius: 12px;
 
     & > div {
       padding-left: 20px;
       padding-right: 20px;
     }
+
     .modalHeader {
       padding-right: 35px;
       line-height: 1.25;
@@ -60,10 +63,12 @@
         }
       }
     }
+
     .modalBody {
       padding-top: 10px;
       padding-bottom: 15px;
     }
+
     .modalFooter {
       padding-top: 15px;
       padding-bottom: 15px;

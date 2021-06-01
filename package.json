@@ -3,7 +3,7 @@
   "name": "@matterlabs/zksync-dapp-checkout",
   "title": "zkCheckout — simple permissionless DeFi payment gateway",
   "description": "zkCheckout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "keywords": [
     "zksync",
     "ethereum",
@@ -30,6 +30,9 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
+  "repository": {
+    "url": "git@github.com:matter-labs/zksync-dapp-checkout.git"
+  },
   "author": "Matter Labs",
   "browserslist": {
     "production": [
@@ -51,13 +54,13 @@
     "@babel/preset-env": "^7.13.9",
     "@babel/runtime": "^7.13.9",
     "@ethersproject/logger": "^5.0.9",
-    "@matterlabs/zk-wallet-onboarding": "^1.18.6",
-    "@nuxt/typescript-runtime": "^2.0.0",
+    "@matterlabs/zk-wallet-onboarding": "1.18.6",
+    "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/axios": "latest",
     "@nuxtjs/google-gtag": "^1.0.4",
-    "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/sentry": "^5.0.2",
-    "@nuxtjs/tailwindcss": "^3.4.2",
+    "@nuxtjs/style-resources": "latest",
+    "@nuxtjs/tailwindcss": "^4.0.1",
     "@nuxtjs/toast": "latest",
     "@types/js-cookie": "^2.2.6",
     "@walletconnect/web3-provider": "^1.3.6",
@@ -66,7 +69,8 @@
     "js-cookie": "^2.2.1",
     "lottie-web": "^5.7.6",
     "moment": "^2.29.1",
-    "nuxt": "^2.15.2",
+    "nuxt": "latest",
+    "nuxt-build-optimisations": "latest",
     "nuxt-i18n": "^6.20.4",
     "nuxt-social-meta": "^0.0.5",
     "nuxt-webfontloader": "^1.1.0",
@@ -75,124 +79,72 @@
     "vue-scrollto": "^2.20.0",
     "vuex": "^3.6.2",
     "web3": "^1.3.4",
-    "zksync": "0.10.5",
-    "zksync-checkout": "^0.0.11",
-    "zksync-checkout-internal": "^0.0.4"
+    "zksync": "latest",
+    "zksync-checkout": "^0.0.12",
+    "zksync-checkout-internal": "0.0.4"
   },
   "devDependencies": {
-    "@nuxt/types": "^2.15.2",
-    "@nuxt/typescript-build": "^2.0.6",
+    "@nuxt/types": "latest",
+    "@nuxt/typescript-build": "latest",
     "@nuxtjs/dotenv": "1.4.1",
     "@nuxtjs/eslint-config-typescript": "^5.0.0",
     "@tailwindcss/postcss7-compat": "^2.0.3",
+    "@types/eslint-plugin-prettier": "3.1.0",
     "@types/jest": "^26.0.20",
     "autoprefixer": "^9",
     "babel-core": "^7.0.0-bridge.0",
     "commitlint": "^11.0.0",
+    "cspell": "latest",
     "dotenv": "8.2.0",
     "eslint": "^7.21.0",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-vue": "^7.7.0",
     "fork-ts-checker-webpack-plugin": "^6.1.0",
     "node-sass": "latest",
-    "nuxt-webpackdashboard": "^2.0.1",
     "prettier": "^2.2.1",
     "sass-loader": "^10.1.1",
     "stylelint": "^13.11.0",
-    "tailwindcss": "^1.9.6",
-    "webpack": "^5.11.1"
+    "stylelint-config-standard": "^22.0.0",
+    "stylelint-scss": "^3.19.0",
+    "tailwindcss": "^2.0.4",
+    "webpack": "^4.46.0"
   },
   "optionalDependencies": {
     "@sentry/webpack-plugin": "^1.14.0",
     "fs-extra": "^9.1.0"
   },
-  "eslintConfig": {
-    "extends": "@nuxtjs/eslint-config"
-  },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
+      "pre-commit": "lint-fix",
       "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
     }
   },
-  "lint-staged": {
-    "*.{css,scss}": "yarn run lint-css",
-    "*.{ts,tsx}": [
-      "yarn run lint-ts",
-      "yarn run format"
-    ]
-  },
+  "lint-fix": [
+    "yarn lint-style:fix",
+    "yarn lint-ts:fix",
+    "yarn format:prettier",
+    "yarn spell-check"
+  ],
   "scripts": {
-    "ci": "rm -fr node_modules && rm -rf 'public/*' && sh ./cli-check-env.sh && yarn install --immutable  --immutable-cache",
-    "ci:build": "yarn nuxt-ci && && sh ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
-    "dev": "sh ./cli-check-env.sh && nuxt",
-    "generate": "sh ./cli-check-env.sh && nuxt generate ",
-    "start:firebase": "firebase serve --only hosting",
-    "prepare_ci": "yarn ci && sh cli-process-env.sh 'ropsten'",
-    "prepare_ci_rinkeby": "yarn ci && sh cli-process-env.sh 'rinkeby'",
-    "prepare_ci_mainnet": "yarn ci && sh cli-process-env.sh 'mainnet'",
+    "local": "sh ./cli-process-env.sh 'rinkeby' 'dev' 1 1",
+    "ci": "bash cli-dev.sh ci && yarn install --immutable",
+    "dev": "yarn local && nuxt",
+    "generate": "nuxt generate ",
+    "prepare_ci_rinkeby": "sh cli-process-env.sh 'rinkeby' 'prod' 1",
+    "prepare_ci_ropsten": "sh cli-process-env.sh 'ropsten' 'prod' 1",
+    "prepare_ci_mainnet": "sh cli-process-env.sh 'mainnet' 'prod' 1",
     "build:prod": "yarn prepare_ci_mainnet && yarn generate --fail-on-error",
-    "build:stage": "yarn prepare_ci_rinkeby && yarn generate --fail-on-error",
-    "start": "nuxt start",
-    "build": "nuxt build",
-    "format": "prettier --write",
-    "lint-ts": "eslint --fix \"**/*.{ts, js, vue}\"",
-    "lint-css": "stylelint --fix \"**/*.scss\"",
-    "audit_dependencies": "yarn audit --package-lock-only --audit-level critical --json | yarn-audit-html --output audit.html"
-  },
-  "stylelint": {
-    "extends": [
-      "stylelint-config-recommended",
-      "stylelint-config-rational-order"
-    ],
-    "plugins": [
-      "stylelint-order",
-      "stylelint-scss",
-      "stylelint-config-rational-order/plugin",
-      "stylelint-high-performance-animation",
-      "stylelint-declaration-use-variable"
-    ],
-    "rules": {
-      "no-empty-source": [
-        true,
-        {
-          "severity": "warning"
-        }
-      ],
-      "plugin/no-low-performance-animation-properties": [
-        true,
-        {
-          "severity": "warning"
-        }
-      ],
-      "sh-waqar/declaration-use-variable": [
-        [
-          "/color/",
-          "font-size",
-          "font-family",
-          "font-weight"
-        ]
-      ],
-      "order/properties-order": [],
-      "plugin/rational-order": [
-        true,
-        {
-          "border-in-box-model": false,
-          "empty-line-between-groups": false
-        }
-      ],
-      "selector-type-no-unknown": [
-        true,
-        {
-          "ignore": [
-            "custom-elements"
-          ]
-        }
-      ],
-      "no-descending-specificity": true,
-      "at-rule-no-unknown": null,
-      "scss/at-rule-no-unknown": true
-    }
+    "build:rinkeby": "yarn prepare_ci_rinkeby && yarn generate --fail-on-error",
+    "build:ropsten": "yarn prepare_ci_ropsten && yarn generate --fail-on-error",
+    "start": "yarn local && nuxt start",
+    "build": "yarn local && nuxt build",
+    "format:prettier": "prettier --config .prettierrc.js --ignore-path .prettierignore --write src/**/*.{ts,vue,js}",
+    "lint-ts:check": "eslint --quiet --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
+    "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore --quiet",
+    "lint-ts:fix": "eslint --fix --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
+    "lint-style:fix": "stylelint src/**/*.scss --config '.stylelintrc' --fix -f verbose",
+    "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js} *.md"
   }
 }

@@ -24,7 +24,7 @@
     will-change: background-color;
 
     &:disabled {
-      background-color: transparentize($color: $lightViolet, $amount: 0.3);
+      background-color: transparentize($color: $lightViolet, $amount: .3);
     }
 
     &:not(:disabled) {
@@ -33,7 +33,7 @@
       }
 
       &:active {
-        transition-delay: 0.0001s;
+        transition-delay: .0001s;
         background-color: $violet;
       }
     }
@@ -41,10 +41,10 @@
 
   &.outline {
     color: $violet;
-    background-color: #F6F8FA;
+    background-color: #f6f8fa;
     transition-property: color, border-color, background-color, box-shadow;
     will-change: color, border-color, background-color, box-shadow;
-    border: 0.5px solid #E1E4E8;
+    border: .5px solid #e1e4e8;
 
     &:disabled {
       background-color: $white;
@@ -53,19 +53,20 @@
     }
 
     &:not(:disabled) {
-      box-shadow: 0 2px 2px rgba(28, 5, 77, 0.05), 0 12px 8px rgba(0, 0, 0, 0.02);
+      box-shadow: 0 2px 2px rgba(28, 5, 77, .05), 0 12px 8px rgba(0, 0, 0, .02);
 
       &:hover {
         color: $lightViolet;
-        box-shadow: 0 0 2px rgba(28, 5, 77, 0.05), 0 0 4px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 0 2px rgba(28, 5, 77, .05), 0 0 4px rgba(0, 0, 0, .02);
       }
 
       &:active {
-        transition-delay: 0.0001s;
+        transition-delay: .0001s;
         border-color: $lightViolet;
       }
     }
   }
+
   &[big] {
     height: 50px;
     font-size: 18px;
@@ -74,6 +75,7 @@
       width: 50px;
     }
   }
+
   &[square] {
     width: 29px;
     padding: 0;

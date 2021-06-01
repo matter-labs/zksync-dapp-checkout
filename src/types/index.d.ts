@@ -1,6 +1,8 @@
 import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
 import { Types } from "zksync-checkout";
 
+export import ZkSyncTransaction = Types.ZkSyncTransaction;
+
 export declare type Address = string;
 export declare type PubKeyHash = string;
 export declare type TokenSymbol = string;
@@ -9,8 +11,6 @@ export declare type TokenLike = TokenSymbol | TokenAddress;
 export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
 export declare type Nonce = number | "committed";
-
-export import ZkSyncTransaction = Types.ZkSyncTransaction;
 
 export type TransactionData = {
   transactions: Array<ZkSyncTransaction>;
@@ -25,7 +25,7 @@ export type TransactionFee = {
   to?: Address;
 };
 export type TotalByToken = {
-  [token: string]: BigNumberish;
+  [token: string]: BigNumber;
 };
 export interface Signature {
   pubKey: string;
@@ -83,7 +83,7 @@ export interface Token {
   address: Address;
   balance: string | BigNumber;
   symbol: TokenSymbol;
-  id: Number;
+  id: number;
   formattedBalance?: string;
 }
 
@@ -155,9 +155,7 @@ export declare class Signer {
   signSyncChangePubKey(changePubKey: { accountId: number; account: Address; newPkHash: PubKeyHash; feeTokenId: number; fee: BigNumberish; nonce: number }): ChangePubKey;
   static fromPrivateKey(pk: Uint8Array): Signer;
   static fromSeed(seed: Uint8Array): Signer;
-  static fromETHSignature(
-    ethSigner: ethers.Signer,
-  ): Promise<{
+  static fromETHSignature(ethSigner: ethers.Signer): Promise<{
     signer: Signer;
     ethSignatureType: EthSignerType;
   }>;
@@ -187,6 +185,7 @@ export declare class Wallet {
       nonce?: Nonce;
     }[],
   ): Promise<Transaction[]>;
+
   batchBuilder: any;
 
   syncTransfer(transfer: { to: Address; token: TokenLike; amount: BigNumberish; fee?: BigNumberish; nonce?: Nonce }): Promise<Transaction>;

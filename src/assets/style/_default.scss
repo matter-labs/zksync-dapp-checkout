@@ -1,4 +1,5 @@
-#__nuxt, #__layout {
+#__nuxt,
+#__layout {
   width: 100%;
   min-height: 100vh;
 }
@@ -18,6 +19,12 @@ body {
   min-height: 100vh;
 }
 
+a {
+  &:hover {
+    color: darken($violet, .5)
+  }
+}
+
 head {
   display: none;
 }
@@ -28,7 +35,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -43,10 +50,12 @@ input[type=number] {
     display: none !important;
   }
 }
+
 .fitRightSide {
   z-index: 1;
   width: 57% !important;
   left: 43% !important;
+
   @media screen and (min-width: 1300px) {
     left: 600px !important;
     width: calc(100% - 600px) !important;

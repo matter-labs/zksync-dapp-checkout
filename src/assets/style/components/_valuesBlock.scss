@@ -1,5 +1,3 @@
-@import "../variables";
-
 .valuesBlockContainer {
   width: 100%;
   height: max-content;
@@ -15,17 +13,18 @@
     text-align: right;
   }
 
-  .valuesLeftBottom, .valuesRightBottom {
+  .valuesLeftBottom,
+  .valuesRightBottom {
     padding-top: 1px;
   }
 
   .address {
     font-family: $firaCode;
     color: $black2;
-    font-size: 0.65rem;
+    font-size: .65rem;
     line-height: 1.4;
     font-weight: 300;
-    letter-spacing: -0.025em;
+    letter-spacing: -.025em;
   }
 
   .headline {
@@ -53,16 +52,16 @@
 
   .secondaryValue {
     color: $gray;
-    font-size: 0.65rem;
+    font-size: .65rem;
     line-height: 1.4;
     font-weight: 300;
-    letter-spacing: -0.025em;
+    letter-spacing: -.025em;
+
     @media screen and (max-width: $breakpoint1) {
       font-size: 14px;
       line-height: 22px;
     }
   }
-
 
   /* @media screen and (max-width: $breakpoint1) {
     &.bottomOnHover {
@@ -88,7 +87,7 @@
 
   @media screen and (max-width: 340px) {
     .address {
-      font-size: 0.52rem;
+      font-size: .52rem;
     }
   }
 }
