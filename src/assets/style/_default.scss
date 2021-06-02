@@ -7,22 +7,3 @@
     width: calc(100% - 600px) !important;
   }
 }
-.darkMode {
-  .useDarkMode {
-    &.text-black2 {
-      color: $gray;
-    }
-    &.text-dark {
-      color: $light;
-    }
-    &.text-gray {
-      color: $dark3;
-    }
-    &.text-violet {
-      color: $lightViolet;
-    }
-    &.border-light {
-      border-color: $dark2;
-    }
-  }
-}

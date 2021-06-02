@@ -4,7 +4,7 @@
       <header class="md:mb-6">
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
-          <div class="text-violet useDarkMode text-2xl font-bold">zkCheckout <sup v-if="currentNetworkName !== 'mainnet'" class="text-sm font-light">{{currentNetworkName}}</sup></div>
+          <div class="text-violet -dark text-2xl font-bold">zkCheckout <sup v-if="currentNetworkName !== 'mainnet'" class="text-sm font-light">{{currentNetworkName}}</sup></div>
         </div>
       </header>
       <zk-values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
@@ -23,7 +23,7 @@
       </zk-values-block>
       <transition name="fade">
         <div v-if="loggedIn" class="w-full">
-          <div class="w-full border-b-2 border-light useDarkMode mt-1 lg:mt-3"/>
+          <div class="w-full border-b-2 border-light -dark mt-1 lg:mt-3"/>
           <zk-values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
             <template slot="left-top">
               <div class="flex items-center">
@@ -41,7 +41,7 @@
               </div>
             </template>
           </zk-values-block>
-          <max-height v-model="feesOpened" :update-value="allFees.length">
+          <zk-max-height v-model="feesOpened" :update-value="allFees.length">
             <zk-values-block v-for="(item, index) in allFees" :key="index" class="mt-1 lg:mt-3">
               <template slot="left-top">
                 <div class="headline">{{item.name}}</div>
@@ -53,28 +53,28 @@
                 </div>
               </template>
             </zk-values-block>
-          </max-height>
-          <div class="w-full border-b-2 border-light useDarkMode mt-1 lg:mt-3"></div>
+          </zk-max-height>
+          <div class="w-full border-b-2 border-light -dark mt-1 lg:mt-3"></div>
           <div class="mt-2 lg:mt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">
             <div class="flex-2">
               <div class="flex items-center">
-                <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark useDarkMode">Total amount</div>
+                <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark -dark">Total amount</div>
                 <span class="ml-3">
                   <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"/>
                 </span>
               </div>
             </div>
             <div class="flex-1 flex flex-col items-end">
-              <div class="font-firaCondensed font-bold text-lg text-violet useDarkMode md:mt-1">
+              <div class="font-firaCondensed font-bold text-lg text-violet -dark md:mt-1">
                 {{totalUSD}}
               </div>
-              <max-height v-model="totalOpened" :update-value="allFees.length">
+              <zk-max-height v-model="totalOpened" :update-value="allFees.length">
                 <div class="md:flex flex-col items-end">
-                <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 useDarkMode mt-2">
+                <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 -dark mt-2">
                   <div>{{ item | formatToken(token) }} {{token}}</div>
                 </div>
               </div>
-              </max-height>
+              </zk-max-height>
             </div>
           </div>
         </div>
@@ -82,7 +82,7 @@
       <div class="footerContainer hidden md:block">
         <footer>
           <a class="poweredBy flex justify-center items-center pt-5" href="https://zksync.io" target="_blank">
-            <div class="text-md text-violet useDarkMode mr-3">Powered by</div>
+            <div class="text-md text-violet -dark mr-3">Powered by</div>
             <logo class="h-8" />
           </a>
           <div class="poweredBy flex justify-center items-center mt-3">

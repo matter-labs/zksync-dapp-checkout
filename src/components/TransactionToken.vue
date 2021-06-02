@@ -2,7 +2,7 @@
   <div class="w-full transactionTokenContainer">
 
     <!-- Modals -->
-    <modal :value="modal==='insufficientL1Deposit' || modal==='insufficientL1Min'" @close="modal=''">
+    <zk-modal :value="modal==='insufficientL1Deposit' || modal==='insufficientL1Min'" @close="modal=''">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square"></i>
@@ -42,9 +42,9 @@
           </template>
         </zk-values-block>
       </template>
-    </modal>
+    </zk-modal>
 
-    <modal :value="modal==='customError'" @close="modal=''">
+    <zk-modal :value="modal==='customError'" @close="modal=''">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square"/>
@@ -54,7 +54,7 @@
       <template slot="default">
         <div class="text-sm">{{ errorModal.text }}</div>
       </template>
-    </modal>
+    </zk-modal>
 
     <!-- Main -->
     <zk-line-block>

@@ -1,6 +1,6 @@
 <template>
   <div class="indexPage">
-    <modal :value="modal==='feeChanged'" @close="modal=false;cancelTransfer();">
+    <zk-modal :value="modal==='feeChanged'" @close="modal=false;cancelTransfer();">
       <template slot="header">
         <div class="withIcon text-warning text-yellow">
           <i class="fad fa-info-square"/>
@@ -46,9 +46,9 @@
           </zk-defbtn>
         </div>
       </template>
-    </modal>
+    </zk-modal>
 
-    <modal :value="errorModal!==false" @close="errorModal=false">
+    <zk-modal :value="errorModal!==false" @close="errorModal=false">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square"/>
@@ -58,13 +58,13 @@
       <template slot="default">
         <div class="text-sm">{{errorModal.text}}</div>
       </template>
-    </modal>
+    </zk-modal>
 
     <connected-wallet/>
 
     <div v-if="step==='main'" class="w-full">
-      <max-height class="mt-5 md:mt-7" :value="!transferAllowed">
-        <note>
+      <zk-max-height class="mt-5 md:mt-7" :value="!transferAllowed">
+        <zk-note>
           <template slot="icon">
             <i class="text-gray text-xl fal fa-info-square"></i>
           </template>
@@ -73,8 +73,8 @@
               The default amount to deposit is 10% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br>
             </div>
           </template>
-        </note>
-      </max-height>
+        </zk-note>
+      </zk-max-height>
 
       <line-table-header class="mt-5 mb-2">
         <template slot="first">To pay</template>
@@ -93,7 +93,7 @@
       </div>
     </div>
     <div v-else-if="step==='transfer'" class="w-full">
-      <div class="font-firaCondensed font-medium text-3xl text-dark useDarkMode text-center pt-5 md:pt-10">Payment</div>
+      <div class="font-firaCondensed font-medium text-3xl text-dark -dark text-center pt-5 md:pt-10">Payment</div>
       <div v-if="subStep==='processing'" class="text-lg text-center pt-2">Processing...</div>
       <div v-else-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in your wallet</div>
       <div v-else-if="subStep==='committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
@@ -136,7 +136,7 @@
               <div class="font-light txHash text-xxs md:text-right">
                 {{item.txHash | formatTransaction}}
               </div>
-              <i class="text-xs text-violet useDarkMode pl-1 fal fa-external-link"/>
+              <i class="text-xs text-violet -dark pl-1 fal fa-external-link"/>
             </a>
           </template>
         </zk-line-block>
@@ -201,7 +201,7 @@ export default Vue.extend({
       return this.$store.getters["checkout/getTotalByToken"];
     },
     transferAllowed(): Boolean {
-      for (const [token, state] of Object.entries(this.tokenItemsValid)) {
+      for (const [_, state] of Object.entries(this.tokenItemsValid)) {
         if (!state) {
           return false;
         }

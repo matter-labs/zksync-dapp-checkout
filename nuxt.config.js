@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const tailwindDefault = require("tailwindcss/defaultTheme");
+const zkTailwindDefault = require("matter-zk-ui/tailwind.config");
 
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
 const pageTitle = `${process.env.SITE_TITLE} | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
@@ -143,7 +143,7 @@ export default {
     iconPack: "fontawesome",
     action: {
       text: "OK",
-      onClick: (event, toastObject) => {
+      onClick: (_, toastObject) => {
         toastObject.goAway(100);
       },
     },
@@ -154,11 +154,6 @@ export default {
       messages: {
         en: require(`./${srcDir}/locales/en/translations.json`),
       },
-    },
-  },
-  inkline: {
-    config: {
-      autodetectVariant: true,
     },
   },
   styleResources: {
@@ -180,12 +175,8 @@ export default {
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
   tailwindcss: {
-    /* cssPath: '@/assets/style/tailwind.min.css', */
     config: {
-      future: {
-        removeDeprecatedGapUtilities: true,
-        purgeLayersByDefault: true,
-      },
+      ...zkTailwindDefault,
       purge: {
         enabled: process.env.NODE_ENV === "production",
         content: [
@@ -198,81 +189,6 @@ export default {
           `nuxt.config.{js,ts}`,
         ],
       },
-      theme: {
-        borderColor: {
-          light: "#E1E4E8",
-          gray: "#8D9AAC",
-        },
-        backgroundColor: {
-          white: "#FFFFFF",
-          white2: "#FBFBFB",
-          white3: "#F4F5F7",
-          violet: "#5436D6",
-        },
-        textColor: {
-          white: "#FFFFFF",
-          gray: "#8D9AAC",
-          dark: "#243955",
-          dark2: "#4E566D",
-          black2: "#3C4257",
-          black: "#000",
-          violet: "#5436D6",
-          lightviolet: "#7860df",
-          red: "#F25F5C",
-          green: "#057A55",
-          yellow: "#fbbf24",
-        },
-        fontSize: {
-          ...tailwindDefault.fontSize,
-          xxs: [
-            "0.65rem",
-            {
-              lineHeight: "0.75rem",
-            },
-          ],
-        },
-        maxWidth: {
-          ...tailwindDefault.maxWidth,
-          xxs: "15rem",
-        },
-        fontFamily: {
-          ...tailwindDefault.fontFamily,
-          firaCode: ["Fira Code", "sans-serif"],
-          firaCondensed: ["Fira Sans Condensed", "sans-serif"],
-        },
-        screens: {
-          ...tailwindDefault.screens,
-          lg: "1101px",
-        },
-        /* transitionTimingFunction: {
-          ...tailwindDefault.transitionTimingFunction,
-          ease: "ease",
-        }, */
-        /* extend: {
-          width: {
-            '72': '18rem',
-            'max-content': 'max-content'
-          },
-          height: {
-            '72': '18rem',
-            'max-content': 'max-content'
-          },
-          spacing: {
-            '72': '18rem',
-            '84': '21rem',
-            '96': '24rem',
-          },
-        }, */
-      },
-      /* variants: {
-        extends: {
-          fontFamily: {
-            firaCode: ["Fira Code", "sans-serif"],
-            firaCondensed: ["Fira Sans Condensed", "sans-serif"],
-          },
-        },
-      }, */
-      plugins: [],
     },
   },
   /*
