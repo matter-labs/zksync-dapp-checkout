@@ -7,6 +7,9 @@
       <transition v-if="!loggingIn && (loggedIn || $route.path === '/connect' || $route.path === '/connect/')" name="fade" mode="out-in">
         <nuxt class="routeMain" />
       </transition>
+      <footer class="secondaryText footerBlock text-sm font-light text-center b-0 hidden md:block">
+        Made with ❤ by <a href="https://matter-labs.io" class="lightLink" target="_blank">Matter Labs</a>
+      </footer>
     </div>
   </div>
 </template>

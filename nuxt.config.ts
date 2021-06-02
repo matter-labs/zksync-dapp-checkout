@@ -5,8 +5,10 @@ import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
 
+// @ts-ignore
 require("dotenv").config();
 
+// @ts-ignore
 const tailwindDefault = require("tailwindcss/defaultTheme");
 
 const srcDir = "./src/";
@@ -187,28 +189,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: [
-    "@nuxtjs/dotenv",
-    "@nuxtjs/axios",
-    "@nuxtjs/toast",
-    "@nuxtjs/google-gtag",
-    "nuxt-webfontloader",
-    "@nuxtjs/sentry",
-    [
-      "nuxt-i18n",
-      {
-        locales: [
-          {
-            code: "en",
-            iso: "en_US",
-            file: "en/translations.json",
-          },
-        ],
-        defaultLocale: "en",
-        langDir: "./locales/",
-      },
-    ],
-  ],
+  modules: ["@nuxtjs/dotenv", "@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "nuxt-webfontloader", "@nuxtjs/sentry"],
   webfontloader: {
     google: {
       families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
@@ -241,7 +222,7 @@ const config: NuxtConfig = {
     },
   },
   styleResources: {
-    scss: ["@/assets/style/vars/*.scss", "@/assets/style/_variables.scss"],
+    scss: ["@/assets/style/vars/*.scss"],
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
@@ -276,7 +257,7 @@ const config: NuxtConfig = {
           `${srcDir}/layouts/**/*.vue`,
           `${srcDir}/pages/**/*.vue`,
           `${srcDir}/plugins/**/*.{js,ts}`,
-          `nuxt.config.{js,ts}`,
+          "nuxt.config.{js,ts}",
         ],
       },
       theme: {
@@ -325,35 +306,7 @@ const config: NuxtConfig = {
           ...tailwindDefault.screens,
           lg: "1101px",
         },
-        /* transitionTimingFunction: {
-          ...tailwindDefault.transitionTimingFunction,
-          ease: "ease",
-        }, */
-        /* extend: {
-          width: {
-            '72': '18rem',
-            'max-content': 'max-content'
-          },
-          height: {
-            '72': '18rem',
-            'max-content': 'max-content'
-          },
-          spacing: {
-            '72': '18rem',
-            '84': '21rem',
-            '96': '24rem',
-          },
-        }, */
       },
-      /* variants: {
-        extends: {
-          fontFamily: {
-            firaCode: ["Fira Code", "sans-serif"],
-            firaCondensed: ["Fira Sans Condensed", "sans-serif"],
-          },
-        },
-      }, */
-      plugins: [],
     },
   },
   /*

@@ -60,13 +60,13 @@ const initializedWallets: WalletSelectModuleOptions = {
   ],
 };
 export default (ctx: unknown): Initialization => {
-  const colorTheme: string | null = localStorage.getItem("colorTheme");
+  // const colorTheme: string | null = localStorage.getItem("colorTheme");
   return <Initialization>{
     hideBranding: true,
     blockPollingInterval: 400000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
-    darkMode: colorTheme !== null && colorTheme === "dark",
+    darkMode: false,
     subscriptions: <Subscriptions>{
       wallet: (wallet: OnBoardingWallet) => {
         if (wallet && wallet.provider) {
