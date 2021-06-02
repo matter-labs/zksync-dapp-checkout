@@ -34,3 +34,13 @@
     }
   }
 }
+
+@media screen and (max-width: 400px) {
+  .loggingInContainer {
+    & > div,
+    & > h1 {
+      text-align: center;
+      font-size: 18px;
+    }
+  }
+}
