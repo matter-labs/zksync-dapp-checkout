@@ -103,6 +103,7 @@
     "eslint-plugin-vue": "^7.7.0",
     "fork-ts-checker-webpack-plugin": "^6.1.0",
     "node-sass": "latest",
+    "postcss": "latest",
     "prettier": "^2.2.1",
     "sass-loader": "^10.1.1",
     "stylelint": "^13.11.0",

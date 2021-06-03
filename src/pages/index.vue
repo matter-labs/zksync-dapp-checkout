@@ -1,6 +1,6 @@
 <template>
   <div class="indexPage">
-    <modal :value="modal === 'feeChanged'" @close="modal = false">
+    <modal :value="modal === 'feeChanged'" @close="modal = false; cancelTransfer();">
       <template slot="header">
         <div class="withIcon text-warning text-yellow">
           <i class="fad fa-info-square" />

@@ -5,8 +5,7 @@
         <div class="flex items-center">
           <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync" />
           <div class="text-violet text-2xl font-bold">
-            zkCheckout <sup v-if="!isMainnet" class="text-sm font-light">{{ network }}
-            <span v-if="isBeta" class="text-xs font-bold text-red ml-1"> beta</span></sup>
+            zkCheckout <sup v-if="!isMainnet" class="text-sm font-light">{{ network }} <span v-if="isBeta" class="text-xs font-bold text-red ml-1"> beta</span></sup>
           </div>
         </div>
       </header>
@@ -97,10 +96,7 @@
       <div class="footerContainer hidden md:block">
         <footer>
           <div class="poweredBy flex gap-4 justify-center items-center mt-3">
-            <a target="_blank" href="https://zksync.io" class="linkDefault">zkWallet</a>
-            <a target="_blank" href="https://zksync.io" class="linkDefault">zkSync</a>
-            <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
-            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault">Privacy Policy</a>
+            <a v-for="(item, index) in links" :key="index" target="_blank" :href="item.url" class="linkDefault lightLink">{{ item.title }}</a>
           </div>
         </footer>
       </div>
@@ -120,6 +116,28 @@ export default Vue.extend({
     return {
       totalOpened: false,
       feesOpened: false,
+      links: [
+        {
+          title: "Terms",
+          url: "https://zksync.io/legal/terms.html#introduction",
+        },
+        {
+          title: "Privacy",
+          url: "https://zksync.io/legal/privacy.html#introduction",
+        },
+        {
+          title: "Docs",
+          url: "https://zksync.io/api/sdk/checkout/tutorial.html#getting-started",
+        },
+        {
+          title: "zkLink",
+          url: "https://link.zksync.io/",
+        },
+        {
+          title: "zkSync",
+          url: "https://zksync.io",
+        },
+      ],
     };
   },
   computed: {

@@ -1,3 +1,5 @@
 .github/*
 .idea/*
 environments/*
+.nuxt/*
+_nuxt/*

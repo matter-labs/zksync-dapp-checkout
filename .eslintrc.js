@@ -42,6 +42,7 @@ module.exports = {
     "@typescript-eslint/no-empty-function": ["off"],
     "vue/max-attribute": "off",
     "vue/require-prop-types": "off",
+    "@typescript-eslint/no-var-requires": "off"
   },
   settings: {
     "prettier-vue": {

@@ -17,29 +17,11 @@
         height: 45px;
       }
     }
+  }
 
-    .footerContainer {
-      z-index: 1;
-      height: 145px;
-
-      .zkSyncFooter {
-        z-index: -1;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: auto;
-        opacity: .6;
-      }
-    }
-
-    footer {
-      position: absolute;
-      left: 0;
-      bottom: 25px;
-      width: 100%;
-      height: max-content;
-    }
+  .footerContainer {
+    z-index: 1;
+    height: 145px;
   }
 
   .zkSyncLogoFull {
@@ -64,5 +46,19 @@
   .linkDefault {
     font-size: 14px;
     font-weight: 300;
+  }
+}
+
+footer {
+  position: absolute;
+  left: 0;
+  bottom: 25px;
+  width: 100%;
+  height: max-content;
+
+  .poweredBy {
+    justify-content: space-around;
+    width: fit-content;
+    margin: 0 auto;
   }
 }

@@ -69,13 +69,13 @@ export const submitSignedTransactionsBatch = async (provider: Provider, signedTx
  * @returns {Promise<Transaction | Transaction[]>}
  */
 export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: boolean, store: any) => {
-  const syncWallet: Wallet | undefined = walletData.get().syncWallet;
+  const syncWallet = walletData.get().syncWallet!;
 
   await store.dispatch("wallet/restoreProviderConnection");
-  const nonce = await syncWallet!.getNonce("committed");
-  const batchBuilder = syncWallet!.batchBuilder(nonce);
+  const nonce = await syncWallet.getNonce("committed");
+  const batchBuilder = syncWallet.batchBuilder(nonce);
   if (changePubKey) {
-    if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
+    if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
       const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
       if (!isOnchainAuthSigningKeySet) {
         const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
@@ -83,16 +83,17 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
       }
     }
 
-    const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-    const signedTx = await syncWallet!.signSetSigningKey({
+    const ethAuthType = syncWallet.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
+    /* const signedTx = await syncWallet.signSetSigningKey({
       feeToken,
-      fee: await store.getters["checkout/getAccountUnlockFee"],
+      fee: store.getters["checkout/getAccountUnlockFee"],
       nonce,
-      ethAuthType: ethAuthType === "ECDSA" ? "ECDSALegacyMessage" : "ECDSA",
-    });
+      ethAuthType,
+    }); */
     batchBuilder.addChangePubKey({
-      ...signedTx.tx,
-      alreadySigned: true,
+      feeToken,
+      fee: store.getters["checkout/getAccountUnlockFee"],
+      ethAuthType,
     });
   }
   for (const tx of transactions) {
@@ -111,7 +112,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
     token: feeToken,
   });
   const batchTransactionData = await batchBuilder.build();
-  return await submitSignedTransactionsBatch(<Provider>syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
 };
 
 /**
