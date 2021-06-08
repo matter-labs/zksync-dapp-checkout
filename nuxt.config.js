@@ -52,7 +52,7 @@ export default {
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
-        content: "/icon.png",
+        content: "/favicon-dark.png",
       },
       { hid: "theme-color", name: "theme-color", content: "#4e529a" },
       {
@@ -61,6 +61,7 @@ export default {
         content: "#4e529a",
       },
     ],
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
   },
 
   /*

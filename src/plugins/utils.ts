@@ -134,4 +134,18 @@ export default {
   validateAddress: (address: Address): boolean => {
     return utils.isAddress(address);
   },
+
+  filterError: (error: Error): string | undefined => {
+    if (error.message) {
+      if (error.message.includes("User denied") || error.message.includes("User rejected")) {
+        return undefined;
+      } else if (error.message.includes("Fee Amount is not packable")) {
+        return "Fee Amount is not packable";
+      } else if (error.message.includes("Transaction Amount is not packable")) {
+        return "Transaction Amount is not packable";
+      } else if (error.message.length < 60) {
+        return error.message;
+      }
+    }
+  },
 };

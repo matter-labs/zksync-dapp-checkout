@@ -70,7 +70,7 @@
           </template>
           <template slot="default">
             <div class="text-sm text-gray font-light">
-              The default amount to deposit is 10% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br>
+              The default amount to deposit is 5% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br>
             </div>
           </template>
         </zk-note>
@@ -85,7 +85,11 @@
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <zk-defbtn :disabled="!transferAllowed" @click="preTransfer()">
+          <zk-defbtn v-if="displayActivateAccountBtn" :disabled="!canCPK || cpkLoading" :loader="cpkLoading" @click="signActivation()">
+            <i class="fas fa-unlock"></i>
+            <span>{{ cpkBtnText }}</span>
+          </zk-defbtn>
+          <zk-defbtn v-else :disabled="!transferAllowed" @click="preTransfer()">
             <i class="fas fa-paper-plane"></i>
             <span>Complete payment</span>
           </zk-defbtn>
@@ -148,8 +152,12 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, TransactionFee, Transaction, ZkSyncTransaction, TokenPrices } from "@/plugins/types";
+import { TransactionData, TotalByToken, TransactionFee, Transaction, ZkSyncTransaction, TokenPrices, CPKLocal } from "@/plugins/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
+import { walletData } from "@/plugins/walletData";
+import zkUtils from "@/plugins/utils";
+import { utils } from "zksync";
+import { getCPKTx, saveCPKTx } from "@/plugins/walletActions/cpk";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
@@ -171,6 +179,8 @@ export default Vue.extend({
       modal: false as false | string /* false, feeChanged */,
       step: "main" /* main, transfer, success */,
       subStep: "" /* processing, waitingUserConfirmation, committing */,
+      cpkMessageSigned: false,
+      cpkState: "main" as "main" | "processing" | "waitingUserConfirmation",
       tokenItemsValid: {} as {
         [token: string]: Boolean;
       },
@@ -201,7 +211,7 @@ export default Vue.extend({
       return this.$store.getters["checkout/getTotalByToken"];
     },
     transferAllowed(): Boolean {
-      for (const [_, state] of Object.entries(this.tokenItemsValid)) {
+      for (const [, state] of Object.entries(this.tokenItemsValid)) {
         if (!state) {
           return false;
         }
@@ -210,6 +220,30 @@ export default Vue.extend({
     },
     tokensPrices(): TokenPrices {
       return this.$store.getters["tokens/getTokenPrices"];
+    },
+    displayActivateAccountBtn(): boolean {
+      if (this.isAccountLocked) {
+        this.checkCPKMessageSigned();
+        return !this.cpkMessageSigned;
+      }
+      return false;
+    },
+    canCPK(): boolean {
+      return typeof this.$store.getters["account/accountID"] === "number";
+    },
+    cpkLoading(): boolean {
+      return this.cpkState === "processing" || this.cpkState === "waitingUserConfirmation";
+    },
+    cpkBtnText(): string {
+      switch (this.cpkState) {
+        case "processing":
+          return "Processing...";
+        case "waitingUserConfirmation":
+          return "Follow the instructions in your wallet";
+
+        default:
+          return "Activate account";
+      }
     },
   },
   methods: {
@@ -255,76 +289,132 @@ export default Vue.extend({
       this.step = "main";
     },
     async transfer() {
-      if (this.transferAllowed) {
-        const transactionData = this.transactionData;
-        this.step = "transfer";
-        this.subStep = "waitingUserConfirmation";
-        try {
-          const transactionsList = [] as Array<ZkSyncTransaction>;
-          transactionsList.push(...transactionData.transactions);
-          const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
-          const transactions = await transactionBatch(
-            transactionsList,
-            transactionData.feeToken,
-            transactionFees.amount,
-            this.$store.getters["wallet/isAccountLocked"],
-            this.$store,
-          );
-          console.log("Batch transaction", transactionsList);
+      if (!this.transferAllowed) {
+        return;
+      }
+      const transactionData = this.transactionData;
+      this.step = "transfer";
+      this.subStep = "waitingUserConfirmation";
+      try {
+        const transactionsList = [] as Array<ZkSyncTransaction>;
+        transactionsList.push(...transactionData.transactions);
+        const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
+        const transactions = await transactionBatch(transactionsList, transactionData.feeToken, transactionFees.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
+        console.log("Batch transaction", transactionsList);
 
-          const manager = ZkSyncCheckoutManager.getManager();
+        const manager = ZkSyncCheckoutManager.getManager();
 
-          let endHashes = [];
-          const validHashes = transactions.filter((tx: any) => {
-            if (tx.txData.tx.type !== "Transfer") {
-              return false;
-            }
-            for (const singleTx of transactionsList) {
-              if (
-                typeof tx.txData.tx.to === "string" &&
-                typeof singleTx.to === "string" &&
-                tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() &&
-                tx.txData.tx.amount === singleTx.amount
-              ) {
-                return true;
-              }
-            }
+        let endHashes = [];
+        const validHashes = transactions.filter((tx: any) => {
+          if (tx.txData.tx.type !== "Transfer") {
             return false;
-          });
-          endHashes = validHashes.map((tx: any) => tx.txHash);
-          console.log("Sent hashes", endHashes);
-          manager.notifyHashes(endHashes);
-
-          // @ts-ignore
-          this.finalTransactions.push(...transactions);
-          this.subStep = "committing";
-
-          await transactions[0].awaitReceipt(); /* Not sure if required. Wait for the first transaction (at least) to be confirmed */
-          this.step = "success";
-        } catch (error) {
-          this.step = "main";
-          if (error.message) {
-            if (!error.message.includes("User denied")) {
-              if (error.message.includes("Account does not exist in the zkSync network")) {
-                this.errorModal = {
-                  headline: "Payment error",
-                  text: "Please, make deposit or request tokens in order to activate the account.",
-                };
-              } else {
-                this.errorModal = {
-                  headline: "Payment error",
-                  text: error.message,
-                };
-              }
-            }
-          } else {
-            this.errorModal = {
-              headline: "Payment error",
-              text: "Unknown error. Try again later.",
-            };
           }
+          for (const singleTx of transactionsList) {
+            if (
+              typeof tx.txData.tx.to === "string" &&
+              typeof singleTx.to === "string" &&
+              tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() &&
+              tx.txData.tx.amount === singleTx.amount
+            ) {
+              return true;
+            }
+          }
+          return false;
+        });
+        endHashes = validHashes.map((tx: any) => tx.txHash);
+        console.log("Sent hashes", endHashes);
+        manager.notifyHashes(endHashes);
+
+        // @ts-ignore
+        this.finalTransactions.push(...transactions);
+        this.subStep = "committing";
+
+        await transactions[0].awaitReceipt(); /* Not sure if required. Wait for the first transaction (at least) to be confirmed */
+        this.step = "success";
+      } catch (error) {
+        this.checkCPKMessageSigned();
+        this.step = "main";
+        if (error.message) {
+          if (!error.message.includes("User denied")) {
+            if (error.message.includes("Account does not exist in the zkSync network")) {
+              this.errorModal = {
+                headline: "Payment error",
+                text: "Please, make deposit or request tokens in order to activate the account.",
+              };
+            } else {
+              this.errorModal = {
+                headline: "Payment error",
+                text: error.message,
+              };
+            }
+          }
+        } else {
+          this.errorModal = {
+            headline: "Payment error",
+            text: "Unknown error. Try again later.",
+          };
         }
       }
+    },
+    async signActivation() {
+      this.cpkState = "processing";
+      try {
+        const syncWallet = walletData.get().syncWallet!;
+        const nonce = await syncWallet.getNonce("committed");
+        if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
+          const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
+          if (!isOnchainAuthSigningKeySet) {
+            const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
+            await onchainAuthTransaction?.wait();
+          }
+        }
+
+        const newPubKeyHash = await syncWallet.signer!.pubKeyHash();
+        const accountID = await syncWallet.getAccountId();
+        if (typeof accountID !== "number") {
+          throw new TypeError("It is required to have a history of balances on the account to activate it.");
+        }
+        const changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, accountID!);
+        this.cpkState = "waitingUserConfirmation";
+        const ethSignature = (await syncWallet.getEthMessageSignature(changePubKeyMessage)).signature;
+        const changePubkeyTx: CPKLocal = {
+          accountId: accountID!,
+          account: syncWallet.address(),
+          newPkHash: newPubKeyHash,
+          nonce,
+          ethSignature,
+          validFrom: 0,
+          validUntil: utils.MAX_TIMESTAMP,
+        };
+        saveCPKTx(this.$store.getters["account/address"], changePubkeyTx);
+        this.cpkState = "processing";
+        await new Promise((resolve) => {
+          // Just for the UX reasons
+          setTimeout(() => {
+            resolve(undefined);
+          }, 500);
+        });
+        this.cpkState = "main";
+      } catch (error) {
+        this.cpkState = "main";
+        const errorMsg = zkUtils.filterError(error);
+        if (typeof errorMsg === "string") {
+          this.errorModal = {
+            headline: "Activation error",
+            text: errorMsg,
+          };
+        }
+      }
+      this.checkCPKMessageSigned();
+    },
+    checkCPKMessageSigned(): boolean {
+      try {
+        getCPKTx(this.$store.getters["account/address"]);
+        this.cpkMessageSigned = true;
+      } catch (error) {
+        this.cpkMessageSigned = false;
+      }
+      return this.cpkMessageSigned;
     },
     close() {
       window.close();

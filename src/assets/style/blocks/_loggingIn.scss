@@ -32,6 +32,14 @@
       height: auto;
     }
   }
+
+  @media screen and (max-width: $mobile) {
+    padding: 0 5vw;
+
+    svg {
+      max-width: 100%;
+    }
+  }
 }
 
 .darkMode .loggingInContainer {

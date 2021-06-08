@@ -198,9 +198,7 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   getTransactionsHistory(state): Array<Transaction> {
     return state.transactionsHistory.list;
   },
-  getTokenPrices(
-    state,
-  ): {
+  getTokenPrices(state): {
     [symbol: string]: {
       lastUpdated: Number;
       price: Number;
@@ -208,17 +206,13 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   } {
     return state.tokenPrices;
   },
-  getTransactionsList(
-    state,
-  ): {
+  getTransactionsList(state): {
     lastUpdated: Number;
     list: Array<Transaction>;
   } {
     return state.transactionsHistory;
   },
-  getWithdrawalProcessingTime(
-    state,
-  ):
+  getWithdrawalProcessingTime(state):
     | false
     | {
         normal: Number;
@@ -292,33 +286,14 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
       await dispatch("restoreProviderConnection");
       const newAccountState = await syncWallet!.getAccountState();
-
-      // @todo Left for testing purposes.
-      // const testBalances = {
-      //   DAI: 98.91346,
-      //   ETH: 0.00697466,
-      //   STORJ: 10.496,
-      //   USDC: 3329.78057,
-      //   USDT: 98.55857,
-      // };
-      // // const testBalances1 = {
-      // //   BAT: 0.9,
-      // //   DAI: 33543.4016421191,
-      // //   ETH: 0.0028442766686,
-      // //   KNC: 0.8,
-      // //   USDT: 64.277,
-      // // }
-      // newAccountState["committed"]["balances"] = testBalances;
-      // newAccountState["verified"]["balances"] = testBalances;
-      // console.log(newAccountState);
-
+      this.commit("account/setAccountID", newAccountState.id);
       walletData.set({ accountState: newAccountState });
       listCommitted = newAccountState?.committed.balances || {};
       listVerified = newAccountState?.verified.balances || {};
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
     const totalByToken = this.getters["checkout/getTotalByToken"];
-    let usedTokens = Object.entries(totalByToken).map((e) => e[0]);
+    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
 
     for (const tokenSymbol of usedTokens) {
       const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
@@ -368,9 +343,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     }
     await dispatch("restoreProviderConnection");
     const syncWallet = walletData.get().syncWallet;
-    const accountState = await syncWallet?.getAccountState();
-    walletData.set({ accountState });
-    if (!syncWallet || !accountState) {
+    if (!syncWallet) {
       return localList.list;
     }
     const loadedTokens = await this.dispatch("tokens/loadAllTokens");
@@ -399,6 +372,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
     });
     const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
+      console.log("Get balances error", err);
       // @todo insert sentry logging
       return [];
     });
@@ -450,10 +424,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       return localList.list;
     }
   },
-  async getWithdrawalProcessingTime({
-    getters,
-    commit,
-  }): Promise<{
+  async getWithdrawalProcessingTime({ getters, commit }): Promise<{
     normal: Number;
     fast: Number;
   }> {
@@ -524,13 +495,11 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
     }
   },
-  async checkLockedState({ commit }): Promise<boolean> {
-    const syncWallet = walletData.get().syncWallet;
-    const isSigningKeySet = await syncWallet!.isSigningKeySet();
-    commit("setAccountLockedState", !isSigningKeySet);
-    return !isSigningKeySet;
+  async checkLockedState({ commit }): Promise<void> {
+    const pubKeyHash = await walletData.get().syncWallet!.signer!.pubKeyHash();
+    commit("setAccountLockedState", pubKeyHash !== walletData.get().accountState!.committed.pubKeyHash);
   },
-  async getProviders({ commit }): Promise<void> {
+  async getProviders(): Promise<void> {
     const zksync = await walletData.zkSync();
     const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
     walletData.set({ syncProvider });
@@ -561,7 +530,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
         return false;
       }
       const transactionData = this.getters["checkout/getTransactionData"];
-      if (typeof(transactionData.fromAddress)==='string' && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
+      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
         this.commit("setCurrentModal", "wrongAccountAddress");
         return false;
       }
@@ -590,7 +559,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
 
       walletData.set({ syncWallet, accountState, ethWallet });
 
-      await dispatch("getzkBalances", accountState);
+      await dispatch("getzkBalances", { accountState, force: true });
       await dispatch("getInitialBalances", true);
 
       await dispatch("checkLockedState");
@@ -599,6 +568,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       await watcher.changeNetworkSet(dispatch, this);
 
       this.commit("account/setAddress", syncWallet.address());
+      this.commit("account/setAccountID", accountState.id);
       this.commit("account/setLoggedIn", true);
       return true;
     } catch (error) {
@@ -632,6 +602,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     localStorage.removeItem("selectedWallet");
     this.commit("account/setLoggedIn", false);
     this.commit("account/setSelectedWallet", "");
+    this.commit("account/setAccountID", null);
     /* this.commit('checkout/setAccountUnlockFee', false); */
     commit("clearDataStorage");
   },

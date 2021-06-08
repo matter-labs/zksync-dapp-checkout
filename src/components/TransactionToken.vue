@@ -185,8 +185,8 @@ export default Vue.extend({
     recommendedDeposit(): GweiBalance {
       try {
         const minDeposit = BigNumber.from(this.needToDeposit);
-        /* Add 10% to take into account the risk of fluctuating transaction fees */
-        return minDeposit.add(minDeposit.div("10")).toString();
+        /* Add 5% to take into account the risk of fluctuating transaction fees */
+        return minDeposit.add(minDeposit.div("5")).toString();
       } catch (error) {
         return "";
       }
@@ -250,7 +250,7 @@ export default Vue.extend({
         this.lineStateText = "Committing transaction...";
       } else if (val === "confirming") {
         const confirmations = await walletData.get().syncProvider!.getConfirmationsForEthOpAmount();
-        this.lineStateText = `The transaction has been comitted. Waiting for ${confirmations} confirmations.`;
+        this.lineStateText = `Waiting for ${confirmations} confirmations.`;
       } else {
         this.lineStateText = "";
       }
@@ -289,7 +289,10 @@ export default Vue.extend({
         try {
           this.subStep = "waitingUserConfirmation";
           this.step = "depositing";
-          const transferTransaction = await deposit(this.token, this.depositBigNumber, this.$store);
+          const transferTransaction = await deposit(this.token, this.depositBigNumber);
+          if (!transferTransaction) {
+            throw new Error("Unexpected payment error!");
+          }
           this.subStep = "committing";
           await transferTransaction.awaitEthereumTxCommit();
           this.subStep = "confirming";
