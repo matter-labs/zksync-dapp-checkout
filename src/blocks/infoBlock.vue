@@ -3,8 +3,8 @@
     <div class="infoBlock md:min-h-screen py-4 md:py-10 px-5 md:px-10">
       <header class="md:mb-6">
         <div class="flex items-center">
-          <img class="w-10 h-10 mr-2" src="/zkSyncLogo.svg" alt="zkSync">
-          <div class="text-violet -dark text-2xl font-bold">zkCheckout <sup v-if="currentNetworkName !== 'mainnet'" class="text-sm font-light">{{currentNetworkName}}</sup></div>
+          <logo class="h-8 mr-2" />
+          <div class="brandContainer text-violet -dark text-2xl font-bold">Checkout <sup class="networkName text-sm font-light">{{currentNetworkName}}</sup></div>
         </div>
       </header>
       <zk-values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">

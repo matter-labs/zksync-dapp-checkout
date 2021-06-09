@@ -8,8 +8,15 @@
   .infoBlock {
     position: relative;
 
-    sup {
-      top: -1em;
+    .brandContainer {
+      position: relative;
+      top: 1px;
+
+      .networkName {
+        position: absolute;
+        left: 100%;
+        top: 0.4em;
+      }
     }
 
     header {
