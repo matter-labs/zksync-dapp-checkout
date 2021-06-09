@@ -6,7 +6,7 @@
       </div>
     </div>
     <div class="rightSide flex items-center">
-      <div v-if="version" class="version text-xs text-black2 -dark md:mr-5">v.{{version}}</div>
+      <div v-if="version" class="version text-xs text-black2 -dark mr-3 md:mr-5">v.{{version}}</div>
       <div class="colorTheme" :class="{'dark': darkMode}" @click="toogleDarkMode">
         <i class="fas fa-adjust"></i>
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="defaultLayout min-h-screen" :class="{'darkMode': darkMode===true}">
+  <div class="defaultLayout min-h-screen" :class="[{'darkMode': darkMode===true}, {'loggedIn': loggedIn===true}]">
     <modals />
     <info-block />
     <div class="routerContainer bg-white2 md:min-h-screen py-4 md:py-10 px-5 md:px-10">
@@ -7,7 +7,7 @@
       <transition v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')" name="fade" mode="out-in">
         <nuxt class="routeMain"/>
       </transition>
-      <div class="zk-footer-space"></div>
+      <div class="zk-footer-space mobileOnly"></div>
       <zk-footer />
     </div>
   </div>

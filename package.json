@@ -64,7 +64,7 @@
     "ethers": "^5.0.31",
     "js-cookie": "^2.2.1",
     "lottie-web": "^5.7.6",
-    "matter-zk-ui": "^1.0.3",
+    "matter-zk-ui": "^1.0.4",
     "moment": "^2.29.1",
     "nuxt": "^2.15.2",
     "nuxt-i18n": "^6.20.4",

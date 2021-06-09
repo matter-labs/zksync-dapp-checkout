@@ -27,11 +27,9 @@
 
   @media screen and (max-width: $mobile) {
     .mainBtnsContainer {
-      position: absolute;
       left: 0;
       bottom: 0;
       margin-top: 0;
-      height: 80px;
       width: 100%;
 
       .mainBtns {

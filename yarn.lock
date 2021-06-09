@@ -11770,10 +11770,10 @@ mathml-tag-names@^2.1.3:
   resolved "https://registry.yarnpkg.com/mathml-tag-names/-/mathml-tag-names-2.1.3.tgz#4ddadd67308e780cf16a47685878ee27b736a0a3"
   integrity sha512-APMBEanjybaPzUrfqU0IMU5I0AswKMH7k8OTLs0vvV4KZpExkTkY87nR/zpbuTPj+gARop7aGUbl11pnDfW6xg==
 
-matter-zk-ui@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/matter-zk-ui/-/matter-zk-ui-1.0.3.tgz#b9912f36dac97f078088871303d2fc79c3ea6bcb"
-  integrity sha512-/DWB0zzJwHZWhSA6zNtn45ffjAhWNRaJ+SbK8KesIyg0a/7mAUgtzsNSU/OUrUK929bOZLYbY3CG3tDBCLTuXg==
+matter-zk-ui@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/matter-zk-ui/-/matter-zk-ui-1.0.4.tgz#e13e637143dff0787e63eedc7ddfa247adfb95ad"
+  integrity sha512-I/2po7ek1uUmxb5oB4OGazl7/mEfamfHY+mNOtZ+QK80x+ZP4N7t4LtMas+cXo1sMgag0to4WogFgaPzFhMH6Q==
   dependencies:
     "@nuxtjs/axios" "^5.13.1"
     "@nuxtjs/style-resources" "^1.0.0"
@@ -18808,16 +18808,6 @@ zksync-crypto@^0.5.4:
   resolved "https://registry.yarnpkg.com/zksync-crypto/-/zksync-crypto-0.5.4.tgz#6b3ca224ce35bbf1843f20ffa526651c45000e03"
   integrity sha512-E5TrDnOijfbyqt3J38iYtqsSdytB68FsEEgiTd/YPVeF6Q1Fp+4ecVlUs+FlelY/OTRpWNkSLD9HGug1GpXHcw==
 
-zksync@^0.10.9:
-  version "0.10.9"
-  resolved "https://registry.yarnpkg.com/zksync/-/zksync-0.10.9.tgz#912ec2d7b11e6ba4a086e393d93944aabc2217c1"
-  integrity sha512-8esbcCvQ48a+5iXMrR0VPVy2P149sULKdBXlXQaxcVueGUjsMFE1DsM+xoJhcyufy8quuENg9LkheZWNqPTkFQ==
-  dependencies:
-    axios "^0.21.1"
-    websocket "^1.0.30"
-    websocket-as-promised "^1.1.0"
-    zksync-crypto "^0.5.4"
-
 zksync@^0.8.1:
   version "0.8.4"
   resolved "https://registry.yarnpkg.com/zksync/-/zksync-0.8.4.tgz#1d02cca4ca17aa09ede73944177baee10cc2ace9"
@@ -18827,6 +18817,16 @@ zksync@^0.8.1:
     websocket "^1.0.30"
     websocket-as-promised "^1.1.0"
     zksync-crypto "^0.4.2"
+
+zksync@latest:
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/zksync/-/zksync-0.10.9.tgz#912ec2d7b11e6ba4a086e393d93944aabc2217c1"
+  integrity sha512-8esbcCvQ48a+5iXMrR0VPVy2P149sULKdBXlXQaxcVueGUjsMFE1DsM+xoJhcyufy8quuENg9LkheZWNqPTkFQ==
+  dependencies:
+    axios "^0.21.1"
+    websocket "^1.0.30"
+    websocket-as-promised "^1.1.0"
+    zksync-crypto "^0.5.4"
 
 zwitch@^1.0.0:
   version "1.0.5"
