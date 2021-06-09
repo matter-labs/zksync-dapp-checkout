@@ -176,9 +176,9 @@ export default Vue.extend({
   },
   data() {
     return {
-      modal: false as false | string /* false, feeChanged */,
-      step: "main" /* main, transfer, success */,
-      subStep: "" /* processing, waitingUserConfirmation, committing */,
+      modal: false as false | "feeChanged",
+      step: "main" as "main" | "transfer" | "success",
+      subStep: "" as "processing" | "waitingUserConfirmation" | "committing",
       cpkMessageSigned: false,
       cpkState: "main" as "main" | "processing" | "waitingUserConfirmation",
       tokenItemsValid: {} as {
@@ -329,7 +329,7 @@ export default Vue.extend({
         this.finalTransactions.push(...transactions);
         this.subStep = "committing";
 
-        await transactions[0].awaitReceipt(); /* Not sure if required. Wait for the first transaction (at least) to be confirmed */
+        await transactions[0].awaitReceipt();
         this.step = "success";
       } catch (error) {
         this.checkCPKMessageSigned();

@@ -506,7 +506,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
   },
   async walletRefresh({ getters, dispatch }, firstSelect = true): Promise<boolean> {
     try {
-      /* dispatch("changeNetworkRemove"); */
       const onboard = getters.getOnboard;
       this.commit("account/setLoadingHint", "processing");
       let walletCheck = false;
@@ -573,7 +572,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       return true;
     } catch (error) {
       if (!error.message.includes("User denied")) {
-        // this.dispatch("toaster/error", `Refreshing state of the wallet failed... Reason: ${error.message}`);
         this.dispatch("toaster/error", error.message);
       }
       return false;
@@ -590,10 +588,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       // @todo add sentry report
       console.log("forceRefreshData | getzkBalances error", err);
     });
-    /* await dispatch("getTransactionsHistory", { force: true }).catch((err) => {
-      // @todo add sentry report
-      console.log("forceRefreshData | getTransactionsHistory error", err);
-    }); */
   },
   async logout({ commit, getters }): Promise<void> {
     const onboard = getters.getOnboard;
@@ -603,7 +597,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     this.commit("account/setLoggedIn", false);
     this.commit("account/setSelectedWallet", "");
     this.commit("account/setAccountID", null);
-    /* this.commit('checkout/setAccountUnlockFee', false); */
     commit("clearDataStorage");
   },
 };

@@ -134,8 +134,8 @@ export default Vue.extend({
         headline: "",
         text: "",
       },
-      step: "default" /* default, depositing, unlocking */,
-      subStep: "" /* depositing: [waitingUserConfirmation,depositing,committing], unlocking: [waitingUserConfirmation,committing,confirming] */,
+      step: "default" as "default" | "depositing" | "unlocking",
+      subStep: "" as "waitingUserConfirmation" | "depositing" | "committing" | "waitingUserConfirmation" | "confirming",
       depositAmount: "",
       lineStateText: "",
     };

@@ -197,10 +197,6 @@ export default {
    */
   build: {
     ssr: false,
-    // target: "static",
-    /* extractCSS: {
-      ignoreOrder: true,
-    }, */
     extend(config) {
       config.node = {
         fs: "empty",
