@@ -22,8 +22,8 @@
         </template>
       </zk-values-block>
       <div class="w-full">
-        <div class="w-full border-b-2 border-light -dark mt-1 lg:mt-3"/>
-        <zk-values-block class="mt-1 lg:mt-3 cursor-pointer" @click="feesOpened=!feesOpened">
+        <div class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"/>
+        <zk-values-block class="pt-1 lg:pt-3 cursor-pointer" @click="feesOpened=!feesOpened">
           <template slot="left-top">
             <div class="flex items-center">
               <div class="headline big">Fees</div>
@@ -41,7 +41,7 @@
           </template>
         </zk-values-block>
         <zk-max-height v-model="feesOpened" :update-value="allFees.length">
-          <zk-values-block v-for="(item, index) in allFees" :key="index" class="mt-1 lg:mt-3">
+          <zk-values-block v-for="(item, index) in allFees" :key="index" class="pt-1 lg:pt-3">
             <template slot="left-top">
               <div class="headline">{{item.name}}</div>
             </template>
@@ -53,9 +53,9 @@
             </template>
           </zk-values-block>
         </zk-max-height>
-        <div class="w-full border-b-2 border-light -dark mt-1 lg:mt-3"></div>
+        <div class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"></div>
       <transition name="fade">
-        <div v-if="loggedIn" class="mt-2 lg:mt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">
+        <div v-if="loggedIn" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">
           <div class="flex-2">
             <div class="flex items-center">
               <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark -dark">Total amount</div>
