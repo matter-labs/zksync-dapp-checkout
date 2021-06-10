@@ -4,7 +4,7 @@
       <header class="md:mb-6">
         <div class="flex items-center">
           <logo class="h-8 mr-2" />
-          <div class="brandContainer text-violet -dark text-2xl font-bold">Checkout <sup class="networkName text-sm font-light">{{currentNetworkName}}</sup></div>
+          <div class="brandContainer text-violet -dark text-2xl font-bold">Checkout <sup v-if="currentNetworkName !== 'mainnet'" class="networkName text-sm font-light">{{currentNetworkName}}</sup></div>
         </div>
       </header>
       <zk-values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">

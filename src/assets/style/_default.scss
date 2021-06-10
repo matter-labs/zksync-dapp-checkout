@@ -1,3 +1,7 @@
+body {
+  overscroll-behavior-y: none;
+}
+
 .fitRightSide {
   z-index: 1;
   width: 57% !important;
