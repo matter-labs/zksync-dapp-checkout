@@ -1,19 +1,34 @@
 <template>
-  <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]" @click.self="focusInput()">
+  <div
+    class="amountInputGroup border rounded"
+    :class="[{ hasUnderInput: $slots['underInput'] }, { disabled: disabled }, { error: error }, { focused: focused }]"
+    @click.self="focusInput()"
+  >
     <div class="leftSide" @click="focusInput()">
       <div class="inputContainer">
-        <input ref="input" v-model="inputtedAmount" :style="{'width': `${width}px`}" :disabled="disabled" type="text" placeholder="Amount" maxlength="15" @focus="focused=true" @blur="focused=false" @keyup.enter="$emit('enter')">
-        <span ref="sizeSpan" class="sizeSpan">{{inputtedAmount}}</span>
+        <input
+          ref="input"
+          v-model="inputtedAmount"
+          :style="{ width: `${width}px` }"
+          :disabled="disabled"
+          type="text"
+          placeholder="Amount"
+          maxlength="15"
+          @focus="focused = true"
+          @blur="focused = false"
+          @keyup.enter="$emit('enter')"
+        />
+        <span ref="sizeSpan" class="sizeSpan">{{ inputtedAmount }}</span>
         <div class="penIcon">
-          <i class="fad fa-pen"/>
+          <i class="fad fa-pen" />
         </div>
       </div>
       <div class="underInput">
-        <slot name="underInput"/>
+        <slot name="underInput" />
       </div>
     </div>
     <div class="rightSide">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>
@@ -115,7 +130,7 @@ export default Vue.extend({
       try {
         inputAmount = utils.parseToken(this.token, val);
       } catch (error) {
-        let errorInfo = `Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help`;
+        let errorInfo = "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
           errorInfo = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
         }

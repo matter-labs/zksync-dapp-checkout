@@ -36,7 +36,8 @@ yarn-error.log*
 .assets_cache/
 .buildx-cache/
 .reports/
-/src/static/sw.js
+src/static/sw.js
+*sw.js
 public
 !public/.gitignore
 .nuxt
@@ -44,3 +45,5 @@ public
 /report.txt
 /tokens.txt
 /.yarn/
+!.yarn/plugins
+!.yarn/releases*

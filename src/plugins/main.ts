@@ -1,7 +1,7 @@
 import Vue from "vue";
 import utils from "@/plugins/utils";
 
-import { GweiBalance, TokenSymbol } from "@/plugins/types";
+import { GweiBalance, TokenSymbol } from "@/types/index";
 import { BigNumber } from "ethers";
 
 /**

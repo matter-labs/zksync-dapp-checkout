@@ -106,7 +106,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
  *
  * @param {TokenSymbol} token
  * @param {string} amount
- * @param store
+ * @param _store
  * @returns {Promise<ETHOperation>}
  */
 export const deposit = async (token: TokenSymbol, amount: string | BigNumber): Promise<ETHOperation | undefined> => {
@@ -138,6 +138,5 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber): P
 export const unlockToken = async (address: Address, store: any) => {
   const wallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
-  const unlockTransaction = await wallet!.approveERC20TokenDeposits(address as string);
-  return unlockTransaction;
+  return await wallet!.approveERC20TokenDeposits(address as string);
 };

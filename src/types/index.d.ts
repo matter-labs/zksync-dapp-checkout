@@ -4,6 +4,8 @@ import { ChangePubKeyCREATE2, ChangePubKeyECDSA, ChangePubKeyOnchain } from "zks
 
 export import ZkSyncTransaction = Types.ZkSyncTransaction;
 
+export import ZkSyncTransaction = Types.ZkSyncTransaction;
+
 export declare type Address = string;
 export declare type PubKeyHash = string;
 export declare type TokenSymbol = string;
@@ -26,7 +28,7 @@ export type TransactionFee = {
   to?: Address;
 };
 export type TotalByToken = {
-  [token: string]: BigNumberish;
+  [token: string]: BigNumber;
 };
 export interface Signature {
   pubKey: string;
@@ -95,7 +97,7 @@ export interface Token {
   address: Address;
   balance: string | BigNumber;
   symbol: TokenSymbol;
-  id: Number;
+  id: number;
   formattedBalance?: string;
 }
 

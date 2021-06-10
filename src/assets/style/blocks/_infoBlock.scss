@@ -1,7 +1,7 @@
 .infoBlockContainer {
   z-index: 4;
   width: 100%;
-  box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
+  box-shadow: 0 32px 64px rgba(17, 17, 17, .08);
   overflow: auto;
   height: 100%;
 
@@ -24,29 +24,11 @@
         height: 45px;
       }
     }
+  }
 
-    .footerContainer {
-      z-index: 1;
-      height: 85px;
-
-      .zkSyncFooter {
-        z-index: -1;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: auto;
-        opacity: 0.6;
-      }
-    }
-
-    footer {
-      position: absolute;
-      left: 0;
-      bottom: 25px;
-      width: 100%;
-      height: max-content;
-    }
+  .footerContainer {
+    z-index: 1;
+    height: 85px;
   }
 
   @media screen and (max-width: $mobile) {
@@ -75,5 +57,20 @@
   .linkDefault {
     font-weight: 400;
     color: $lightViolet;
+  }
+}
+
+
+footer {
+  position: absolute;
+  left: 0;
+  bottom: 25px;
+  width: 100%;
+  height: max-content;
+
+  .poweredBy {
+    justify-content: space-around;
+    width: fit-content;
+    margin: 0 auto;
   }
 }

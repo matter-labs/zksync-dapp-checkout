@@ -4,20 +4,27 @@
       <header class="md:mb-6">
         <div class="flex items-center">
           <logo class="h-8 mr-2" />
-          <div class="brandContainer text-violet -dark text-2xl font-bold">Checkout <sup class="networkName text-sm font-light">{{currentNetworkName}}</sup></div>
+          <div class="brandContainer text-violet -dark text-2xl font-bold">Checkout <sup v-if="!isMainnet" class="text-sm font-light">{{ network }} <span v-if="isBeta" class="text-xs font-bold text-red ml-1"> beta</span></sup>
+          </div>
         </div>
       </header>
       <zk-values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
         <template slot="left-top">
-          <div class="headline">{{item.description}}</div>
+          <div class="headline">
+            {{ item.description }}
+          </div>
         </template>
         <template slot="left-bottom">
-          <div class="address hidden lg:block">{{item.to}}</div>
+          <div class="address hidden lg:block">
+            {{ item.to }}
+          </div>
         </template>
         <template slot="right-top">
           <div class="flex flex-col items-end whitespace-nowrap">
-            <div class="value">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
-            <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
+            <div class="value">
+              {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
+            </div>
+            <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{ item.token }}</div>
           </div>
         </template>
       </zk-values-block>
@@ -28,14 +35,16 @@
             <div class="flex items-center">
               <div class="headline big">Fees</div>
               <span class="ml-3">
-                <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${feesOpened===true?-180:0}deg)`}"/>
+                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${feesOpened === true ? -180 : 0}deg)` }" />
               </span>
             </div>
           </template>
           <template slot="right-top">
             <div class="flex items-center">
               <div class="flex flex-col">
-                <div class="value">{{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}</div>
+                <div class="value">
+                    {{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+                  </div>
               </div>
             </div>
           </template>
@@ -43,24 +52,28 @@
         <zk-max-height v-model="feesOpened" :update-value="allFees.length">
           <zk-values-block v-for="(item, index) in allFees" :key="index" class="pt-1 lg:pt-3">
             <template slot="left-top">
-              <div class="headline">{{item.name}}</div>
+                <div class="headline">
+                  {{ item.name }}
+                </div>
             </template>
             <template slot="right-top">
               <div class="flex flex-col items-end whitespace-nowrap">
-                <div class="value">{{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}</div>
+                <div class="value">
+                    {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
+                  </div>
                 <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
               </div>
             </template>
           </zk-values-block>
         </zk-max-height>
-        <div class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"></div>
+        <div class="w-full border-b-2 border-light -dark pt-1 lg:pt-3" />
       <transition name="fade">
-        <div v-if="loggedIn" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened=!totalOpened">
+        <div v-if="loggedIn" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
           <div class="flex-2">
             <div class="flex items-center">
               <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark -dark">Total amount</div>
               <span class="ml-3">
-                <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{'transform': `rotate(${totalOpened===true?-180:0}deg)`}"/>
+                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${totalOpened === true ? -180 : 0}deg)` }" />
               </span>
             </div>
           </div>
@@ -90,7 +103,6 @@
             <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault ml-5">Privacy Policy</a>
           </div>
         </footer>
-        <img class="zkSyncFooter" src="/zkSyncFooter.svg" alt="zkSync">
       </div>
     </div>
   </aside>
@@ -99,10 +111,10 @@
 <script lang="ts">
 import Vue from "vue";
 import utils from "@/plugins/utils";
-import { TransactionData, TransactionFee, TokenPrices, TotalByToken, GweiBalance } from "@/plugins/types";
+import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import { BigNumber } from "ethers";
 import Logo from "@/blocks/logo.vue";
-import { ETHER_NETWORK_LABEL_LOWERCASED } from "@/plugins/build";
+import { ETHER_NETWORK_NAME, ETHER_PRODUCTION, ZK_IS_BETA } from "~/plugins/build";
 
 export default Vue.extend({
   components: {
@@ -112,14 +124,42 @@ export default Vue.extend({
     return {
       totalOpened: false,
       feesOpened: false,
+      links: [
+        {
+          title: "Terms",
+          url: "https://zksync.io/legal/terms.html#introduction",
+        },
+        {
+          title: "Privacy",
+          url: "https://zksync.io/legal/privacy.html#introduction",
+        },
+        {
+          title: "Docs",
+          url: "https://zksync.io/api/sdk/checkout/tutorial.html#getting-started",
+        },
+        {
+          title: "zkLink",
+          url: "https://link.zksync.io/",
+        },
+        {
+          title: "zkSync",
+          url: "https://zksync.io",
+        },
+      ],
     };
   },
   computed: {
     loggedIn(): boolean {
       return this.$store.getters["account/loggedIn"];
     },
-    currentNetworkName(): string {
-      return ETHER_NETWORK_LABEL_LOWERCASED;
+    network(): string {
+      return ETHER_NETWORK_NAME;
+    },
+    isBeta(): boolean {
+      return ZK_IS_BETA;
+    },
+    isMainnet(): boolean {
+      return ETHER_PRODUCTION;
     },
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
@@ -149,7 +189,7 @@ export default Vue.extend({
       for (const item of [...transactionData.transactions, ...allFees]) {
         totalUSD += +tokensPrices[item.token].price * +utils.handleFormatToken(item.token, item.amount as string);
       }
-      return totalUSD < 0.01 ? `<$0.01` : `$${totalUSD.toFixed(2)}`;
+      return totalUSD < 0.01 ? "<$0.01" : `$${totalUSD.toFixed(2)}`;
     },
     totalByToken(): TotalByToken {
       return this.$store.getters["checkout/getTotalByToken"];

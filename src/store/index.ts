@@ -20,7 +20,7 @@ export const getters: GetterTree<RootState, RootState> = {
 };
 
 export const mutations: MutationTree<RootState> = {
-  setCurrentModal(state, modalName: false | String) {
+  setCurrentModal(state, modalName: false | string) {
     state.currentModal = modalName;
   },
   setDarkMode(state, darkModeState: boolean) {

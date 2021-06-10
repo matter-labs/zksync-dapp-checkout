@@ -1,0 +1,34 @@
+//Colors
+$white: #fff;
+$white2: #fbfbfb;
+$white3: #f4f5f7;
+$light: #e1e4e8;
+$gray: #8d9aac;
+$dark: #243955;
+$dark2: #4e566d;
+$majorDark: #171a49;
+$black2: #3c4257;
+$black: #000;
+$violet: #5436d6;
+$lightViolet: lighten(
+  $color: $violet,
+  $amount: 10,
+);
+$red: #f25f5c;
+$green: #057a55;
+
+//Fonts
+$firaSans: "Fira Sans", "sans-serif";
+$firaCode: "Fira Code", "sans-serif";
+$firaCondensed: "Fira Sans", "sans-serif";
+
+$mainFontFamily: $firaSans;
+
+/* Transitions */
+$transition: .2s ease;
+$transition2: .3s ease;
+
+/* Responsive */
+$mobile: 768px;
+$breakpoint1: 1100px;
+$maxWidth: 1370px;

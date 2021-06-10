@@ -9,13 +9,16 @@
     transition-property: opacity, height, color;
     overflow: hidden;
   }
-  &.focused,&.error {
+
+  &.focused,
+  &.error {
     .underInput .minAmount {
       height: 12px;
       opacity: 1;
       cursor: pointer;
     }
   }
+
   &.error {
     .underInput .minAmount {
       color: $red;

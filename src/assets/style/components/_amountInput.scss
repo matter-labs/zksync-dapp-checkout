@@ -13,6 +13,7 @@
   &:not(:disabled) {
     &.focused {
       border-color: $violet;
+
       .leftSide {
         .inputContainer {
           .penIcon {
@@ -56,7 +57,8 @@
       display: flex;
       align-items: center;
 
-      input, .sizeSpan {
+      input,
+      .sizeSpan {
         display: block;
         font-family: $firaSans;
         font-size: 16px;
@@ -87,8 +89,8 @@
           font-size: 14px;
         }
       }
-      @media screen and (max-width: $breakpoint1)
-      {
+
+      @media screen and (max-width: $breakpoint1) {
         max-width: 100px;
       }
 
@@ -105,7 +107,7 @@
         transition: $transition;
         transition-property: color;
         will-change: color;
-        color: transparentize($color: $gray, $amount: 0.4);
+        color: transparentize($color: $gray, $amount: .4);
         width: 15px;
         pointer-events: none;
 
