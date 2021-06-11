@@ -3,7 +3,7 @@
   "name": "@matterlabs/zksync-dapp-checkout",
   "title": "zkSync Checkout — simple permissionless DeFi payment gateway",
   "description": "zkSync Checkout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.",
-  "version": "2.1.0",
+  "version": "2.4.0",
   "keywords": [
     "zksync",
     "ethereum",
@@ -144,7 +144,7 @@
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",
-    "ci:build:prod": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
+    "ci:build:prod": "yarn ci:prepare:prod && yarn generate --fail-on-error",
     "ci:build:rinkeby": "yarn ci:prepare:rinkeby && yarn generate --fail-on-error",
     "ci:build:ropsten": "yarn ci:prepare:ropsten && yarn generate --fail-on-error",
     "ci:prepare:rinkeby": "sh cli-process-env.sh 'rinkeby' 'prod' 1",
