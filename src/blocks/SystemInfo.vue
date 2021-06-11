@@ -1,7 +1,9 @@
 <template>
   <div v-if="version" class="system-info flex flex-row mx-2">
-    <a id="system-b-popover" v-popover:env-details.top class="linkDefault version px-2">v.{{ version
-      }}<sup v-if="isBeta" class="beta text-danger ml-1 font-weight-bold">BETA</sup></a>
+    <a id="system-b-popover" v-popover:env-details.top class="linkDefault version px-2">
+      v.{{ version }}
+      <!-- <sup v-if="isBeta" class="beta text-danger ml-1 font-weight-bold">BETA</sup> -->
+    </a>
     <popover name="env-details" transition="show-from-bottom" event="hover" class="system-env-popover p-5 rounded-md bg-gray-500">
       <h2 class="w-full leading-5 text-left text-md bg-blue-400 px-2 py-1 font-light block">Environment details</h2>
       <div class="flex flex-col justify-items-stretch items-start text-left px-2">
@@ -19,10 +21,10 @@
         </span>
       </div>
     </popover>
-      <a :href="githubLink" class="revision linkDefault x-2" target="_blank">
-        <i class="fab fa-github align-self-start"/>
-        {{ revision }}
-      </a>
+    <a :href="githubLink" class="revision linkDefault x-2" target="_blank">
+      <i class="fab fa-github align-self-start"/>
+      {{ revision }}
+    </a>
   </div>
 </template>
 <script lang="ts">

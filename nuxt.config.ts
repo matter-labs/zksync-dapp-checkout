@@ -268,14 +268,14 @@ const config: NuxtConfig = {
       };
     },
   },
-  buildOptimisations: {
+  /* buildOptimisations: {
     profile: env !== "prod" ? "risky" : "experimental",
     features: {
       postcssNoPolyfills: isProduction,
       hardSourcePlugin: isProduction,
     },
     esbuildLoaderOptions: "esnext",
-  },
+  }, */
   generate: {
     dir: "public",
     fallback: "404.html",
