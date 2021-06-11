@@ -8,7 +8,6 @@
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
             <span class="networkName text-sm font-light inline-flex items-center">
               {{ network }}
-              <!-- <small v-if="isBeta" class="text-xs font-bold text-red ml-1">beta</small> -->
             </span>
           </div>
         </div>
@@ -109,6 +108,7 @@
           <div class="poweredBy flex justify-center items-center mt-3">
             <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
             <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault ml-5">Privacy Policy</a>
+            <a target="_blank" v-if="!isMainnet" :href="zkMint" class="linkDefault ml-5">zkMint</a>
           </div>
         </footer>
       </div>
@@ -122,7 +122,7 @@ import utils from "@/plugins/utils";
 import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import { BigNumber } from "ethers";
 import Logo from "@/blocks/logo.vue";
-import { ETHER_NETWORK_NAME, ETHER_PRODUCTION, ZK_IS_BETA } from "~/plugins/build";
+import { ETHER_NETWORK_NAME, ETHER_PRODUCTION } from "~/plugins/build";
 
 export default Vue.extend({
   components: {
@@ -132,28 +132,6 @@ export default Vue.extend({
     return {
       totalOpened: false,
       feesOpened: false,
-      links: [
-        {
-          title: "Terms",
-          url: "https://zksync.io/legal/terms.html#introduction",
-        },
-        {
-          title: "Privacy",
-          url: "https://zksync.io/legal/privacy.html#introduction",
-        },
-        {
-          title: "Docs",
-          url: "https://zksync.io/api/sdk/checkout/tutorial.html#getting-started",
-        },
-        {
-          title: "zkLink",
-          url: "https://link.zksync.io/",
-        },
-        {
-          title: "zkSync",
-          url: "https://zksync.io",
-        },
-      ],
       scrollBarOptions: {
         scrollingThreshold: 1000
       }
@@ -167,15 +145,15 @@ export default Vue.extend({
       }
       return this.$store.getters["checkout/getErrorState"] !== true
     },
+    zkMint(): string {
+      return `https://mint${this.network==='ropsten' ? '-ropsten' : ''}.zksync.dev`;
+    },
     loggedIn(): boolean {
       return this.$store.getters["account/loggedIn"];
     },
     network(): string {
       return ETHER_NETWORK_NAME;
     },
-    /* isBeta(): boolean {
-      return ZK_IS_BETA;
-    }, */
     isMainnet(): boolean {
       return ETHER_PRODUCTION;
     },

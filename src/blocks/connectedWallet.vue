@@ -17,7 +17,7 @@
         </template>
         <template slot="right-top">
           <div class="flex items-center flex-col md:flex-row">
-            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="currentNetwork==='rinkeby'?'///stage.zksync.io':'///wallet.zksync.io'">
+            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="testnetWalletUrl">
               <span>Open wallet</span>
               <i class="fas fa-external-link" />
             </zk-defbtn>
@@ -51,7 +51,7 @@ export default Vue.extend({
       return ETHER_NETWORK_NAME;
     },
     testnetWalletUrl(): string {
-      return `https://${this.isProd ? "wallet.zksync.io" : `${ETHER_NETWORK_NAME}.zksync.io`}`
+      return `///${this.isProd ? "wallet.zksync.io" : `${ETHER_NETWORK_NAME}.zksync.io`}`
     }
   },
   methods: {
