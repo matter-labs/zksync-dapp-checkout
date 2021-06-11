@@ -13,7 +13,7 @@ jobs:
         run: sh cli-dev.sh ci &&  yarn install --immutable
 
       - name: Generating static rinkeby version
-        run: yarn build:rinkeby
+        run: yarn ci:build:rinkeby
 
       - name: Creating temporary preview URL with rinkeby
         uses: FirebaseExtended/action-hosting-deploy@v0
