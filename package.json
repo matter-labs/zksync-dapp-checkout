@@ -144,7 +144,7 @@
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",
-    "ci:build:prod": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
+    "ci:build:prod": "yarn ci:prepare:prod && yarn generate --fail-on-error",
     "ci:build:rinkeby": "yarn ci:prepare:rinkeby && yarn generate --fail-on-error",
     "ci:build:ropsten": "yarn ci:prepare:ropsten && yarn generate --fail-on-error",
     "ci:prepare:rinkeby": "sh cli-process-env.sh 'rinkeby' 'prod' 1",
