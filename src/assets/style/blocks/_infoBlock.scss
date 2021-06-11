@@ -77,3 +77,42 @@
     color: $lightViolet;
   }
 }
+
+.zkFooterContainer {
+  justify-content: center;
+
+  @media screen and (max-width: $mobile) {
+    flex-wrap: wrap;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .leftSide {
+    @apply w-4/5;
+
+    @media screen and (max-width: $mobile) {
+      @apply w-full;
+    }
+  }
+
+  .rightSide {
+    @apply w-1/5;
+
+    text-align: right;
+    justify-content: flex-end;
+    z-index: 4;
+    width: 100%;
+
+    .linkDefault {
+      font-size: 14px;
+      font-weight: 300;
+    }
+  }
+}
+
+.darkMode .zkFooterContainer .rightSide {
+  .linkDefault {
+    font-weight: 400;
+    color: $lightViolet;
+  }
+}

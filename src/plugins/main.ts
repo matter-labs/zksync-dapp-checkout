@@ -3,6 +3,11 @@ import utils from "@/plugins/utils";
 
 import { GweiBalance, TokenSymbol } from "@/types/index";
 import { BigNumber } from "ethers";
+// @ts-ignore
+import Popover from "vue-js-popover";
+
+// @ts-ignore
+Vue.use(Popover);
 
 /**
  * Implementation of the tokenFormatter as a global filter
