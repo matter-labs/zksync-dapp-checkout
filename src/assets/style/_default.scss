@@ -2,7 +2,6 @@ body {
   overscroll-behavior-y: none;
 }
 
-.fitRightSide {
 #__nuxt,
 #__layout {
   width: 100%;
@@ -11,7 +10,7 @@ body {
 
 #nuxt-loading {
   will-change: opacity;
-
+  
   & > div {
     will-change: transform;
   }
@@ -56,6 +55,43 @@ input[type="number"] {
   }
 }
 
+.customScrollList {
+  overflow: auto;
+  width: calc(100% + 10px);
+  padding-right: 10px;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .ps__rail-y {
+    opacity: 0.7;
+    width: 6px;
+    will-change: top, opacity;
+    transition: opacity $transition;
+
+    &:hover, &.ps--clicking {
+      opacity: 1;
+      background-color: transparent !important;
+
+      .ps__thumb-y {
+        width: 10px;
+      }
+    }
+    
+    .ps__thumb-y {
+      left: 0;
+      width: 6px !important;
+      background-color: lighten($color: $gray, $amount: 5) !important;
+      border-radius: 6px !important;
+      will-change: width, height, background-color, top;
+      transition: $transition;
+      transition-property: width, height;
+    }
+  }
+}
+
+.fitRightSide {
   z-index: 1;
   width: 57% !important;
   left: 43% !important;

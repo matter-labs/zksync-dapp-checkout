@@ -12,7 +12,7 @@
           </div>
         </div>
       </header>
-      <vue-custom-scrollbar :settings="scrollBarOptions" class="transactionsList">
+      <vue-custom-scrollbar class="customScrollList transactionsList">
         <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2" >
           <template slot="left-top">
             <div class="headline">
@@ -132,9 +132,6 @@ export default Vue.extend({
     return {
       totalOpened: false,
       feesOpened: false,
-      scrollBarOptions: {
-        scrollingThreshold: 1000
-      }
     };
   },
   computed: {

@@ -25,7 +25,25 @@
     }
   }
 
+  .successPage {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(5, max-content) 1fr;
+    height: calc(100vh - 1rem - 45px - 80px);
+
+    .customScrollList {
+      min-height: 80px;
+    }
+  }
+
   @media screen and (max-width: $mobile) {
+    .successPage {
+      height: auto;
+      
+      .customScrollList {
+        max-height: 50vh;
+      }
+    }
     .mainBtnsContainer {
       left: 0;
       bottom: 0;
