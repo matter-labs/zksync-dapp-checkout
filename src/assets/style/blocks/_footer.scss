@@ -58,10 +58,11 @@
       font-weight: 300;
     }
   }
-  .system-info {
-    .vue-popover {
-      position: fixed;
-    }
+  #system-b-popover {
+    cursor: help;
+  }
+  .vue-popover {
+    position: fixed;
   }
 }
 

@@ -2,13 +2,17 @@
   <div class="container">
     <div class="connectedWallet flex items-center">
       <i class="text-gray text-4xl mr-3 far fa-wallet" />
+      <popover name="copy-address" event="click" class="text-green text-center">
+        Address copied!
+      </popover>
       <zk-values-block>
         <template slot="left-top">
           <div class="headline">My wallet</div>
         </template>
         <template slot="left-bottom">
-          <div class="address">
+          <div @click="copyAddress()" id="copy-address" v-popover:copy-address.bottom class="address">
             {{ ownAddress }}
+            <i class="copyIcon text-lg fal fa-clipboard"></i>
           </div>
         </template>
         <template slot="right-top">
@@ -55,6 +59,17 @@ export default Vue.extend({
       this.$store.dispatch("wallet/logout");
       this.$router.push("/connect");
     },
+    copyAddress(): void {
+      const elem = document.createElement("textarea");
+      elem.style.position = "absolute";
+      elem.style.left = -99999999 + "px";
+      elem.style.top = -99999999 + "px";
+      elem.value = this.$store.getters["account/address"];
+      document.body.appendChild(elem);
+      elem.select();
+      document.execCommand("copy");
+      document.body.removeChild(elem);
+    }
   },
 });
 </script>
