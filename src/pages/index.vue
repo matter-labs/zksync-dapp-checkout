@@ -224,6 +224,11 @@ export default Vue.extend({
       },
     };
   },
+  watch: {
+    step(val) {
+      this.$store.commit('setStep', val);
+    }
+  },
   computed: {
     currentNetworkName(): string {
       return ETHER_NETWORK_NAME;

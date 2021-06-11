@@ -7,15 +7,20 @@
 
   .infoBlock {
     position: relative;
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: max-content 1fr repeat(2, max-content);
 
     .brandContainer {
+      width: max-content;
       position: relative;
-      top: 1px;
 
       .networkName {
         position: absolute;
         left: 100%;
-        top: 0.4em;
+        top: -0.4em;
       }
     }
 
@@ -47,6 +52,43 @@
       width: 100%;
       height: max-content;
     }
+
+    .transactionsList {
+      overflow: auto;
+      scroll-snap-type: y mandatory;
+      width: calc(100% + 10px);
+      padding-right: 10px;
+      &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+      }
+
+      .ps__rail-y {
+        opacity: 0.7;
+        width: 6px;
+        will-change: top, opacity;
+        transition: opacity $transition;
+
+        &:hover, &.ps--clicking {
+          opacity: 1;
+          background-color: transparent !important;
+
+          .ps__thumb-y {
+            width: 10px;
+          }
+        }
+        
+        .ps__thumb-y {
+          left: 0;
+          width: 6px !important;
+          background-color: lighten($color: $gray, $amount: 5) !important;
+          border-radius: 6px !important;
+          will-change: width, height, background-color, top;
+          transition: $transition;
+          transition-property: width, height;
+        }
+      }
+    }
   }
 
   @media screen and (max-width: $mobile) {
@@ -54,6 +96,7 @@
 
     .infoBlock {
       height: auto;
+      max-height: 50vh;
 
       header {
         display: flex;
@@ -72,45 +115,6 @@
 .darkMode .infoBlockContainer {
   background-color: $darkBlue;
 
-  .linkDefault {
-    font-weight: 400;
-    color: $lightViolet;
-  }
-}
-
-.zkFooterContainer {
-  justify-content: center;
-
-  @media screen and (max-width: $mobile) {
-    flex-wrap: wrap;
-    text-align: center;
-    padding: 1rem 0;
-  }
-
-  .leftSide {
-    @apply w-4/5;
-
-    @media screen and (max-width: $mobile) {
-      @apply w-full;
-    }
-  }
-
-  .rightSide {
-    @apply w-1/5;
-
-    text-align: right;
-    justify-content: flex-end;
-    z-index: 4;
-    width: 100%;
-
-    .linkDefault {
-      font-size: 14px;
-      font-weight: 300;
-    }
-  }
-}
-
-.darkMode .zkFooterContainer .rightSide {
   .linkDefault {
     font-weight: 400;
     color: $lightViolet;

@@ -1,11 +1,11 @@
 <template>
-  <div class="defaultLayout min-h-screen" :class="[{'darkMode': darkMode===true}, {'loggedIn': loggedIn===true}]">
+  <div class="defaultLayout min-h-screen" :class="[{'darkMode': darkMode===true},{'loggedIn': loggedIn===true},{'footerUpStyle': footerUpStyle===true}]">
     <modals />
     <info-block />
-    <div class="routerContainer bg-white2 md:min-h-screen py-4 md:py-10 px-5 md:px-10">
+    <div class="routerContainer bg-white2 py-4 px-5 md:px-10">
       <logging-in/>
-      <nuxt v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')" class="routeMain"/>
-      <div class="zk-footer-space mobileOnly"></div>
+      <nuxt @step="step=$event" v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')" class="routeMain"/>
+      <div class="zk-footer-space"></div>
       <zk-footer />
     </div>
   </div>
@@ -25,6 +25,12 @@ export default {
     zkFooter,
   },
   computed: {
+    step() {
+      return this.$store.getters["step"];
+    },
+    footerUpStyle() {
+      return this.loggedIn===true && (this.step==='main' || this.step==='success');
+    },
     loggingIn() {
       return this.$store.getters["account/loader"];
     },

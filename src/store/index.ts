@@ -5,6 +5,7 @@ export const state = () => ({
    * Used to handle modals and simplify the code
    */
   currentModal: false as String | false,
+  step: 'main' as string,
   darkMode: false,
 });
 
@@ -14,12 +15,18 @@ export const getters: GetterTree<RootState, RootState> = {
   currentModal(state) {
     return state.currentModal;
   },
+  step(state) {
+    return state.step;
+  },
   darkMode(state) {
     return state.darkMode;
   },
 };
 
 export const mutations: MutationTree<RootState> = {
+  setStep(state, step: string) {
+    state.step = step;
+  },
   setCurrentModal(state, modalName: false | string) {
     state.currentModal = modalName;
   },

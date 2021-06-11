@@ -27,7 +27,7 @@
 }
 
 @media screen and (max-width: 450px) {
-  .transactionTokenContainer:not(.success):not(.inProgress) {
+  .transactionTokenContainer:not(.rowLayout) {
     .lineContainer {
       grid-template-areas: "token L2" "token L1" "rightSide rightSide";
       grid-template-columns: 45px 1fr;

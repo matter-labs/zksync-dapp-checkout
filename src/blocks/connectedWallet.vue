@@ -43,6 +43,9 @@ export default Vue.extend({
     isProd(): boolean {
       return ETHER_PRODUCTION;
     },
+    currentNetwork(): string {
+      return ETHER_NETWORK_NAME;
+    },
     testnetWalletUrl(): string {
       return `https://${this.isProd ? "wallet.zksync.io" : `${ETHER_NETWORK_NAME}.zksync.io`}`
     }
