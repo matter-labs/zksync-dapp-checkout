@@ -25,3 +25,41 @@
     }
   }
 }
+
+@media screen and (max-width: 450px) {
+  .transactionTokenContainer:not(.success):not(.inProgress) {
+    .lineContainer {
+      grid-template-areas: "token L2" "token L1" "rightSide rightSide";
+      grid-template-columns: 45px 1fr;
+      grid-template-rows: repeat(3, max-content);
+
+      .lineItem {
+        .amount {
+          margin-left: auto;
+        }
+        .text-red {
+          margin-right: 0;
+        }
+      }
+      .lineItem:nth-child(4) {
+        width: 100%;
+
+        .amountInputGroup {
+          width: 100%;
+          left: 0;
+          display: grid;
+          grid-template-columns: 1fr max-content;
+          grid-template-rows: 100%;
+
+          .leftSide {
+            width: 100%;
+
+            .inputContainer {
+              max-width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}

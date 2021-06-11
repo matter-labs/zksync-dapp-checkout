@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full transactionTokenContainer">
+  <div class="w-full transactionTokenContainer" :class="{'success': isInProgress || enoughZkBalance}">
 
     <!-- Modals -->
     <zk-modal :value="modal==='insufficientL1Deposit' || modal==='insufficientL1Min'" @close="modal=''">
@@ -64,7 +64,7 @@
         </div>
       </template>
       <template slot="second">
-        <div class="amount">{{ total | formatToken(token) }}</div>
+        <div class="amount">{{ total | formatTokenPretty(token) }}</div>
       </template>
       <template slot="third">
         <div class="amount"><span :class="amountClass">{{ zkBalance.rawBalance | formatTokenPretty(token) }}</span></div>

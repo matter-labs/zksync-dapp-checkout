@@ -6,10 +6,7 @@
       </div>
     </div>
     <div class="rightSide flex items-center">
-      <div v-if="version" class="version text-xs text-black2 -dark mr-3 md:mr-5">v.{{version}}</div>
-      <div class="colorTheme" :class="{'dark': darkMode}" @click="toogleDarkMode">
-        <i class="fas fa-adjust"></i>
-      </div>
+      <div v-if="version" class="version text-xs text-black2 -dark">v.{{version}}</div>
     </div>
   </footer>
 </template>
@@ -23,17 +20,6 @@ export default Vue.extend({
     return {
       version: GIT_REVISION_SHORT,
     };
-  },
-  computed: {
-    darkMode() {
-      return this.$store.getters.darkMode;
-    },
-  },
-  methods: {
-    toogleDarkMode() {
-      this.$store.commit("setDarkMode", !this.darkMode);
-      localStorage.setItem("colorTheme", this.darkMode ? "dark" : "light");
-    },
   },
 });
 </script>

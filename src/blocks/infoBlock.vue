@@ -4,7 +4,8 @@
       <header class="md:mb-6">
         <div class="flex items-center">
           <logo class="h-8 mr-2" />
-          <div class="brandContainer text-violet -dark text-2xl font-bold">Checkout <sup v-if="!isMainnet" class="text-sm font-light">{{ network }} <span v-if="isBeta" class="text-xs font-bold text-red ml-1"> beta</span></sup>
+          <div class="brandContainer text-violet -dark text-2xl font-bold">Checkout <sup class="text-sm font-light">{{ network }} <span v-if="isBeta"
+                                                                                                                                        class="text-xs font-bold text-red ml-1"> beta</span></sup>
           </div>
         </div>
       </header>

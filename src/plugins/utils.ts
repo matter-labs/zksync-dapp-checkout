@@ -30,6 +30,7 @@ const handleFormatToken = (symbol: TokenSymbol, amount: any) => {
 
 const handleFormatTokenPretty = (symbol: TokenSymbol, amount: GweiBalance) => {
   const firstFormated = handleFormatToken(symbol, amount);
+  console.log(symbol, firstFormated);
   const symbolsArr = firstFormated.split(".");
   const symbolsArrInt = symbolsArr[0];
   let symbolsArrDecimal = symbolsArr[1];
@@ -45,6 +46,9 @@ const handleFormatTokenPretty = (symbol: TokenSymbol, amount: GweiBalance) => {
     if (firstNotZero === -1 && symbolsArrDecimal[a] !== "0") {
       firstNotZero = a;
     }
+  }
+  if (firstNotZero > 5) {
+    return "<0.000001";
   }
   let newVal = `${symbolsArrInt}.${symbolsArrDecimal}`;
   if (newVal.length < firstFormated.length) {

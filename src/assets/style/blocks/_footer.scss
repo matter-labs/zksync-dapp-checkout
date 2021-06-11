@@ -1,6 +1,6 @@
 .zk-footer-space {
   width: 100%;
-  height: 100px;
+  height: 60px;
 }
 .zkFooterContainer {
   width: 100%;
@@ -40,6 +40,9 @@
   }
 }
 .defaultLayout.loggedIn {
+  .zk-footer-space {
+    height: 100px;
+  }
   .zkFooterContainer {
     @media screen and (max-width: $mobile) {
       bottom: 62px;
