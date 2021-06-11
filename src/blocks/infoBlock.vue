@@ -1,15 +1,16 @@
 <template>
   <aside class="infoBlockContainer bg-white h-screen">
-    <div class="infoBlock md:min-h-screen py-4 md:py-10 px-5 md:px-10">
-      <header class="md:mb-6">
-        <div class="flex items-center">
-          <logo class="h-8 mr-2" />
-          <div class="brandContainer text-violet -dark text-2xl font-bold">Checkout <sup class="text-sm font-light">{{ network }}<sup v-if="isBeta"
-                                                                                                                                        class="text-xs font-bold text-red ml-1"> beta</sup></sup>
+    <div class="infoBlock border-none md:min-h-screen py-4 md:py-10 px-5 md:px-10">
+      <header class="w-screen lg:mb-6">
+        <div class="items-center lg:items-center justify-items-stretch lg:justify-items-start grid lg:flex grid-cols-2 gap-2">
+          <logo class="h-8 lg:h-8 mr-2" />
+          <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
+            <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
+            <span class="text-sm font-light inline-flex items-center">{{ network }}<small v-if="isBeta" class="text-xs font-bold text-red ml-1">beta</small></span>
           </div>
         </div>
       </header>
-      <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2">
+      <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2" >
         <template slot="left-top">
           <div class="headline">
             {{ item.description }}
@@ -30,8 +31,9 @@
         </template>
       </zk-values-block>
       <div class="w-full">
-        <div class="w-full border-b-2 border-light -dark pt-1 lg:pt-3" />
-        <zk-values-block class="pt-1 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
+        <div v-if="isInfoAvailable !==false" class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"/>
+
+        <zk-values-block v-if="isInfoAvailable" class="pt-1 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
           <template slot="left-top">
             <div class="flex items-center">
               <div class="headline big">Fees</div>
@@ -67,7 +69,8 @@
             </template>
           </zk-values-block>
         </zk-max-height>
-        <div class="w-full border-b-2 border-light -dark pt-1 lg:pt-3" />
+
+        <div v-if="isInfoAvailable !==false" class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"/>
         <transition name="fade">
           <div v-if="loggedIn" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
             <div class="flex-2">
@@ -150,6 +153,13 @@ export default Vue.extend({
     };
   },
   computed: {
+    isInfoAvailable(): boolean {
+      if (this.transactionData.transactions.length < 1)
+      {
+        return false;
+      }
+      return this.$store.getters["checkout/getErrorState"] !== true
+    },
     loggedIn(): boolean {
       return this.$store.getters["account/loggedIn"];
     },
@@ -182,7 +192,7 @@ export default Vue.extend({
         totalFeeBigNum = totalFeeBigNum.add(item.amount);
       }
 
-      return totalFeeBigNum.toString();
+      return totalFeeBigNum?.toString();
     },
     totalUSD(): string {
       const transactionData = this.transactionData;

@@ -1,6 +1,6 @@
 <template>
   <div class="indexPage">
-    <zk-modal
+    <zk-modal v-if="modal === 'feeChanged'"
       :value="modal === 'feeChanged'"
       @close="
         modal = false;
@@ -9,7 +9,7 @@
     >
       <template slot="header">
         <div class="withIcon text-warning text-yellow">
-          <i class="fad fa-info-square" />
+          <i class="fad fa-info-square"/>
           <div>Fee changed</div>
         </div>
       </template>
@@ -51,7 +51,7 @@
               cancelTransfer();
             "
           >
-            <i class="far fa-arrow-left" />
+            <i class="far fa-arrow-left"/>
             <span>Cancel payment</span>
           </zk-defbtn>
           <zk-defbtn
@@ -60,50 +60,51 @@
               transfer();
             "
           >
-            <i class="fas fa-paper-plane" />
+            <i class="fas fa-paper-plane"/>
             <span>Complete payment</span>
           </zk-defbtn>
         </div>
       </template>
     </zk-modal>
 
-    <zk-modal :value="errorModal !== false" @close="errorModal = false">
+    <zk-modal v-if="errorModal !== false" :value="errorModal !== false" @close="errorModal = false">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square" />
+          <i class="fad fa-info-square"/>
           <div>{{ errorModal.headline }}</div>
         </div>
       </template>
       <template slot="default">
         <div class="text-sm">
           {{ errorModal.text }}
+
         </div>
       </template>
     </zk-modal>
 
-    <connected-wallet />
+    <connected-wallet/>
 
     <div v-if="step === 'main'" class="w-full">
       <zk-max-height class="mt-5 md:mt-7" :value="!transferAllowed">
         <zk-note>
           <template slot="icon">
-            <i class="text-gray text-xl fal fa-info-square" />
+            <i class="text-gray text-xl fal fa-info-square"/>
           </template>
           <template slot="default">
             <div class="text-sm text-gray font-light">
-              The default amount to deposit is 5% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br />
+              The default amount to deposit is 5% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br/>
             </div>
           </template>
         </zk-note>
       </zk-max-height>
 
       <line-table-header class="mt-5 mb-2">
-        <template slot="first"> To pay </template>
-        <template slot="second"> L2 balance </template>
-        <template slot="first:md"> To pay / L2 balance </template>
-        <template slot="right" />
+        <template slot="first"> To pay</template>
+        <template slot="second"> L2 balance</template>
+        <template slot="first:md"> To pay / L2 balance</template>
+        <template slot="right"/>
       </line-table-header>
-      <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()" />
+      <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()"/>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
           <zk-defbtn v-if="displayActivateAccountBtn" :disabled="!canCPK || cpkLoading" :loader="cpkLoading" @click="signActivation()">
@@ -111,7 +112,7 @@
             <span>{{ cpkBtnText }}</span>
           </zk-defbtn>
           <zk-defbtn v-else :disabled="!transferAllowed" @click="preTransfer()">
-            <i class="fas fa-paper-plane" />
+            <i class="fas fa-paper-plane"/>
             <span>Complete payment</span>
           </zk-defbtn>
         </div>
@@ -122,25 +123,25 @@
       <div v-if="subStep === 'processing'" class="text-lg text-center pt-2">Processing...</div>
       <div v-else-if="subStep === 'waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in your wallet</div>
       <div v-else-if="subStep === 'committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
-      <zk-loader class="mx-auto mt-6" size="md" color="violet" />
+      <zk-loader class="mx-auto mt-6" size="md" color="violet"/>
     </div>
     <div v-else-if="step === 'success'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Done. Thank you!</div>
-      <zk-success-check-mark big class="w-11/12 max-w-xxs mx-auto py-5" />
+      <zk-success-check-mark big class="w-11/12 max-w-xxs mx-auto py-5"/>
       <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a></div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
           <zk-defbtn :disabled="!transferAllowed" @click="close()">
-            <i class="far fa-times" />
+            <i class="far fa-times"/>
             <span>Close</span>
           </zk-defbtn>
         </div>
       </div>
       <line-table-header class="mt-10 md:mt-7 mb-2">
-        <template slot="first"> Paid </template>
-        <template slot="second" />
-        <template slot="first:md"> &nbsp; </template>
-        <template slot="right"> Paid / TX Hash </template>
+        <template slot="first"> Paid</template>
+        <template slot="second"/>
+        <template slot="first:md"> &nbsp;</template>
+        <template slot="right"> Paid / TX Hash</template>
       </line-table-header>
 
       <template v-for="(item, index) in finalTransactions">
@@ -167,7 +168,7 @@
               <div class="font-light txHash text-xxs md:text-right">
                 {{ item.txHash | formatTransaction }}
               </div>
-              <i class="text-xs text-violet -dark pl-1 fal fa-external-link" />
+              <i class="text-xs text-violet -dark pl-1 fal fa-external-link"/>
             </a>
           </template>
         </zk-line-block>
@@ -180,17 +181,17 @@
 import Vue from "vue";
 
 import { TransactionData, TotalByToken, TransactionFee, Transaction, TokenPrices, CPKLocal } from "@/types/index";
-import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 import zkUtils from "@/plugins/utils";
 import { utils } from "zksync";
 import { getCPKTx, saveCPKTx } from "@/plugins/walletActions/cpk";
-import { transactionBatch } from "@/plugins/walletActions/transaction";
+import {transactionBatch} from "@/plugins/walletActions/transaction";
 
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
-import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
+import {ZkSyncTransaction} from "zksync-checkout-internal/src/types";
+import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
 
 export default Vue.extend({
   components: {
@@ -213,12 +214,10 @@ export default Vue.extend({
         [token: string]: boolean;
       },
       finalTransactions: [] as Array<Transaction>,
-      errorModal: false as
-        | false
-        | {
-            headline: string;
-            text: string;
-          },
+      errorModal: false as false | {
+        headline: string;
+        text: string;
+      },
       transactionFees: {
         previous: "0",
         new: "0",
@@ -330,13 +329,13 @@ export default Vue.extend({
         const transactions = await transactionBatch(
           transactionsList,
           transactionData.feeToken,
-          transactionFees.amount, this.$stor.getters["wallet/isAccountLocked"], this.$store);
+          transactionFees.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
         console.log("Batch transaction", transactionsList);
 
         const manager = ZkSyncCheckoutManager.getManager();
 
         let endHashes = [];
-        const validHashes = transactions.filter((tx: any) => {
+          const validHashes = transactions.filter((tx: any) => {
           if (tx.txData.tx.type !== "Transfer") {
             return false;
           }
@@ -356,12 +355,13 @@ export default Vue.extend({
         console.log("Sent hashes", endHashes);
         manager.notifyHashes(endHashes);
 
-        // @ts-ignore
-        this.finalTransactions.push(...transactions);
-        this.subStep = "committing";
+
+          // @ts-ignore
+          this.finalTransactions.push(...transactions);
+          this.subStep = "committing";
 
         await transactions[0].awaitReceipt();
-        this.step = "success";
+          this.step = "success";
       } catch (error) {
         this.checkCPKMessageSigned();
         this.step = "main";

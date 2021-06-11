@@ -15,5 +15,6 @@ export default async (context: any) => {
     await context.store.dispatch("tokens/loadAllTokens");
   } catch (error) {
     await context.store.dispatch("openModal", "noCheckoutData");
+    await context.store.dispatch("checkout/setError", error);
   }
 };
