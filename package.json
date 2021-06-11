@@ -8,6 +8,9 @@
     "zksync",
     "ethereum",
     "web3",
+    "payments",
+    "gitcoin",
+    "gitcoin grants",
     "checkout",
     "defi",
     "payment gateway",
@@ -31,7 +34,8 @@
     }
   ],
   "repository": {
-    "url": "git@github.com:matter-labs/zksync-dapp-checkout.git"
+    "type": "git",
+    "url": "matter-labs/zksync-dapp-checkout"
   },
   "author": "Matter Labs",
   "browserslist": {
@@ -53,7 +57,6 @@
     "@babel/core": "^7.13.8",
     "@babel/preset-env": "^7.13.9",
     "@babel/runtime": "^7.13.9",
-    "@ethersproject/logger": "^5.0.9",
     "@matterlabs/zk-wallet-onboarding": "1.18.6",
     "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/axios": "latest",
@@ -82,14 +85,14 @@
     "zksync-checkout-internal": "^0.0.4"
   },
   "devDependencies": {
+    "@ethersproject/logger": "^5.0.9",
     "@matterlabs/zksync-nuxt-ui": "^0.0.0",
     "@nuxt/types": "latest",
     "@nuxt/typescript-build": "latest",
+    "@nuxt/typescript": "latest",
     "@nuxtjs/dotenv": "1.4.1",
     "@nuxtjs/eslint-config-typescript": "^5.0.0",
-    "@nuxtjs/vuetify": "^1.11.3",
     "@tailwindcss/postcss7-compat": "^2.0.3",
-    "@types/eslint-plugin-prettier": "3.1.0",
     "@types/jest": "^26.0.20",
     "autoprefixer": "^9",
     "babel-core": "^7.0.0-bridge.0",
@@ -98,7 +101,6 @@
     "dotenv": "8.2.0",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-vue": "^7.7.0",
     "fork-ts-checker-webpack-plugin": "^6.1.0",
@@ -106,11 +108,17 @@
     "postcss": "latest",
     "prettier": "^2.2.1",
     "sass-loader": "^10.1.1",
-    "stylelint": "^13.11.0",
-    "stylelint-config-standard": "^22.0.0",
-    "stylelint-scss": "^3.19.0",
-    "tailwindcss": "^2.0.4",
-    "webpack": "^4.46.0"
+    "stylelint": "latest",
+    "stylelint-config-standard": "latest",
+    "stylelint-scss": "latest",
+    "tailwindcss": "^1.9.6",
+    "webpack": "^5.11.1"
+  },
+  "peerDependencies": {
+    "@babel/core": "*",
+    "@babel/runtime": "*",
+    "typed-vuex": "*",
+    "vuex": "3.5.1"
   },
   "optionalDependencies": {
     "@sentry/webpack-plugin": "^1.14.0",
@@ -129,18 +137,18 @@
     "yarn spell-check"
   ],
   "scripts": {
-    "local": "sh ./cli-process-env.sh 'rinkeby' 'dev' 1 1",
-    "ci": "bash cli-dev.sh ci && yarn install --immutable",
+    "local": "sh ./cli-process-env.sh 'ropsten' 'dev' 1 1",
     "dev": "yarn local && nuxt",
     "generate": "nuxt generate ",
-    "prepare_ci_rinkeby": "sh cli-process-env.sh 'rinkeby' 'prod' 1",
-    "prepare_ci_ropsten": "sh cli-process-env.sh 'ropsten' 'prod' 1",
-    "prepare_ci_mainnet": "sh cli-process-env.sh 'mainnet' 'prod' 1",
-    "build:prod": "yarn prepare_ci_mainnet && yarn generate --fail-on-error",
-    "build:rinkeby": "yarn prepare_ci_rinkeby && yarn generate --fail-on-error",
-    "build:ropsten": "yarn prepare_ci_ropsten && yarn generate --fail-on-error",
     "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",
+    "ci:build:prod": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
+    "ci:build:rinkeby": "yarn ci:prepare:rinkeby && yarn generate --fail-on-error",
+    "ci:build:ropsten": "yarn ci:prepare:ropsten && yarn generate --fail-on-error",
+    "ci:prepare:rinkeby": "sh cli-process-env.sh 'rinkeby' 'prod' 1",
+    "ci:prepare:ropsten": "sh cli-process-env.sh 'ropsten' 'prod' 1",
+    "ci:prepare:prod": "sh cli-process-env.sh 'mainnet' 'prod' 1",
+    "test": "jest",
     "format:prettier": "prettier --config .prettierrc.js --ignore-path .prettierignore --write src/**/*.{ts,vue,js}",
     "lint-ts:check": "eslint --quiet --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
     "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore --quiet",

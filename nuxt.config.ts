@@ -1,14 +1,12 @@
-// noinspection ES6PreferShortImport
-
-import { NuxtConfig } from "@nuxt/types";
+import { NuxtConfig, Configuration } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+import { ToastObject } from "vue-toasted/types";
 
+//noinspection ES6PreferShortImport
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
 
 // @ts-ignore
-require("dotenv").config();
-
-const zkTailwindDefault = require("matter-zk-ui/tailwind.config");
+import * as zkTailwindDefault from "matter-zk-ui/tailwind.config.js";
 
 const srcDir = "./src/";
 
@@ -153,9 +151,6 @@ const config: NuxtConfig = {
    */
   plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
 
-  // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
-
   router: {
     middleware: ["wallet"],
   },
@@ -186,13 +181,13 @@ const config: NuxtConfig = {
       },
     ],
     ["@nuxtjs/dotenv", { path: __dirname }],
-    "matter-zk-ui"
+    "matter-zk-ui",
   ],
 
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "nuxt-webfontloader", "@nuxtjs/sentry"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "nuxt-webfontloader", "@nuxtjs/sentry"],
   webfontloader: {
     google: {
       families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
@@ -206,7 +201,7 @@ const config: NuxtConfig = {
     iconPack: "fontawesome",
     action: {
       text: "OK",
-      onClick: (_, toastObject) => {
+      onClick: (_: unknown, toastObject: ToastObject) => {
         toastObject.goAway(100);
       },
     },
@@ -261,7 +256,7 @@ const config: NuxtConfig = {
    */
   build: {
     ssr: false,
-    extend(config) {
+    extend: (config: Configuration) => {
       config.node = {
         fs: "empty",
       };

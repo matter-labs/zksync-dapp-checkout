@@ -1,10 +1,11 @@
-import { walletData } from "@/plugins/walletData";
-import { ETHOperation } from "zksync/build/wallet";
-import { Provider } from "zksync";
-import { Address, TokenSymbol, ZkSyncTransaction } from "@/plugins/types";
-import { BigNumber, BigNumberish } from "ethers";
-import { SignedTransaction, TransactionReceipt, TxEthSignature } from "zksync/src/types";
 import { addCPKToBatch } from "@/plugins/walletActions/cpk";
+import { walletData } from "@/plugins/walletData";
+import { BigNumber, BigNumberish } from "ethers";
+import { Address, TokenSymbol } from "types";
+import { ZkSyncTransaction } from "zksync-checkout/src/types";
+import { Provider } from "zksync";
+import { ETHOperation } from "zksync/build/wallet";
+import { SignedTransaction, TransactionReceipt, TxEthSignature } from "zksync/src/types";
 
 class Transaction {
   state: "Sent" | "Committed" | "Verified" | "Failed";
@@ -106,7 +107,6 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
  *
  * @param {TokenSymbol} token
  * @param {string} amount
- * @param _store
  * @returns {Promise<ETHOperation>}
  */
 export const deposit = async (token: TokenSymbol, amount: string | BigNumber): Promise<ETHOperation | undefined> => {

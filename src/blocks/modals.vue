@@ -1,6 +1,6 @@
 <template>
   <div class="allModalsContainer">
-    <zk-modal v-if="currentModal==='wrongAccountAddress'" :value="true" @close="closeModal()">
+    <zk-modal v-if="currentModal === 'wrongAccountAddress'" :value="true" @close="closeModal()">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square" />
@@ -12,8 +12,8 @@
           The website that initiated the checkout, expects you to be logged in to the following account: <b>{{ transactionData.fromAddress }}</b>
         </div>
       </template>
-    </modal>
-    <modal v-if="currentModal === 'noCheckoutData'" :value="true" :not-closable="true">
+    </zk-modal>
+    <zk-modal v-if="currentModal === 'noCheckoutData'" :value="true" :not-closable="true">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square" />
@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { TransactionData } from "@/types/index";
+import { TransactionData } from "@/types";
 
 export default Vue.extend({
   computed: {

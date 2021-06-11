@@ -4,12 +4,12 @@
       <header class="md:mb-6">
         <div class="flex items-center">
           <logo class="h-8 mr-2" />
-          <div class="brandContainer text-violet -dark text-2xl font-bold">Checkout <sup class="text-sm font-light">{{ network }} <span v-if="isBeta"
-                                                                                                                                        class="text-xs font-bold text-red ml-1"> beta</span></sup>
+          <div class="brandContainer text-violet -dark text-2xl font-bold">Checkout <sup class="text-sm font-light">{{ network }}<sup v-if="isBeta"
+                                                                                                                                        class="text-xs font-bold text-red ml-1"> beta</sup></sup>
           </div>
         </div>
       </header>
-      <zk-values-block v-for="(item,index) in transactionData.transactions" :key="index" class="mt-2">
+      <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2">
         <template slot="left-top">
           <div class="headline">
             {{ item.description }}
@@ -30,13 +30,13 @@
         </template>
       </zk-values-block>
       <div class="w-full">
-        <div class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"/>
-        <zk-values-block class="pt-1 lg:pt-3 cursor-pointer" @click="feesOpened=!feesOpened">
+        <div class="w-full border-b-2 border-light -dark pt-1 lg:pt-3" />
+        <zk-values-block class="pt-1 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
           <template slot="left-top">
             <div class="flex items-center">
               <div class="headline big">Fees</div>
               <span class="ml-3">
-                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${feesOpened === true ? -180 : 0}deg)` }" />
+                <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${feesOpened === true ? -180 : 0}deg)` }" />
               </span>
             </div>
           </template>
@@ -44,8 +44,8 @@
             <div class="flex items-center">
               <div class="flex flex-col">
                 <div class="value">
-                    {{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
-                  </div>
+                  {{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+                </div>
               </div>
             </div>
           </template>
@@ -53,45 +53,45 @@
         <zk-max-height v-model="feesOpened" :update-value="allFees.length">
           <zk-values-block v-for="(item, index) in allFees" :key="index" class="pt-1 lg:pt-3">
             <template slot="left-top">
-                <div class="headline">
-                  {{ item.name }}
-                </div>
+              <div class="headline">
+                {{ item.name }}
+              </div>
             </template>
             <template slot="right-top">
               <div class="flex flex-col items-end whitespace-nowrap">
                 <div class="value">
-                    {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
-                  </div>
-                <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{item.token}}</div>
+                  {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
+                </div>
+                <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{ item.token }}</div>
               </div>
             </template>
           </zk-values-block>
         </zk-max-height>
         <div class="w-full border-b-2 border-light -dark pt-1 lg:pt-3" />
-      <transition name="fade">
-        <div v-if="loggedIn" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
-          <div class="flex-2">
-            <div class="flex items-center">
-              <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark -dark">Total amount</div>
-              <span class="ml-3">
+        <transition name="fade">
+          <div v-if="loggedIn" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
+            <div class="flex-2">
+              <div class="flex items-center">
+                <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark -dark">Total amount</div>
+                <span class="ml-3">
                   <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${totalOpened === true ? -180 : 0}deg)` }" />
-              </span>
-            </div>
-          </div>
-          <div class="flex-1 flex flex-col items-end">
-            <div class="font-firaCondensed font-bold text-lg text-violet -dark md:mt-1">
-              {{totalUSD}}
-            </div>
-            <zk-max-height v-model="totalOpened" :update-value="allFees.length">
-              <div class="md:flex flex-col items-end">
-              <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 -dark pt-1 md:pt-2">
-                <div>{{ item | formatToken(token) }} {{token}}</div>
+                </span>
               </div>
             </div>
-            </zk-max-height>
+            <div class="flex-1 flex flex-col items-end">
+              <div class="font-firaCondensed font-bold text-lg text-violet -dark md:mt-1">
+                {{ totalUSD }}
+              </div>
+              <zk-max-height v-model="totalOpened" :update-value="allFees.length">
+                <div class="md:flex flex-col items-end">
+                  <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 -dark pt-1 md:pt-2">
+                    <div>{{ item | formatToken(token) }} {{ token }}</div>
+                  </div>
+                </div>
+              </zk-max-height>
+            </div>
           </div>
-        </div>
-      </transition>
+        </transition>
       </div>
       <div class="footerContainer hidden md:block">
         <footer>
@@ -174,12 +174,14 @@ export default Vue.extend({
     totalFees(): GweiBalance {
       const allFees = this.allFees;
       let totalFeeBigNum = BigNumber.from("0");
+
       for (const item of allFees) {
         if (item.key === "changePubKey" && !this.loggedIn) {
           continue;
         }
         totalFeeBigNum = totalFeeBigNum.add(item.amount);
       }
+
       return totalFeeBigNum.toString();
     },
     totalUSD(): string {

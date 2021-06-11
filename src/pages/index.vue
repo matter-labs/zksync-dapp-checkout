@@ -1,6 +1,12 @@
 <template>
   <div class="indexPage">
-    <zk-modal :value="modal === 'feeChanged'" @close="modal = false;cancelTransfer();">
+    <zk-modal
+      :value="modal === 'feeChanged'"
+      @close="
+        modal = false;
+        cancelTransfer();
+      "
+    >
       <template slot="header">
         <div class="withIcon text-warning text-yellow">
           <i class="fad fa-info-square" />
@@ -61,7 +67,7 @@
       </template>
     </zk-modal>
 
-    <zk-modal :value="errorModal!==false" @close="errorModal=false">
+    <zk-modal :value="errorModal !== false" @close="errorModal = false">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square" />
@@ -114,7 +120,7 @@
     <div v-else-if="step === 'transfer'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-dark -dark text-center pt-5 md:pt-10">Payment</div>
       <div v-if="subStep === 'processing'" class="text-lg text-center pt-2">Processing...</div>
-      <div v-else-if="subStep==='waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in your wallet</div>
+      <div v-else-if="subStep === 'waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in your wallet</div>
       <div v-else-if="subStep === 'committing'" class="text-lg text-center pt-2">Waiting for the transaction to be mined...</div>
       <zk-loader class="mx-auto mt-6" size="md" color="violet" />
     </div>
@@ -125,7 +131,7 @@
       <div class="mainBtnsContainer">
         <div class="mainBtns">
           <zk-defbtn :disabled="!transferAllowed" @click="close()">
-            <i class="far fa-times"/>
+            <i class="far fa-times" />
             <span>Close</span>
           </zk-defbtn>
         </div>
@@ -161,7 +167,7 @@
               <div class="font-light txHash text-xxs md:text-right">
                 {{ item.txHash | formatTransaction }}
               </div>
-              <i class="text-xs text-violet -dark pl-1 fal fa-external-link"/>
+              <i class="text-xs text-violet -dark pl-1 fal fa-external-link" />
             </a>
           </template>
         </zk-line-block>
@@ -173,7 +179,8 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, TransactionFee, Transaction, ZkSyncTransaction, TokenPrices, CPKLocal } from "@/types/index";
+import { TransactionData, TotalByToken, TransactionFee, Transaction, TokenPrices, CPKLocal } from "@/types/index";
+import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 import zkUtils from "@/plugins/utils";
@@ -320,13 +327,10 @@ export default Vue.extend({
         const transactionsList = [] as Array<ZkSyncTransaction>;
         transactionsList.push(...transactionData.transactions);
         const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
-          const transactions = await transactionBatch(
-            transactionsList,
-            transactionData.feeToken,
-            transactionFees.amount,
-            this.$store.getters["wallet/isAccountLocked"],
-            this.$store,
-          );
+        const transactions = await transactionBatch(
+          transactionsList,
+          transactionData.feeToken,
+          transactionFees.amount, this.$stor.getters["wallet/isAccountLocked"], this.$store);
         console.log("Batch transaction", transactionsList);
 
         const manager = ZkSyncCheckoutManager.getManager();

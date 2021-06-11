@@ -1,5 +1,6 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { ZkSyncTransaction, Address, TokenSymbol, TransactionData, TransactionFee, TotalByToken } from "@/types/index";
+import { Address, TokenSymbol, TransactionData, TransactionFee, TotalByToken } from "@/types/index";
+import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { closestPackableTransactionAmount } from "zksync";
 import { BigNumber } from "ethers";
 import { walletData } from "@/plugins/walletData";

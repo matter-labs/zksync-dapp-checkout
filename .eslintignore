@@ -1,8 +1,8 @@
 # don't ever lint node_modules
-node_modules/*
-src/static/sw.js
+/node_modules/*
 # don't ever lint public
-.nuxt/*
+*.css
+/.nuxt/*
 /src/assets/fonts/*
 /src/assets/imgs/*
 /.github/*
@@ -10,4 +10,6 @@ src/static/sw.js
 /environments/*
 /public/*
 /_nuxt/*
+/src/static/sw.js
 sw.js*
+.eslintrc.js

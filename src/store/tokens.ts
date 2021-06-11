@@ -1,6 +1,5 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Token, TokenPrices, Tokens, TokenSymbol, TokenItem } from "@/types/index";
-import { BigNumberish } from "ethers";
+import { TokenPrices, Tokens, TokenSymbol, TokenItem } from "@/types/index";
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
 

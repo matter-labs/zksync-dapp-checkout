@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Balance, GweiBalance, Token, TokenSymbol, Transaction } from "@/types/index";
+import { Address, Balance, GweiBalance, Token, TokenSymbol, TotalByToken, Transaction } from "@/types/index";
 
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 
@@ -347,8 +347,8 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       return localList.list;
     }
     const loadedTokens = await this.dispatch("tokens/loadAllTokens");
-    const totalByToken = this.getters["checkout/getTotalByToken"];
-    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
+    const totalByToken: TotalByToken = this.getters["checkout/getTotalByToken"];
+    const usedTokens: string[] = Object.entries(totalByToken).map((e: [string, BigNumber]) => e[0]);
 
     const loadInitialBalancesPromises = usedTokens.map(async (key: string) => {
       const currentToken = loadedTokens[key];
@@ -504,7 +504,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
     walletData.set({ syncProvider });
   },
-  async walletRefresh({ getters, dispatch }, firstSelect = true): Promise<boolean> {
+  async walletRefresh({ getters, dispatch }, firstSelect: boolean = true): Promise<boolean> {
     try {
       const onboard = getters.getOnboard;
       this.commit("account/setLoadingHint", "processing");
@@ -514,10 +514,8 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
         if (!walletCheck) {
           return false;
         }
-        walletCheck = await onboard.walletCheck();
-      } else {
-        walletCheck = await onboard.walletCheck();
       }
+      walletCheck = await onboard.walletCheck();
       if (!walletCheck) {
         return false;
       }

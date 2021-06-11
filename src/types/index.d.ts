@@ -1,10 +1,6 @@
 import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
-import { Types } from "zksync-checkout";
+import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { ChangePubKeyCREATE2, ChangePubKeyECDSA, ChangePubKeyOnchain } from "zksync/build/types";
-
-export import ZkSyncTransaction = Types.ZkSyncTransaction;
-
-export import ZkSyncTransaction = Types.ZkSyncTransaction;
 
 export declare type Address = string;
 export declare type PubKeyHash = string;
