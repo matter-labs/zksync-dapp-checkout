@@ -40,7 +40,6 @@ export default Vue.extend({
       return window.location.hostname;
     },
     currentModal() {
-      console.log(this.$store.getters.currentModal);
       return this.$store.getters.currentModal;
     },
     transactionData(): TransactionData {

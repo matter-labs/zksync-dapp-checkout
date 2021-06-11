@@ -26,7 +26,7 @@ export const ETHER_NETWORK_NAME: Network = process.env.APP_CURRENT_NETWORK as Ne
 export const ZK_LIB_VERSION = dependencies?.zksync ?? "latest";
 export const ZK_IS_BETA: boolean = dependencies?.zksync.search("beta") !== -1 || process.env.ZK_NETWORK !== undefined || ETHER_NETWORK_NAME === "ropsten";
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;
-export const CURRENT_APP_NAME = `zkSync Wallet${ZK_IS_BETA ? ":beta" : ""}`;
+export const CURRENT_APP_NAME = 'zkSync Checkout';
 
 export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
 

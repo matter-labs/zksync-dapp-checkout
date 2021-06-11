@@ -2,12 +2,19 @@ import Vue from "vue";
 import utils from "@/plugins/utils";
 
 import { GweiBalance, TokenSymbol } from "@/types/index";
+
+// @ts-ignore
 import { BigNumber } from "ethers";
+
 // @ts-ignore
 import Popover from "vue-js-popover";
 
 // @ts-ignore
+import VueCustomScrollbar from 'vue-custom-scrollbar'
+import "vue-custom-scrollbar/dist/vueScrollbar.css"
+
 Vue.use(Popover);
+Vue.component('VueCustomScrollbar', VueCustomScrollbar);
 
 /**
  * Implementation of the tokenFormatter as a global filter

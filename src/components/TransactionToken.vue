@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full transactionTokenContainer" :class="{'success': isInProgress || enoughZkBalance}">
+  <div class="w-full transactionTokenContainer" :class="{'rowLayout': isInProgress || enoughZkBalance || !enoughWithInitialBalance}">
 
     <!-- Modals -->
     <zk-modal :value="modal === 'insufficientL1Deposit' || modal === 'insufficientL1Min'" @close="modal = ''">

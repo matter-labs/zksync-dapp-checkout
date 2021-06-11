@@ -1,39 +1,43 @@
 <template>
   <aside class="infoBlockContainer bg-white h-screen">
     <div class="infoBlock border-none md:min-h-screen py-4 md:py-10 px-5 md:px-10">
-      <header class="w-screen lg:mb-6">
-        <div class="items-center lg:items-center justify-items-stretch lg:justify-items-start grid lg:flex grid-cols-2 gap-2">
+      <header class="lg:mb-6">
+        <div class="flex items-center">
           <logo class="h-8 lg:h-8 mr-2" />
           <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
-            <span class="text-sm font-light inline-flex items-center">{{ network }}<small v-if="isBeta" class="text-xs font-bold text-red ml-1">beta</small></span>
+            <span class="networkName text-sm font-light inline-flex items-center">
+              {{ network }}
+              <!-- <small v-if="isBeta" class="text-xs font-bold text-red ml-1">beta</small> -->
+            </span>
           </div>
         </div>
       </header>
-      <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2" >
-        <template slot="left-top">
-          <div class="headline">
-            {{ item.description }}
-          </div>
-        </template>
-        <template slot="left-bottom">
-          <div class="address hidden lg:block">
-            {{ item.to }}
-          </div>
-        </template>
-        <template slot="right-top">
-          <div class="flex flex-col items-end whitespace-nowrap">
-            <div class="value">
-              {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
+      <vue-custom-scrollbar :settings="scrollBarOptions" class="transactionsList">
+        <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2" >
+          <template slot="left-top">
+            <div class="headline">
+              {{ item.description }}
             </div>
-            <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{ item.token }}</div>
-          </div>
-        </template>
-      </zk-values-block>
+          </template>
+          <template slot="left-bottom">
+            <div class="address hidden lg:block">
+              {{ item.to }}
+            </div>
+          </template>
+          <template slot="right-top">
+            <div class="flex flex-col items-end whitespace-nowrap">
+              <div class="value">
+                {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
+              </div>
+              <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{ item.token }}</div>
+            </div>
+          </template>
+        </zk-values-block>
+      </vue-custom-scrollbar>
       <div class="w-full">
         <div v-if="isInfoAvailable !==false" class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"/>
-
-        <zk-values-block v-if="isInfoAvailable" class="pt-1 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
+        <zk-values-block v-if="isInfoAvailable" class="pt-1 pb-0 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
           <template slot="left-top">
             <div class="flex items-center">
               <div class="headline big">Fees</div>
@@ -150,6 +154,9 @@ export default Vue.extend({
           url: "https://zksync.io",
         },
       ],
+      scrollBarOptions: {
+        scrollingThreshold: 1000
+      }
     };
   },
   computed: {
@@ -166,9 +173,9 @@ export default Vue.extend({
     network(): string {
       return ETHER_NETWORK_NAME;
     },
-    isBeta(): boolean {
+    /* isBeta(): boolean {
       return ZK_IS_BETA;
-    },
+    }, */
     isMainnet(): boolean {
       return ETHER_PRODUCTION;
     },

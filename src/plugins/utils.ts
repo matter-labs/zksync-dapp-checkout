@@ -30,7 +30,6 @@ const handleFormatToken = (symbol: TokenSymbol, amount: any) => {
 
 const handleFormatTokenPretty = (symbol: TokenSymbol, amount: GweiBalance) => {
   const firstFormated = handleFormatToken(symbol, amount);
-  console.log(symbol, firstFormated);
   const symbolsArr = firstFormated.split(".");
   const symbolsArrInt = symbolsArr[0];
   let symbolsArrDecimal = symbolsArr[1];
