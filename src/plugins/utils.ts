@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, DecimalBalance, GweiBalance, TokenSymbol } from "@/plugins/types";
+import { Address, DecimalBalance, GweiBalance, TokenSymbol } from "@/types/index";
 import { utils as zkUtils } from "zksync";
 import { BigNumber, BigNumberish, utils } from "ethers";
 
@@ -45,6 +45,9 @@ const handleFormatTokenPretty = (symbol: TokenSymbol, amount: GweiBalance) => {
     if (firstNotZero === -1 && symbolsArrDecimal[a] !== "0") {
       firstNotZero = a;
     }
+  }
+  if (firstNotZero > 5) {
+    return "<0.000001";
   }
   let newVal = `${symbolsArrInt}.${symbolsArrDecimal}`;
   if (newVal.length < firstFormated.length) {
@@ -103,7 +106,7 @@ export default {
     if (!amount || total === 0) {
       return "$0.00";
     }
-    return total < 0.01 ? `<$0.01` : `$${total.toFixed(2)}`;
+    return total < 0.01 ? "<$0.01" : `$${total.toFixed(2)}`;
   },
 
   /**
@@ -127,11 +130,25 @@ export default {
     }
   },
 
-  isAmountPackable: (amount: String): boolean => {
+  isAmountPackable: (amount: string): boolean => {
     return zkUtils.isTransactionAmountPackable(amount as BigNumberish);
   },
 
   validateAddress: (address: Address): boolean => {
     return utils.isAddress(address);
+  },
+
+  filterError: (error: Error): string | undefined => {
+    if (error.message) {
+      if (error.message.includes("User denied") || error.message.includes("User rejected")) {
+        return undefined;
+      } else if (error.message.includes("Fee Amount is not packable")) {
+        return "Fee Amount is not packable";
+      } else if (error.message.includes("Transaction Amount is not packable")) {
+        return "Transaction Amount is not packable";
+      } else if (error.message.length < 60) {
+        return error.message;
+      }
+    }
   },
 };

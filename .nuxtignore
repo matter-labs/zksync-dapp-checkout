@@ -1,0 +1,9 @@
+cypress
+_old
+tsconfig.json
+cypress.json
+public
+.nuxt
+.github
+.yarn
+.firebase

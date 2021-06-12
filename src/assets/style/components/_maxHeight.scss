@@ -1,13 +1,7 @@
 .maxHeightBlock {
-  height: 0;
-  transition: height $transition2;
-  will-change: height;
-  overflow: hidden;
-
   @media (min-width: $mobile) {
     &.mobile {
       height: auto !important;
     }
   }
 }
-

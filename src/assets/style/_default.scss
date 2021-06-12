@@ -1,28 +1,103 @@
+body {
+  overscroll-behavior-y: none;
+}
+
+#__nuxt,
+#__layout {
+  width: 100%;
+  min-height: 100vh;
+}
+
+#nuxt-loading {
+  will-change: opacity;
+  
+  & > div {
+    will-change: transform;
+  }
+}
+
+body {
+  font-family: $mainFontFamily;
+  color: $black2;
+  width: 100%;
+  min-height: 100vh;
+}
+
+a {
+  &:hover {
+    color: darken($violet, .5)
+  }
+}
+
+head {
+  display: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.desktopOnly {
+  @media screen and (max-width: $mobile+1) {
+    display: none !important;
+  }
+}
+
+.mobileOnly {
+  @media screen and (min-width: $mobile) {
+    display: none !important;
+  }
+}
+
+.customScrollList {
+  overflow: auto;
+  width: calc(100% + 10px);
+  padding-right: 10px;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .ps__rail-y {
+    opacity: 0.7;
+    width: 6px;
+    will-change: top, opacity;
+    transition: opacity $transition;
+
+    &:hover, &.ps--clicking {
+      opacity: 1;
+      background-color: transparent !important;
+
+      .ps__thumb-y {
+        width: 10px;
+      }
+    }
+    
+    .ps__thumb-y {
+      left: 0;
+      width: 6px !important;
+      background-color: lighten($color: $gray, $amount: 5) !important;
+      border-radius: 6px !important;
+      will-change: width, height, background-color, top;
+      transition: $transition;
+      transition-property: width, height;
+    }
+  }
+}
+
 .fitRightSide {
   z-index: 1;
   width: 57% !important;
   left: 43% !important;
+
   @media screen and (min-width: 1300px) {
     left: 600px !important;
     width: calc(100% - 600px) !important;
-  }
-}
-.darkMode {
-  .useDarkMode {
-    &.text-black2 {
-      color: $gray;
-    }
-    &.text-dark {
-      color: $light;
-    }
-    &.text-gray {
-      color: $dark3;
-    }
-    &.text-violet {
-      color: $lightViolet;
-    }
-    &.border-light {
-      border-color: $dark2;
-    }
   }
 }

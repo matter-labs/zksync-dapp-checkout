@@ -9,4 +9,7 @@
 /.idea/*
 /environments/*
 /public/*
+/_nuxt/*
 /src/static/sw.js
+sw.js*
+.eslintrc.js

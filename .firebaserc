@@ -1,5 +1,20 @@
 {
   "projects": {
     "default": "zsync-dapp-checkout"
+  },
+  "targets": {
+    "zsync-dapp-checkout": {
+      "hosting": {
+        "prod-mainnet": [
+          "zsync-dapp-checkout"
+        ],
+        "prod-rinkeby": [
+          "rinkeby-checkout-zksync"
+        ],
+        "prod-ropsten": [
+          "ropsten-checkout-zksync"
+        ]
+      }
+    }
   }
 }

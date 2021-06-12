@@ -11,13 +11,15 @@
     font-size: 14px;
     color: $black2;
     font-family: $firaCondensed;
+
     &:last-child {
       width: max-content;
       justify-self: end;
     }
+
     line-height: 1.4;
     font-weight: 300;
-    letter-spacing: -0.025em;
+    letter-spacing: -.025em;
   }
 
   @media screen and (max-width: $mobile) {

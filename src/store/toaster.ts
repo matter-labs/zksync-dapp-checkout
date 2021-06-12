@@ -28,11 +28,6 @@ export const actions: ActionTree<ToasterModuleState, RootState> = {
       duration: 2000,
       messageText: "",
     };
-    /* if (typeof params === "string") {
-      configuration.messageText = params;
-    } else {
-      configuration = params;
-    } */
     // @ts-ignore: Unreachable code error
     this.$toast.show(configuration.messageText, {
       type: "default",

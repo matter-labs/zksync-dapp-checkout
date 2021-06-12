@@ -1,89 +1,94 @@
-import Web3 from "web3";
+import { CURRENT_APP_NAME, ETHER_NETWORK_ID, ONBOARD_FORCED_EXIT_LINK, ONBOARD_FORTMATIC_KEY, ONBOARD_INFURA_KEY, ONBOARD_PORTIS_KEY, ONBOARD_RPC_URL } from "@/plugins/build";
 import web3Wallet from "@/plugins/web3";
-import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
+import {
+  Initialization,
+  PopupContent,
+  Subscriptions,
+  Wallet as OnBoardingWallet,
+  WalletInitOptions,
+  WalletModule,
+  WalletSelectModuleOptions,
+} from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import Web3 from "web3";
 
-const APP_NAME = "zkSync Beta";
-const EXPLANATION_LINK = "https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message";
-const FORTMATIC_KEY = process.env.APP_FORTMATIC;
-const INFURA_KEY = process.env.APP_WALLET_CONNECT;
-const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
-const initializedWallets = {
-  wallets: [
-    { walletName: "imToken", rpcUrl: RPC_URL },
+const initializedWallets: WalletSelectModuleOptions = {
+  wallets: <Array<WalletModule | WalletInitOptions>>[
+    { walletName: "imToken", rpcUrl: ONBOARD_RPC_URL, preferred: true },
     { walletName: "metamask", preferred: true },
     {
       walletName: "walletConnect",
       networkId: ETHER_NETWORK_ID,
-      infuraKey: INFURA_KEY,
+      infuraKey: ONBOARD_INFURA_KEY,
       enableLogging: true,
       preferred: true,
     },
-    // FIXME: enable again
-    // { walletName: "authereum" },
+    { walletName: "authereum" },
     { walletName: "coinbase", preferred: true },
-    { walletName: "dapper", preferred: false },
+    { walletName: "trust", preferred: true, rpcUrl: ONBOARD_RPC_URL },
     {
       walletName: "ledger",
-      rpcUrl: RPC_URL,
+      rpcUrl: ONBOARD_RPC_URL,
     },
     {
       walletName: "lattice",
-      rpcUrl: RPC_URL,
-      appName: APP_NAME,
+      rpcUrl: ONBOARD_RPC_URL,
+      appName: CURRENT_APP_NAME,
     },
     {
       walletName: "fortmatic",
-      apiKey: FORTMATIC_KEY,
+      apiKey: ONBOARD_FORTMATIC_KEY,
       preferred: true,
     },
     {
       walletName: "portis",
-      apiKey: process.env.APP_PORTIS,
+      apiKey: ONBOARD_PORTIS_KEY,
       preferred: true,
       label: "Portis",
     },
     { walletName: "opera" },
+    { walletName: "tokenpocket", rpcUrl: ONBOARD_RPC_URL },
+    { walletName: "dapper", rpcUrl: ONBOARD_RPC_URL },
     { walletName: "operaTouch" },
     { walletName: "torus" },
     { walletName: "status" },
     { walletName: "meetone" },
-    { walletName: "mykey", rpcUrl: RPC_URL },
-    { walletName: "huobiwallet", rpcUrl: RPC_URL },
+    { walletName: "mykey", rpcUrl: ONBOARD_RPC_URL },
+    { walletName: "huobiwallet", rpcUrl: ONBOARD_RPC_URL },
     { walletName: "hyperpay" },
-    { walletName: "wallet.io", rpcUrl: RPC_URL },
+    { walletName: "wallet.io", rpcUrl: ONBOARD_RPC_URL },
     { walletName: "atoken" },
   ],
 };
-export default (ctx: any) => {
-  const colorTheme = localStorage.getItem("colorTheme");
-  return {
+export default (ctx: unknown): Initialization => {
+  // const colorTheme: string | null = localStorage.getItem("colorTheme");
+  return <Initialization>{
     hideBranding: true,
     blockPollingInterval: 400000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
-    darkMode: colorTheme === "dark",
-    subscriptions: {
-      wallet: (wallet: any) => {
+    darkMode: false,
+    subscriptions: <Subscriptions>{
+      wallet: (wallet: OnBoardingWallet) => {
         if (wallet && wallet.provider) {
-          wallet.provider.autoRefreshOnNetworkChange = false;
+          wallet.provider.autoRefreshOnNetworkChange = true;
         }
         web3Wallet.set(new Web3(wallet.provider));
         if (process.client) {
+          // @ts-ignore
           ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
-          window.localStorage.setItem("selectedWallet", wallet.name);
+          window.localStorage.setItem("selectedWallet", wallet.name as string);
         }
-        wallet.provider;
+        return wallet?.provider;
       },
     },
-    walletSelect: {
-      wallets: initializedWallets.wallets,
+    walletSelect: <WalletSelectModuleOptions>{
+      wallets: <Array<WalletModule | WalletInitOptions>>initializedWallets.wallets,
     },
-    popupContent: {
+    // walletCheck: walletChecks,
+    popupContent: <PopupContent>{
       dismiss: "Dismiss",
       teaser: "Can't find your wallet?",
-      fullHtml: `If you have funds in zkSync on an address that you can't control (a smart contract or an  exchange deposit account),
-        it is possible to initiate a forced withdrawal —&nbsp;<a href="${EXPLANATION_LINK}" target="_blank">please consult the documentation</a>.
-         In the future, this functionality will be automated.`,
+      fullHtml: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${ONBOARD_FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
     },
   };
 };

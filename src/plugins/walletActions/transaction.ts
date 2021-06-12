@@ -1,7 +1,11 @@
+import { addCPKToBatch } from "@/plugins/walletActions/cpk";
 import { walletData } from "@/plugins/walletData";
-import { Address, ETHOperation, GweiBalance, TokenSymbol, Tx, Wallet, ZkSyncTransaction, Provider } from "@/plugins/types";
 import { BigNumber, BigNumberish } from "ethers";
-import { PriorityOperationReceipt, SignedTransaction, TransactionReceipt, TxEthSignature } from "zksync/src/types";
+import { Address, TokenSymbol } from "types";
+import { ZkSyncTransaction } from "zksync-checkout/src/types";
+import { Provider } from "zksync";
+import { ETHOperation } from "zksync/build/wallet";
+import { SignedTransaction, TransactionReceipt, TxEthSignature } from "zksync/src/types";
 
 class Transaction {
   state: "Sent" | "Committed" | "Verified" | "Failed";
@@ -68,34 +72,17 @@ export const submitSignedTransactionsBatch = async (provider: Provider, signedTx
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
-export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: Boolean, store: any) => {
-  const syncWallet: Wallet | undefined = walletData.get().syncWallet;
+export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: boolean, store: any) => {
+  const syncWallet = walletData.get().syncWallet!;
 
   await store.dispatch("wallet/restoreProviderConnection");
-  const nonce = await syncWallet!.getNonce("committed");
-  const batchBuilder = syncWallet!.batchBuilder(nonce);
+  const nonce = await syncWallet.getNonce("committed");
+  const batchBuilder = syncWallet.batchBuilder(nonce);
   if (changePubKey) {
-    if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
-      const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
-      if (!isOnchainAuthSigningKeySet) {
-        const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
-        await onchainAuthTransaction?.wait();
-      }
+    if (!store.getters["checkout/getAccountUnlockFee"]) {
+      throw new Error("No account activation fee found");
     }
-
-    const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-    const signedTx = await syncWallet!.signSetSigningKey({
-      feeToken,
-      fee: await store.getters["checkout/getAccountUnlockFee"],
-      nonce,
-      ethAuthType: ethAuthType === "ECDSA" ? "ECDSALegacyMessage" : "ECDSA",
-    });
-    console.log("signedTx", signedTx);
-    batchBuilder.addChangePubKey({
-      ...signedTx.tx,
-      alreadySigned: true,
-    });
-    console.log(batchBuilder);
+    await addCPKToBatch(syncWallet, store.getters["checkout/getAccountUnlockFee"], feeToken, batchBuilder, store);
   }
   for (const tx of transactions) {
     batchBuilder.addTransfer({
@@ -107,116 +94,12 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
   }
   batchBuilder.addTransfer({
     fee,
-    nonce,
     amount: 0,
     to: syncWallet!.address(),
     token: feeToken,
   });
   const batchTransactionData = await batchBuilder.build();
-  return await submitSignedTransactionsBatch(<Provider>syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
-};
-
-/**
- * Generic method for batch transaction creation
- *
- * @param address
- * @param token
- * @param feeToken
- * @param amount
- * @param fastWithdraw
- * @param fees
- * @param store
- * @return {Promise<{txData: *, txHash: *}[]>}
- */
-export const withdraw = async (address: Address, token: TokenSymbol, feeToken: TokenSymbol, amount: GweiBalance, fastWithdraw: boolean, fees: GweiBalance, store: any) => {
-  const syncWallet = walletData.get().syncWallet;
-  const amountBigValue = amount;
-  const feeBigValue = fees;
-  if (token === feeToken) {
-    const transaction = await syncWallet!.withdrawFromSyncToEthereum({
-      ethAddress: address,
-      token,
-      amount: amountBigValue,
-      fee: feeBigValue,
-      fastProcessing: fastWithdraw,
-    });
-    store.dispatch("transaction/watchTransaction", { transactionHash: transaction.txHash, tokenSymbol: token, type: "transfer" });
-    return transaction;
-  } else {
-    const withdrawals = [
-      {
-        ethAddress: address,
-        amount: amountBigValue,
-        fee: "0",
-        token,
-      },
-    ];
-    const transfers = [
-      {
-        to: syncWallet!.address(),
-        token: feeToken,
-        amount: "0",
-        fee: feeBigValue,
-      },
-    ];
-    if (!syncWallet!.signer) {
-      throw new Error("zkSync signer is required for sending zksync transactions.");
-    } else if (transfers.length === 0) {
-      throw new Error("No transfers in queue");
-    }
-
-    const signedTransactions = [] as Array<Tx>;
-    let signWithdrawTransaction = null;
-
-    let nextNonce = await syncWallet!.getNonce();
-
-    for (let i = 0; i < withdrawals.length; i++) {
-      const withdrawal = withdrawals[i];
-      const nonce = nextNonce;
-      nextNonce += 1;
-
-      signWithdrawTransaction = await syncWallet!
-        .signWithdrawFromSyncToEthereum({
-          ...withdrawal,
-          nonce,
-        })
-        .catch((error) => {
-          throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
-        });
-
-      // @ts-ignore: Unreachable code error
-      signedTransactions.push({ tx: signWithdrawTransaction.tx, signature: signWithdrawTransaction.ethereumSignature });
-    }
-
-    for (let i = 0; i < transfers.length; i++) {
-      const transfer = transfers[i];
-      const nonce = nextNonce;
-      nextNonce += 1;
-
-      const signTransaction = await syncWallet!
-        .signSyncTransfer({
-          ...transfer,
-          nonce,
-        })
-        .catch((error) => {
-          throw new Error("Error while performing signSyncTransfer: " + error.message);
-        });
-
-      // @ts-ignore: Unreachable code error
-      signedTransactions.push({ tx: signTransaction.tx, signature: signTransaction.ethereumSignature });
-    }
-
-    const transactionHashes = await syncWallet!.provider.submitTxsBatch(signedTransactions).catch((error) => {
-      throw new Error("Error while performing submitTxsBatch: " + error.message);
-    });
-    for (let a = 0; a < transactionHashes.length; a++) {
-      store.dispatch("transaction/watchTransaction", { transactionHash: transactionHashes[a], tokenSymbol: a === 0 ? token : feeToken, type: "transfer" });
-    }
-    return transactionHashes.map((txHash, index) => ({
-      txData: signedTransactions[index],
-      txHash,
-    }));
-  }
+  return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
 };
 
 /**
@@ -224,10 +107,9 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
  *
  * @param {TokenSymbol} token
  * @param {string} amount
- * @param store
  * @returns {Promise<ETHOperation>}
  */
-export const deposit = async (token: TokenSymbol, amount: string | BigNumber, store: any): Promise<ETHOperation> => {
+export const deposit = async (token: TokenSymbol, amount: string | BigNumber): Promise<ETHOperation | undefined> => {
   const wallet = walletData.get().syncWallet;
   // console.log(token)
   const ethTxOptions =
@@ -243,7 +125,7 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, st
     ethTxOptions,
   });
   // store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
-  return depositResponse as ETHOperation;
+  return depositResponse;
 };
 
 /**
@@ -256,6 +138,5 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, st
 export const unlockToken = async (address: Address, store: any) => {
   const wallet = walletData.get().syncWallet;
   await store.dispatch("wallet/restoreProviderConnection");
-  const unlockTransaction = await wallet!.approveERC20TokenDeposits(address as string);
-  return unlockTransaction;
+  return await wallet!.approveERC20TokenDeposits(address as string);
 };

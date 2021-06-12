@@ -1,16 +1,24 @@
-.zkFooterContainer, .zk-footer-space {
+.zk-footer-space {
   width: 100%;
   height: 60px;
 }
 .zkFooterContainer {
   position: absolute;
+  width: 100%;
+  height: 60px;
   bottom: 0;
   left: 0;
   padding-bottom: 10px;
-  @media screen and (min-width: $mobile) {
-    position: fixed;
-    width: 57%;
-    left: 43%;
+  justify-content: center;
+  @media screen and (max-width: $mobile) {
+    height: 73px;
+    flex-wrap: wrap;
+    text-align: center;
+    padding: 1rem 0;
+
+    .rightSide {
+      justify-content: center !important;
+    }
   }
 
   .colorTheme {
@@ -34,6 +42,53 @@
       transition: $transition;
       transition-property: transform;
       will-change: transform;
+    }
+  }
+  .leftSide {
+    width: max-content;
+    white-space: nowrap;
+  }
+  .rightSide {
+    width: 100%;
+    text-align: right;
+    justify-content: flex-end;
+
+    .linkDefault {
+      font-size: 14px;
+      font-weight: 300;
+    }
+  }
+  #system-b-popover {
+    cursor: help;
+  }
+  .vue-popover {
+    position: fixed;
+  }
+}
+
+.darkMode .zkFooterContainer .rightSide {
+  .linkDefault {
+    font-weight: 400;
+    color: $lightViolet;
+  }
+}
+
+.defaultLayout {
+  @media screen and (min-width: $mobile) {
+    &:not(.loggedIn) {
+      .zk-footer-space {
+        display: none;
+      }
+    }
+  }
+  @media screen and (max-width: $mobile) {
+    &.footerUpStyle {
+      .zk-footer-space {
+        height: 110px;
+      }
+      .zkFooterContainer {
+        bottom: 62px;
+      }
     }
   }
 }

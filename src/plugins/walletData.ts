@@ -1,14 +1,14 @@
-import { Provider, Wallet, AccountState } from "@/plugins/types";
+import { Wallet } from "zksync";
+import { Provider, AccountState } from "@/types/index";
 
-interface walletData {
-  [key: string]: object | undefined;
+interface WalletData {
   syncProvider?: Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
-  zkSync?: object;
+  zkSync?: unknown;
 }
 
-const internalWalletData: walletData = {
+const internalWalletData: WalletData = {
   syncProvider: undefined,
   syncWallet: undefined,
   accountState: undefined,
@@ -32,11 +32,12 @@ export const walletData = {
     }
     return internalWalletData.zkSync;
   },
-  get: (): walletData => {
+  get: (): WalletData => {
     return internalWalletData;
   },
-  set: (val: object): void => {
+  set: (val: any): void => {
     for (const [key, value] of Object.entries(val)) {
+      // @ts-ignore
       internalWalletData[key] = value;
     }
   },

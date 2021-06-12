@@ -5,11 +5,11 @@
     margin-top: 25px;
 
     .mainBtns {
-      z-index: 10;
+      z-index: 1;
       display: flex;
       justify-content: center;
-      button.defbtn.filled
-      {
+
+      button.defbtn.filled {
         line-height: 1.4;
         position: static;
         justify-content: center;
@@ -18,20 +18,36 @@
         font-weight: 400;
         min-width: 300px;
         width: max-content;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
         border-radius: 4px;
         height: 55px;
       }
     }
   }
 
+  .successPage {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(5, max-content) 1fr;
+    height: calc(100vh - 1rem - 45px - 80px);
+
+    .customScrollList {
+      min-height: 80px;
+    }
+  }
+
   @media screen and (max-width: $mobile) {
+    .successPage {
+      height: auto;
+      
+      .customScrollList {
+        max-height: 50vh;
+      }
+    }
     .mainBtnsContainer {
-      position: absolute;
       left: 0;
       bottom: 0;
       margin-top: 0;
-      height: 80px;
       width: 100%;
 
       .mainBtns {
@@ -41,12 +57,13 @@
         width: 100%;
         background-color: $white;
         padding: 10px 1.25rem;
-        box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
+        box-shadow: 0 32px 64px rgba(17, 17, 17, .08);
 
         .defbtn {
           height: 50px;
           width: 100% !important;
           font-size: 18px;
+
           &:last-child {
             width: 100%;
             text-align: center;

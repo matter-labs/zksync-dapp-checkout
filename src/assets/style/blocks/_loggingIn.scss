@@ -1,5 +1,5 @@
 .loggingInContainer {
-  z-index: 1;
+  z-index: 2;
   background-color: $white2;
   position: absolute;
   width: 100%;
@@ -14,9 +14,10 @@
   flex-direction: column;
   animation-fill-mode: forwards;
   overflow: hidden;
-  transition-delay: 0.35s;
+  transition-delay: .35s;
+
   &.fade-leave-active {
-    transition-delay: 0.5s;
+    transition-delay: .5s;
   }
 
   .hint {
@@ -32,8 +33,26 @@
       height: auto;
     }
   }
+
+  @media screen and (max-width: $mobile) {
+    padding: 0 5vw;
+
+    svg {
+      max-width: 100%;
+    }
+  }
 }
 
 .darkMode .loggingInContainer {
   background-color: $darkBlue;
+}
+
+@media screen and (max-width: 400px) {
+  .loggingInContainer {
+    & > div,
+    & > h1 {
+      text-align: center;
+      font-size: 18px;
+    }
+  }
 }

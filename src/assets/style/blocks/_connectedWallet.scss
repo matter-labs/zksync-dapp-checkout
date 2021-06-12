@@ -1,0 +1,32 @@
+.connectedWallet {
+  .address {
+    cursor: pointer;
+    transition: transform $transition;
+    will-change: transform;
+    &:hover {
+      transform: scale(1.035);
+
+      .copyIcon {
+        opacity: 1;
+      }
+    }
+    &:active {
+      transition-duration: 0.001s;
+      color: $green;
+      transform: scale(1);
+    }
+
+    .copyIcon {
+      position: absolute;
+      left: 105%;
+      top: 42%;
+      transform: translateY(-50%);
+      opacity: 0;
+      transition: opacity $transition;
+      will-change: opacity;
+    }
+  }
+  .vue-popover {
+    position: fixed;
+  }
+}

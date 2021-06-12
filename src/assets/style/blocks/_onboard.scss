@@ -5,9 +5,11 @@
     width: 57% !important;
     left: 43% !important;
     background-color: transparent !important;
+
     .bn-onboard-modal-content {
       width: 85%;
     }
+
     @media screen and (min-width: 1300px) {
       left: 600px !important;
       width: calc(100% - 600px) !important;
@@ -28,25 +30,16 @@
       }
     }
   }
-  /* &.bn-onboard-dark-mode {
-    background-color: $darkViolet !important;
-
-    .bn-onboard-prepare-error {
-      background-color: transparent !important;
-    }
-    .bn-onboard-selected-wallet {
-      background-color: transparentize($color: $gray, $amount: 0.95) !important;
-    }
-  } */
   ul.bn-onboard-modal-select-wallets {
     max-height: 50vh !important;
     overflow: auto;
   }
+
   .bn-onboard-custom.bn-onboard-select-wallet-definition {
     font-size: 14px;
 
     span {
-      font-weight: bold;
+      font-weight: 600;
       display: block;
       margin: 5px 0;
 
@@ -55,16 +48,20 @@
       }
     }
   }
+
   .bn-onboard-select-wallet-info {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
   }
+
   .bn-onboard-icon-button {
     border-radius: 8px;
   }
+
   .bn-onboard-selected-wallet {
-    background-color: transparentize($color: $gray, $amount: 0.95) !important;
+    background-color: transparentize($color: $gray, $amount: .95) !important;
     box-shadow: 0 0 0 1.5px $violet !important;
+
     &:hover {
       box-shadow: 0 0 0 2.5px $lightViolet !important;
     }
@@ -132,5 +129,4 @@
     display: none !important;
     visibility: hidden !important;
   }
-
 }

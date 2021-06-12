@@ -1,12 +1,10 @@
 <template>
-  <div class="defaultLayout min-h-screen" :class="{'darkMode': darkMode===true}">
+  <div class="defaultLayout min-h-screen" :class="[{'darkMode': darkMode===true},{'loggedIn': loggedIn===true},{'footerUpStyle': footerUpStyle===true}]">
     <modals />
     <info-block />
-    <div class="routerContainer bg-white2 md:min-h-screen py-4 md:py-10 px-5 md:px-10">
+    <div class="routerContainer bg-white2 py-4 px-5 md:px-10">
       <logging-in/>
-      <transition v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')" name="fade" mode="out-in">
-        <nuxt class="routeMain"/>
-      </transition>
+      <nuxt @step="step=$event" v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')" class="routeMain"/>
       <div class="zk-footer-space"></div>
       <zk-footer />
     </div>
@@ -27,6 +25,12 @@ export default {
     zkFooter,
   },
   computed: {
+    step() {
+      return this.$store.getters["step"];
+    },
+    footerUpStyle() {
+      return this.loggedIn===true && (this.step==='main' || this.step==='success');
+    },
     loggingIn() {
       return this.$store.getters["account/loader"];
     },
@@ -36,29 +40,6 @@ export default {
     darkMode() {
       return this.$store.getters.darkMode;
     },
-  },
-  watch: {
-    $route: {
-      immediate: true,
-      handler(val, oldVal) {
-        if (!oldVal) {
-          return this.$nextTick(() => {
-            document.documentElement.scrollTop = 0;
-          });
-        }
-        if (val.path !== oldVal.path) {
-          this.$nextTick(() => {
-            const lastScroll = this.$store.getters["scroll/getLastScroll"];
-            document.documentElement.scrollTop = lastScroll !== false ? lastScroll.y : 0;
-          });
-        }
-      },
-    },
-  },
-  mounted() {
-    if (process.client) {
-      window.history.scrollRestoration = "manual";
-    }
   },
   created() {
     let colorTheme = localStorage.getItem("colorTheme");

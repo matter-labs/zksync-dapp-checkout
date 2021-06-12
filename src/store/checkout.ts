@@ -1,11 +1,14 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { ZkSyncTransaction, Address, TokenSymbol, TransactionData, TransactionFee, TotalByToken } from "@/plugins/types";
+import { Address, TokenSymbol, TransactionData, TransactionFee, TotalByToken } from "@/types/index";
+import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { closestPackableTransactionAmount } from "zksync";
 import { BigNumber } from "ethers";
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
 
 export const state = () => ({
+  isError: <boolean>false,
+  noDataError: <unknown | undefined>undefined,
   transactions: [] as Array<ZkSyncTransaction>,
   fromAddress: "" as Address,
   feeToken: "" as TokenSymbol,
@@ -14,25 +17,6 @@ export const state = () => ({
 });
 
 export type CheckoutModuleState = ReturnType<typeof state>;
-
-export const mutations: MutationTree<CheckoutModuleState> = {
-  setTransactionData(state, { transactions, fromAddress, feeToken }: TransactionData) {
-    state.transactions = transactions.map((tx) => {
-      return {
-        ...tx,
-        amount: closestPackableTransactionAmount(tx.amount).toString(),
-      };
-    });
-    state.fromAddress = fromAddress;
-    state.feeToken = feeToken;
-  },
-  setTransactionBatchFee(state, transaction: TransactionFee) {
-    state.transactionBatchFee = transaction;
-  },
-  setAccountUnlockFee(state, accountUnlockFee: false | BigNumber) {
-    state.accountUnlockedFee = accountUnlockFee;
-  },
-};
 
 export const getters: GetterTree<CheckoutModuleState, RootState> = {
   getTransactionData(state): TransactionData {
@@ -48,7 +32,10 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
   getAccountUnlockFee(state): false | BigNumber {
     return state.accountUnlockedFee;
   },
-  getAllFees(state: /* Vuex store state */ any, getters, rootState, rootGetters: /* Vuex store getters */ any): Array<TransactionFee> {
+  getAllFees(state: CheckoutModuleState, getters, rootState, rootGetters: any): Array<TransactionFee> {
+    if (state.isError) {
+      return [];
+    }
     const allFees = [] as Array<TransactionFee>;
     allFees.push(state.transactionBatchFee);
     if (state.accountUnlockedFee && rootGetters["wallet/isAccountLocked"]) {
@@ -79,9 +66,41 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     }
     return Object.fromEntries(totalByToken);
   },
+  getErrorState(state: CheckoutModuleState): boolean {
+    return state.isError;
+  },
+  getErrorData(state: CheckoutModuleState): unknown | undefined {
+    return state.noDataError;
+  },
+};
+
+export const mutations: MutationTree<CheckoutModuleState> = {
+  setTransactionData(state, { transactions, fromAddress, feeToken }: TransactionData) {
+    state.transactions = transactions.map((tx) => {
+      return {
+        ...tx,
+        amount: closestPackableTransactionAmount(tx.amount).toString(),
+      };
+    });
+    state.fromAddress = fromAddress;
+    state.feeToken = feeToken;
+  },
+  setTransactionBatchFee(state, transaction: TransactionFee) {
+    state.transactionBatchFee = transaction;
+  },
+  setAccountUnlockFee(state, accountUnlockFee: false | BigNumber) {
+    state.accountUnlockedFee = accountUnlockFee;
+  },
+  setError(state: CheckoutModuleState, errorData) {
+    state.isError = true;
+    state.noDataError = errorData;
+  },
 };
 
 export const actions: ActionTree<CheckoutModuleState, RootState> = {
+  setError({ commit }, error: unknown): void {
+    commit("setError", error);
+  },
   async getTransactionBatchFee({ state, commit }): Promise<void> {
     const syncProvider = walletData.get().syncProvider;
     await this.dispatch("wallet/restoreProviderConnection");

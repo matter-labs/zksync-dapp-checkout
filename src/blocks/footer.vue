@@ -1,15 +1,14 @@
 <template>
   <footer class="zkFooterContainer flex justify-between items-center px-5 md:px-10">
     <div class="leftSide">
-      <div class="text-violet text-xs useDarkMode">
+      <div class="text-violet text-sm -dark">
         Made with ❤️ by Matter Labs
       </div>
     </div>
     <div class="rightSide flex items-center">
-      <div v-if="version" class="version text-xs text-black2 useDarkMode md:mr-5">v.{{version}}</div>
-      <div class="colorTheme" :class="{'dark': darkMode}" @click="toogleDarkMode">
-        <i class="fas fa-adjust"></i>
-      </div>
+      <block-system-info />
+      <span class="linkDefault px-1">|</span>
+      <a href="https://uptime.com/s/zksync" class="linkDefault" target="_blank">uptime</a>
     </div>
   </footer>
 </template>
@@ -23,17 +22,6 @@ export default Vue.extend({
     return {
       version: GIT_REVISION_SHORT,
     };
-  },
-  computed: {
-    darkMode() {
-      return this.$store.getters.darkMode;
-    },
-  },
-  methods: {
-    toogleDarkMode() {
-      this.$store.commit("setDarkMode", !this.darkMode);
-      localStorage.setItem("colorTheme", this.darkMode ? "dark" : "light");
-    },
   },
 });
 </script>
