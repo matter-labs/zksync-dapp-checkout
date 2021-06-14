@@ -111,10 +111,12 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     types.push(types[0]);
     addresses.push(addresses[0]);
     const transactionFee = await syncProvider!.getTransactionsBatchFee(types, addresses, state.feeToken);
+    const minFee = BigNumber.from(transactionFee);
     commit("setTransactionBatchFee", {
       name: "Tx Batch Fee / zkSync",
       key: "txBatchFee",
-      amount: BigNumber.from(transactionFee),
+      amount: minFee.add(minFee.div("100").mul("5")),
+      realAmount: BigNumber.from(transactionFee),
       token: state.feeToken,
     });
   },

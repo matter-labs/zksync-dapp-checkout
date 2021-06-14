@@ -71,6 +71,13 @@
               </div>
             </template>
           </zk-values-block>
+          <zk-values-block class="pt-1 lg:pt-3" v-if="!loggedIn">
+            <template slot="left-top">
+              <div class="text-sm text-gray">
+                May require additional one-time account unlock fee
+              </div>
+            </template>
+          </zk-values-block>
         </zk-max-height>
 
         <div v-if="isInfoAvailable !==false" class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"/>

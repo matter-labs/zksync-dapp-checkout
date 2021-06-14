@@ -85,19 +85,6 @@
     <connected-wallet/>
 
     <div v-if="step === 'main'" class="w-full">
-      <zk-max-height class="mt-5 md:mt-7" :value="!transferAllowed">
-        <zk-note>
-          <template slot="icon">
-            <i class="text-gray text-xl fal fa-info-square"/>
-          </template>
-          <template slot="default">
-            <div class="text-sm text-gray font-light">
-              The default amount to deposit is 5% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br/>
-            </div>
-          </template>
-        </zk-note>
-      </zk-max-height>
-
       <line-table-header class="mt-5 mb-2">
         <template slot="first"> To pay</template>
         <template slot="second"> L2 balance</template>
@@ -291,13 +278,13 @@ export default Vue.extend({
       this.step = "transfer";
       this.subStep = "processing";
       try {
-        const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
+        const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount;
         await this.$store.dispatch("checkout/getTransactionBatchFee");
-        const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
-        if (transactionFeesPrevious !== transactionFeesNew) {
+        const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].realAmount;
+        if (transactionFeesPrevious.lt(transactionFeesNew)) {
           this.transactionFees = {
-            previous: transactionFeesPrevious,
-            new: transactionFeesNew,
+            previous: transactionFeesPrevious.toString(),
+            new: this.$store.getters["checkout/getTransactionBatchFee"].amount.toString(),
           };
           this.modal = "feeChanged";
         } else {

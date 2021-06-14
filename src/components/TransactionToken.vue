@@ -205,9 +205,7 @@ export default Vue.extend({
     },
     recommendedDeposit(): GweiBalance {
       try {
-        const minDeposit = BigNumber.from(this.needToDeposit);
-        /* Add 5% to take into account the risk of fluctuating transaction fees */
-        return minDeposit.add(minDeposit.div("5")).toString();
+        return this.needToDeposit;
       } catch (error) {
         return "";
       }
