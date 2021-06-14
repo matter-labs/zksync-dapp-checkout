@@ -3,17 +3,15 @@
     cursor: pointer;
     transition: transform $transition;
     will-change: transform;
-    &:hover {
-      transform: scale(1.035);
 
+    &:hover {
       .copyIcon {
         opacity: 1;
       }
     }
+
     &:active {
-      transition-duration: 0.001s;
-      color: $green;
-      transform: scale(1);
+      color: $lightViolet;
     }
 
     .copyIcon {
@@ -26,7 +24,12 @@
       will-change: opacity;
     }
   }
+
   .vue-popover {
     position: fixed;
+    color: $lightViolet;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    width: fit-content !important;
   }
 }

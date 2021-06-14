@@ -2,7 +2,7 @@
   <div class="container">
     <div class="connectedWallet flex items-center">
       <i class="text-gray text-4xl mr-3 far fa-wallet" />
-      <popover name="copy-address" event="click" class="text-green text-center">
+      <popover name="copy-address" event="click" class="text-center block text-xs" :delay="400">
         Address copied!
       </popover>
       <zk-values-block>
@@ -10,7 +10,7 @@
           <div class="headline">My wallet</div>
         </template>
         <template slot="left-bottom">
-          <div @click="copyAddress()" id="copy-address" v-popover:copy-address.bottom class="address">
+          <div @click="copyAddress()" id="copy-address" v-popover:copy-address.bottom class="address lightLink">
             {{ ownAddress }}
             <i class="copyIcon text-lg fal fa-clipboard"></i>
           </div>
