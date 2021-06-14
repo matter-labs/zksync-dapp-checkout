@@ -7,7 +7,7 @@
     </div>
     <div class="rightSide flex items-center">
       <block-system-info />
-      <span class="linkDefault px-1">|</span>
+      <span class="linkDefault px-2">|</span>
       <a href="https://uptime.com/s/zksync" class="linkDefault" target="_blank">uptime</a>
     </div>
   </footer>
