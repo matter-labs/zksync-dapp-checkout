@@ -283,33 +283,36 @@ export default Vue.extend({
     getTxLink(hash: string) {
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
     },
+    async checkFees() {
+      this.transactionFees = [];
+      const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount;
+      await this.$store.dispatch("checkout/getTransactionBatchFee");
+      const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].realAmount;
+      if (transactionFeesPrevious.lt(transactionFeesNew)) {
+        this.transactionFees.push({
+          type: "batch",
+          previous: transactionFeesPrevious.toString(),
+          new: this.$store.getters["checkout/getTransactionBatchFee"].amount.toString(),
+        });
+      }
+      if(this.isAccountLocked) {
+        const accountUnlockFeePrevious = this.$store.getters["checkout/getAccountUnlockFee"];
+        await this.$store.dispatch("checkout/getAccountUnlockFee");
+        const accountUnlockFeeNew = this.$store.getters["checkout/getAccountUnlockFee"];
+        if (accountUnlockFeePrevious.lt(accountUnlockFeeNew)) {
+          this.transactionFees.push({
+            type: "cpk",
+            previous: accountUnlockFeePrevious.toString(),
+            new: accountUnlockFeeNew.toString(),
+          });
+        }
+      }
+    },
     async preTransfer() {
       this.step = "transfer";
       this.subStep = "processing";
       try {
-        this.transactionFees = [];
-        const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount;
-        await this.$store.dispatch("checkout/getTransactionBatchFee");
-        const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].realAmount;
-        if (transactionFeesPrevious.lt(transactionFeesNew)) {
-          this.transactionFees.push({
-            type: "batch",
-            previous: transactionFeesPrevious.toString(),
-            new: this.$store.getters["checkout/getTransactionBatchFee"].amount.toString(),
-          });
-        }
-        if(this.isAccountLocked) {
-          const accountUnlockFeePrevious = this.$store.getters["checkout/getAccountUnlockFee"];
-          await this.$store.dispatch("checkout/getAccountUnlockFee");
-          const accountUnlockFeeNew = this.$store.getters["checkout/getAccountUnlockFee"];
-          if (accountUnlockFeePrevious.lt(accountUnlockFeeNew)) {
-            this.transactionFees.push({
-              type: "cpk",
-              previous: accountUnlockFeePrevious.toString(),
-              new: accountUnlockFeeNew.toString(),
-            });
-          }
-        }
+        await this.checkFees();
         if(this.transactionFees.length > 0) {
           this.modal = "feeChanged";
           return;
@@ -380,33 +383,29 @@ export default Vue.extend({
         manager.notifyHashes(endHashes);
 
 
-          // @ts-ignore
-          this.finalTransactions.push(...transactions);
-          this.subStep = "committing";
+        // @ts-ignore
+        this.finalTransactions.push(...transactions);
+        this.subStep = "committing";
 
         await transactions[0].awaitReceipt();
-          this.step = "success";
+        this.step = "success";
       } catch (error) {
         this.checkCPKMessageSigned();
         this.step = "main";
-        if (error.message) {
-          if (!error.message.includes("User denied")) {
-            if (error.message.includes("Account does not exist in the zkSync network")) {
-              this.errorModal = {
-                headline: "Payment error",
-                text: "Please, make deposit or request tokens in order to activate the account.",
-              };
-            } else {
-              this.errorModal = {
-                headline: "Payment error",
-                text: error.message,
-              };
+        let errorMsg = zkUtils.filterError(error);
+        if (typeof errorMsg === "string") {
+          if(errorMsg.includes("Account does not exist in the zkSync network")) {
+            errorMsg = "Please, make deposit or request tokens in order to activate the account.";
+          } else if(errorMsg.includes("batch summary fee is too low")) {
+            await this.checkFees();
+            if(this.transactionFees.length > 0) {
+              this.modal = "feeChanged";
+              return;
             }
           }
-        } else {
           this.errorModal = {
-            headline: "Payment error",
-            text: "Unknown error. Try again later.",
+            headline: "Activation error",
+            text: errorMsg,
           };
         }
       }
