@@ -224,6 +224,7 @@ export default Vue.extend({
       step: "main" as "main" | "transfer" | "success",
       subStep: "" as "processing" | "waitingUserConfirmation" | "committing",
       cpkMessageSigned: false,
+      updateTransferAllowed: 0,
       cpkState: "main" as "main" | "processing" | "waitingUserConfirmation",
       tokenItemsValid: {} as {
         [token: string]: boolean;
@@ -252,9 +253,11 @@ export default Vue.extend({
       return this.$store.getters["checkout/getTransactionData"];
     },
     totalByToken(): TotalByToken {
+      this.updateTransferAllowed;
       return this.$store.getters["checkout/getTotalByToken"];
     },
     transferAllowed(): boolean {
+      this.updateTransferAllowed;
       for (const [, state] of Object.entries(this.tokenItemsValid)) {
         if (!state) {
           return false;
@@ -404,6 +407,7 @@ export default Vue.extend({
         await transactions[0].awaitReceipt();
         this.step = "success";
       } catch (error) {
+        this.updateTransferAllowed++;
         this.checkCPKMessageSigned();
         this.step = "main";
         let errorMsg = zkUtils.filterError(error);
@@ -412,6 +416,7 @@ export default Vue.extend({
             errorMsg = "Please, make deposit or request tokens in order to activate the account.";
           } else if(errorMsg.includes("batch summary fee is too low")) {
             await this.checkFees();
+            this.updateTransferAllowed++;
             if(this.transactionFees.length > 0) {
               this.modal = "feeChanged";
               return;
