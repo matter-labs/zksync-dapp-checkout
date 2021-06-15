@@ -24,7 +24,7 @@ export const getCPKTx = (address: Address): CPKLocal | undefined => {
   }
 };
 
-export const addCPKToBatch = async (syncWallet: Wallet, fee: GweiBalance, feeToken: TokenSymbol, batchBuilder: BatchBuilder, store: any) => {
+export const addCPKToBatch = async (syncWallet: Wallet, feeToken: TokenSymbol, batchBuilder: BatchBuilder, store: any) => {
   let pubKeyTx: CPKLocal | undefined;
   try {
     pubKeyTx = getCPKTx(store.getters["account/address"]);
@@ -41,7 +41,7 @@ export const addCPKToBatch = async (syncWallet: Wallet, fee: GweiBalance, feeTok
   }
   const changePubKeyTx = await syncWallet.signer!.signSyncChangePubKey({
     ...pubKeyTx,
-    fee,
+    fee: 0,
     feeTokenId: syncWallet.provider.tokenSet.resolveTokenId(feeToken),
   });
   batchBuilder.addChangePubKey({

@@ -108,10 +108,6 @@
       </div>
       <div class="footerContainer hidden md:block">
         <footer>
-          <a class="poweredBy flex justify-center items-center pt-5" href="https://zksync.io" target="_blank">
-            <div class="text-md text-violet -dark mr-3">Powered by</div>
-            <logo class="h-8" />
-          </a>
           <div class="poweredBy flex justify-center items-center mt-3">
             <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
             <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault ml-5">Privacy Policy</a>

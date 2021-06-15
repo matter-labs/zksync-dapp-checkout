@@ -10,9 +10,11 @@
           <div class="headline">My wallet</div>
         </template>
         <template slot="left-bottom">
-          <div @click="copyAddress()" id="copy-address" v-popover:copy-address.bottom class="address lightLink">
-            {{ ownAddress }}
-            <i class="copyIcon text-lg fal fa-clipboard"></i>
+          <div @click="copyAddress()" id="copy-address" v-popover:copy-address.bottom class="address">
+            <span>
+              <span>{{ ownAddress[0] }}</span><span class="addressMiddle">{{ ownAddress[1] }}</span><span class="dots">...</span><span>{{ ownAddress[2] }}</span>
+            </span>
+            <i class="copyIcon text-lg far fa-clipboard"></i>
           </div>
         </template>
         <template slot="right-top">
@@ -40,9 +42,9 @@ import {ETHER_NETWORK_NAME, ETHER_PRODUCTION} from "@/plugins/build";
 
 export default Vue.extend({
   computed: {
-    ownAddress(): Address {
+    ownAddress(): string[] {
       const address = this.$store.getters["account/address"];
-      return address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
+      return [address.substr(0, 11), address.substr(11, address.length - 5 - 11), address.substr(address.length - 5, address.length)];
     },
     isProd(): boolean {
       return ETHER_PRODUCTION;

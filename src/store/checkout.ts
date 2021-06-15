@@ -106,7 +106,6 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     await this.dispatch("wallet/restoreProviderConnection");
     const types = new Array(state.transactions.length).fill("Transfer") as "Transfer"[];
     const addresses = state.transactions.map((tx) => tx.to);
-
     // The fee transaction
     types.push(types[0]);
     addresses.push(addresses[0]);
@@ -115,7 +114,7 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     commit("setTransactionBatchFee", {
       name: "Tx Batch Fee / zkSync",
       key: "txBatchFee",
-      amount: closestPackableTransactionAmount(minFee.add(minFee.div("100").mul("5"))),
+      amount: minFee.add(minFee.div("100").mul("5")),
       realAmount: BigNumber.from(transactionFee),
       token: state.feeToken,
     });

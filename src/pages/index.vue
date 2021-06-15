@@ -94,7 +94,7 @@
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()"/>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <zk-defbtn v-if="displayActivateAccountBtn" :disabled="!canCPK || cpkLoading" :loader="cpkLoading" @click="signActivation()">
+          <zk-defbtn v-if="displayActivateAccountBtn" :disabled="!transferAllowed || !canCPK || cpkLoading" :loader="cpkLoading" @click="signActivation()">
             <i class="fas fa-unlock"></i>
             <span>{{ cpkBtnText }}</span>
           </zk-defbtn>
@@ -103,6 +103,7 @@
             <span>Complete payment</span>
           </zk-defbtn>
         </div>
+        <div v-if="displayActivateAccountBtn && (!canCPK || !transferAllowed) && !cpkLoading" class="text-gray text-center text-sm pt-2">Complete all deposit operations to continue</div>
       </div>
     </div>
     <div v-else-if="step === 'transfer'" class="w-full">
@@ -118,7 +119,7 @@
       <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a></div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <zk-defbtn :disabled="!transferAllowed" @click="close()">
+          <zk-defbtn @click="close()">
             <i class="far fa-times"/>
             <span>Close</span>
           </zk-defbtn>
@@ -323,7 +324,10 @@ export default Vue.extend({
         const transactions = await transactionBatch(
           transactionsList,
           transactionData.feeToken,
-          transactionFees.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
+          transactionFees.amount,
+          this.$store.getters["wallet/isAccountLocked"],
+          this.$store
+        );
         console.log("Batch transaction", transactionsList);
 
         const manager = ZkSyncCheckoutManager.getManager();

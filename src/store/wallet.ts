@@ -560,12 +560,14 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       await dispatch("getInitialBalances", true);
 
       await dispatch("checkLockedState");
+
+      this.commit("account/setAddress", syncWallet.address());
+      this.commit("account/setAccountID", accountState.id);
+      
       await this.dispatch("checkout/getAccountUnlockFee");
 
       await watcher.changeNetworkSet(dispatch, this);
 
-      this.commit("account/setAddress", syncWallet.address());
-      this.commit("account/setAccountID", accountState.id);
       this.commit("account/setLoggedIn", true);
       return true;
     } catch (error) {
@@ -596,6 +598,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     this.commit("account/setLoggedIn", false);
     this.commit("account/setSelectedWallet", "");
     this.commit("account/setAccountID", null);
+    commit("setAccountLockedState", false);
     commit("clearDataStorage");
   },
 };
