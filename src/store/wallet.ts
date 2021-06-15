@@ -1,6 +1,7 @@
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, Contract, ContractInterface, BigNumberish, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
 import { Address, Balance, GweiBalance, Token, TokenSymbol, TotalByToken, Transaction } from "@/types/index";
+import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
 
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 
@@ -353,10 +354,14 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     const loadInitialBalancesPromises = usedTokens.map(async (key: string) => {
       const currentToken = loadedTokens[key];
       try {
-        let unlocked = true;
         const balance = await syncWallet.getEthereumBalance(key);
-        if (key !== "ETH") {
-          unlocked = await syncWallet.isERC20DepositsApproved(currentToken.address);
+        let unlocked: BigNumber;
+        if (currentToken.symbol.toLowerCase() !== "eth") {
+          const tokenAddress = syncWallet!.provider.tokenSet.resolveTokenAddress(currentToken.symbol);
+          const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE as ContractInterface, syncWallet!.ethSigner);
+          unlocked = await erc20contract.allowance(syncWallet!.address(), syncWallet!.provider.contractAddress.mainContract);
+        } else {
+          unlocked = BigNumber.from(ERC20_APPROVE_TRESHOLD);
         }
         return {
           id: currentToken.id,

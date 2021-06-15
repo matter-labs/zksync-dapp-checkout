@@ -72,11 +72,10 @@ export const submitSignedTransactionsBatch = async (provider: Provider, signedTx
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
-export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumber, changePubKey: boolean, store: any) => {
+export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumber, nonce: number, changePubKey: boolean, store: any) => {
   const syncWallet = walletData.get().syncWallet!;
 
   await store.dispatch("wallet/restoreProviderConnection");
-  const nonce = await syncWallet.getNonce("committed");
   const batchBuilder = syncWallet.batchBuilder(nonce);
   if (changePubKey) {
     await addCPKToBatch(syncWallet, feeToken, batchBuilder, store);
@@ -90,7 +89,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
     });
   }
   batchBuilder.addTransfer({
-    fee: closestPackableTransactionFee(store.getters["wallet/isAccountLocked"] ? fee.add(store.getters["checkout/getAccountUnlockFee"]) : fee),
+    fee: store.getters["wallet/isAccountLocked"] ? fee.add(store.getters["checkout/getAccountUnlockFee"]) : fee,
     amount: 0,
     to: syncWallet!.address(),
     token: feeToken,

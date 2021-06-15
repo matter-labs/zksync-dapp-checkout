@@ -15,32 +15,36 @@
       </template>
       <template slot="default">
         <div class="text-sm">The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.</div>
-        <zk-values-block class="mt-3">
-          <template slot="left-top">
-            <div class="headline">Previous fee</div>
-          </template>
-          <template slot="right-top">
-            <div class="flex flex-col items-end whitespace-nowrap">
-              <div class="value">
-                {{ transactionFees.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+        <div class="text-sm text-red" v-if="!transferAllowed">You have to deposit a little bit more to cover new transaction fee.</div>
+        <div class="mt-3" v-for="(item, index) in transactionFees" :key="index">
+          <div class="text-lg">{{ item.type === "batch" ? "Batch transaction fee" : "One-time account activation fee"}}</div>
+          <zk-values-block>
+            <template slot="left-top">
+              <div class="headline">Previous fee</div>
+            </template>
+            <template slot="right-top">
+              <div class="flex flex-col items-end whitespace-nowrap">
+                <div class="value">
+                  {{ item.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+                </div>
+                <div class="secondaryValue">{{ item.previous | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
               </div>
-              <div class="secondaryValue">{{ transactionFees.previous | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
-            </div>
-          </template>
-        </zk-values-block>
-        <zk-values-block class="mt-3">
-          <template slot="left-top">
-            <div class="headline">New fee</div>
-          </template>
-          <template slot="right-top">
-            <div class="flex flex-col items-end whitespace-nowrap">
-              <div class="value">
-                {{ transactionFees.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+            </template>
+          </zk-values-block>
+          <zk-values-block class="mt-1">
+            <template slot="left-top">
+              <div class="headline">New fee</div>
+            </template>
+            <template slot="right-top">
+              <div class="flex flex-col items-end whitespace-nowrap">
+                <div class="value">
+                  {{ item.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+                </div>
+                <div class="secondaryValue">{{ item.new | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
               </div>
-              <div class="secondaryValue">{{ transactionFees.new | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
-            </div>
-          </template>
-        </zk-values-block>
+            </template>
+          </zk-values-block>
+        </div>
       </template>
       <template slot="footer">
         <div class="flex items-center justify-center flex-wrap gap-2">
@@ -55,6 +59,7 @@
             <span>Cancel payment</span>
           </zk-defbtn>
           <zk-defbtn
+            v-if="transferAllowed"
             @click="
               modal = false;
               transfer();
@@ -170,7 +175,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, TransactionFee, Transaction, TokenPrices, CPKLocal } from "@/types/index";
+import { TransactionData, TotalByToken, TransactionFee, Transaction, TokenPrices, CPKLocal, GweiBalance } from "@/types/index";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 import zkUtils from "@/plugins/utils";
@@ -182,6 +187,12 @@ import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import {ZkSyncTransaction} from "zksync-checkout-internal/src/types";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
+
+interface UpdatedFee {
+  type: "batch" | "cpk";
+  previous: GweiBalance;
+  new: GweiBalance;
+}
 
 export default Vue.extend({
   components: {
@@ -208,10 +219,7 @@ export default Vue.extend({
         headline: string;
         text: string;
       },
-      transactionFees: {
-        previous: "0",
-        new: "0",
-      },
+      transactionFees: [] as UpdatedFee[],
     };
   },
   watch: {
@@ -279,29 +287,45 @@ export default Vue.extend({
       this.step = "transfer";
       this.subStep = "processing";
       try {
+        this.transactionFees = [];
         const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount;
         await this.$store.dispatch("checkout/getTransactionBatchFee");
         const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].realAmount;
         if (transactionFeesPrevious.lt(transactionFeesNew)) {
-          this.transactionFees = {
+          this.transactionFees.push({
+            type: "batch",
             previous: transactionFeesPrevious.toString(),
             new: this.$store.getters["checkout/getTransactionBatchFee"].amount.toString(),
-          };
-          this.modal = "feeChanged";
-        } else {
-          this.transfer();
+          });
         }
+        if(this.isAccountLocked) {
+          const accountUnlockFeePrevious = this.$store.getters["checkout/getAccountUnlockFee"];
+          await this.$store.dispatch("checkout/getAccountUnlockFee");
+          const accountUnlockFeeNew = this.$store.getters["checkout/getAccountUnlockFee"];
+          if (accountUnlockFeePrevious.lt(accountUnlockFeeNew)) {
+            this.transactionFees.push({
+              type: "cpk",
+              previous: accountUnlockFeePrevious.toString(),
+              new: accountUnlockFeeNew.toString(),
+            });
+          }
+        }
+        if(this.transactionFees.length > 0) {
+          this.modal = "feeChanged";
+          return;
+        }
+        this.transfer();
       } catch (error) {
         this.step = "main";
         this.modal = false;
         if (error.message) {
           this.errorModal = {
-            headline: "Payment error",
+            headline: "Pretransfer error",
             text: error.message,
           };
         } else {
           this.errorModal = {
-            headline: "Payment error",
+            headline: "Pretransfer error",
             text: "Unknown error. Try again later.",
           };
         }
@@ -316,15 +340,17 @@ export default Vue.extend({
       }
       const transactionData = this.transactionData;
       this.step = "transfer";
-      this.subStep = "waitingUserConfirmation";
       try {
+        const nonce = await walletData.get().syncWallet!.getNonce("committed");
+        this.subStep = "waitingUserConfirmation";
         const transactionsList = [] as Array<ZkSyncTransaction>;
         transactionsList.push(...transactionData.transactions);
-        const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
+        const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"];
         const transactions = await transactionBatch(
           transactionsList,
           transactionData.feeToken,
-          transactionFees.amount,
+          transactionFees.realAmount,
+          nonce,
           this.$store.getters["wallet/isAccountLocked"],
           this.$store
         );

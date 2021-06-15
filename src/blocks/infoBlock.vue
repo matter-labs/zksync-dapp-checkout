@@ -74,7 +74,7 @@
           <zk-values-block class="pt-1 lg:pt-3" v-if="!loggedIn">
             <template slot="left-top">
               <div class="text-sm text-gray">
-                May require additional one-time account unlock fee
+                May require additional one-time account activation fee
               </div>
             </template>
           </zk-values-block>
