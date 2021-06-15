@@ -89,7 +89,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
     });
   }
   batchBuilder.addTransfer({
-    fee: store.getters["wallet/isAccountLocked"] ? fee.add(store.getters["checkout/getAccountUnlockFee"]) : fee,
+    fee: closestPackableTransactionFee(store.getters["wallet/isAccountLocked"] ? fee.add(store.getters["checkout/getAccountUnlockFee"]) : fee),
     amount: 0,
     to: syncWallet!.address(),
     token: feeToken,
