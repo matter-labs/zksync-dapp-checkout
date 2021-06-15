@@ -115,7 +115,7 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     commit("setTransactionBatchFee", {
       name: "Tx Batch Fee / zkSync",
       key: "txBatchFee",
-      amount: minFee.add(minFee.div("100").mul("5")),
+      amount: closestPackableTransactionAmount(minFee.add(minFee.div("100").mul("5"))),
       realAmount: BigNumber.from(transactionFee),
       token: state.feeToken,
     });
