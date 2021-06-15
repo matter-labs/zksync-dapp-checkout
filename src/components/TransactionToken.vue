@@ -163,7 +163,6 @@ export default Vue.extend({
   },
   computed: {
     unlocked(): boolean {
-      console.log(this.token, this.initialBalance.unlocked?.toString());
       return this.enoughZkBalance || this.initialBalance.unlocked!.gte(this.needToDeposit);
     },
     isDeposit(): boolean {

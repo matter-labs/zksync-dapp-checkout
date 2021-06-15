@@ -11,7 +11,7 @@
     height: 100vh;
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: max-content 1fr repeat(2, max-content);
+    grid-template-rows: repeat(4, max-content);
 
     .brandContainer {
       width: max-content;
@@ -28,6 +28,12 @@
       @media screen and (min-width: $mobile+1) {
         height: 45px;
       }
+    }
+
+    .transactionsList {
+      height: max-content;
+      max-height: 40vh;
+      min-height: 104px;
     }
 
     .footerContainer {
@@ -60,11 +66,18 @@
     .infoBlock {
       height: auto;
       max-height: 45vh;
+      grid-template-rows: max-content 1fr repeat(2, max-content);
 
       header {
         display: flex;
         align-items: center;
         justify-content: space-between;
+      }
+
+      .transactionsList {
+        height: 100%;
+        max-height: initial;
+        min-height: initial;
       }
     }
   }
