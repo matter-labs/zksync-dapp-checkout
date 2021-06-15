@@ -101,7 +101,7 @@
           <div class="flex justify-between items-center text-xs font-medium mr-2 text-green">Ready <zk-success-check-mark class="w-8 h-8" /></div>
         </template>
         <template v-else slot="right">
-          <div v-if="!enoughWithInitialBalance && unlocked" class="text-red text-xs">
+          <div v-if="!enoughWithInitialBalance" class="text-red text-xs">
             Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance
           </div>
           <zk-defbtn v-else-if="!enoughWithInitialBalance && !unlocked" @click="unlock()"> <i class="fas fa-unlock-alt" /><span>Unlock</span> </zk-defbtn>
