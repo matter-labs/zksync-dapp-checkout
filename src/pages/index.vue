@@ -82,7 +82,6 @@
       <template slot="default">
         <div class="text-sm">
           {{ errorModal.text }}
-
         </div>
       </template>
     </zk-modal>
@@ -90,6 +89,21 @@
     <connected-wallet/>
 
     <div v-if="step === 'main'" class="w-full">
+      <zk-max-height :value="!tokenItemsValid[transactionData.feeToken]" class="mt-5 md:mt-7">
+        <div>
+          <zk-note class="notificationNote">
+            <template slot="icon">
+              <i class="text-gray text-xl fal fa-info-square" />
+            </template>
+            <template slot="default">
+              <div class="text-sm text-gray font-light">
+                The default recommended <span class="font-normal">{{transactionData.feeToken}}</span> amount to deposit is <span class="font-normal">25% higher</span> than the minimal required one for paying fees to take into account the risk of fluctuating transaction fees.
+              </div>
+            </template>
+          </zk-note>
+        </div>
+      </zk-max-height>
+
       <line-table-header class="mt-5 mb-2">
         <template slot="first"> To pay</template>
         <template slot="second"> L2 balance</template>

@@ -216,6 +216,10 @@ export default Vue.extend({
     },
     recommendedDeposit(): GweiBalance {
       try {
+        if(this.token === this.$store.getters["checkout/getTransactionData"].feeToken) {
+          const batchFee = this.$store.getters["checkout/getTransactionBatchFee"].realAmount.div(100).mul(30);
+          return BigNumber.from(this.needToDeposit).add(batchFee).toString();
+        }
         return this.needToDeposit;
       } catch (error) {
         return "";
