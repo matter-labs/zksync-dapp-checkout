@@ -253,6 +253,7 @@ export default Vue.extend({
       return this.$store.getters["checkout/getTransactionData"];
     },
     totalByToken(): TotalByToken {
+      this.updateTransferAllowed;
       return this.$store.getters["checkout/getTotalByToken"];
     },
     transferAllowed(): boolean {
