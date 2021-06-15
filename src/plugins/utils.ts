@@ -146,7 +146,7 @@ export default {
         return "Fee Amount is not packable";
       } else if (error.message.includes("Transaction Amount is not packable")) {
         return "Transaction Amount is not packable";
-      } else if (error.message.length < 60) {
+      } else {
         return error.message;
       }
     }

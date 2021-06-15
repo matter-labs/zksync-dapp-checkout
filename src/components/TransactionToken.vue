@@ -101,16 +101,16 @@
           <div class="flex justify-between items-center text-xs font-medium mr-2 text-green">Ready <zk-success-check-mark class="w-8 h-8" /></div>
         </template>
         <template v-else slot="right">
-          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs">
+          <div v-if="!enoughWithInitialBalance && unlocked" class="text-red text-xs">
             Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance
           </div>
-          <zk-defbtn v-else-if="!enoughWithInitialBalance && !initialBalance.unlocked" @click="unlock()"> <i class="fas fa-unlock-alt" /><span>Unlock</span> </zk-defbtn>
+          <zk-defbtn v-else-if="!enoughWithInitialBalance && !unlocked" @click="unlock()"> <i class="fas fa-unlock-alt" /><span>Unlock</span> </zk-defbtn>
           <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{ error: !enoughDepositAmount }">
             <template slot="underInput">
               <div class="minAmount text-xxs" @click="setDepositMinAmount()">Min: {{ needToDeposit | formatToken(token) }}</div>
             </template>
             <template slot="default">
-              <zk-defbtn v-if="initialBalance.unlocked" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
+              <zk-defbtn v-if="unlocked" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
                 <i class="fal fa-arrow-to-right" />
                 <span>Deposit</span>
               </zk-defbtn>
@@ -162,6 +162,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    unlocked(): boolean {
+      return this.enoughZkBalance || this.initialBalance.unlocked!.gte(this.needToDeposit);
+    },
     isDeposit(): boolean {
       return !!this.depositBigNumber && this.enoughDepositAmount;
     },
@@ -198,22 +201,28 @@ export default Vue.extend({
     },
     needToDeposit(): GweiBalance {
       try {
-        return BigNumber.from(this.total).sub(this.zkBalance.rawBalance).toString();
+        const txBatchFee = this.$store.getters["checkout/getTransactionBatchFee"];
+        const recommendedAmount = BigNumber.from(this.total).sub(this.zkBalance.rawBalance);
+        if(txBatchFee.token === this.token) {
+          const amount = BigNumber.from(this.total).sub(txBatchFee.amount).add(txBatchFee.realAmount).sub(this.zkBalance.rawBalance);
+          if(amount.lte("0") && recommendedAmount.gt("0")) {
+            return amount.toString();
+          }
+        }
+        return recommendedAmount.toString();
       } catch (error) {
         return "";
       }
     },
     recommendedDeposit(): GweiBalance {
       try {
-        const minDeposit = BigNumber.from(this.needToDeposit);
-        /* Add 5% to take into account the risk of fluctuating transaction fees */
-        return minDeposit.add(minDeposit.div("5")).toString();
+        return this.needToDeposit;
       } catch (error) {
         return "";
       }
     },
     enoughZkBalance(): boolean {
-      return BigNumber.from(this.zkBalance.rawBalance).gte(this.total);
+      return (BigNumber.from(this.zkBalance.rawBalance).gte(this.total) || BigNumber.from(this.needToDeposit).lte("0"));
     },
 
     /**

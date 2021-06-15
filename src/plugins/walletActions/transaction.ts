@@ -3,7 +3,7 @@ import { walletData } from "@/plugins/walletData";
 import { BigNumber, BigNumberish } from "ethers";
 import { Address, TokenSymbol } from "types";
 import { ZkSyncTransaction } from "zksync-checkout/src/types";
-import { Provider } from "zksync";
+import { closestPackableTransactionFee, Provider } from "zksync";
 import { ETHOperation } from "zksync/build/wallet";
 import { SignedTransaction, TransactionReceipt, TxEthSignature } from "zksync/src/types";
 
@@ -72,17 +72,13 @@ export const submitSignedTransactionsBatch = async (provider: Provider, signedTx
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
-export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: boolean, store: any) => {
+export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumber, nonce: number, changePubKey: boolean, store: any) => {
   const syncWallet = walletData.get().syncWallet!;
 
   await store.dispatch("wallet/restoreProviderConnection");
-  const nonce = await syncWallet.getNonce("committed");
   const batchBuilder = syncWallet.batchBuilder(nonce);
   if (changePubKey) {
-    if (!store.getters["checkout/getAccountUnlockFee"]) {
-      throw new Error("No account activation fee found");
-    }
-    await addCPKToBatch(syncWallet, store.getters["checkout/getAccountUnlockFee"], feeToken, batchBuilder, store);
+    await addCPKToBatch(syncWallet, feeToken, batchBuilder, store);
   }
   for (const tx of transactions) {
     batchBuilder.addTransfer({
@@ -93,7 +89,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
     });
   }
   batchBuilder.addTransfer({
-    fee,
+    fee: closestPackableTransactionFee(store.getters["wallet/isAccountLocked"] ? fee.add(store.getters["checkout/getAccountUnlockFee"]) : fee),
     amount: 0,
     to: syncWallet!.address(),
     token: feeToken,

@@ -85,7 +85,7 @@ export interface Balance {
   verifiedBalance: DecimalBalance;
   tokenPrice: string;
   restricted: boolean;
-  unlocked?: boolean;
+  unlocked?: BigNumber;
   address?: string;
 }
 
@@ -302,7 +302,7 @@ export interface TokenItem {
   id: number;
   symbol: string;
   decimals: number;
-  unlocked: boolean;
+  unlocked: BigNumber;
 }
 
 export interface TokenPrices {

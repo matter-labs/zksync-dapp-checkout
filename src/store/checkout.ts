@@ -1,7 +1,7 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
 import { Address, TokenSymbol, TransactionData, TransactionFee, TotalByToken } from "@/types/index";
 import { ZkSyncTransaction } from "zksync-checkout/src/types";
-import { closestPackableTransactionAmount } from "zksync";
+import { closestPackableTransactionAmount, closestPackableTransactionFee } from "zksync";
 import { BigNumber } from "ethers";
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
@@ -40,7 +40,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     allFees.push(state.transactionBatchFee);
     if (state.accountUnlockedFee && rootGetters["wallet/isAccountLocked"]) {
       allFees.push({
-        name: "One-time account unlock fee",
+        name: "One-time account activation fee",
         key: "changePubKey",
         amount: state.accountUnlockedFee,
         token: state.feeToken,
@@ -106,15 +106,16 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     await this.dispatch("wallet/restoreProviderConnection");
     const types = new Array(state.transactions.length).fill("Transfer") as "Transfer"[];
     const addresses = state.transactions.map((tx) => tx.to);
-
     // The fee transaction
     types.push(types[0]);
     addresses.push(addresses[0]);
     const transactionFee = await syncProvider!.getTransactionsBatchFee(types, addresses, state.feeToken);
+    const minFee = BigNumber.from(transactionFee);
     commit("setTransactionBatchFee", {
       name: "Tx Batch Fee / zkSync",
       key: "txBatchFee",
-      amount: BigNumber.from(transactionFee),
+      amount: closestPackableTransactionFee(minFee.add(minFee.div("100").mul("5"))),
+      realAmount: BigNumber.from(transactionFee),
       token: state.feeToken,
     });
   },
@@ -133,7 +134,7 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
         syncWallet?.address() || "",
         state.feeToken,
       );
-      commit("setAccountUnlockFee", BigNumber.from(foundFee!.totalFee.toString()));
+      commit("setAccountUnlockFee", closestPackableTransactionFee(BigNumber.from(foundFee!.totalFee.toString())));
     } else {
       commit("setAccountUnlockFee", false);
     }

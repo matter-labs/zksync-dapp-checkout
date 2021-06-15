@@ -1,24 +1,41 @@
 .connectedWallet {
   .address {
+    position: relative;
     cursor: pointer;
-    transition: transform $transition;
-    will-change: transform;
+    transition: border-color $transition;
+    border-bottom: 1px dashed $black;
+    
     &:hover {
-      transform: scale(1.035);
-
+      color: $lightViolet;
+      border-color: $lightViolet;
+      
       .copyIcon {
         opacity: 1;
       }
     }
+    
     &:active {
       transition-duration: 0.001s;
-      color: $green;
-      transform: scale(1);
+      color: lighten($color: $lightViolet, $amount: 10);
     }
-
+    
+    .dots {
+      display: none;
+    }
+    
+    @media screen and (max-width: 1155px) {
+      .addressMiddle {
+        display: none;
+      }
+      .dots {
+        display: inline;
+      }
+    }
+    
     .copyIcon {
       position: absolute;
-      left: 105%;
+      color: $lightViolet;
+      left: 103.5%;
       top: 42%;
       transform: translateY(-50%);
       opacity: 0;
@@ -26,7 +43,12 @@
       will-change: opacity;
     }
   }
+
   .vue-popover {
     position: fixed;
+    color: $lightViolet;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    width: fit-content !important;
   }
 }

@@ -15,32 +15,36 @@
       </template>
       <template slot="default">
         <div class="text-sm">The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.</div>
-        <zk-values-block class="mt-3">
-          <template slot="left-top">
-            <div class="headline">Previous fee</div>
-          </template>
-          <template slot="right-top">
-            <div class="flex flex-col items-end whitespace-nowrap">
-              <div class="value">
-                {{ transactionFees.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+        <div class="text-sm text-red" v-if="!transferAllowed">You have to deposit a little bit more to cover new transaction fee.</div>
+        <div class="mt-3" v-for="(item, index) in transactionFees" :key="index">
+          <div class="text-lg">{{ item.type === "batch" ? "Batch transaction fee" : "One-time account activation fee"}}</div>
+          <zk-values-block>
+            <template slot="left-top">
+              <div class="headline">Previous fee</div>
+            </template>
+            <template slot="right-top">
+              <div class="flex flex-col items-end whitespace-nowrap">
+                <div class="value">
+                  {{ item.previous | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+                </div>
+                <div class="secondaryValue">{{ item.previous | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
               </div>
-              <div class="secondaryValue">{{ transactionFees.previous | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
-            </div>
-          </template>
-        </zk-values-block>
-        <zk-values-block class="mt-3">
-          <template slot="left-top">
-            <div class="headline">New fee</div>
-          </template>
-          <template slot="right-top">
-            <div class="flex flex-col items-end whitespace-nowrap">
-              <div class="value">
-                {{ transactionFees.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+            </template>
+          </zk-values-block>
+          <zk-values-block class="mt-1">
+            <template slot="left-top">
+              <div class="headline">New fee</div>
+            </template>
+            <template slot="right-top">
+              <div class="flex flex-col items-end whitespace-nowrap">
+                <div class="value">
+                  {{ item.new | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+                </div>
+                <div class="secondaryValue">{{ item.new | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
               </div>
-              <div class="secondaryValue">{{ transactionFees.new | formatToken(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
-            </div>
-          </template>
-        </zk-values-block>
+            </template>
+          </zk-values-block>
+        </div>
       </template>
       <template slot="footer">
         <div class="flex items-center justify-center flex-wrap gap-2">
@@ -55,6 +59,7 @@
             <span>Cancel payment</span>
           </zk-defbtn>
           <zk-defbtn
+            v-if="transferAllowed"
             @click="
               modal = false;
               transfer();
@@ -85,19 +90,6 @@
     <connected-wallet/>
 
     <div v-if="step === 'main'" class="w-full">
-      <zk-max-height class="mt-5 md:mt-7" :value="!transferAllowed">
-        <zk-note>
-          <template slot="icon">
-            <i class="text-gray text-xl fal fa-info-square"/>
-          </template>
-          <template slot="default">
-            <div class="text-sm text-gray font-light">
-              The default amount to deposit is 5% higher than the minimal required one to take into account the risk of fluctuating transaction fees.<br/>
-            </div>
-          </template>
-        </zk-note>
-      </zk-max-height>
-
       <line-table-header class="mt-5 mb-2">
         <template slot="first"> To pay</template>
         <template slot="second"> L2 balance</template>
@@ -107,7 +99,7 @@
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()"/>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <zk-defbtn v-if="displayActivateAccountBtn" :disabled="!canCPK || cpkLoading" :loader="cpkLoading" @click="signActivation()">
+          <zk-defbtn v-if="displayActivateAccountBtn" :disabled="!transferAllowed || !canCPK || cpkLoading" :loader="cpkLoading" @click="signActivation()">
             <i class="fas fa-unlock"></i>
             <span>{{ cpkBtnText }}</span>
           </zk-defbtn>
@@ -116,6 +108,7 @@
             <span>Complete payment</span>
           </zk-defbtn>
         </div>
+        <div v-if="displayActivateAccountBtn && (!canCPK || !transferAllowed) && !cpkLoading" class="text-gray text-center text-sm pt-2">Complete all deposit operations to continue</div>
       </div>
     </div>
     <div v-else-if="step === 'transfer'" class="w-full">
@@ -131,7 +124,7 @@
       <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a></div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <zk-defbtn :disabled="!transferAllowed" @click="close()">
+          <zk-defbtn @click="close()">
             <i class="far fa-times"/>
             <span>Close</span>
           </zk-defbtn>
@@ -182,7 +175,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, TransactionFee, Transaction, TokenPrices, CPKLocal } from "@/types/index";
+import { TransactionData, TotalByToken, TransactionFee, Transaction, TokenPrices, CPKLocal, GweiBalance } from "@/types/index";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 import zkUtils from "@/plugins/utils";
@@ -194,6 +187,12 @@ import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import {ZkSyncTransaction} from "zksync-checkout-internal/src/types";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
+
+interface UpdatedFee {
+  type: "batch" | "cpk";
+  previous: GweiBalance;
+  new: GweiBalance;
+}
 
 export default Vue.extend({
   components: {
@@ -220,10 +219,7 @@ export default Vue.extend({
         headline: string;
         text: string;
       },
-      transactionFees: {
-        previous: "0",
-        new: "0",
-      },
+      transactionFees: [] as UpdatedFee[],
     };
   },
   watch: {
@@ -287,33 +283,52 @@ export default Vue.extend({
     getTxLink(hash: string) {
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
     },
+    async checkFees() {
+      this.transactionFees = [];
+      const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount;
+      await this.$store.dispatch("checkout/getTransactionBatchFee");
+      const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].realAmount;
+      if (transactionFeesPrevious.lt(transactionFeesNew)) {
+        this.transactionFees.push({
+          type: "batch",
+          previous: transactionFeesPrevious.toString(),
+          new: this.$store.getters["checkout/getTransactionBatchFee"].amount.toString(),
+        });
+      }
+      if(this.isAccountLocked) {
+        const accountUnlockFeePrevious = this.$store.getters["checkout/getAccountUnlockFee"];
+        await this.$store.dispatch("checkout/getAccountUnlockFee");
+        const accountUnlockFeeNew = this.$store.getters["checkout/getAccountUnlockFee"];
+        if (accountUnlockFeePrevious.lt(accountUnlockFeeNew)) {
+          this.transactionFees.push({
+            type: "cpk",
+            previous: accountUnlockFeePrevious.toString(),
+            new: accountUnlockFeeNew.toString(),
+          });
+        }
+      }
+    },
     async preTransfer() {
       this.step = "transfer";
       this.subStep = "processing";
       try {
-        const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
-        await this.$store.dispatch("checkout/getTransactionBatchFee");
-        const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].amount.toString();
-        if (transactionFeesPrevious !== transactionFeesNew) {
-          this.transactionFees = {
-            previous: transactionFeesPrevious,
-            new: transactionFeesNew,
-          };
+        await this.checkFees();
+        if(this.transactionFees.length > 0) {
           this.modal = "feeChanged";
-        } else {
-          this.transfer();
+          return;
         }
+        this.transfer();
       } catch (error) {
         this.step = "main";
         this.modal = false;
         if (error.message) {
           this.errorModal = {
-            headline: "Payment error",
+            headline: "Pretransfer error",
             text: error.message,
           };
         } else {
           this.errorModal = {
-            headline: "Payment error",
+            headline: "Pretransfer error",
             text: "Unknown error. Try again later.",
           };
         }
@@ -328,15 +343,20 @@ export default Vue.extend({
       }
       const transactionData = this.transactionData;
       this.step = "transfer";
-      this.subStep = "waitingUserConfirmation";
       try {
+        const nonce = await walletData.get().syncWallet!.getNonce("committed");
+        this.subStep = "waitingUserConfirmation";
         const transactionsList = [] as Array<ZkSyncTransaction>;
         transactionsList.push(...transactionData.transactions);
-        const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"] as TransactionFee;
+        const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"];
         const transactions = await transactionBatch(
           transactionsList,
           transactionData.feeToken,
-          transactionFees.amount, this.$store.getters["wallet/isAccountLocked"], this.$store);
+          transactionFees.realAmount,
+          nonce,
+          this.$store.getters["wallet/isAccountLocked"],
+          this.$store
+        );
         console.log("Batch transaction", transactionsList);
 
         const manager = ZkSyncCheckoutManager.getManager();
@@ -363,33 +383,29 @@ export default Vue.extend({
         manager.notifyHashes(endHashes);
 
 
-          // @ts-ignore
-          this.finalTransactions.push(...transactions);
-          this.subStep = "committing";
+        // @ts-ignore
+        this.finalTransactions.push(...transactions);
+        this.subStep = "committing";
 
         await transactions[0].awaitReceipt();
-          this.step = "success";
+        this.step = "success";
       } catch (error) {
         this.checkCPKMessageSigned();
         this.step = "main";
-        if (error.message) {
-          if (!error.message.includes("User denied")) {
-            if (error.message.includes("Account does not exist in the zkSync network")) {
-              this.errorModal = {
-                headline: "Payment error",
-                text: "Please, make deposit or request tokens in order to activate the account.",
-              };
-            } else {
-              this.errorModal = {
-                headline: "Payment error",
-                text: error.message,
-              };
+        let errorMsg = zkUtils.filterError(error);
+        if (typeof errorMsg === "string") {
+          if(errorMsg.includes("Account does not exist in the zkSync network")) {
+            errorMsg = "Please, make deposit or request tokens in order to activate the account.";
+          } else if(errorMsg.includes("batch summary fee is too low")) {
+            await this.checkFees();
+            if(this.transactionFees.length > 0) {
+              this.modal = "feeChanged";
+              return;
             }
           }
-        } else {
           this.errorModal = {
-            headline: "Payment error",
-            text: "Unknown error. Try again later.",
+            headline: "Activation error",
+            text: errorMsg,
           };
         }
       }
