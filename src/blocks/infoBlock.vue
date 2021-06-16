@@ -3,7 +3,7 @@
     <div class="infoBlock border-none md:min-h-screen py-4 md:py-10 px-5 md:px-10">
       <header class="lg:mb-6">
         <div class="flex items-center">
-          <logo class="h-8 lg:h-8 mr-2" />
+          <a href="https://zksync.io" target="_blank"><logo class="h-8 lg:h-8 mr-2" /></a>
           <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
             <span class="networkName text-sm font-light inline-flex items-center">
@@ -108,10 +108,10 @@
       </div>
       <div class="footerContainer hidden md:block">
         <footer>
-          <div class="poweredBy flex justify-center items-center mt-3">
-            <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
-            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault ml-5">Privacy Policy</a>
-            <a target="_blank" v-if="!isMainnet" :href="zkMint" class="linkDefault ml-5">zkMint</a>
+          <div class="poweredBy flex justify-between w-1/2 mx-auto items-center mt-3">
+            <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault lightLink">Terms of Service</a>
+            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault lightLink">Privacy Policy</a>
+            <a target="_blank" :href="zkLink" class="linkDefault lightLink">zkLink</a>
           </div>
         </footer>
       </div>
@@ -125,7 +125,7 @@ import utils from "@/plugins/utils";
 import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import { BigNumber } from "ethers";
 import Logo from "@/blocks/logo.vue";
-import { ETHER_NETWORK_NAME, ETHER_PRODUCTION } from "~/plugins/build";
+import {APP_ZK_LINK, ETHER_NETWORK_NAME, ETHER_PRODUCTION} from "~/plugins/build";
 
 export default Vue.extend({
   components: {
@@ -144,9 +144,6 @@ export default Vue.extend({
         return false;
       }
       return this.$store.getters["checkout/getErrorState"] !== true
-    },
-    zkMint(): string {
-      return `https://mint${this.network==='ropsten' ? '-ropsten' : ''}.zksync.dev`;
     },
     loggedIn(): boolean {
       return this.$store.getters["account/loggedIn"];
@@ -195,6 +192,9 @@ export default Vue.extend({
     tokensPrices(): TokenPrices {
       return this.$store.getters["tokens/getTokenPrices"];
     },
+    zkLink(): string {
+      return APP_ZK_LINK as string;
+    }
   },
 });
 </script>

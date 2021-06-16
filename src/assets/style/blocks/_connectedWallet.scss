@@ -4,34 +4,35 @@
     cursor: pointer;
     transition: border-color $transition;
     border-bottom: 1px dashed $black;
-    
+
     &:hover {
       color: $lightViolet;
       border-color: $lightViolet;
-      
+
       .copyIcon {
         opacity: 1;
       }
     }
-    
+
     &:active {
       transition-duration: 0.001s;
       color: lighten($color: $lightViolet, $amount: 10);
     }
-    
+
     .dots {
       display: none;
     }
-    
+
     @media screen and (max-width: 1155px) {
       .addressMiddle {
         display: none;
       }
+
       .dots {
         display: inline;
       }
     }
-    
+
     .copyIcon {
       position: absolute;
       color: $lightViolet;
@@ -47,8 +48,6 @@
   .vue-popover {
     position: fixed;
     color: $lightViolet;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
     width: fit-content !important;
   }
 }
