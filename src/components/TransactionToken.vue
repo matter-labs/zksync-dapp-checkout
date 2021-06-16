@@ -1,10 +1,11 @@
 <template>
-  <div class="w-full transactionTokenContainer">
+  <div class="w-full transactionTokenContainer" :class="{'rowLayout': isInProgress || enoughZkBalance || !enoughWithInitialBalance}">
+
     <!-- Modals -->
-    <modal :value="modal === 'insufficientL1Deposit' || modal === 'insufficientL1Min'" @close="modal = ''">
+    <zk-modal :value="modal === 'insufficientL1Deposit' || modal === 'insufficientL1Min'" @close="modal = ''">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square" />
+          <i class="fad fa-info-square"></i>
           <div>Insufficient funds in the on-chain wallet to deposit</div>
         </div>
       </template>
@@ -25,7 +26,7 @@
         <div v-else-if="modal === 'insufficientL1Min'" class="text-sm">
           <b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> will not be enough to commit the transaction. The minimal amount is:
         </div>
-        <values-block
+        <zk-values-block
           class="mt-3 cursor-pointer"
           @click="
             setDepositMinAmount();
@@ -36,15 +37,13 @@
             <div class="headline">Minimal amount to deposit</div>
           </template>
           <template slot="right-top">
-            <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ needToDeposit | formatToken(token) }} {{ token }}</div>
-              <div class="secondaryValue">
-                {{ needToDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}
-              </div>
+            <div class="flex flex-col items-end whitespace-nowrap">
+              <div class="value">{{ needToDeposit | formatToken(token) }} {{ token }}</div>
+              <div class="secondaryValue">{{ needToDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}</div>
             </div>
           </template>
-        </values-block>
-        <values-block
+        </zk-values-block>
+        <zk-values-block
           class="mt-3 cursor-pointer"
           @click="
             setDepositRecommendedAmount();
@@ -55,18 +54,16 @@
             <div class="headline">Recommended deposit amount</div>
           </template>
           <template slot="right-top">
-            <div class="flex md:flex-col whitespace-nowrap">
-              <div class="value mr-2 md:mr-0">{{ recommendedDeposit | formatToken(token) }} {{ token }}</div>
-              <div class="secondaryValue">
-                {{ recommendedDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}
-              </div>
+            <div class="flex flex-col items-end whitespace-nowrap">
+              <div class="value">{{ recommendedDeposit | formatToken(token) }} {{ token }}</div>
+              <div class="secondaryValue">{{ recommendedDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}</div>
             </div>
           </template>
-        </values-block>
+        </zk-values-block>
       </template>
-    </modal>
+    </zk-modal>
 
-    <modal :value="modal === 'customError'" @close="modal = ''">
+    <zk-modal :value="modal === 'customError'" @close="modal = ''">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square" />
@@ -74,25 +71,19 @@
         </div>
       </template>
       <template slot="default">
-        <div class="text-sm">
-          {{ errorModal.text }}
-        </div>
+        <div class="text-sm">{{ errorModal.text }}</div>
       </template>
-    </modal>
+    </zk-modal>
 
     <!-- Main -->
-    <line-block>
+    <zk-line-block>
       <template slot="first">
         <div class="tokenItem">
-          <div class="tokenName">
-            {{ token }}
-          </div>
+          <div class="tokenName">{{ token }}</div>
         </div>
       </template>
       <template slot="second">
-        <div class="amount">
-          {{ total | formatToken(token) }}
-        </div>
+        <div class="amount">{{ total | formatTokenPretty(token) }}</div>
       </template>
       <template slot="third">
         <div class="amount">
@@ -101,42 +92,37 @@
       </template>
       <template v-if="isInProgress" slot="right">
         <div class="flex items-center">
-          <div class="text-gray text-xs font-medium" :class="{ 'mr-2': isLoading }">
-            {{ lineStateText }}
-          </div>
-          <loader v-if="isLoading" color="gray" size="sm" />
+          <div class="text-gray text-xs font-medium" :class="{ 'mr-2': isLoading }">{{ lineStateText }}</div>
+          <zk-loader v-if="isLoading" color="gray" size="sm" />
         </div>
       </template>
       <template v-else>
         <template v-if="enoughZkBalance" slot="right">
-          <div class="flex justify-between text-xs font-medium mr-2 text-green">
-            Ready
-            <success-mark class="w-8 h-8" />
-          </div>
+          <div class="flex justify-between items-center text-xs font-medium mr-2 text-green">Ready <zk-success-check-mark class="w-8 h-8" /></div>
         </template>
         <template v-else slot="right">
-          <div v-if="!enoughWithInitialBalance && initialBalance.unlocked" class="text-red text-xs">
+          <div v-if="!enoughWithInitialBalance" class="text-red text-xs">
             Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance
           </div>
-          <defbtn v-else-if="!enoughWithInitialBalance && !initialBalance.unlocked" @click="unlock()"><i class="fas fa-unlock-alt" /><span>Unlock</span></defbtn>
+          <zk-defbtn v-else-if="!enoughWithInitialBalance && !unlocked" @click="unlock()"> <i class="fas fa-unlock-alt" /><span>Unlock</span> </zk-defbtn>
           <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{ error: !enoughDepositAmount }">
             <template slot="underInput">
               <div class="minAmount text-xxs" @click="setDepositMinAmount()">Min: {{ needToDeposit | formatToken(token) }}</div>
             </template>
             <template slot="default">
-              <defbtn v-if="initialBalance.unlocked" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
+              <zk-defbtn v-if="unlocked" :disabled="!depositBigNumber || !enoughDepositAmount" @click="deposit()">
                 <i class="fal fa-arrow-to-right" />
                 <span>Deposit</span>
-              </defbtn>
-              <defbtn v-else @click="unlock()">
+              </zk-defbtn>
+              <zk-defbtn v-else @click="unlock()">
                 <i class="fas fa-unlock-alt" />
                 <span>Unlock</span>
-              </defbtn>
+              </zk-defbtn>
             </template>
           </amount-input>
         </template>
       </template>
-    </line-block>
+    </zk-line-block>
   </div>
 </template>
 
@@ -169,13 +155,16 @@ export default Vue.extend({
         headline: "",
         text: "",
       },
-      step: "default" /* default, depositing, unlocking */,
-      subStep: "" /* depositing: [waitingUserConfirmation,depositing,committing], unlocking: [waitingUserConfirmation,committing,confirming] */,
+      step: "default" as "default" | "depositing" | "unlocking",
+      subStep: "" as "waitingUserConfirmation" | "depositing" | "committing" | "confirming",
       depositAmount: "",
       lineStateText: "",
     };
   },
   computed: {
+    unlocked(): boolean {
+      return this.enoughZkBalance || this.initialBalance.unlocked!.gte(this.needToDeposit);
+    },
     isDeposit(): boolean {
       return !!this.depositBigNumber && this.enoughDepositAmount;
     },
@@ -212,22 +201,32 @@ export default Vue.extend({
     },
     needToDeposit(): GweiBalance {
       try {
-        return BigNumber.from(this.total).sub(this.zkBalance.rawBalance).toString();
+        const txBatchFee = this.$store.getters["checkout/getTransactionBatchFee"];
+        const recommendedAmount = BigNumber.from(this.total).sub(this.zkBalance.rawBalance);
+        if(txBatchFee.token === this.token) {
+          const amount = BigNumber.from(this.total).sub(txBatchFee.amount).add(txBatchFee.realAmount).sub(this.zkBalance.rawBalance);
+          if(amount.lte("0") && recommendedAmount.gt("0")) {
+            return amount.toString();
+          }
+        }
+        return recommendedAmount.toString();
       } catch (error) {
         return "";
       }
     },
     recommendedDeposit(): GweiBalance {
       try {
-        const minDeposit = BigNumber.from(this.needToDeposit);
-        /* Add 10% to take into account the risk of fluctuating transaction fees */
-        return minDeposit.add(minDeposit.div("10")).toString();
+        if(this.token === this.$store.getters["checkout/getTransactionData"].feeToken) {
+          const batchFee = this.$store.getters["checkout/getTransactionBatchFee"].realAmount.div(100).mul(30);
+          return BigNumber.from(this.needToDeposit).add(batchFee).toString();
+        }
+        return this.needToDeposit;
       } catch (error) {
         return "";
       }
     },
     enoughZkBalance(): boolean {
-      return BigNumber.from(this.zkBalance.rawBalance).gte(this.total);
+      return (BigNumber.from(this.zkBalance.rawBalance).gte(this.total) || BigNumber.from(this.needToDeposit).lte("0"));
     },
 
     /**
@@ -285,7 +284,7 @@ export default Vue.extend({
         this.lineStateText = "Committing transaction...";
       } else if (val === "confirming") {
         const confirmations = await walletData.get().syncProvider!.getConfirmationsForEthOpAmount();
-        this.lineStateText = `Committed. Waiting for ${confirmations} confirmations.`;
+        this.lineStateText = `Waiting for ${confirmations} confirmations.`;
       } else {
         this.lineStateText = "";
       }
@@ -324,7 +323,10 @@ export default Vue.extend({
         try {
           this.subStep = "waitingUserConfirmation";
           this.step = "depositing";
-          const transferTransaction = await deposit(this.token, this.depositBigNumber, this.$store);
+          const transferTransaction = await deposit(this.token, this.depositBigNumber);
+          if (!transferTransaction) {
+            throw new Error("Unexpected payment error!");
+          }
           this.subStep = "committing";
           await transferTransaction.awaitEthereumTxCommit();
           this.subStep = "confirming";

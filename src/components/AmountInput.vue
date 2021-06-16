@@ -50,11 +50,6 @@ export default Vue.extend({
       default: "",
       required: false,
     },
-    /* maxAmount: {
-      type: String,
-      default: "",
-      required: false,
-    }, */
     token: {
       type: String,
       default: "",
@@ -101,15 +96,6 @@ export default Vue.extend({
       }
       this.emitValue(this.inputtedAmount);
     },
-    /* maxAmount: {
-      deep: true,
-      handler() {
-        if (!this.inputtedAmount) {
-          return;
-        }
-        this.emitValue(this.inputtedAmount);
-      },
-    }, */
     value(val) {
       if (!this.error || (this.error && !!val)) {
         this.inputtedAmount = val;

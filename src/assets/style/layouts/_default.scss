@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: 43% 1fr;
   grid-template-rows: 100%;
-
+  color: $black2;
   @media screen and (min-width: 1300px) {
     grid-template-columns: 600px 1fr;
   }
@@ -11,7 +11,8 @@
   .routerContainer {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: max-content;
+    min-height: 100vh;
 
     .routeMain {
       max-width: 650px;
@@ -25,8 +26,18 @@
     grid-template-columns: 100%;
     grid-template-rows: max-content 1fr;
 
-    &,
     .routerContainer {
+      min-height: initial;
+      height: 100%;
     }
+  }
+}
+
+.darkMode.defaultLayout {
+  color: $white;
+  background-color: $darkBlue;
+
+  .routerContainer {
+    background-color: $darkBlue;
   }
 }

@@ -6,18 +6,16 @@
     "stylelint-scss"
   ],
   "rules": {
-    "at-rule-no-unknown": null,
+    "at-rule-no-unknown": [],
     "block-no-empty": null,
     "block-opening-brace-newline-after": "always",
     "color-named": "never",
+    "custom-property-empty-line-before": "never",
     "declaration-block-semicolon-newline-after": "always",
     "declaration-block-trailing-semicolon": null,
     "font-family-name-quotes": "always-where-recommended",
     "font-weight-notation": "numeric",
     "function-url-quotes": "always",
-    "number-leading-zero": "never",
-    "value-list-comma-newline-before": "never-multi-line",
-    "custom-property-empty-line-before": "never",
     "indentation": [
       2,
       {
@@ -32,7 +30,6 @@
         "severity": "warning"
       }
     ],
-    "font-family-no-missing-generic-family-keyword": null,
     "property-no-unknown": [
       true,
       {
@@ -45,7 +42,7 @@
     ],
     "scss/at-rule-no-unknown": true,
     "selector-attribute-quotes": "always",
-    "selector-max-specificity": null,
+    "selector-max-specificity": "never",
     "selector-pseudo-class-no-unknown": [
       true,
       {
@@ -55,13 +52,7 @@
         ]
       }
     ],
-    "named-grid-areas-no-invalid": [
-      true,
-      {
-        "ignore": "*"
-      }
-    ],
-    "selector-pseudo-element-colon-notation": null,
+    "selector-pseudo-element-colon-notation": "single",
     "selector-type-no-unknown": [
       true,
       {
@@ -71,16 +62,7 @@
       }
     ],
     "string-quotes": "double",
+    "value-list-comma-newline-before": "never-multi-line",
     "value-no-vendor-prefix": null
-  },
-  "ignoreDisables": true,
-  "ignoreFiles": [
-    "*.css",
-    "*.eot",
-    "*.svg",
-    "*.ttf",
-    "*.woff",
-    "*.woff2",
-    "successCheckmark.json"
-  ]
+  }
 }

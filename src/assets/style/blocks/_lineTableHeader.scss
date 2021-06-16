@@ -26,3 +26,9 @@
     grid-template-columns: 45px 1fr max-content;
   }
 }
+
+.darkMode .lineTableHeader {
+  .tableItem {
+    color: $gray;
+  }
+}

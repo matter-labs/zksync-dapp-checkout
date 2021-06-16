@@ -1,6 +1,10 @@
+import { addCPKToBatch } from "@/plugins/walletActions/cpk";
 import { walletData } from "@/plugins/walletData";
-import { Address, ETHOperation, GweiBalance, Provider, TokenSymbol, Tx, Wallet, ZkSyncTransaction } from "@/types/index";
 import { BigNumber, BigNumberish } from "ethers";
+import { Address, TokenSymbol } from "types";
+import { ZkSyncTransaction } from "zksync-checkout/src/types";
+import { closestPackableTransactionFee, Provider } from "zksync";
+import { ETHOperation } from "zksync/build/wallet";
 import { SignedTransaction, TransactionReceipt, TxEthSignature } from "zksync/src/types";
 
 class Transaction {
@@ -68,33 +72,13 @@ export const submitSignedTransactionsBatch = async (provider: Provider, signedTx
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
-export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumberish, changePubKey: boolean, store: any) => {
+export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumber, nonce: number, changePubKey: boolean, store: any) => {
   const syncWallet = walletData.get().syncWallet!;
 
   await store.dispatch("wallet/restoreProviderConnection");
-  const nonce = await syncWallet.getNonce("committed");
   const batchBuilder = syncWallet.batchBuilder(nonce);
   if (changePubKey) {
-    if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
-      const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
-      if (!isOnchainAuthSigningKeySet) {
-        const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
-        await onchainAuthTransaction?.wait();
-      }
-    }
-
-    const ethAuthType = syncWallet.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-    /* const signedTx = await syncWallet.signSetSigningKey({
-      feeToken,
-      fee: store.getters["checkout/getAccountUnlockFee"],
-      nonce,
-      ethAuthType,
-    }); */
-    batchBuilder.addChangePubKey({
-      feeToken,
-      fee: store.getters["checkout/getAccountUnlockFee"],
-      ethAuthType,
-    });
+    await addCPKToBatch(syncWallet, feeToken, batchBuilder, store);
   }
   for (const tx of transactions) {
     batchBuilder.addTransfer({
@@ -105,8 +89,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
     });
   }
   batchBuilder.addTransfer({
-    fee,
-    nonce,
+    fee: closestPackableTransactionFee(store.getters["wallet/isAccountLocked"] ? fee.add(store.getters["checkout/getAccountUnlockFee"]) : fee),
     amount: 0,
     to: syncWallet!.address(),
     token: feeToken,
@@ -116,118 +99,13 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
 };
 
 /**
- * Generic method for batch transaction creation
- *
- * @param address
- * @param token
- * @param feeToken
- * @param amount
- * @param fastWithdraw
- * @param fees
- * @param store
- * @return {Promise<{txData: *, txHash: *}[]>}
- */
-export const withdraw = async (address: Address, token: TokenSymbol, feeToken: TokenSymbol, amount: GweiBalance, fastWithdraw: boolean, fees: GweiBalance, store: any) => {
-  const syncWallet = walletData.get().syncWallet;
-  const amountBigValue = amount;
-  const feeBigValue = fees;
-  if (token === feeToken) {
-    const transaction = await syncWallet!.withdrawFromSyncToEthereum({
-      ethAddress: address,
-      token,
-      amount: amountBigValue,
-      fee: feeBigValue,
-      fastProcessing: fastWithdraw,
-    });
-    store.dispatch("transaction/watchTransaction", { transactionHash: transaction.txHash, tokenSymbol: token, type: "transfer" });
-    return transaction;
-  } else {
-    const withdrawals = [
-      {
-        ethAddress: address,
-        amount: amountBigValue,
-        fee: "0",
-        token,
-      },
-    ];
-    const transfers = [
-      {
-        to: syncWallet!.address(),
-        token: feeToken,
-        amount: "0",
-        fee: feeBigValue,
-      },
-    ];
-    if (!syncWallet!.signer) {
-      throw new Error("zkSync signer is required for sending zksync transactions.");
-    } else if (transfers.length === 0) {
-      throw new Error("No transfers in queue");
-    }
-
-    const signedTransactions = [] as Array<Tx>;
-    let signWithdrawTransaction = null;
-
-    let nextNonce = await syncWallet!.getNonce();
-
-    for (let i = 0; i < withdrawals.length; i++) {
-      const withdrawal = withdrawals[i];
-      const nonce = nextNonce;
-      nextNonce += 1;
-
-      signWithdrawTransaction = await syncWallet!
-        .signWithdrawFromSyncToEthereum({
-          ...withdrawal,
-          nonce,
-        })
-        .catch((error) => {
-          throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
-        });
-
-      // @ts-ignore: Unreachable code error
-      signedTransactions.push({ tx: signWithdrawTransaction.tx, signature: signWithdrawTransaction.ethereumSignature });
-    }
-
-    for (let i = 0; i < transfers.length; i++) {
-      const transfer = transfers[i];
-      const nonce = nextNonce;
-      nextNonce += 1;
-
-      const signTransaction = await syncWallet!
-        .signSyncTransfer({
-          ...transfer,
-          nonce,
-        })
-        .catch((error) => {
-          throw new Error("Error while performing signSyncTransfer: " + error.message);
-        });
-
-      // @ts-ignore: Unreachable code error
-      signedTransactions.push({ tx: signTransaction.tx, signature: signTransaction.ethereumSignature });
-    }
-
-    const transactionHashes = await syncWallet!.provider.submitTxsBatch(signedTransactions).catch((error) => {
-      throw new Error("Error while performing submitTxsBatch: " + error.message);
-    });
-    for (let a = 0; a < transactionHashes.length; a++) {
-      store.dispatch("transaction/watchTransaction", { transactionHash: transactionHashes[a], tokenSymbol: a === 0 ? token : feeToken, type: "transfer" });
-    }
-    return transactionHashes.map((txHash, index) => ({
-      txData: signedTransactions[index],
-      txHash,
-    }));
-  }
-};
-
-/**
  * Deposit action method
  *
  * @param {TokenSymbol} token
  * @param {string} amount
- * @param _store
  * @returns {Promise<ETHOperation>}
  */
-// @ts-ignore
-export const deposit = async (token: TokenSymbol, amount: string | BigNumber, _store): Promise<ETHOperation> => {
+export const deposit = async (token: TokenSymbol, amount: string | BigNumber): Promise<ETHOperation | undefined> => {
   const wallet = walletData.get().syncWallet;
   // console.log(token)
   const ethTxOptions =
@@ -240,10 +118,10 @@ export const deposit = async (token: TokenSymbol, amount: string | BigNumber, _s
     depositTo: wallet.address(),
     token,
     amount,
-    ethTxOptions: ethTxOptions,
+    ethTxOptions,
   });
   // store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
-  return depositResponse as ETHOperation;
+  return depositResponse;
 };
 
 /**

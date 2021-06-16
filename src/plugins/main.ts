@@ -1,34 +1,20 @@
 import Vue from "vue";
-import VueScrollTo from "vue-scrollto";
 import utils from "@/plugins/utils";
-import Note from "@/components/Note.vue";
-import Defbtn from "@/components/Defbtn.vue";
-import Closebtn from "@/components/Closebtn.vue";
-import LineBlock from "@/components/LineBlock.vue";
-import TransactionToken from "@/components/TransactionToken.vue";
-import SuccessMark from "@/components/SuccessMark.vue";
-import Loader from "@/components/Loader.vue";
-import AmountInput from "@/components/AmountInput.vue";
-import ValuesBlock from "@/components/ValuesBlock.vue";
-import Modal from "@/components/Modal.vue";
-import MaxHeight from "@/components/MaxHeight.vue";
 
 import { GweiBalance, TokenSymbol } from "@/types/index";
+
+// @ts-ignore
 import { BigNumber } from "ethers";
 
-Vue.use(VueScrollTo);
+// @ts-ignore
+import Popover from "vue-js-popover";
 
-Vue.component("Note", Note);
-Vue.component("Defbtn", Defbtn);
-Vue.component("Closebtn", Closebtn);
-Vue.component("LineBlock", LineBlock);
-Vue.component("TransactionToken", TransactionToken);
-Vue.component("Loader", Loader);
-Vue.component("AmountInput", AmountInput);
-Vue.component("ValuesBlock", ValuesBlock);
-Vue.component("Modal", Modal);
-Vue.component("MaxHeight", MaxHeight);
-Vue.component("SuccessMark", SuccessMark);
+// @ts-ignore
+import VueCustomScrollbar from 'vue-custom-scrollbar'
+import "vue-custom-scrollbar/dist/vueScrollbar.css"
+
+Vue.use(Popover);
+Vue.component('VueCustomScrollbar', VueCustomScrollbar);
 
 /**
  * Implementation of the tokenFormatter as a global filter

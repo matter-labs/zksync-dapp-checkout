@@ -1,7 +1,6 @@
 import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
-import { Types } from "zksync-checkout";
-
-export import ZkSyncTransaction = Types.ZkSyncTransaction;
+import { ZkSyncTransaction } from "zksync-checkout/src/types";
+import { ChangePubKeyCREATE2, ChangePubKeyECDSA, ChangePubKeyOnchain } from "zksync/build/types";
 
 export declare type Address = string;
 export declare type PubKeyHash = string;
@@ -41,14 +40,25 @@ export interface ForcedExit {
   signature: Signature;
 }
 
-export interface DepositsInterface {
-  [tokenSymbol: string]: Array<SinglDepositsInterface>;
+export interface CPKLocal {
+  accountId: number;
+  account: Address;
+  newPkHash: PubKeyHash;
+  nonce: number;
+  ethAuthData?: ChangePubKeyOnchain | ChangePubKeyECDSA | ChangePubKeyCREATE2;
+  ethSignature?: string;
+  validFrom: number;
+  validUntil: number;
 }
 interface SinglDepositsInterface {
   hash: string;
   amount: string;
   status: string;
   confirmations: number;
+}
+
+export interface DepositsInterface {
+  [tokenSymbol: string]: Array<SinglDepositsInterface>;
 }
 export interface ActiveDepositInterface {
   [tokenSymbol: string]: BigNumber;
@@ -75,7 +85,7 @@ export interface Balance {
   verifiedBalance: DecimalBalance;
   tokenPrice: string;
   restricted: boolean;
-  unlocked?: boolean;
+  unlocked?: BigNumber;
   address?: string;
 }
 
@@ -159,71 +169,6 @@ export declare class Signer {
     signer: Signer;
     ethSignatureType: EthSignerType;
   }>;
-}
-
-export declare class Wallet {
-  ethSigner: ethers.Signer;
-  cachedAddress: Address;
-  signer?: Signer;
-  accountId?: number;
-  ethSignerType?: EthSignerType;
-  provider: Provider;
-  private constructor();
-  connect(provider: Provider): this;
-  static fromEthSigner(ethWallet: ethers.Signer, provider: Provider, signer?: Signer, accountId?: number, ethSignerType?: EthSignerType): Promise<Wallet>;
-  static fromEthSignerNoKeys(ethWallet: ethers.Signer, provider: Provider, accountId?: number, ethSignerType?: EthSignerType): Promise<Wallet>;
-  getEthMessageSignature(message: string): Promise<TxEthSignature>;
-  signSyncTransfer(transfer: { to: Address; token: TokenLike; amount: BigNumberish; fee: BigNumberish; nonce: number }): Promise<SignedTransaction>;
-  signSyncForcedExit(forcedExit: { target: Address; token: TokenLike; fee: BigNumberish; nonce: number }): Promise<SignedTransaction>;
-  syncForcedExit(forcedExit: { target: Address; token: TokenLike; fee?: BigNumberish; nonce?: Nonce }): Promise<Transaction>;
-  syncMultiTransfer(
-    transfers: {
-      to: Address;
-      token: TokenLike;
-      amount: BigNumberish;
-      fee: BigNumberish;
-      nonce?: Nonce;
-    }[],
-  ): Promise<Transaction[]>;
-
-  batchBuilder: any;
-
-  syncTransfer(transfer: { to: Address; token: TokenLike; amount: BigNumberish; fee?: BigNumberish; nonce?: Nonce }): Promise<Transaction>;
-  signWithdrawFromSyncToEthereum(withdraw: { ethAddress: string; token: TokenLike; amount: BigNumberish; fee: BigNumberish; nonce: number }): Promise<SignedTransaction>;
-  withdrawFromSyncToEthereum(withdraw: {
-    ethAddress: string;
-    token: TokenLike;
-    amount: BigNumberish;
-    fee?: BigNumberish;
-    nonce?: Nonce;
-    fastProcessing?: boolean;
-  }): Promise<Transaction>;
-
-  isSigningKeySet(): Promise<boolean>;
-  signSetSigningKey(changePubKey: { feeToken: TokenLike; fee: BigNumberish; nonce: number; ethAuthType: string }): Promise<SignedTransaction>;
-  setSigningKey(changePubKey: { feeToken: TokenLike; fee?: BigNumberish; nonce?: Nonce; onchainAuth?: boolean; ethAuthType: string }): Promise<Transaction>;
-  isOnchainAuthSigningKeySet(nonce?: Nonce): Promise<boolean>;
-  onchainAuthSigningKey(nonce?: Nonce, ethTxOptions?: ethers.providers.TransactionRequest): Promise<ContractTransaction>;
-  getCurrentPubKeyHash(): Promise<PubKeyHash>;
-  getNonce(nonce?: Nonce): Promise<number>;
-  getAccountId(): Promise<number | undefined>;
-  address(): Address;
-  getAccountState(): Promise<AccountState>;
-  getBalance(token: TokenLike, type?: "committed" | "verified"): Promise<BigNumber>;
-  getEthereumBalance(token: TokenLike): Promise<BigNumber>;
-  isERC20DepositsApproved(token: TokenLike): Promise<boolean>;
-  approveERC20TokenDeposits(token: TokenLike): Promise<ContractTransaction>;
-  depositToSyncFromEthereum(deposit: {
-    depositTo: Address;
-    token: TokenLike;
-    amount: BigNumberish;
-    ethTxOptions?: ethers.providers.TransactionRequest;
-    approveDepositAmountForERC20?: boolean;
-  }): Promise<ETHOperation>;
-
-  emergencyWithdraw(withdraw: { token: TokenLike; accountId?: number; ethTxOptions?: ethers.providers.TransactionRequest }): Promise<ETHOperation>;
-  private modifyEthersError;
-  private setRequiredAccountIdFromServer;
 }
 
 export declare class ETHOperation {
@@ -357,7 +302,7 @@ export interface TokenItem {
   id: number;
   symbol: string;
   decimals: number;
-  unlocked: boolean;
+  unlocked: BigNumber;
 }
 
 export interface TokenPrices {

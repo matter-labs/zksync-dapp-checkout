@@ -6,6 +6,7 @@ export const state = () => ({
   loggedIn: false,
   selectedWallet: "" as string,
   loadingHint: "" as string,
+  accountID: null as number | null,
   address: "" as Address,
 });
 
@@ -24,6 +25,9 @@ export const mutations: MutationTree<AccountModuleState> = {
   setAddress(state, address: Address) {
     state.address = address;
   },
+  setAccountID(state, accountID: number | null) {
+    state.accountID = accountID;
+  },
 };
 
 export const getters: GetterTree<AccountModuleState, RootState> = {
@@ -41,5 +45,8 @@ export const getters: GetterTree<AccountModuleState, RootState> = {
   },
   address(state): Address {
     return state.address;
+  },
+  accountID(state): number | null {
+    return state.accountID;
   },
 };

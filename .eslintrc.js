@@ -11,13 +11,29 @@ module.exports = {
     },
     parser: "@typescript-eslint/parser",
     sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.eslint.json"],
+    project: ["tsconfig.json", "tsconfig.eslint.json"],
     tsconfigRootDir: __dirname,
     extraFileExtensions: [".vue", ".scss"],
   },
+  ignorePatterns: ["node_modules"],
   plugins: ["vue", "@typescript-eslint", "prettier"],
   root: true,
   rules: {
+    "linebreak-style": "off",
+    "no-prototype-builtins": "off",
+    "prettier-vue/prettier": [
+      "error",
+      {
+        semi: true,
+        trailingComma: "all",
+        singleQuote: false,
+        jsxSingleQuote: false,
+        printWidth: 180,
+        tabWidth: 2,
+      },
+    ],
+    "no-unused-vars": 2,
+    "import/order": 0,
     indent: "off",
     semi: ["error", "always"],
     "@typescript-eslint/ban-ts-comment": "off",
@@ -35,14 +51,12 @@ module.exports = {
     "vue/no-v-html": "off",
     "vue/html-self-closing": "off",
     "pt-eslint/no-explicit-any": "off",
-    "no-prototype-builtins": "off",
     "no-unused-expressions": "off",
     "no-use-before-define": "off",
     "vue/singleline-html-element-content-newline": "off",
     "@typescript-eslint/no-empty-function": ["off"],
     "vue/max-attribute": "off",
     "vue/require-prop-types": "off",
-    "@typescript-eslint/no-var-requires": "off"
   },
   settings: {
     "prettier-vue": {
@@ -51,6 +65,16 @@ module.exports = {
         script: true,
       },
       usePrettierrc: true,
+      // Set the options for `prettier.getFileInfo`.
+      // @see https://prettier.io/docs/en/api.html#prettiergetfileinfofilepath-options
+      fileInfoOptions: {
+        // Path to ignore file (default: `'.prettierignore'`)
+        // Notice that the ignore file is only used for this plugin
+        ignorePath: "..prettierignore",
+
+        // Process the files in `node_modules` or not (default: `false`)
+        withNodeModules: false,
+      },
     },
   },
 };

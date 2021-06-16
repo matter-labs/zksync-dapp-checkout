@@ -1,8 +1,8 @@
-# [zkCheckout dApp](https://checkout.zksync.io) &middot; [zkSync.io](https://zksync.io/)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT)
+# [zkSync Checkout dApp](https://checkout.zksync.io) &middot; [zkSync.io](https://zksync.io/)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT)
 
-# zkCheckout — trustable permissionless DeFi payment gateway 
+# zkSync Checkout — trustable permissionless DeFi payment gateway 
 
-zkCheckout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.
+zkSync Checkout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.
 
 * **[Learn more](https://zksync.io/api/sdk/checkout/)**
 
@@ -53,7 +53,7 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ### Libraries used  
 
-* [zkCheckout lib](https://www.npmjs.com/package/zksync-checkout): our open sourced NPM-package
+* [zkSync Checkout lib](https://www.npmjs.com/package/zksync-checkout): our open sourced NPM-package
 * [zkSync.js lib](https://www.npmjs.com/package/zksync-checkout): our open sourced NPM-package
 * [zkLink service](https://link.zksync.io/?MHhhMDcyRTYxNDMyODY2NWJlN0UyRjIxNjZCRTFBN2JBMTk1RjhiZTQ0fERBSXwxMDA): bit.ly for payment links on zkSync
 * [ethers.js lib](https://docs.ethers.io/v5/): a simple to use Web3 Provider Bridge as a single JavaScript file

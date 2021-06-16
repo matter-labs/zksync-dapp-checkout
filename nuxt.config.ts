@@ -1,24 +1,21 @@
-// noinspection ES6PreferShortImport
-
-import { NuxtConfig } from "@nuxt/types";
+import { NuxtConfig, Configuration } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+import { ToastObject } from "vue-toasted/types";
 
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
+//noinspection ES6PreferShortImport
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION, ZK_IS_BETA, ZK_LIB_VERSION } from "./src/plugins/build";
 
 // @ts-ignore
-require("dotenv").config();
-
-// @ts-ignore
-const tailwindDefault = require("tailwindcss/defaultTheme");
+import * as zkTailwindDefault from "matter-zk-ui/tailwind.config.js";
 
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
 const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
-const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
+const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Checkout";
 const pageImg = "/Cover.jpg";
 
-const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED} v.${VERSION}:${GIT_REVISION_SHORT}`;
+const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED}${ZK_IS_BETA ? "-beta" : ""} v.${VERSION} | zksync: v.${ZK_LIB_VERSION}`;
 
 const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
 const pageKeywords = process.env.SITE_KEYWORDS ?? "";
@@ -126,7 +123,7 @@ const config: NuxtConfig = {
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
-        content: "/icon.png",
+        content: "/favicon-dark.png",
       },
       { hid: "theme-color", name: "theme-color", content: "#4e529a" },
       {
@@ -135,7 +132,7 @@ const config: NuxtConfig = {
         content: "#4e529a",
       },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/icon.png" }],
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
   },
 
   /*
@@ -184,12 +181,13 @@ const config: NuxtConfig = {
       },
     ],
     ["@nuxtjs/dotenv", { path: __dirname }],
+    "matter-zk-ui",
   ],
 
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "nuxt-webfontloader", "@nuxtjs/sentry"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "nuxt-webfontloader", "@nuxtjs/sentry"],
   webfontloader: {
     google: {
       families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
@@ -203,7 +201,7 @@ const config: NuxtConfig = {
     iconPack: "fontawesome",
     action: {
       text: "OK",
-      onClick: (_event: unknown, toastObject: { goAway: (arg0: number) => void }) => {
+      onClick: (_: unknown, toastObject: ToastObject) => {
         toastObject.goAway(100);
       },
     },
@@ -214,11 +212,6 @@ const config: NuxtConfig = {
       messages: {
         en: require(`./${srcDir}/locales/en/translations.json`),
       },
-    },
-  },
-  inkline: {
-    config: {
-      autodetectVariant: true,
     },
   },
   styleResources: {
@@ -242,12 +235,8 @@ const config: NuxtConfig = {
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
   tailwindcss: {
-    /* cssPath: '@/assets/style/tailwind.min.css', */
     config: {
-      future: {
-        removeDeprecatedGapUtilities: true,
-        purgeLayersByDefault: true,
-      },
+      ...zkTailwindDefault,
       purge: {
         enabled: process.env.NODE_ENV === "production",
         content: [
@@ -257,55 +246,14 @@ const config: NuxtConfig = {
           `${srcDir}/layouts/**/*.vue`,
           `${srcDir}/pages/**/*.vue`,
           `${srcDir}/plugins/**/*.{js,ts}`,
-          "nuxt.config.{js,ts}",
+          "./node_modules/matter-zk-ui/components/**/*.vue",
+          "./node_modules/matter-zk-ui/blocks/**/*.vue",
+          "./node_modules/matter-zk-ui/blocks/**/*.vue",
+          "./node_modules/matter-zk-ui/layouts/**/*.vue",
+          "./node_modules/matter-zk-ui/pages/**/*.vue",
+          "./node_modules/matter-zk-ui/plugins/**/*.{js,ts}",
+          "./node_modules/matter-zk-ui/nuxt.config.{js,ts}",
         ],
-      },
-      theme: {
-        borderColor: {
-          light: "#e1e4e8",
-          gray: "#8d9aac",
-        },
-        backgroundColor: {
-          white: "#ffffff",
-          white2: "#fbfbfb",
-          white3: "#f4f5f7",
-          violet: "#5436d6",
-        },
-        textColor: {
-          white: "#ffffff",
-          gray: "#8d9aac",
-          dark: "#243955",
-          dark2: "#4e566d",
-          black2: "#3c4257",
-          black: "#000000",
-          violet: "#5436D6",
-          lightviolet: "#7860df",
-          red: "#F25F5C",
-          green: "#057A55",
-          yellow: "#fbbf24",
-        },
-        fontSize: {
-          ...tailwindDefault.fontSize,
-          xxs: [
-            "0.65rem",
-            {
-              lineHeight: "0.75rem",
-            },
-          ],
-        },
-        maxWidth: {
-          ...tailwindDefault.maxWidth,
-          xxs: "15rem",
-        },
-        fontFamily: {
-          ...tailwindDefault.fontFamily,
-          firaCode: ["Fira Code", "sans-serif"],
-          firaCondensed: ["Fira Sans Condensed", "sans-serif"],
-        },
-        screens: {
-          ...tailwindDefault.screens,
-          lg: "1101px",
-        },
       },
     },
   },
@@ -314,24 +262,20 @@ const config: NuxtConfig = {
    */
   build: {
     ssr: false,
-    // target: "static",
-    /* extractCSS: {
-      ignoreOrder: true,
-    }, */
-    extend(config) {
+    extend: (config: Configuration) => {
       config.node = {
         fs: "empty",
       };
     },
   },
-  buildOptimisations: {
+  /* buildOptimisations: {
     profile: env !== "prod" ? "risky" : "experimental",
     features: {
       postcssNoPolyfills: isProduction,
       hardSourcePlugin: isProduction,
     },
     esbuildLoaderOptions: "esnext",
-  },
+  }, */
   generate: {
     dir: "public",
     fallback: "404.html",

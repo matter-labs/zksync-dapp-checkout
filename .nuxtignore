@@ -1,5 +1,9 @@
-.github/*
-.idea/*
-environments/*
-.nuxt/*
-_nuxt/*
+cypress
+_old
+tsconfig.json
+cypress.json
+public
+.nuxt
+.github
+.yarn
+.firebase

@@ -6,14 +6,13 @@ $light: #e1e4e8;
 $gray: #8d9aac;
 $dark: #243955;
 $dark2: #4e566d;
+$dark3: #5d768e;
 $majorDark: #171a49;
 $black2: #3c4257;
 $black: #000;
+$darkBlue: #272640;
 $violet: #5436d6;
-$lightViolet: lighten(
-  $color: $violet,
-  $amount: 10,
-);
+$lightViolet: lighten($color: $violet, $amount: 10);
 $red: #f25f5c;
 $green: #057a55;
 
@@ -24,9 +23,9 @@ $firaCondensed: "Fira Sans", "sans-serif";
 
 $mainFontFamily: $firaSans;
 
-/* Transitions */
-$transition: .2s ease;
-$transition2: .3s ease;
+// Transitions
+$transition: 0.2s ease;
+$transition2: 0.3s ease;
 
 /* Responsive */
 $mobile: 768px;

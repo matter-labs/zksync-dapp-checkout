@@ -7,6 +7,7 @@
     "declaration": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "jsx": "preserve",
     "lib": [
       "es2019",
       "dom",
@@ -32,6 +33,7 @@
     "strict": true,
     "target": "ESNext",
     "types": [
+      "@types/nuxt",
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",
@@ -39,9 +41,7 @@
       "@types/jest",
       "@nuxtjs/toast",
       "web3-core/types",
-      "@inkline/inkline/types",
-      "nuxt-typed-vuex",
-      "typed-vuex"
+      "nuxt-typed-vuex"
     ]
   },
   "exclude": [

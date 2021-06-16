@@ -26,7 +26,7 @@ export const ETHER_NETWORK_NAME: Network = process.env.APP_CURRENT_NETWORK as Ne
 export const ZK_LIB_VERSION = dependencies?.zksync ?? "latest";
 export const ZK_IS_BETA: boolean = dependencies?.zksync.search("beta") !== -1 || process.env.ZK_NETWORK !== undefined || ETHER_NETWORK_NAME === "ropsten";
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;
-export const CURRENT_APP_NAME = `zkSync Wallet${ZK_IS_BETA ? ":beta" : ""}`;
+export const CURRENT_APP_NAME = 'zkSync Checkout';
 
 export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
 
@@ -36,15 +36,6 @@ export const ETHER_PREFIX_DOT: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : 
 export const ETHER_PREFIX_MINUS: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : "-");
 
 export const ETHER_NETWORK_ID: number | undefined = _ETHER_NETWORK_ID_DICTIONARY[ETHER_NETWORK_NAME as string];
-
-/**
- * The right way of strict-typing for the web3provider
- *  — thanks to the [global.window] with type NodeJS.Global operation with the typed window is generally possible
- *  — provider [window.ethereum] should be declared separately using shims (index.d.ts)
- *    @see /src/types/index.d.ts
- * @author: Serge B. | Matter Labs
- */
-export const ethWindow: Window = global.window;
 
 export const ZK_API_BASE: string = process.env.ZK_SPECIAL_API ? process.env.ZK_SPECIAL_API : `${ETHER_PREFIX_MINUS}api.zksync.io`;
 export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;

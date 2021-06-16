@@ -1,6 +1,7 @@
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, Contract, ContractInterface, BigNumberish, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Balance, GweiBalance, Token, TokenSymbol, Transaction } from "@/types/index";
+import { Address, Balance, GweiBalance, Token, TokenSymbol, TotalByToken, Transaction } from "@/types/index";
+import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
 
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 
@@ -286,26 +287,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
       await dispatch("restoreProviderConnection");
       const newAccountState = await syncWallet!.getAccountState();
-
-      // @todo Left for testing purposes.
-      // const testBalances = {
-      //   DAI: 98.91346,
-      //   ETH: 0.00697466,
-      //   STORJ: 10.496,
-      //   USDC: 3329.78057,
-      //   USDT: 98.55857,
-      // };
-      // // const testBalances1 = {
-      // //   BAT: 0.9,
-      // //   DAI: 33543.4016421191,
-      // //   ETH: 0.0028442766686,
-      // //   KNC: 0.8,
-      // //   USDT: 64.277,
-      // // }
-      // newAccountState["committed"]["balances"] = testBalances;
-      // newAccountState["verified"]["balances"] = testBalances;
-      // console.log(newAccountState);
-
+      this.commit("account/setAccountID", newAccountState.id);
       walletData.set({ accountState: newAccountState });
       listCommitted = newAccountState?.committed.balances || {};
       listVerified = newAccountState?.verified.balances || {};
@@ -362,22 +344,24 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     }
     await dispatch("restoreProviderConnection");
     const syncWallet = walletData.get().syncWallet;
-    const accountState = await syncWallet?.getAccountState();
-    walletData.set({ accountState });
-    if (!syncWallet || !accountState) {
+    if (!syncWallet) {
       return localList.list;
     }
     const loadedTokens = await this.dispatch("tokens/loadAllTokens");
-    const totalByToken = this.getters["checkout/getTotalByToken"];
-    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
+    const totalByToken: TotalByToken = this.getters["checkout/getTotalByToken"];
+    const usedTokens: string[] = Object.entries(totalByToken).map((e: [string, BigNumber]) => e[0]);
 
     const loadInitialBalancesPromises = usedTokens.map(async (key: string) => {
       const currentToken = loadedTokens[key];
       try {
-        let unlocked = true;
         const balance = await syncWallet.getEthereumBalance(key);
-        if (key !== "ETH") {
-          unlocked = await syncWallet.isERC20DepositsApproved(currentToken.address);
+        let unlocked: BigNumber;
+        if (currentToken.symbol.toLowerCase() !== "eth") {
+          const tokenAddress = syncWallet!.provider.tokenSet.resolveTokenAddress(currentToken.symbol);
+          const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE as ContractInterface, syncWallet!.ethSigner);
+          unlocked = await erc20contract.allowance(syncWallet!.address(), syncWallet!.provider.contractAddress.mainContract);
+        } else {
+          unlocked = BigNumber.from(ERC20_APPROVE_TRESHOLD);
         }
         return {
           id: currentToken.id,
@@ -393,7 +377,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
     });
     const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
-      console.log(err);
+      console.log("Get balances error", err);
       // @todo insert sentry logging
       return [];
     });
@@ -516,32 +500,27 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
     }
   },
-  async checkLockedState({ commit }): Promise<boolean> {
-    const syncWallet = walletData.get().syncWallet;
-    const isSigningKeySet = await syncWallet!.isSigningKeySet();
-    commit("setAccountLockedState", !isSigningKeySet);
-    return !isSigningKeySet;
+  async checkLockedState({ commit }): Promise<void> {
+    const pubKeyHash = await walletData.get().syncWallet!.signer!.pubKeyHash();
+    commit("setAccountLockedState", pubKeyHash !== walletData.get().accountState!.committed.pubKeyHash);
   },
-  async getProviders({ commit }): Promise<void> {
+  async getProviders(): Promise<void> {
     const zksync = await walletData.zkSync();
     const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
     walletData.set({ syncProvider });
   },
-  async walletRefresh({ getters, dispatch }, firstSelect = true): Promise<boolean> {
+  async walletRefresh({ getters, dispatch }, firstSelect: boolean = true): Promise<boolean> {
     try {
-      /* dispatch("changeNetworkRemove"); */
       const onboard = getters.getOnboard;
-      this.commit("account/setLoadingHint", "followInstructions");
+      this.commit("account/setLoadingHint", "processing");
       let walletCheck = false;
       if (firstSelect) {
         walletCheck = await onboard.walletSelect();
         if (!walletCheck) {
           return false;
         }
-        walletCheck = await onboard.walletCheck();
-      } else {
-        walletCheck = await onboard.walletCheck();
       }
+      walletCheck = await onboard.walletCheck();
       if (!walletCheck) {
         return false;
       }
@@ -553,7 +532,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
         return false;
       }
       const transactionData = this.getters["checkout/getTransactionData"];
-      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress !== "" && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
+      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
         this.commit("setCurrentModal", "wrongAccountAddress");
         return false;
       }
@@ -574,6 +553,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
 
       const zksync = await walletData.zkSync();
       await dispatch("restoreProviderConnection");
+      this.commit("account/setLoadingHint", "followInstructions");
       const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, walletData.get().syncProvider);
 
       this.commit("account/setLoadingHint", "loadingData");
@@ -581,20 +561,22 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
 
       walletData.set({ syncWallet, accountState, ethWallet });
 
-      await dispatch("getzkBalances", accountState);
+      await dispatch("getzkBalances", { accountState, force: true });
       await dispatch("getInitialBalances", true);
 
       await dispatch("checkLockedState");
+
+      this.commit("account/setAddress", syncWallet.address());
+      this.commit("account/setAccountID", accountState.id);
+      
       await this.dispatch("checkout/getAccountUnlockFee");
 
       await watcher.changeNetworkSet(dispatch, this);
 
-      this.commit("account/setAddress", syncWallet.address());
       this.commit("account/setLoggedIn", true);
       return true;
     } catch (error) {
       if (!error.message.includes("User denied")) {
-        // this.dispatch("toaster/error", `Refreshing state of the wallet failed... Reason: ${error.message}`);
         this.dispatch("toaster/error", error.message);
       }
       return false;
@@ -612,10 +594,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       // @todo add sentry report
       console.log("forceRefreshData | getzkBalances error", err);
     });
-    /* await dispatch("getTransactionsHistory", { force: true }).catch((err) => {
-      // @todo add sentry report
-      console.log("forceRefreshData | getTransactionsHistory error", err);
-    }); */
   },
   logout({ commit, getters }): void {
     const onboard = getters.getOnboard;
@@ -624,7 +602,8 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     localStorage.removeItem("selectedWallet");
     this.commit("account/setLoggedIn", false);
     this.commit("account/setSelectedWallet", "");
-    /* this.commit('checkout/setAccountUnlockFee', false); */
+    this.commit("account/setAccountID", null);
+    commit("setAccountLockedState", false);
     commit("clearDataStorage");
   },
 };
