@@ -21,6 +21,11 @@
         position: absolute;
         left: 100%;
         top: -0.4em;
+
+        @media screen and (max-width: $mobile) {
+          left: auto !important;
+          top: -0.9rem !important;
+        }
       }
     }
 
