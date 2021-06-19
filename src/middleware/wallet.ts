@@ -1,6 +1,14 @@
 import { walletData } from "@/plugins/walletData";
+import { Context } from "@nuxt/types";
 
-export default (context) => {
+export default (context: Context) => {
+  if (context.route.matched[0].path === "/link" || context.route.matched[0].path === "/link/:hash") {
+    return;
+  }
+  if (context.store.getters["checkout/getErrorState"]) {
+    context.redirect("/link");
+    return;
+  }
   if (walletData.get().syncWallet) {
     if (context.route.matched[0].path === "/connect") {
       context.redirect("/");

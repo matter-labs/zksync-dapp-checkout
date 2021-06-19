@@ -111,7 +111,7 @@
           <div class="poweredBy flex justify-between w-1/2 mx-auto items-center mt-3">
             <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault lightLink">Terms of Service</a>
             <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault lightLink">Privacy Policy</a>
-            <a target="_blank" :href="zkLink" class="linkDefault lightLink">zkLink</a>
+            <nuxt-link class="linkDefault lightLink" to="/link">zkLink</nuxt-link>
           </div>
         </footer>
       </div>
@@ -125,7 +125,7 @@ import utils from "@/plugins/utils";
 import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import { BigNumber } from "ethers";
 import Logo from "@/blocks/logo.vue";
-import {APP_ZK_LINK, ETHER_NETWORK_NAME, ETHER_PRODUCTION} from "~/plugins/build";
+import { ETHER_NETWORK_NAME, ETHER_PRODUCTION } from "~/plugins/build";
 
 export default Vue.extend({
   components: {
@@ -192,9 +192,6 @@ export default Vue.extend({
     tokensPrices(): TokenPrices {
       return this.$store.getters["tokens/getTokenPrices"];
     },
-    zkLink(): string {
-      return APP_ZK_LINK as string;
-    }
   },
 });
 </script>

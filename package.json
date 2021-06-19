@@ -70,7 +70,7 @@
     "ethers": "^5.0.31",
     "js-cookie": "^2.2.1",
     "lottie-web": "^5.7.6",
-    "matter-zk-ui": "^1.0.4",
+    "matter-zk-ui": "^1.0.9",
     "moment": "^2.29.1",
     "nuxt": "latest",
     "nuxt-build-optimisations": "latest",

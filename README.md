@@ -55,5 +55,5 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 * [zkSync Checkout lib](https://www.npmjs.com/package/zksync-checkout): our open sourced NPM-package
 * [zkSync.js lib](https://www.npmjs.com/package/zksync-checkout): our open sourced NPM-package
-* [zkLink service](https://link.zksync.io/?MHhhMDcyRTYxNDMyODY2NWJlN0UyRjIxNjZCRTFBN2JBMTk1RjhiZTQ0fERBSXwxMDA): bit.ly for payment links on zkSync
+* [zkLink service](https://checkout.zksync.io/link): bit.ly for payment links on zkSync
 * [ethers.js lib](https://docs.ethers.io/v5/): a simple to use Web3 Provider Bridge as a single JavaScript file

@@ -11,6 +11,11 @@ export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
 export declare type Nonce = number | "committed";
 
+export type PaymentItem = {
+  address: Address;
+  token: TokenSymbol;
+  amount: GweiBalance;
+};
 export type TransactionData = {
   transactions: Array<ZkSyncTransaction>;
   fromAddress: Address;

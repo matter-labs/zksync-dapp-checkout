@@ -1,11 +1,11 @@
 <template>
   <div
     class="amountInputGroup border rounded"
-    :class="[{ hasUnderInput: $slots['underInput'] }, { disabled: disabled }, { error: error }, { focused: focused }]"
+    :class="[{ hasUnderInput: $slots['underInput'] }, { disabled: disabled }, { error: (error && inputtedAmount) }, { focused: focused }]"
     @click.self="focusInput()"
   >
     <div class="leftSide" @click="focusInput()">
-      <div class="inputContainer">
+      <div class="amInputContainer">
         <input
           ref="input"
           v-model="inputtedAmount"

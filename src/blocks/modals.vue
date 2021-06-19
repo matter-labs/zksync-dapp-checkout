@@ -1,6 +1,6 @@
 <template>
   <div class="allModalsContainer">
-    <zk-modal v-if="currentModal === 'wrongAccountAddress'" :value="true" @close="closeModal()">
+    <zk-modal :value="currentModal === 'wrongAccountAddress'" @close="closeModal()">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square" />
@@ -13,17 +13,16 @@
         </div>
       </template>
     </zk-modal>
-    <zk-modal v-if="currentModal === 'noCheckoutData'" :value="true" :not-closable="true">
+    <zk-modal :value="currentModal === 'zkLinkParseFail'" @close="closeModal()">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square" />
-          <div>No checkout data</div>
+          <div>Failed to parse link</div>
         </div>
       </template>
       <template slot="default">
         <div class="text-center">
-          zkCheckout is working with the pre-configured checkout data. If you're trying to access the url <b>{{ href }}</b> directly, use
-          <a href="https://link.zksync.io" class="lightLink" target="_blank">zkLink</a> first.
+          We failed to parse link checkout data. Try again later or try to use another link.
         </div>
       </template>
     </zk-modal>
@@ -33,7 +32,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { TransactionData } from "@/types";
-import {APP_ZK_LINK} from "@/plugins/build";
 
 export default Vue.extend({
   computed: {
@@ -46,9 +44,6 @@ export default Vue.extend({
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
-    zkLink(): string {
-      return APP_ZK_LINK as string;
-    }
   },
   methods: {
     closeModal() {

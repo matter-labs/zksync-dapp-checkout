@@ -2,7 +2,7 @@
   <div class="container">
     <div class="connectedWallet flex items-center">
       <i class="text-gray text-4xl mr-3 far fa-wallet" />
-      <popover name="copy-address" event="click" class="text-center block text-xs" :delay="400">
+      <popover name="copy-address" event="click" class="text-center block text-xs" :delay="100">
         Address copied!
       </popover>
       <zk-values-block>

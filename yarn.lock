@@ -2958,7 +2958,7 @@ __metadata:
     fs-extra: ^9.1.0
     js-cookie: ^2.2.1
     lottie-web: ^5.7.6
-    matter-zk-ui: ^1.0.4
+    matter-zk-ui: ^1.0.9
     moment: ^2.29.1
     node-sass: latest
     nuxt: latest
@@ -15660,9 +15660,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"matter-zk-ui@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "matter-zk-ui@npm:1.0.4"
+"matter-zk-ui@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "matter-zk-ui@npm:1.0.9"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@nuxtjs/style-resources": ^1.0.0
@@ -15672,7 +15672,7 @@ fsevents@~2.3.1:
     nuxt: ^2.15.3
     nuxt-webfontloader: ^1.1.0
     ts-node: ^9.1.1
-  checksum: 9d08d0b2f7d6964ce399098f68c7c59c7d2d518c03c97d136b97f2fc24f3e2ac547ea634534177e23ae8f95dda82f1c29f1a310d822ecee5b352aa27b28adf6a
+  checksum: 2e003565309f19f5defa93aef8534dccfdfa41165b579efab5dd06c1965306984c7b2d51864a920e15f064a9b1ee8e8a167825d2f3b4b64e58ce01dd40a59e87
   languageName: node
   linkType: hard
 

@@ -76,21 +76,18 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
 
 export const actions: ActionTree<TokensModuleState, RootState> = {
   async loadAllTokens({ commit, dispatch, getters }): Promise<Tokens> {
-    if (Object.entries(getters.getAllTokens).length === 0) {
-      await this.dispatch("wallet/restoreProviderConnection");
-      /* By taking token list from syncProvider we avoid double getTokens request,
-          but the tokensBySymbol param is private on zksync utils types */
-      // @ts-ignore
-      const tokensList = walletData.get().syncProvider!.tokenSet.tokensBySymbol;
-      const totalByToken = this.getters["checkout/getTotalByToken"];
-      const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
-      for (const symbol of usedTokens) {
-        await dispatch("getTokenPrice", symbol);
-      }
-      commit("setAllTokens", tokensList);
-      return tokensList || {};
+    await this.dispatch("wallet/restoreProviderConnection");
+    /* By taking token list from syncProvider we avoid double getTokens request,
+        but the tokensBySymbol param is private on zksync utils types */
+    // @ts-ignore
+    const tokensList = walletData.get().syncProvider!.tokenSet.tokensBySymbol;
+    const totalByToken = this.getters["checkout/getTotalByToken"];
+    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
+    for (const symbol of usedTokens) {
+      await dispatch("getTokenPrice", symbol);
     }
-    return getters.getAllTokens;
+    commit("setAllTokens", Object.entries(tokensList).sort(([,a],[,b]) => (a as TokenItem).id-(b as TokenItem).id).reduce((r, [k, v]) => ({ ...r, [k]: v }), {}));
+    return tokensList || {};
   },
 
   /**

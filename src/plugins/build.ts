@@ -37,7 +37,6 @@ export const ETHER_NETWORK_ID: number | undefined = _ETHER_NETWORK_ID_DICTIONARY
 export const ZK_API_BASE: string = process.env.ZK_SPECIAL_API ? process.env.ZK_SPECIAL_API : `${ETHER_PREFIX_MINUS}api.zksync.io`;
 export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
 export const APP_ZK_SCAN: string = process.env.ZK_SPECIAL_SCAN ? process.env.ZK_SPECIAL_SCAN : `https://${ETHER_PREFIX_DOT}zkscan.io`;
-export const APP_ZK_LINK: string = `https://link.zksync.io`;
 export const APP_ZKSYNC_BLOCK_EXPLORER = `${APP_ZK_SCAN}/explorer`;
 export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;
 
@@ -49,3 +48,10 @@ export const ONBOARD_FORTMATIC_KEY: string | undefined = process.env.APP_FORTMAT
 export const ONBOARD_PORTIS_KEY: string | undefined = process.env.APP_PORTIS;
 export const ONBOARD_INFURA_KEY: string | undefined = process.env.APP_WALLET_CONNECT;
 export const ONBOARD_RPC_URL: string | undefined = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
+
+
+/**
+ * zkLink
+ */
+export const TWEET_URL = 'https://twitter.com/intent/tweet?url=';
+export const FACEBOOK_URL = 'https://www.facebook.com/sharer/sharer.php?u=';

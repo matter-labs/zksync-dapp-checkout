@@ -104,7 +104,7 @@
           <div v-if="!enoughWithInitialBalance" class="text-red text-xs">
             Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance
           </div>
-          <zk-defbtn v-else-if="!enoughWithInitialBalance && !unlocked" @click="unlock()"> <i class="fas fa-unlock-alt" /><span>Unlock</span> </zk-defbtn>
+          <zk-defbtn v-else-if="!unlocked" @click="unlock()"> <i class="fas fa-unlock-alt" /><span>Unlock</span> </zk-defbtn>
           <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{ error: !enoughDepositAmount }">
             <template slot="underInput">
               <div class="minAmount text-xxs" @click="setDepositMinAmount()">Min: {{ needToDeposit | formatToken(token) }}</div>

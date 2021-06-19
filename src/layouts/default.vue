@@ -1,29 +1,18 @@
 <template>
   <div class="defaultLayout min-h-screen" :class="[{'darkMode': darkMode===true},{'loggedIn': loggedIn===true},{'footerUpStyle': footerUpStyle===true}]">
-    <modals />
-    <info-block />
+    <block-modals />
+    <block-info-block />
     <div class="routerContainer bg-white2 py-4 px-5 md:px-10">
-      <logging-in/>
+      <block-logging-in/>
       <nuxt @step="step=$event" v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')" class="routeMain"/>
       <div class="zk-footer-space"></div>
-      <zk-footer />
+      <block-footer />
     </div>
   </div>
 </template>
 
 <script>
-import infoBlock from "@/blocks/infoBlock.vue";
-import loggingIn from "@/blocks/loggingIn.vue";
-import modals from "@/blocks/modals.vue";
-import zkFooter from "@/blocks/footer.vue";
-
 export default {
-  components: {
-    infoBlock,
-    loggingIn,
-    modals,
-    zkFooter,
-  },
   computed: {
     step() {
       return this.$store.getters["step"];
@@ -40,16 +29,6 @@ export default {
     darkMode() {
       return this.$store.getters.darkMode;
     },
-  },
-  created() {
-    let colorTheme = localStorage.getItem("colorTheme");
-    if (!colorTheme) {
-      colorTheme = "light";
-    }
-    if (colorTheme === "dark") {
-      this.$store.commit("setDarkMode", true);
-    }
-    localStorage.setItem("colorTheme", colorTheme);
   },
 };
 </script>
