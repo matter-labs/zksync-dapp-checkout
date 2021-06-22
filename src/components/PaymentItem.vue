@@ -13,7 +13,7 @@
       <address-input v-model="valNow.address" />
     </div>
     <div class="md:pl-4">
-      <div class="label text-sm text-light">&nbsp;</div>
+      <div class="label text-sm text-light desktopOnly">&nbsp;</div>
       <div class="tokenDropdown w-full md:w-64" :class="{'opened': dropdownOpened}">
         <div class="dropdownMain flex items-center justify-between border border-light rounded px-3">
           <div class="flex items-center pr-4 cursor-pointer select-none" @click="dropdownOpened=!dropdownOpened">

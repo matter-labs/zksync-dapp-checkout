@@ -1,7 +1,7 @@
 <template>
-  <div class="linkLayout min-h-screen w-full" :class="[{'darkMode': darkMode===true}]">
+  <div class="linkLayout min-h-screen w-full">
     <block-modals />
-    <div class="routerContainer w-full h-full py-4 px-5 md:px-10">
+    <div class="routerContainer w-full h-full px-5 md:px-10">
       <block-logging-in/>
       <nuxt class="routeMain w-full h-full"/>
     </div>
@@ -13,9 +13,6 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.getters["account/loggedIn"];
-    },
-    darkMode() {
-      return this.$store.getters.darkMode;
     },
   },
 };

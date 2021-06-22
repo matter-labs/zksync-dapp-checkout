@@ -1,5 +1,5 @@
 <template>
-  <div class="defaultLayout min-h-screen" :class="[{'darkMode': darkMode===true},{'loggedIn': loggedIn===true},{'footerUpStyle': footerUpStyle===true}]">
+  <div class="defaultLayout min-h-screen" :class="[{'loggedIn': loggedIn===true},{'footerUpStyle': footerUpStyle===true}]">
     <block-modals />
     <block-info-block />
     <div class="routerContainer bg-white2 py-4 px-5 md:px-10">
@@ -25,9 +25,6 @@ export default {
     },
     loggedIn() {
       return this.$store.getters["account/loggedIn"];
-    },
-    darkMode() {
-      return this.$store.getters.darkMode;
     },
   },
 };

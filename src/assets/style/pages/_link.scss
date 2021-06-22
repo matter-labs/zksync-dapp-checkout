@@ -1,4 +1,9 @@
 .linkPage {
+  min-height: 100vh;
+  height: max-content;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: max-content 1fr max-content;
   .linkHeader {
     svg {
       fill: $violet;
@@ -14,7 +19,8 @@
         position: absolute;
         width: 36px;
         height: 36px;
-        top: 21px;
+        top: 50%;
+        transform: translateY(-50%);
         text-align: center;
         line-height: 36px;
       }
@@ -104,6 +110,17 @@
               }
             }
           }
+        }
+      }
+
+      @media screen and (max-width: $mobile) {
+        max-width: calc(95% - 36px - 55px);
+
+        .index,.delete {
+          top: 60%;
+        }
+        .delete {
+          background-color: transparentize($color: $gray, $amount: 0.85);
         }
       }
     }

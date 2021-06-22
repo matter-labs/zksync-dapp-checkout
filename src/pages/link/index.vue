@@ -1,5 +1,5 @@
 <template>
-  <div class="linkPage container w-full h-full">
+  <div class="linkPage container w-full h-full py-10">
     <zk-modal v-model="wrongDataModal" @close="wrongDataModal=false">
       <template slot="header">
         <div class="withIcon text-red">
@@ -54,7 +54,7 @@
       </template>
     </zk-modal>
 
-    <div class="linkHeader pt-10">
+    <div class="linkHeader">
       <div class="flex items-center justify-center">
         <svg class="block h-16" viewBox="0 0 393 392" xmlns="http://www.w3.org/2000/svg">
           <g>
@@ -68,12 +68,20 @@
       <div class="text-lg text-gray text-center">Create zkSync payment links, get paid in tokens</div>
     </div>
     <div class="linkBody py-10">
-      <payment-item class="my-2" v-for="(item, index) in payments" :index="index" :displayIndex="payments.length>=5" :displayDelete="payments.length>=2" :key="index" v-model="payments[index]" @delete="deletePayment(index)" />
+      <div class="w-full py-2 md:py-1" v-for="(item, index) in payments" :key="index">
+        <payment-item :displayIndex="payments.length>=5" :displayDelete="payments.length>=2" :index="index" v-model="payments[index]" @delete="deletePayment(index)" />
+      </div>
       <zk-defbtn outline class="mx-auto mt-5" @click="addPayment()" :disabled="payments.length>=maxPayments">Add another transaction</zk-defbtn>
       <div class="text-gray text-sm text-center leading-tight pt-2" :class="{'text-dark': payments.length>=maxPayments}">{{payments.length>=5 ? `${payments.length}/` : 'Up to '}}{{maxPayments}} transactions</div>
     </div>
     <div class="linkFooter">
       <zk-defbtn class="mx-auto mt-5" big @click="generate()">Create your payment link</zk-defbtn>
+      <div class="poweredBy pt-10 flex items-center justify-center">
+        <div class="text-violet mr-3">Powered by</div>
+        <a class="h-8 w-max-content" target="_blank" href="https://zksync.io/">
+          <block-logo class="h-8" />
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -86,6 +94,11 @@ import { TWEET_URL, FACEBOOK_URL } from "@/plugins/build";
 
 export default Vue.extend({
   layout: "link",
+  head() {
+    return {
+      title: "zkLink - Create zkSync payment links",
+    }
+  },
   data() {
     return {
       payments: <PaymentItem[]>[],
