@@ -39,6 +39,11 @@ export const addCPKToBatch = async (syncWallet: Wallet, feeToken: TokenSymbol, b
     removeCPKTx(store.getters["account/address"]);
     throw new Error("Sign account activation to continue.");
   }
+  if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
+    pubKeyTx.ethAuthData = {
+      type: "Onchain",
+    };
+  }
   const changePubKeyTx = await syncWallet.signer!.signSyncChangePubKey({
     ...pubKeyTx,
     fee: 0,
