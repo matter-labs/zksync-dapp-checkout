@@ -19,8 +19,7 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT }}'
-          target: rinkeby
-          projectId: zksync-dapp-scan
+          projectId: zsync-dapp-checkout
 
       - name: "Build ropsten"
         run: yarn run ci:build:ropsten
@@ -28,8 +27,7 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT }}'
-          target: ropsten
-          projectId: zksync-dapp-scan
+          projectId: zsync-dapp-checkout
 
       - name: "Build mainnet"
         run: yarn run ci:build:mainnet
@@ -37,5 +35,4 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT }}'
-          target: mainnet
-          projectId: zksync-dapp-scan
+          projectId: zsync-dapp-checkout
