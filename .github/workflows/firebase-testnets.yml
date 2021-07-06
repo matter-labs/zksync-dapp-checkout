@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: bash cli-dev.sh ci && yarn install --check-cache
 
-      - name: Building rinkeby [rinkeby]
+      - name: "Building rinkeby [rinkeby]"
         run: yarn run ci:build:rinkeby
 
       - name: Deploying rinkeby [rinkeby]
