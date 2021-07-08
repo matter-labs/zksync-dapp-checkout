@@ -24,7 +24,7 @@ jobs:
           projectId: zsync-dapp-checkout
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
-          
+
       - name: Building rosten [preview]
         run: yarn run ci:build:ropsten
 
@@ -39,7 +39,7 @@ jobs:
           FIREBASE_CLI_PREVIEWS: hostingchannels
 
       - name: Building mainnet [preview]
-        run: yarn run ci:build:prod
+        run: yarn run ci:build:mainnet
 
       - name: Deploying mainnet [preview]
         uses: matter-labs/action-hosting-deploy@v0

@@ -28,7 +28,7 @@ jobs:
           channel: live
 
       - name: Building mainnet [stage]
-        run: yarn run ci:build:prod
+        run: yarn run ci:build:mainnet
 
       - name: Deploying mainnet [stage]
         uses: matter-labs/action-hosting-deploy@v0
