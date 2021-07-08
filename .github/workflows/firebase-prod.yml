@@ -16,7 +16,7 @@ jobs:
         run: bash cli-dev.sh ci && yarn install --immutable
 
       - name: Build mainnet [production]
-        run: yarn ci:build:prod
+        run: yarn ci:build:mainnet
 
       - name: Deploy to mainnet [production]
         uses: matter-labs/action-hosting-deploy@v0
