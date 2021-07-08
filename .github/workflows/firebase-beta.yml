@@ -12,7 +12,7 @@ jobs:
     environment: dev
     steps:
       - uses: actions/checkout@v2
-      - run: "bash cli-dev.sh ci && yarn run ci:build:rinkeby-beta"
+      - run: "bash cli-dev.sh ci && yarn run ci:build:rinkeby"
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
