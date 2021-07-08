@@ -36,10 +36,13 @@ export default Vue.extend({
   },
   computed: {
     isValid(): boolean {
-      return utils.validateAddress(this.inputtedWallet);
+      return utils.validateAddress(this.inputtedWallet) && this.inputtedWallet.startsWith("0x");
     },
     error(): string {
       if (this.inputtedWallet && !this.isValid) {
+        if(!this.inputtedWallet.startsWith("0x")) {
+          return "Address should start with '0x'";
+        }
         return "Invalid address";
       } else {
         return "";
