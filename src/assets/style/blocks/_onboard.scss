@@ -130,3 +130,9 @@
     visibility: hidden !important;
   }
 }
+
+#walletconnect-wrapper .walletconnect-modal__base {
+  @media (max-height: $mobile) {
+    max-width: 300px;
+  }
+}
