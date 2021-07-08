@@ -7,31 +7,31 @@ jobs:
   build_and_preview:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
-    environment: preview
+    environment: dev
     steps:
       - uses: actions/checkout@v2
-      - run: bash cli-dev.sh ci && yarn install --check-cache && yarn run ci:build:rinkeby
+      - run: 'bash cli-dev.sh ci && yarn run ci:build:rinkeby'
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}'
           target: prod-rinkeby
           projectId: zsync-dapp-checkout
 
       - name: Building rosten [preview]
-        run: yarn run ci:build:ropsten
+      - run: 'yarn run ci:build:ropsten'
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}'
           target: prod-ropsten
           projectId: zsync-dapp-checkout
 
       - name: Building mainnet [preview]
-        run: yarn run ci:build:prod
+      - run: 'yarn run ci:build:mainnet'
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}'
           target: prod-mainnet
           projectId: zsync-dapp-checkout

@@ -2,28 +2,21 @@
 # https://github.com/firebase/firebase-tools
 
 name: "Deploy production (mainnet)"
-"on":
+'on':
   push:
     branches:
       - master
 jobs:
   build_and_deploy:
-    environment: mainnet
     runs-on: ubuntu-latest
+    environment: prod
     steps:
       - uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: bash cli-dev.sh ci && yarn install --check-cache
-
-      - name: Build mainnet [production]
-        run: yarn ci:build:prod
-
-      - name: Deploy to mainnet [production]
-        uses: matter-labs/action-hosting-deploy@v0
+      - run: "bash cli-dev.sh ci && yarn run ci:build:mainnet"
+      - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_MAINNET }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}'
           target: prod-mainnet
           projectId: zsync-dapp-checkout
           channelID: live
