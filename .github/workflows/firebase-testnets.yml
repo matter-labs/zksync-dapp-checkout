@@ -9,7 +9,7 @@ name: "Deploy testnets [rinkeby, ropsten]"
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    environment: prod
+    environment: dev
     steps:
       - uses: actions/checkout@v2
 
@@ -22,11 +22,12 @@ jobs:
       - name: Deploying rinkeby [rinkeby]
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}'
           target: prod-rinkeby
           projectId: zsync-dapp-checkout
           channelID: live
+
 
       - name: Building ropsten [ropsten]
         run: yarn run ci:build:ropsten
@@ -34,8 +35,8 @@ jobs:
       - name: Deploying ropsten [ropsten]
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}'
           target: prod-ropsten
           projectId: zsync-dapp-checkout
           channelID: live
