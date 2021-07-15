@@ -12,23 +12,30 @@ jobs:
     environment: prod
     steps:
       - uses: actions/checkout@v2
-      - run: "bash cli-dev.sh ci && yarn run ci:build:rinkeby"
-      - uses: matter-labs/action-hosting-deploy@v0
+
+      - name: Install dependencies
+        run: bash cli-dev.sh ci
+
+      - name: Building rinkeby [rinkeby]
+        run: yarn run ci:build:rinkeby
+
+      - name: Deploying rinkeby [rinkeby]
+        uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
           target: prod-rinkeby
           projectId: zsync-dapp-checkout
-          channel: live
+          channelID: live
 
-      - name: "Build ropsten"
-        run: "yarn run ci:build:ropsten"
+      - name: Building ropsten [ropsten]
+        run: yarn run ci:build:ropsten
 
-      - name: "Deploy static to the ropsten"
+      - name: Deploying ropsten [ropsten]
         uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
           target: prod-ropsten
           projectId: zsync-dapp-checkout
-          channel: live
+          channelID: live
