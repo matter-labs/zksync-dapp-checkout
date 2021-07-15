@@ -13,6 +13,9 @@
         ],
         "prod-ropsten": [
           "ropsten-checkout-zksync"
+        ],
+        "rinkeby-beta": [
+          "rinkeby-beta-checkout-zksync"
         ]
       }
     }
