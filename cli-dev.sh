@@ -39,5 +39,6 @@ if [[ $CATEGORY == "ci" ]]; then
     echo ""
     bash cli-dev.sh clean yarn
     echo ""
+    yarn install --check-cache
     echo "Done"
 fi

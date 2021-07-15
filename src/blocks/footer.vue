@@ -1,27 +1,12 @@
 <template>
   <footer class="zkFooterContainer flex justify-between items-center px-5 md:px-10">
-    <div class="leftSide">
-      <div class="text-violet text-sm -dark">
-        Made with ❤️ by <a href="https://matter-labs.io" target="_blank" class="lightLink">Matter Labs</a>
-      </div>
+    <div class="whitespace-no-wrap">
+        <span class="desktopOnly">Made with ❤️</span><a href="https://matter-labs.io" target="_blank" class="lightLink">by&nbsp;Matter&nbsp;Labs</a>
     </div>
-    <div class="rightSide flex items-center">
+    <div class="rightSide flex items-stretch">
       <block-system-info />
-      <span class="linkDefault px-2">|</span>
-      <a href="https://uptime.com/s/zksync" class="linkDefault" target="_blank">uptime</a>
+      <span class="mx-2 md:mx-2">|</span>
+      <a href="https://uptime.com/s/zksync" class="lightLink" target="_blank">up<span class="desktopOnly">time</span></a>
     </div>
   </footer>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { GIT_REVISION_SHORT } from "@/plugins/build";
-
-export default Vue.extend({
-  data() {
-    return {
-      version: GIT_REVISION_SHORT,
-    };
-  },
-});
-</script>
