@@ -26,6 +26,24 @@
         "**/.*",
         "**/node_modules/**"
       ]
+    },
+    {
+      "target": "beta-rinkeby",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "beta-ropsten",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
   ]
 }
