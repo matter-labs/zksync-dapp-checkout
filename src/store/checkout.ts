@@ -92,7 +92,7 @@ export const mutations: MutationTree<CheckoutModuleState> = {
     state.accountUnlockedFee = accountUnlockFee;
   },
   setError(state: CheckoutModuleState, errorData) {
-    state.isError = true;
+    state.isError = !!errorData;
     state.noDataError = errorData;
   },
 };
