@@ -30,6 +30,9 @@ export const addCPKToBatch = async (syncWallet: Wallet, feeToken: TokenSymbol, b
   let pubKeyTx: CPKLocal | undefined;
   try {
     pubKeyTx = getCPKTx(store.getters["account/address"]);
+    if (typeof pubKeyTx!.accountId !== "number") {
+      throw new TypeError("Wrong account ID. Try to sign account activation again.");
+    }
   } catch (error) {
     removeCPKTx(store.getters["account/address"]);
     throw error;
