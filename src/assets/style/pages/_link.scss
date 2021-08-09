@@ -5,9 +5,34 @@
   grid-template-columns: 100%;
   grid-template-rows: max-content 1fr max-content;
   .linkHeader {
-    svg {
-      fill: $violet;
+    img.head-logo
+    {
+      width: 3rem;
     }
+  }
+
+  .lightLink
+  {
+    color: $violet
+  }
+
+  .headline
+  {
+    font-weight: 400;
+    font-size: 16px;
+    font-family: $firaCondensed;
+    line-height: 1.37;
+    @media screen and (max-width: $mobile) {
+      font-size: 0.8rem;
+    }
+
+    &.big {
+      font-size: 20px;
+    }
+  }
+  .zk-container {
+    position: relative;
+    max-width: 660px;
   }
   .linkBody {
     .paymentItem {
@@ -55,7 +80,7 @@
         padding: 0;
         border: none;
         height: max-content;
-        
+
         .penIcon,.rightSide {
           display: none;
         }
@@ -90,7 +115,7 @@
           padding-top: 35px;
           background-color: $white2;
           outline: none;
-          
+
           .searchField {
             position: sticky;
             top: 0;
@@ -102,7 +127,7 @@
             height: max-content;
             max-height: 45vh;
             overflow: auto;
-            
+
             .tokenItem {
               transition: background-color $transition;
               &:hover {
