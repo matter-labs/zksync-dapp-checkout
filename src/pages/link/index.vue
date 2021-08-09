@@ -1,5 +1,5 @@
 <template>
-  <div class="linkPage container w-full h-full py-10">
+  <div class="linkPage container h-full pt-5 px-3 md:py-10">
     <zk-modal v-model="wrongDataModal" @close="wrongDataModal=false">
       <template slot="header">
         <div class="withIcon text-red">
@@ -55,68 +55,72 @@
     </zk-modal>
 
     <div class="linkHeader">
-      <div class="flex items-stretch justify-center">
-        <img src="@/static/zkSyncLogo.svg" class="block head-logo" height="100%" alt="Checkout service by zkSync">
-        <h1 class="text-5xl text-violet pl-6 font-medium">
-          Checkout
-          <a class="lightLink" href="https://zksync.io" target="_blank">by zkSync</a>
+      <nuxt-link to="/link" class="flex items-center justify-center">
+        <img src="@/static/zkSyncLogo.svg" class="head-logo" alt="Checkout by zkSync">
+        <h1 class="text-3xl md:text-5xl text-violet pl-2 md:pl-4 font-medium leading-loose">
+          zkCheckout<span class="desktopOnly">:</span> <strong
+          class="text-lg absolute md:relative md:text-5xl transform -translate-x-1/2 -translate-y-3 md:translate-y-0 md:translate-x-0 leading-loose">{{
+            currentNetwork
+          }}</strong>
         </h1>
-      </div>
-      <ul class="feature-list zk-container text-center mt-4 mr-auto ml-auto mb-6 flex-col items-center text-gray-600 dark:text-gray-100 w-full">
-        <li class="flex-shrink-0 pr-4 headline big text-violet mb-3">
+      </nuxt-link>
+      <ul
+        class="feature-list zk-container font-light text-dark mt-4 mr-auto ml-auto mb-6  text-sm md:text-md flex-col items-center text-gray-600 dark:text-gray-100"
+        v-if="!showAddLink"
+      >
+        <li class="flex-grow headline text-violet mb-3">
           Get paid in tokens with zkSync:
         </li>
-        <li class="mb-3 text-md flex font-light text-dark items-center ">
-          <svg class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" width="6" height="6" stroke="currentColor" fill="#5436d6" viewBox="0 0 1792 1792">
-            <path
-              d="M1412 734q0-28-18-46l-91-90q-19-19-45-19t-45 19l-408 407-226-226q-19-19-45-19t-45 19l-91 90q-18 18-18 46 0 27 18 45l362 362q19 19 45 19 27 0 46-19l543-543q18-18 18-45zm252 162q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"
-            >
-            </path>
-          </svg>
-          Create instant permissionless payout links
+        <li class="mb-3">
+          <i class="fad fa-check text-violet mr-2"/>
+          <span>Blazing-fast & cost efficient</span>
         </li>
-        <li class="mb-3 text-md flex font-light text-dark items-center ">
-          <svg class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" width="6" height="6" stroke="currentColor" fill="#5436d6" viewBox="0 0 1792 1792">
-            <path
-              d="M1412 734q0-28-18-46l-91-90q-19-19-45-19t-45 19l-408 407-226-226q-19-19-45-19t-45 19l-91 90q-18 18-18 46 0 27 18 45l362 362q19 19 45 19 27 0 46-19l543-543q18-18 18-45zm252 162q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"
-            >
-            </path>
-          </svg>
-          Plug-n-play up to 70 transaction as a single payment batch
+        <li class="mb-3">
+          <i class="fad fa-check text-violet mr-2"/>
+          <span>Permissionless visual link builder</span>
         </li>
-        <li class="mb-3 text-md flex font-light text-dark ">
-          <svg class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" width="6" height="6" stroke="currentColor" fill="#5436d6" viewBox="0 0 1792 1792">
-            <path
-              d="M1412 734q0-28-18-46l-91-90q-19-19-45-19t-45 19l-408 407-226-226q-19-19-45-19t-45 19l-91 90q-18 18-18 46 0 27 18 45l362 362q19 19 45 19 27 0 46-19l543-543q18-18 18-45zm252 162q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"
-            >
-            </path>
-          </svg>
-          Use our&nbsp;<a href="https://zksync.io/api/sdk/checkout/" CLASS="lightLink" target="_blank">zkCheckout SDK</a>&nbsp;to integrate any fully-featured checkout
+        <li class="mb-3">
+          <i class="fad fa-check text-violet mr-2"/>
+          <span>Up to {{ maxPayments }} transactions with different recipients</span>
+        </li>
+        <li class="mb-3">
+          <i class="fad fa-check text-violet mr-2"/>
+          <span><a href="https://zksync.io/api/sdk/checkout/" CLASS="lightLink" target="_blank">zkCheckout SDK</a>&nbsp;for the fully-featured checkout</span>
+        </li>
+        <li class="mb-3">
+          <i class="fad fa-check text-violet mr-2"/>
+          <span>Up to 70 transaction with customizable description & purpose using SDK</span>
         </li>
       </ul>
     </div>
-    <div class="linkBody py-10">
-      <h2 class="mx-auto text-center zk-container headline big text-violet mb-3">
-        Create your instant payment link:
-      </h2>
-      <div class="w-full py-2 md:py-1" v-for="(_item, index) in payments" :key="index">
+    <div class="linkBody py-4 md:py-10">
+      <h2 class="mx-auto text-center zk-container headline big text-violet mb-3" v-html="createLinkBlockTitle"/>
+      <zk-defbtn class="mx-auto mt-5" v-if="!showAddLink" big @click="enableLink()">Try it now</zk-defbtn>
+      <div class="w-full py-2 md:py-1" v-for="(_item, index) in payments" :key="index" v-if="showAddLink">
         <payment-item :displayIndex="payments.length>=5" :displayDelete="payments.length>=2" :index="index" v-model="payments[index]" @delete="deletePayment(index)"/>
       </div>
-      <zk-defbtn outline class="mx-auto mt-5" @click="addPayment()" :disabled="payments.length>=maxPayments">Add another transaction</zk-defbtn>
-      <div class="text-gray text-sm text-center leading-tight pt-2" :class="{'text-dark': payments.length>=maxPayments}">{{
+      <zk-defbtn outline class="mx-auto mt-5" @click="addPayment()" v-if="showAddLink" :disabled="payments.length>=maxPayments">Add another transaction</zk-defbtn>
+      <div class="text-gray text-sm text-center leading-tight pt-2" :class="{'text-dark': payments.length>=maxPayments}" v-if="showAddLink">{{
           payments.length >= 5 ? `${payments.length}/`:"Up to "
         }}{{ maxPayments }} transactions
       </div>
-      <zk-defbtn class="mx-auto mt-5" big @click="generate()" dis>Create your payment link</zk-defbtn>
+
     </div>
     <div class="linkFooter">
-
+      <zk-defbtn class="mx-auto mt-5" v-if="showAddLink" :outline="!validCheckoutConfiguration" :disabled="!validCheckoutConfiguration" big @click="generate()" dis>Build your
+        payment link</zk-defbtn>
+      <div class="poweredBy pt-10 pb-5 flex items-center justify-center">
+        <div class="text-violet mr-3">Powered by</div>
+        <a class="h-8 w-max-content" target="_blank" href="https://zksync.io/">
+          <block-logo class="h-8"/>
+        </a>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {FACEBOOK_URL, TWEET_URL} from "@/plugins/build";
+import {ETHER_NETWORK_NAME, FACEBOOK_URL, TWEET_URL} from "@/plugins/build";
 import {encrypt} from "@/plugins/link";
 import {PaymentItem} from "@/types";
 import Vue from "vue";
@@ -130,6 +134,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      addLinkMode: false,
       payments: <PaymentItem[]>[],
       wrongDataModal: false,
       successModal: false,
@@ -141,6 +146,28 @@ export default Vue.extend({
   computed: {
     paymentLink(): string {
       return window.location.origin + "/link/" + this.paymentHash;
+    },
+    currentNetwork(): string {
+      return ETHER_NETWORK_NAME;
+    },
+    showAddLink(): boolean {
+      return this.addLinkMode;
+    },
+    createLinkBlockTitle(): string {
+      return this.showAddLink ? `Create your <strong>${this.currentNetwork}</strong> instant payment link:`:
+        `Build instant <strong>${this.currentNetwork}</strong> payout link in 5 mins`;
+    },
+    validCheckoutConfiguration(): boolean {
+      if (this.payments.length < 1)
+      {
+        return false;
+      }
+      for (const payment of this.payments) {
+        if (!payment.address || !payment.amount) {
+          return false;
+        }
+      }
+      return true;
     }
   },
   methods: {
@@ -162,6 +189,9 @@ export default Vue.extend({
         amount: "",
         token
       });
+    },
+    enableLink() {
+      this.addLinkMode = true;
     },
     generate() {
       for (const payment of this.payments) {

@@ -1,7 +1,7 @@
 <template>
-  <div class="linkLayout min-h-screen w-full">
+  <div class="linkLayout min-h-screen">
     <block-modals />
-    <div class="routerContainer w-full h-full px-5 md:px-10">
+    <div class="routerContainer w-full h-full px-0 md:px-10">
       <block-logging-in/>
       <nuxt class="routeMain w-full h-full"/>
     </div>

@@ -1,9 +1,18 @@
 .linkPage {
-  min-height: 100vh;
+  @apply w-full min-h-screen;
+
   height: max-content;
   display: grid;
-  grid-template-columns: 100%;
+  grid-template-columns: 90vw;
   grid-template-rows: max-content 1fr max-content;
+  justify-content: center;
+
+  .font-mono
+  {
+    font-family: $firaCode;
+    letter-spacing: -0.1em !important;
+  }
+
   .linkHeader {
     img.head-logo
     {
@@ -13,31 +22,47 @@
 
   .lightLink
   {
-    color: $violet
+    @media (max-width: $mobile)
+    {
+      &::after {
+        visibility: visible !important;
+        transform: scaleX(1) !important;
+      }
+    }
   }
 
   .headline
   {
+    @apply text-center font-medium;
+
     font-weight: 400;
-    font-size: 16px;
+    font-size: 1.6rem;
     font-family: $firaCondensed;
-    line-height: 1.37;
-    @media screen and (max-width: $mobile) {
-      font-size: 0.8rem;
-    }
+    line-height: 125%;
 
     &.big {
-      font-size: 20px;
+      font-size: 2rem;
     }
+
+    @media screen and (max-width: $mobile) {
+      font-size: 1.2rem;
+      &.big {
+        font-size: 1.4rem;
+      }
+    }
+
   }
   .zk-container {
     position: relative;
-    max-width: 660px;
+    max-width: $maxWidthDefault;
+    @media screen and (max-width: $mobile) {
+      max-width: $maxWidthMobile;
+    }
   }
   .linkBody {
     .paymentItem {
       position: relative;
-      max-width: 660px;
+      max-width: $maxWidthDefault;
       margin: 0 auto;
 
       .index,.delete {
@@ -139,10 +164,14 @@
       }
 
       @media screen and (max-width: $mobile) {
-        max-width: calc(95% - 36px - 55px);
+        max-width: $maxWidthMobile;
 
         .index,.delete {
-          top: 60%;
+          top: 4px;
+          right: 0;
+          width: 25px;
+          height: 25px;
+          line-height: 25px;
         }
         .delete {
           background-color: transparentize($color: $gray, $amount: 0.85);

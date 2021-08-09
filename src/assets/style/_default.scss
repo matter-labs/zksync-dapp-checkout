@@ -10,7 +10,7 @@ body {
 
 #nuxt-loading {
   will-change: opacity;
-  
+
   & > div {
     will-change: transform;
   }
@@ -21,6 +21,9 @@ body {
   color: $black2;
   width: 100%;
   min-height: 100vh;
+  @media (max-width:$mobile) {
+    font-size: 1rem;
+  }
 }
 
 a {
@@ -78,7 +81,7 @@ input[type="number"] {
         width: 10px;
       }
     }
-    
+
     .ps__thumb-y {
       left: 0;
       width: 6px !important;

@@ -29,6 +29,10 @@
     .routerContainer {
       min-height: initial;
       height: 100%;
+
+      .routeMain {
+        max-width: calc(100vw - 2.5rem);
+      }
     }
   }
 
