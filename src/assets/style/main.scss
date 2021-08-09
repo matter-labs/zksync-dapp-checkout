@@ -1,5 +1,4 @@
 // Core
-@import "./variables.scss";
 @import "./default.scss";
 @import "./transitions.scss";
 @import "./fonts.scss";
@@ -11,23 +10,18 @@
 @import "./blocks/infoBlock.scss";
 @import "./blocks/lineTableHeader.scss";
 @import "./blocks/loggingIn.scss";
+@import "./blocks/connectedWallet.scss";
 @import "./blocks/onboard.scss";
 @import "./blocks/modals.scss";
+@import "./blocks/logo.scss";
+@import "./blocks/footer.scss";
 
 //Components
-@import "./components/note.scss";
-@import "./components/link.scss";
-@import "./components/defbtn.scss";
-@import "./components/closebtn.scss";
-@import "./components/loader.scss";
-@import "./components/valuesBlock.scss";
-@import "./components/lineBlock.scss";
 @import "./components/amountInput.scss";
-@import "./components/modal.scss";
 @import "./components/maxHeight.scss";
-@import "./components/successMark.scss";
 @import "./components/transactionToken.scss";
 
 //Pages
 @import "./pages/index.scss";
 @import "./pages/connect.scss";
+@import "./pages/link.scss";

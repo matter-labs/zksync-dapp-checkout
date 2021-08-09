@@ -1,21 +1,17 @@
 <template>
-  <div
-    class="amountInputGroup border rounded"
-    :class="[{ hasUnderInput: $slots['underInput'] }, { disabled: disabled }, { error: error }, { focused: focused }]"
-    @click.self="focusInput()"
-  >
+  <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]" @click.self="focusInput()">
     <div class="leftSide" @click="focusInput()">
-      <div class="inputContainer">
+      <div class="amInputContainer">
         <input
           ref="input"
           v-model="inputtedAmount"
-          :disabled="disabled"
           :style="{ width: `${width}px` }"
-          maxlength="15"
-          placeholder="Amount"
+          :disabled="disabled"
           type="text"
-          @blur="focused = false"
+          placeholder="Amount"
+          maxlength="15"
           @focus="focused = true"
+          @blur="focused = false"
           @keyup.enter="$emit('enter')"
         />
         <span ref="sizeSpan" class="sizeSpan">{{ inputtedAmount }}</span>
@@ -106,11 +102,11 @@ export default Vue.extend({
     emitValue(val: string): void {
       const trimmed = val.trim();
       this.inputtedAmount = trimmed;
-      if (val !== trimmed) {
+      if (val!==trimmed) {
         return;
       }
       this.validateAmount(val);
-      this.$emit("input", this.error ? "" : val);
+      this.$emit("input", this.error ? "":val);
     },
     validateAmount(val: string): void {
       if (!val || !parseFloat(val as string)) {
@@ -127,7 +123,7 @@ export default Vue.extend({
         inputAmount = utils.parseToken(this.token, val);
       } catch (error) {
         let errorInfo = "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
-        if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
+        if (error.message && error.message.search("fractional component exceeds decimals")!== -1) {
           errorInfo = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
         }
         this.error = errorInfo;
@@ -139,7 +135,7 @@ export default Vue.extend({
         return;
       }
 
-      if (this.type === "transfer" && !utils.isAmountPackable(inputAmount.toString())) {
+      if (this.type==="transfer" && !utils.isAmountPackable(inputAmount.toString())) {
         this.error = "Max supported precision for transfers exceeded";
         return;
       }
@@ -151,15 +147,12 @@ export default Vue.extend({
       }
     },
     calcWidth(): void {
-      const sizeSpan = this.$refs.sizeSpan;
-      if (!sizeSpan) {
+      const sizeSpan: Vue | Element | Vue[] | Element[] = this.$refs.sizeSpan;
+      if (!sizeSpan || !(sizeSpan as HTMLElement).getBoundingClientRect().width) {
         return;
       }
-      const inputSize = (sizeSpan as HTMLElement).getBoundingClientRect()?.width as number | undefined;
-      if (inputSize) {
-        this.width = inputSize + 4;
-      }
-    },
-  },
+      this.width = (sizeSpan as HTMLElement).getBoundingClientRect().width + 4;
+    }
+  }
 });
 </script>

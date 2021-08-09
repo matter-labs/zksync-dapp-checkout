@@ -1,27 +1,44 @@
-import { iWalletData, iWalletWrapper } from "@/types/lib";
+import {Provider, Wallet} from "zksync";
+import { AccountState } from "@/types";
 
-const internalWalletData: iWalletData = {
+interface WalletData {
+  syncProvider?: Provider;
+  syncWallet?: Wallet;
+  accountState?: AccountState;
+  zkSync?: unknown;
+}
+
+const internalWalletData: WalletData = {
   syncProvider: undefined,
   syncWallet: undefined,
   accountState: undefined,
+  zkSync: undefined,
 };
 
 /**
  * Wrapper for the major Providers
- * @type iWalletWrapper
+ * @type {{accountState: null, syncProvider: null, syncWallet: null, zkSync: any|null}}
  */
-export const walletData: iWalletWrapper = {
-  get: () => internalWalletData,
-
-  set: (val: iWalletData): void => {
-    if (Object.prototype.hasOwnProperty.call(val, "syncProvider")) {
-      internalWalletData.syncProvider = val.syncProvider;
+export const walletData = {
+  /**
+   * @return {Promise<null|*>}
+   */
+  zkSync: async (): Promise<any> => {
+    if (!process.client) {
+      return null;
     }
-    if (Object.prototype.hasOwnProperty.call(val, "syncWallet")) {
-      internalWalletData.syncWallet = val.syncWallet;
+    if (!internalWalletData.zkSync) {
+      [internalWalletData.zkSync] = await Promise.all([import("zksync")]);
     }
-    if (Object.prototype.hasOwnProperty.call(val, "accountState")) {
-      internalWalletData.accountState = val.accountState;
+    return internalWalletData.zkSync;
+  },
+  get: (): WalletData => {
+    return internalWalletData;
+  },
+  set: (val: any): void => {
+    for (const [key, value] of Object.entries(val)) {
+      // @ts-ignore
+      internalWalletData[key] = value;
     }
   },
 };

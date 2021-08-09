@@ -5,14 +5,14 @@
   "targets": {
     "zsync-dapp-checkout": {
       "hosting": {
-        "rinkeby": [
-          "rinkeby-zkcheckout"
-        ],
-        "ropsten": [
-          "ropsten-zkcheckout"
-        ],
-        "live": [
+        "prod-mainnet": [
           "zsync-dapp-checkout"
+        ],
+        "prod-rinkeby": [
+          "rinkeby-checkout-zksync"
+        ],
+        "prod-ropsten": [
+          "ropsten-checkout-zksync"
         ]
       }
     }

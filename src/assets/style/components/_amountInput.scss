@@ -1,35 +1,21 @@
-@import "../variables";
-
 .amountInputGroup {
-  display: flex;
-  align-items: center;
   width: max-content;
   height: 36px;
-  padding-right: 2px;
   padding-left: 0;
+  padding-right: 2px;
+  display: flex;
+  align-items: center;
   border: 1px solid $light;
   transition: $transition;
   transition-property: border-color;
   will-change: border-color;
 
   &:not(:disabled) {
-    /* &:hover, &.focused {
-      border-color: $light;
-
-      .leftSide {
-        .inputContainer {
-          .penIcon {
-            width: 15px;
-            opacity: 1;
-          }
-        }
-      }
-    } */
-
     &.focused {
       border-color: $violet;
+
       .leftSide {
-        .inputContainer {
+        .amInputContainer {
           .penIcon {
             color: $violet;
           }
@@ -45,7 +31,7 @@
   &.error {
     border-color: $red !important;
 
-    .leftSide .inputContainer input {
+    .leftSide .amInputContainer input {
       color: $red;
     }
   }
@@ -58,43 +44,44 @@
 
   .leftSide {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
     width: max-content;
     height: max-content;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
     cursor: default;
 
-    .inputContainer {
+    .amInputContainer {
+      height: 18px;
+      width: max-content;
       display: flex;
       align-items: center;
-      width: max-content;
-      height: 18px;
 
-      input, .sizeSpan {
+      input,
+      .sizeSpan {
         display: block;
-        font-weight: 600;
-        font-size: 16px;
         font-family: $firaSans;
+        font-size: 16px;
+        font-weight: 600;
       }
 
       input {
         position: relative;
         left: 2px;
-        box-sizing: content-box;
+        height: 100%;
         width: 0;
         min-width: 50px;
-        height: 100%;
-        padding: 0 2px;
-        color: $black2;
         line-height: 18px;
+        color: $black2;
         text-align: right;
         background-color: transparent;
-        border: none;
         outline: none !important;
+        border: none;
         transition: .05s ease;
         transition-property: width;
         will-change: width;
+        padding: 0 2px;
+        box-sizing: content-box;
 
         &::placeholder {
           color: $gray;
@@ -102,33 +89,33 @@
           font-size: 14px;
         }
       }
-      @media screen and (max-width: $breakpoint1)
-      {
+
+      @media screen and (max-width: $breakpoint1) {
         max-width: 100px;
       }
 
       .sizeSpan {
         position: absolute;
-        top: -9999px;
-        left: -9999px;
-        z-index: -9999;
         width: max-content;
+        z-index: -9999;
+        left: -9999px;
+        top: -9999px;
         opacity: 0;
       }
 
       .penIcon {
-        width: 15px;
-        color: transparentize($color: $gray, $amount: 0.4);
         transition: $transition;
         transition-property: color;
-        pointer-events: none;
         will-change: color;
+        color: transparentize($color: $gray, $amount: .4);
+        width: 15px;
+        pointer-events: none;
 
         i {
           display: block;
-          padding-left: 5px;
           font-size: 10px;
           line-height: 18px;
+          padding-left: 5px;
         }
       }
     }
@@ -136,14 +123,36 @@
     .underInput {
       color: $gray;
       font-size: 9px;
-      font-family: $firaCondensed;
       line-height: 12px;
+      font-family: $firaCondensed;
     }
   }
 
   .rightSide {
-    width: max-content;
     height: max-content;
+    width: max-content;
     padding-left: 7px;
+  }
+}
+
+.darkMode .amountInputGroup {
+  border-color: $dark2;
+  &:not(:disabled).focused {
+    border-color: $lightViolet;
+
+    .leftSide .amInputContainer .penIcon {
+      color: $lightViolet;
+    }
+  }
+  .leftSide {
+    .amInputContainer input {
+      color: $gray;
+      &::placeholder {
+        color: $dark2;
+      }
+    }
+    .underInput {
+      color: $dark3;
+    }
   }
 }

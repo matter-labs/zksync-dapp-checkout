@@ -1,8 +1,9 @@
 import { Wallet } from "zksync";
 import { Address, TokenSymbol } from "zksync/build/types";
-import { RootState } from "@/store";
 import { BatchBuilder } from "zksync/build/batch-builder";
-import { GweiBalance, CPKLocal } from "~/types/lib";
+import { CPKLocal } from "types";
+
+
 
 function getCPKStorageKey(address: Address) {
   return `pubKeySignature-${address}`;
@@ -25,34 +26,31 @@ export const getCPKTx = (address: Address): CPKLocal | undefined => {
   }
 };
 
-interface CPKToBatch {
-  syncWallet: Wallet;
-  fee: GweiBalance;
-  feeToken: TokenSymbol;
-  batchBuilder: BatchBuilder;
-  store: RootState;
-}
-
-export const addCPKToBatch = async ({ syncWallet, fee, feeToken, batchBuilder, store }CPKToBatchch) => {
+export const addCPKToBatch = async (syncWallet: Wallet, feeToken: TokenSymbol, batchBuilder: BatchBuilder, store: any) => {
   let pubKeyTx: CPKLocal | undefined;
   try {
-    pubKeyTx = getCPKTx(store.account.address!);
+    pubKeyTx = getCPKTx(store.getters["account/address"]);
   } catch (error) {
-    removeCPKTx(store.account.address!);
-    store.openModal("SignPubkey");
+    removeCPKTx(store.getters["account/address"]);
     throw error;
   }
   if (!pubKeyTx) {
-    return store.openModal("SignPubkey");
+    removeCPKTx(store.getters["account/address"]);
+    throw new Error("Sign account activation to continue.");
   }
-  const changePubKeyTx = await syncWallet!.signer!.signSyncChangePubKey({
+  if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
+    pubKeyTx.ethAuthData = {
+      type: "Onchain",
+    };
+  }
+  const changePubKeyTx = await syncWallet.signer!.signSyncChangePubKey({
     ...pubKeyTx,
-    fee,
-    feeTokenId: syncWallet!.provider.tokenSet.resolveTokenId(feeToken),
+    fee: 0,
+    feeTokenId: syncWallet.provider.tokenSet.resolveTokenId(feeToken),
   });
   batchBuilder.addChangePubKey({
     tx: changePubKeyTx,
     // @ts-ignore
     alreadySigned: true,
   });
-}
+};

@@ -1,0 +1,145 @@
+.linkPage {
+  min-height: 100vh;
+  height: max-content;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: max-content 1fr max-content;
+  .linkHeader {
+    svg {
+      fill: $violet;
+    }
+  }
+  .linkBody {
+    .paymentItem {
+      position: relative;
+      max-width: 660px;
+      margin: 0 auto;
+
+      .index,.delete {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: center;
+        line-height: 36px;
+      }
+      .index {
+        left: -55px;
+        will-change: opacity;
+      }
+      .delete {
+        right: -50px;
+        transition: $transition;
+        transition-property: background-color, opacity;
+        will-change: background-color, opacity;
+        &:hover {
+          background-color: $white3;
+        }
+
+        i {
+          position: relative;
+          top: 1px;
+        }
+      }
+      .addressInput {
+        input {
+          font-weight: 400;
+        }
+        .errorTextContainer {
+          height: 18px;
+        }
+      }
+      .amountInputGroup {
+        width: 100%;
+        padding: 0;
+        border: none;
+        height: max-content;
+        
+        .penIcon,.rightSide {
+          display: none;
+        }
+        .amInputContainer {
+          max-width: 160px;
+
+          input {
+            left: 0;
+          }
+        }
+        .leftSide {
+          width: 100%;
+        }
+      }
+      .tokenDropdown {
+        position: relative;
+        &.opened {
+          z-index: 1;
+        }
+
+        .dropdownMain {
+          height: 36px;
+          background-color: $white;
+        }
+        .dropdownBody {
+          z-index: -1;
+          position: absolute;
+          width: 100%;
+          height: max-content;
+          top: 0;
+          left: 0;
+          padding-top: 35px;
+          background-color: $white2;
+          outline: none;
+          
+          .searchField {
+            position: sticky;
+            top: 0;
+            background-color: $white2;
+            padding-top: 8px;
+          }
+          .tokensList {
+            width: 100%;
+            height: max-content;
+            max-height: 45vh;
+            overflow: auto;
+            
+            .tokenItem {
+              transition: background-color $transition;
+              &:hover {
+                background-color: $white3;
+              }
+            }
+          }
+        }
+      }
+
+      @media screen and (max-width: $mobile) {
+        max-width: calc(95% - 36px - 55px);
+
+        .index,.delete {
+          top: 60%;
+        }
+        .delete {
+          background-color: transparentize($color: $gray, $amount: 0.85);
+        }
+      }
+    }
+  }
+  .successLinkContainer {
+    display: grid;
+    height: max-content;
+    grid-template-columns: 1fr repeat(3, max-content);
+    grid-template-rows: 100%;
+    grid-gap: .5rem;
+
+    input {
+      text-overflow: ellipsis;
+    }
+    .vue-popover {
+      position: fixed;
+      color: $lightViolet;
+      width: fit-content !important;
+      padding: 5px 10px;
+    }
+  }
+}

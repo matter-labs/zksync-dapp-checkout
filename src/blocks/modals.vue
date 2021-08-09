@@ -1,9 +1,9 @@
 <template>
   <div class="allModalsContainer">
-    <modal v-if="currentModal === 'wrongAccountAddress'" :value="true" @close="closeModal()">
+    <zk-modal :value="currentModal === 'wrongAccountAddress'" @close="closeModal()">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square"></i>
+          <i class="fad fa-info-square" />
           <div>Wrong account address</div>
         </div>
       </template>
@@ -12,16 +12,32 @@
           The website that initiated the checkout, expects you to be logged in to the following account: <b>{{ transactionData.fromAddress }}</b>
         </div>
       </template>
-    </modal>
+    </zk-modal>
+    <zk-modal :value="currentModal === 'zkLinkParseFail'" @close="closeModal()">
+      <template slot="header">
+        <div class="withIcon text-red">
+          <i class="fad fa-info-square" />
+          <div>Failed to parse link</div>
+        </div>
+      </template>
+      <template slot="default">
+        <div class="text-center">
+          We failed to parse link checkout data. Try again later or try to use another link.
+        </div>
+      </template>
+    </zk-modal>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { TransactionData } from "@/plugins/types";
+import { TransactionData } from "@/types";
 
 export default Vue.extend({
   computed: {
+    href(): string {
+      return window.location.hostname;
+    },
     currentModal() {
       return this.$store.getters.currentModal;
     },

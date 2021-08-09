@@ -1,27 +1,35 @@
 <template>
   <div class="container">
     <div class="connectedWallet flex items-center">
-      <i class="text-violet text-4xl mr-3 fad fa-wallet" />
-      <values-block>
+      <i class="text-gray text-4xl mr-3 far fa-wallet" />
+      <popover name="copy-address" event="click" class="text-center block text-xs" :delay="100">
+        Address copied!
+      </popover>
+      <zk-values-block>
         <template slot="left-top">
           <div class="headline">My wallet</div>
         </template>
         <template slot="left-bottom">
-          <div class="address">{{ ownAddress }}</div>
+          <div @click="copyAddress()" id="copy-address" v-popover:copy-address.bottom class="address">
+            <span>
+              <span>{{ ownAddress[0] }}</span><span class="addressMiddle">{{ ownAddress[1] }}</span><span class="dots">...</span><span>{{ ownAddress[2] }}</span>
+            </span>
+            <i class="copyIcon text-lg far fa-clipboard"></i>
+          </div>
         </template>
         <template slot="right-top">
           <div class="flex items-center flex-col md:flex-row">
-            <defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="walletUrl">
+            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="walletUrl">
               <span>Open wallet</span>
               <i class="fas fa-external-link" />
-            </defbtn>
-            <defbtn outline @click="logout()">
+            </zk-defbtn>
+            <zk-defbtn outline @click="logout()">
               <span class="text-red">Disconnect</span>
               <i class="text-red far fa-times" />
-            </defbtn>
+            </zk-defbtn>
           </div>
         </template>
-      </values-block>
+      </zk-values-block>
     </div>
   </div>
 </template>
@@ -29,25 +37,38 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { Address } from "@/plugins/types";
-import { ETHER_NETWORK_NAME } from "@/types/lib";
+import {ETHER_NETWORK_NAME, ETHER_PRODUCTION} from "@/plugins/build";
+
 
 export default Vue.extend({
   computed: {
-    ownAddress(): Address {
-      let address = this.$store.getters["account/address"];
-      address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
-      return address;
+    ownAddress(): string[] {
+      const address = this.$store.getters["account/address"];
+      return [address.substr(0, 11), address.substr(11, address.length - 5 - 11), address.substr(address.length - 5, address.length)];
+    },
+    isProd(): boolean {
+      return ETHER_PRODUCTION;
     },
     walletUrl(): string {
-      return `///${ETHER_NETWORK_NAME === "rinkeby" ? "stage" : ETHER_NETWORK_NAME === "ropsten" ? "ropsten" : "wallet"}.zksync.io`;
+      return `///${ETHER_PRODUCTION ? "wallet" : ETHER_NETWORK_NAME }.zksync.io`;
     },
   },
   methods: {
     logout(): void {
       this.$store.dispatch("wallet/logout");
-      this.$router.push("/");
+      this.$router.push("/connect");
     },
+    copyAddress(): void {
+      const elem = document.createElement("textarea");
+      elem.style.position = "absolute";
+      elem.style.left = -99999999 + "px";
+      elem.style.top = -99999999 + "px";
+      elem.value = this.$store.getters["account/address"];
+      document.body.appendChild(elem);
+      elem.select();
+      document.execCommand("copy");
+      document.body.removeChild(elem);
+    }
   },
 });
 </script>

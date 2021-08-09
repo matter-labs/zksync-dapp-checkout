@@ -1,22 +1,32 @@
-@import "variables";
-#__nuxt, #__layout {
+body {
+  overscroll-behavior-y: none;
+}
+
+#__nuxt,
+#__layout {
   width: 100%;
   min-height: 100vh;
 }
 
 #nuxt-loading {
   will-change: opacity;
-
+  
   & > div {
     will-change: transform;
   }
 }
 
 body {
+  font-family: $mainFontFamily;
+  color: $black2;
   width: 100%;
   min-height: 100vh;
-  color: $black2;
-  font-family: $mainFontFamily;
+}
+
+a {
+  &:hover {
+    color: darken($violet, .5)
+  }
 }
 
 head {
@@ -25,11 +35,11 @@ head {
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  margin: 0;
   -webkit-appearance: none;
+  margin: 0;
 }
 
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -44,10 +54,48 @@ input[type=number] {
     display: none !important;
   }
 }
+
+.customScrollList {
+  overflow: auto;
+  width: calc(100% + 10px);
+  padding-right: 10px;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .ps__rail-y {
+    opacity: 0.7;
+    width: 6px;
+    will-change: top, opacity;
+    transition: opacity $transition;
+
+    &:hover, &.ps--clicking {
+      opacity: 1;
+      background-color: transparent !important;
+
+      .ps__thumb-y {
+        width: 10px;
+      }
+    }
+    
+    .ps__thumb-y {
+      left: 0;
+      width: 6px !important;
+      background-color: lighten($color: $gray, $amount: 5) !important;
+      border-radius: 6px !important;
+      will-change: width, height, background-color, top;
+      transition: $transition;
+      transition-property: width, height;
+    }
+  }
+}
+
 .fitRightSide {
-  left: 43% !important;
   z-index: 1;
   width: 57% !important;
+  left: 43% !important;
+
   @media screen and (min-width: 1300px) {
     left: 600px !important;
     width: calc(100% - 600px) !important;

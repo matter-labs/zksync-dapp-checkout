@@ -1,60 +1,60 @@
 import { ActionTree } from "vuex";
 import { RootState } from "~/store";
 
-export const state = () => ({
-  canonicalConfig: <any>{
-    type: "default",
-    icon: null as any,
-    action: {
-      text: "OK",
-      onClick: (event: any, toastObject: { goAway: (arg0: number) => void }) => {
-        toastObject?.goAway(100);
-      },
-    },
-  },
-});
+export const state = () => ({});
 
 export type ToasterModuleState = ReturnType<typeof state>;
 
 export const actions: ActionTree<ToasterModuleState, RootState> = {
-  message({ commit, state }, messageText) {
+  message({ commit }, messageText) {
     // @ts-ignore: Unreachable code error
-    this.$toast.show(messageText, state.canonicalConfig);
+    this.$toast.show(messageText, {
+      type: "default",
+      duration: 3000,
+    });
   },
-  success({ commit, state }, messageText) {
+  success({ commit }, messageText) {
     // @ts-ignore: Unreachable code error
     this.$toast.success(messageText, {
-      ...state.canonicalConfig,
-      ...{
-        icon: {
-          name: "fa-check",
-        },
+      duration: 3000,
+      icon: {
+        name: "fa-check",
+      },
+    });
+    const configuration = {
+      position: "bottom-right",
+
+      type: "default",
+      duration: 2000,
+      messageText: "",
+    };
+    // @ts-ignore: Unreachable code error
+    this.$toast.show(configuration.messageText, {
+      type: "default",
+      duration: 3000,
+      icon: {
+        name: "fa-check",
       },
     });
   },
 
-  error({ dispatch, state }, messageText) {
+  error({ dispatch }, messageText) {
     // @ts-ignore: Unreachable code error
     this.$toast.error(messageText, {
-      ...state.canonicalConfig,
-      ...{
-        icon: {
-          name: "fa-times-circle",
-        },
-        duration: null,
+      icon: {
+        name: "fa-times-circle",
       },
+      duration: null,
     });
   },
 
-  info({ dispatch, state }, messageText) {
+  info({ dispatch }, messageText) {
     // @ts-ignore: Unreachable code error
     this.$toast.info(messageText, {
-      ...state.canonicalConfig,
-      ...{
-        icon: {
-          name: "fa-times-circle",
-        },
+      icon: {
+        name: "fa-info-circle",
       },
+      duration: 3000,
     });
   },
 };

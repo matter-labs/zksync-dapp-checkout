@@ -1,180 +1,92 @@
-import { GweiBalance } from "@/types/lib";
-import { walletData } from "@/plugins/walletData";
-import { Sto } from "nuxt-typed-vuex";
-import { submitSignedTransactionsBatch, Transaction } from "zksync/build/wallet";
-import { Address, TokenSymbol } from "zksync/build/types";
-import { addCPKToBatch } from "@/plugins/walletActions/cpk";
+import {addCPKToBatch} from "@/plugins/walletActions/cpk";
+import {walletData} from "@/plugins/walletData";
+import {BigNumber} from "ethers";
+import {Address, TokenSymbol, Transaction} from "~/types/index.d";
+import {closestPackableTransactionFee, Provider} from "zksync";
+import {ZkSyncTransaction} from "zksync-checkout/src/types";
+import {ETHOperation} from "zksync/build/wallet";
+import {SignedTransaction, TxEthSignature} from "zksync/build/types";
+
+
+export const submitSignedTransactionsBatch = async (provider: Provider, signedTxs: SignedTransaction[], ethSignatures?: TxEthSignature[]): Promise<Transaction[]> => {
+  const transactionHashes = await provider.submitTxsBatch(
+    signedTxs.map((tx) => {
+      return { tx: tx.tx, signature: tx.ethereumSignature };
+    }),
+    // @ts-ignore
+    ethSignatures,
+  );
+  return transactionHashes.map((txHash, idx) => new Transaction(signedTxs[idx], txHash, provider));
+};
 
 /**
- * Make zkSync transaction
+ * Transaction processing action
  *
- * @param {Address} address
- * @param {TokenSymbol} token
+ * @param transactions
  * @param {TokenSymbol} feeToken
- * @param {GweiBalance} amountBigValue
- * @param {GweiBalance} feeBigValue
- * @param store
- * @param accountActivationFee
- * @returns {Promise<Transaction[]>}
- */
-export const transaction = async (
-  address: Address,
-  token: TokenSymbol,
-  feeToken: TokenSymbol,
-  amountBigValue: GweiBalance,
-  feeBigValue: GweiBalance,
-  store: typeof accessorType,
-  accountActivationFee?: GweiBalance,
-) => {
-  const syncWallet = walletData.get().syncWallet;
-  const nonce = await syncWallet!.getNonce("committed");
-  const batchBuilder = syncWallet!.batchBuilder(nonce);
-
-  if (store.wallet.isAccountLocked) {
-    if (!accountActivationFee) {
-      throw new Error("No account activation fee found");
-    }
-    await addCPKToBatch({ syncWallet: syncWallet!, fee: accountActivationFee, feeToken, batchBuilder, store });
-  }
-  if (token === feeToken) {
-    batchBuilder.addTransfer({
-      to: address,
-      token,
-      amount: amountBigValue,
-      fee: feeBigValue,
-    });
-  } else {
-    batchBuilder.addTransfer({
-      fee: "0",
-      amount: amountBigValue,
-      to: address,
-      token,
-    });
-    batchBuilder.addTransfer({
-      fee: feeBigValue,
-      amount: "0",
-      to: syncWallet!.address(),
-      token: feeToken,
-    });
-  }
-  const batchTransactionData = await batchBuilder.build();
-  const transactions = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
-  for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash });
-  }
-  return labelTransactions(transactions);
-};
-
-interface WithdrawParams {
-  address: Address;
-  token: TokenSymbol;
-  feeToken: TokenSymbol;
-  amount: GweiBalance;
-  fastWithdraw: boolean;
-  fee: GweiBalance;
-  accountActivationFee?: GweiBalance;
-  store: typeof accessorType;
-}
-
-/**
- * Generic method for batch transaction creation
- *
- * @param address
- * @param token
- * @param feeToken
- * @param amount
- * @param fastWithdraw
  * @param fee
- * @param accountActivationFee
+ * @param nonce
+ * @param changePubKey
  * @param store
- * @return {Promise<{txData: *, txHash: *}[]>}
+ * @returns {Promise<Transaction | Transaction[]>}
  */
-export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw, fee, accountActivationFee, store }: WithdrawParams) => {
-  const syncWallet = walletData.get().syncWallet;
-  const nonce = await syncWallet!.getNonce("committed");
-  const batchBuilder = syncWallet!.batchBuilder(nonce);
+export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumber, nonce: number, changePubKey: boolean, store: any) => {
+  const syncWallet = walletData.get().syncWallet!;
 
-  if (store.wallet.isAccountLocked) {
-    if (!accountActivationFee) {
-      throw new Error("No account activation fee found");
-    }
-    await addCPKToBatch({ syncWallet: syncWallet!, fee: accountActivationFee, feeToken, batchBuilder, store });
+  const batchBuilder = syncWallet.batchBuilder(nonce);
+  if (changePubKey) {
+    await addCPKToBatch(syncWallet, feeToken, batchBuilder, store);
   }
-  if (token === feeToken) {
-    batchBuilder.addWithdraw({
-      ethAddress: address,
-      token,
-      amount,
-      fee,
-    });
-  } else {
-    batchBuilder.addWithdraw({
-      fee: "0",
-      amount,
-      ethAddress: address,
-      token,
-    });
+  for (const tx of transactions) {
     batchBuilder.addTransfer({
-      fee,
-      amount: "0",
-      to: syncWallet!.address(),
-      token: feeToken,
+      fee: 0,
+      amount: tx.amount,
+      to: tx.to as Address,
+      token: tx.token as string,
     });
   }
+  batchBuilder.addTransfer({
+    fee: closestPackableTransactionFee(store.getters["wallet/isAccountLocked"] ? fee.add(store.getters["checkout/getAccountUnlockFee"]) : fee),
+    amount: 0,
+    to: syncWallet!.address(),
+    token: feeToken,
+  });
   const batchTransactionData = await batchBuilder.build();
-  const transactions = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
-  for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash });
-  }
-  return labelTransactions(transactions);
-};
-
-export const labelTransactions = (transactions: Transaction[]) => {
-  let transaction: Transaction | null = null;
-  let feeTransaction: Transaction | null = null;
-  let cpkTransaction: Transaction | null = null;
-  for (const tx of transactions) {
-    if (tx.txData.tx.type === "ChangePubKey") {
-      cpkTransaction = tx;
-      continue;
-    }
-    if (tx.txData.tx.fee === "0") {
-      transaction = tx;
-    } else if (tx.txData.tx.amount === "0") {
-      feeTransaction = tx;
-    }
-  }
-  if (!transaction) {
-    for (const tx of transactions) {
-      if (tx.txData.tx.type !== "ChangePubKey") {
-        transaction = tx;
-      }
-    }
-  }
-  if (!feeTransaction) {
-    feeTransaction = transaction;
-  }
-  return {
-    transaction,
-    feeTransaction,
-    cpkTransaction,
-  };
+  return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
 };
 
 /**
  * Deposit action method
  *
  * @param {TokenSymbol} token
- * @param {GweiBalance} amount
- * @param store
- * @returns {Promise<any>}
+ * @param {string} amount
+ * @returns {Promise<ETHOperation>}
  */
-export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: typeof accessorType) => {
-  const depositResponse = await walletData.get().syncWallet!.depositToSyncFromEthereum({
-    depositTo: walletData.get().syncWallet!.address(),
+export const deposit = async (token: TokenSymbol, amount: string | BigNumber): Promise<ETHOperation | undefined> => {
+  const wallet = walletData.get().syncWallet;
+  // console.log(token)
+  const ethTxOptions =
+    token?.toLowerCase() === "eth"
+      ? {}
+      : {
+          gasLimit: "160000",
+        };
+  // store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
+  return wallet?.depositToSyncFromEthereum({
+    depositTo: wallet.address(),
     token,
     amount,
+    ethTxOptions,
   });
-  store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount });
-  return depositResponse;
+};
+
+/**
+ * Unlock token action method
+ *
+ * @param {Address} address
+ * @returns {Promise<any>}
+ */
+export const unlockToken = async (address: Address) => {
+  const wallet = walletData.get().syncWallet;
+  return await wallet!.approveERC20TokenDeposits(address as string);
 };

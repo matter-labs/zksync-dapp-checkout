@@ -1,11 +1,4 @@
-@import "../variables";
-
 .maxHeightBlock {
-  height: 0;
-  overflow: hidden;
-  transition: height $transition2;
-  will-change: height;
-
   @media (min-width: $mobile) {
     &.mobile {
       height: auto !important;

@@ -1,10 +1,9 @@
-@import "../variables";
-
 .defaultLayout {
-  display: grid;
-  grid-template-rows: 100%;
-  grid-template-columns: 43% 1fr;
   width: 100%;
+  display: grid;
+  grid-template-columns: 43% 1fr;
+  grid-template-rows: 100%;
+  color: $black2;
   @media screen and (min-width: 1300px) {
     grid-template-columns: 600px 1fr;
   }
@@ -12,7 +11,8 @@
   .routerContainer {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: max-content;
+    min-height: 100vh;
 
     .routeMain {
       max-width: 650px;
@@ -21,9 +21,36 @@
   }
 
   @media screen and (max-width: $mobile) {
-    grid-template-rows: max-content 1fr;
-    grid-template-columns: 100%;
     max-width: 650px;
     margin: 0 auto;
+    grid-template-columns: 100%;
+    grid-template-rows: max-content 1fr;
+
+    .routerContainer {
+      min-height: initial;
+      height: 100%;
+    }
+  }
+
+  .modalContainer {
+    &.full {
+      @media screen and (min-width: $mobile+1) {
+        width: 57% !important;
+        left: 43% !important;
+      }
+      @media screen and (min-width: 1300px) {
+        left: 600px !important;
+        width: calc(100% - 600px) !important;
+      }
+    }
+  }
+}
+
+.darkMode.defaultLayout {
+  color: $white;
+  background-color: $darkBlue;
+
+  .routerContainer {
+    background-color: $darkBlue;
   }
 }

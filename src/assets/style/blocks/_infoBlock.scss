@@ -1,5 +1,3 @@
-@import "../variables";
-
 .infoBlockContainer {
   z-index: 4;
   width: 100%;
@@ -9,96 +7,130 @@
 
   .infoBlock {
     position: relative;
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(4, max-content);
 
-    .valuesBlockContainer {
-      align-items: flex-start;
-    }
+    .brandContainer {
+      width: max-content;
+      position: relative;
 
-    sup {
-      top: -1em;
-    }
-
-    header {
-      @media screen and (min-width: $mobile+1) {
-        height: 45px;
-      }
-    }
-
-    .footerContainer {
-      z-index: 1;
-      height: 145px;
-
-      .zkSyncFooter {
+      .networkName {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        z-index: -1;
-        width: 100%;
-        height: auto;
-        opacity: 0.6;
-      }
-    }
+        left: 100%;
+        top: -0.4em;
 
-    footer {
-      position: absolute;
-      bottom: 25px;
-      left: 0;
-      width: 100%;
-      height: max-content;
-    }
-  }
-
-  .zkSyncLogoFull {
-    height: 2.5rem;
-
-  }
-
-  .valuesBlockContainer {
-    .valuesBlockRight .valuesBlockSecondary > div {
-      height: 100%;
-      min-height: 36px;
-    }
-
-    .valuesBlockLeft {
-      max-width: 70%;
-    }
-
-    &.noAddressPadding .valuesBlockRight .valuesBlockSecondary > div {
-      min-height: 0;
-    }
-  }
-
-  @media screen and (max-width: $mobile) {
-    /* box-shadow: none; */
-    height: max-content;
-
-    .valuesBlockContainer {
-      margin: 0;
-
-      .valuesBlockRight .valuesBlockSecondary > div {
-        .secondaryValue {
-          font-size: 0.65rem !important;
+        @media screen and (max-width: $mobile) {
+          left: auto !important;
+          top: -0.9rem !important;
         }
       }
 
-      &.noAddressPadding .valuesBlockRight .valuesBlockSecondary > div {
-        min-height: 0;
+      .valuesBlockContainer {
+        align-items: flex-start;
       }
 
-    }
-    .infoBlock {
-      height: auto;
+      sup {
+        top: -1em;
+      }
 
       header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @media screen and (min-width: $mobile+1) {
+          height: 45px;
+        }
+      }
+
+      .transactionsList {
+        height: max-content;
+        max-height: 40vh;
+      }
+
+      .footerContainer {
+        z-index: 1;
+        height: 40px;
+
+        .zkSyncFooter {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          z-index: -1;
+          width: 100%;
+          height: auto;
+          opacity: 0.6;
+        }
+      }
+
+      footer {
+        position: absolute;
+        bottom: 25px;
+        left: 0;
+        width: 100%;
+        height: max-content;
+      }
+    }
+
+    .zkSyncLogoFull {
+      height: 2.5rem;
+    }
+
+    @media screen and (max-width: $mobile) {
+      height: max-content;
+
+      .valuesBlockContainer {
+        margin: 0;
+
+        .valuesBlockRight .valuesBlockSecondary > div {
+          height: 100%;
+          min-height: 36px;
+
+          .secondaryValue {
+            font-size: 0.65rem !important;
+          }
+        }
+
+        .valuesBlockLeft {
+          max-width: 70%;
+        }
+
+
+        &.noAddressPadding .valuesBlockRight .valuesBlockSecondary > div {
+          min-height: 0;
+        }
+
+      }
+      .infoBlock {
+        height: auto;
+        max-height: 45vh;
+        grid-template-rows: max-content 1fr repeat(2, max-content);
+
+        header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .transactionsList {
+          height: 100%;
+          max-height: initial;
+          min-height: initial;
+        }
       }
     }
   }
-}
 
-.linkDefault {
-  font-weight: 300;
-  font-size: 14px;
+  .linkDefault {
+    font-weight: 300;
+    font-size: 14px;
+  }
+
+  .darkMode .infoBlockContainer {
+    background-color: $darkBlue;
+
+    .linkDefault {
+      font-weight: 400;
+      color: $lightViolet;
+    }
+  }
 }
