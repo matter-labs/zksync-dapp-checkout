@@ -127,11 +127,6 @@ import Vue from "vue";
 
 export default Vue.extend({
   layout: "link",
-  head() {
-    return {
-      title: "zkLink - Create zkSync payment links"
-    };
-  },
   data() {
     return {
       addLinkMode: false,
@@ -192,6 +187,7 @@ export default Vue.extend({
     },
     enableLink() {
       this.addLinkMode = true;
+      this.addPayment();
     },
     generate() {
       for (const payment of this.payments) {
@@ -220,8 +216,5 @@ export default Vue.extend({
       window.open(`${FACEBOOK_URL}${encodeURIComponent(this.paymentLink)}`, "_blank");
     }
   },
-  mounted() {
-    this.addPayment();
-  }
 });
 </script>
