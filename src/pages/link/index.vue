@@ -55,20 +55,21 @@
     </zk-modal>
 
     <div class="linkHeader">
+
       <nuxt-link to="/link" class="flex items-center justify-center">
         <img src="@/static/zkSyncLogo.svg" class="head-logo" alt="Checkout by zkSync">
-        <h1 class="text-3xl md:text-5xl text-violet pl-2 md:pl-4 font-medium leading-loose">
-          zkCheckout<span class="desktopOnly">:</span> <strong
-          class="text-lg absolute md:relative md:text-5xl transform -translate-x-1/2 -translate-y-3 md:translate-y-0 md:translate-x-0 leading-loose">{{
-            currentNetwork
-          }}</strong>
-        </h1>
+        <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
+          <h1 class="leading-1 -mb-1 lg:m-0 w-auto">zkCheckout</h1>
+          <span class="networkName text-sm font-light"
+                v-if="!isMainnet">
+            {{currentNetwork}}</span>
+        </div>
       </nuxt-link>
       <ul
         class="feature-list zk-container font-light text-dark mt-4 mr-auto ml-auto mb-6  text-sm md:text-md flex-col items-center text-gray-600 dark:text-gray-100"
         v-if="!showAddLink"
       >
-        <li class="flex-grow headline text-violet mb-3">
+        <li class="flex-grow headline big text-violet mb-3">
           Get paid in tokens with zkSync:
         </li>
         <li class="mb-3">
@@ -107,8 +108,24 @@
 
     </div>
     <div class="linkFooter">
-      <zk-defbtn class="mx-auto mt-5" v-if="showAddLink" :outline="!validCheckoutConfiguration" :disabled="!validCheckoutConfiguration" big @click="generate()" dis>Build your
-        payment link</zk-defbtn>
+      <zk-max-height :value="!validCheckoutConfiguration && showAddLink" class="mt-5 md:mt-7 zk-container mx-auto">
+        <div>
+          <zk-note class="notificationNote">
+            <template slot="icon">
+              <i class="text-gray text-xl fal fa-info-square"/>
+            </template>
+            <template slot="default">
+              <div class="text-sm text-gray font-light">
+                To unlock <span class="font-normal">“Build your payment link”</span> button below make sure to fill-up <span class="font-normal">“Receiver ETH address”</span>
+                and <span class="font-normal">“Amount”</span> {{ payments.length > 1 ? `for each of ${payments.length} transactions`: `of the transaction`}}.
+              </div>
+            </template>
+          </zk-note>
+        </div>
+      </zk-max-height>
+      <zk-defbtn class="mx-auto mt-5" v-if="showAddLink" :outline="!validCheckoutConfiguration" :disabled="!validCheckoutConfiguration" big @click="generate()">Build your
+        payment link
+      </zk-defbtn>
       <div class="poweredBy pt-10 pb-5 flex items-center justify-center">
         <div class="text-violet mr-3">Powered by</div>
         <a class="h-8 w-max-content" target="_blank" href="https://zksync.io/">
@@ -120,7 +137,7 @@
 </template>
 
 <script lang="ts">
-import {ETHER_NETWORK_NAME, FACEBOOK_URL, TWEET_URL} from "@/plugins/build";
+import {ETHER_NETWORK_NAME, ETHER_PRODUCTION, FACEBOOK_URL, TWEET_URL} from "@/plugins/build";
 import {encrypt} from "@/plugins/link";
 import {PaymentItem} from "@/types";
 import Vue from "vue";
@@ -139,6 +156,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    isMainnet(): boolean {
+      return ETHER_PRODUCTION
+    },
     paymentLink(): string {
       return window.location.origin + "/link/" + this.paymentHash;
     },
@@ -149,12 +169,12 @@ export default Vue.extend({
       return this.addLinkMode;
     },
     createLinkBlockTitle(): string {
-      return this.showAddLink ? `Create your <strong>${this.currentNetwork}</strong> instant payment link:`:
-        `Build instant <strong>${this.currentNetwork}</strong> payout link in 5 mins`;
+      const ethNetwork = this.isMainnet ? "" : `<strong>${this.currentNetwork}</strong>`;
+      return this.showAddLink ? `Create your ${ethNetwork} instant payment link:`:
+        `Build instant ${ethNetwork} payout link in 5 min`;
     },
     validCheckoutConfiguration(): boolean {
-      if (this.payments.length < 1)
-      {
+      if (this.payments.length < 1) {
         return false;
       }
       for (const payment of this.payments) {
@@ -215,6 +235,6 @@ export default Vue.extend({
     facebookShare() {
       window.open(`${FACEBOOK_URL}${encodeURIComponent(this.paymentLink)}`, "_blank");
     }
-  },
+  }
 });
 </script>

@@ -36,18 +36,18 @@
     @apply text-center font-medium;
 
     font-weight: 400;
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     font-family: $firaCondensed;
     line-height: 125%;
 
     &.big {
-      font-size: 2rem;
+      font-size: 1.4rem;
     }
 
     @media screen and (max-width: $mobile) {
-      font-size: 1.2rem;
+      font-size: 0.8rem;
       &.big {
-        font-size: 1.4rem;
+        font-size: 1rem;
       }
     }
 

@@ -1,12 +1,12 @@
 <template>
   <aside class="infoBlockContainer bg-white h-screen">
-    <div class="infoBlock border-none md:min-h-screen py-4 md:py-10 px-5 md:px-10">
+    <div class="infoBlock border-none lg:min-h-screen py-4 md:py-10 px-5 md:px-10">
       <header class="lg:mb-6">
-        <div class="flex items-center">
-          <a href="https://zksync.io" target="_blank"><logo class="h-8 lg:h-8 mr-2" /></a>
+        <div class="flex items-end justify-center md:items-center mb-2">
+          <a href="https://zksync.io" class="logo-container" target="_blank"><logo /></a>
           <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
-            <span class="networkName text-sm font-light inline-flex items-center">
+            <span class="networkName text-sm font-light inline-flex items-center" v-if="!isMainnet">
               {{ network }}
             </span>
           </div>
@@ -35,7 +35,7 @@
         </zk-values-block>
       </vue-custom-scrollbar>
       <div class="w-full">
-        <div v-if="isInfoAvailable !==false" class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"/>
+        <div v-if="isInfoAvailable !==false" class="w-full border-b-1 border-light -dark pt-1 lg:pt-3"/>
         <zk-values-block v-if="isInfoAvailable" class="pt-1 pb-0 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
           <template slot="left-top">
             <div class="flex items-center">
@@ -80,7 +80,7 @@
           </zk-values-block>
         </zk-max-height>
 
-        <div v-if="isInfoAvailable !==false" class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"/>
+        <div v-if="isInfoAvailable !==false" class="w-full border-b-1 border-light -dark pt-1 lg:pt-3"/>
         <transition name="fade">
           <div v-if="loggedIn" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
             <div class="flex-2">

@@ -6,10 +6,8 @@
 .zkFooterContainer {
   position: absolute;
   width: 100%;
-  height: 60px;
-  bottom: 0;
+  bottom: 2rem;
   left: 0;
-  padding-bottom: 10px;
 
   a,
   span {
@@ -17,9 +15,8 @@
   }
 
   @media screen and (max-width: $mobile) {
-    height: 73px;
     text-align: center;
-    padding: 1rem;
+    bottom: 1rem;
   }
 
   .colorTheme {
