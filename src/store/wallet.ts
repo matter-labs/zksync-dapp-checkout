@@ -10,7 +10,7 @@ import onboardConfig from "@/plugins/onboardConfig";
 import web3Wallet from "@/plugins/web3";
 import utils from "@/plugins/utils";
 import watcher from "@/plugins/watcher";
-import { ZK_API_BASE, ETHER_NETWORK_NAME } from "@/plugins/build";
+import {ZK_API_BASE, ZK_NETWORK} from "@/plugins/build";
 
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
@@ -494,7 +494,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
   },
   async getProviders(): Promise<void> {
     const zksync = await walletData.zkSync();
-    const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
+    const syncProvider = await zksync.getDefaultProvider(ZK_NETWORK);
     walletData.set({ syncProvider });
   },
   async walletRefresh({ getters, dispatch }, firstSelect: boolean = true): Promise<boolean> {

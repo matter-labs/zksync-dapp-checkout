@@ -6,16 +6,16 @@ import * as zkTailwindDefault from "matter-zk-ui/tailwind.config.js";
 import { ToastObject } from "vue-toasted/types";
 
 //noinspection ES6PreferShortImport
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
+import {CURRENT_APP_NAME, CURRENT_APP_TITLE, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION} from "./src/plugins/build";
 
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
 const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
-const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Checkout";
+const pageTitle = CURRENT_APP_TITLE;
 const pageImg = "/cover.jpg";
 
-const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED}`;
+const pageTitleTemplate = ETHER_PRODUCTION ? CURRENT_APP_NAME : `${ETHER_NETWORK_CAPITALIZED}`;
 
 const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
 const pageKeywords = process.env.SITE_KEYWORDS ?? "";
@@ -47,6 +47,26 @@ const config: NuxtConfig = {
       amp: "true",
     },
     meta: [
+      {
+        property: "cache-control",
+        httpEquiv: "cache-control",
+        content: "no-cache , no-store, must-revalidate",
+      },
+      {
+        httpEquiv: "pragma",
+        content: "no-cache",
+        property: "pragma",
+      },
+      {
+        httpEquiv: "cache-control",
+        property: "cache-control",
+        content: "no-cache , no-store, must-revalidate",
+      },
+      {
+        httpEquiv: "expires",
+        content: "0",
+        property: "expires",
+      },
       {
         hid: "keywords",
         name: "keywords",
@@ -154,13 +174,11 @@ const config: NuxtConfig = {
   router: {
     middleware: ["wallet"],
   },
+
   /*
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    "nuxt-build-optimisations",
-    "@nuxtjs/style-resources",
-    "@nuxtjs/tailwindcss",
     [
       "@nuxt/typescript-build",
       {
@@ -169,29 +187,47 @@ const config: NuxtConfig = {
             async: true,
             stylelint: {
               config: [".stylelintrc"],
-              files: "src/**.scss",
+              files: "src/**/*.scss",
             },
             eslint: {
-              config: [".eslintrc.js", "tsconfig-eslint.json"],
-              files: "**/*.{ts,js,vue}",
+              config: ["tsconfig-eslint.json", ".eslintrc.js"],
+              files: "@/**/*.{ts,vue,js}",
             },
-            files: "**/*.{ts,vue}",
+            files: "@/**/*.{ts,vue,js}",
           },
         },
       },
     ],
+    "nuxt-build-optimisations",
+    "@nuxtjs/style-resources",
+    "@nuxtjs/tailwindcss",
     ["@nuxtjs/dotenv", {path: __dirname}], "matter-zk-ui",
   ],
 
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "nuxt-webfontloader", "@nuxtjs/sentry"],
-  webfontloader: {
-    google: {
-      families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
-    },
-  },
+  modules: [
+    "nuxt-webfontloader",
+    [
+      "nuxt-social-meta",
+      {
+        url: "https://checkout.zksync.io",
+        title: pageTitle,
+        site_name: pageTitle,
+        description: pageDescription,
+        img: "/social.jpg",
+        locale: "en_US",
+        twitter: "@zksync",
+        twitter_card: "https://checkout.zksync.io/social.jpg",
+        themeColor: "#4e529a",
+      },
+    ],
+    "@nuxtjs/axios",
+    "@nuxtjs/toast",
+    "@nuxtjs/google-gtag",
+    "@nuxtjs/sentry"
+  ],
   toast: {
     singleton: true,
     keepOnHover: true,
@@ -207,8 +243,7 @@ const config: NuxtConfig = {
   },
   styleResources: {
     scss: ["@/assets/style/vars/*.scss"],
-  }
-  ,
+  },
   sentry: {
     dsn: process.env.SENTRY_DSN,
     disableServerSide: true,
@@ -225,7 +260,14 @@ const config: NuxtConfig = {
     },
     debug: env !== "prod", // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
-  }, tailwindcss: {
+  },
+  // Fonts loader https://www.npmjs.com/package/nuxt-webfontloader
+  webfontloader: {
+    google: {
+      families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
+    },
+  },
+  tailwindcss: {
     config: {
       ...zkTailwindDefault,
       purge: {
@@ -255,7 +297,6 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
-    transpile: ["oh-vue-icons"], // [v.2.4.0]: oh-vue-icons package
     hardSource: isProduction,
     ssr: false,
     extend: (config: Configuration) => {
@@ -264,26 +305,6 @@ const config: NuxtConfig = {
       };
     },
   },
-  googleFonts: {
-    prefetch: true,
-    preconnect:
-      true,
-    preload:
-      true,
-    display:
-      "swap",
-    families:
-      {
-        "Fira+Sans":
-          [400, 600],
-        "Fira+Sans+Extra+Condensed":
-          [400, 600],
-        "Fira+Code":
-          [400],
-      }
-    ,
-  }
-  ,
   generate: {
     dir: "public",
     fallback: "404.html",
