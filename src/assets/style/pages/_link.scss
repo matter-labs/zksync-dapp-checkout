@@ -14,9 +14,12 @@
   }
 
   .linkHeader {
-    img.head-logo
-    {
-      width: 3rem;
+    a {
+      img.head-logo {
+        @apply mr-2;
+
+        height: 40px;
+      }
     }
   }
 

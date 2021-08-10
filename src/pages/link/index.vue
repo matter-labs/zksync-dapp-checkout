@@ -56,13 +56,15 @@
 
     <div class="linkHeader">
 
-      <nuxt-link to="/link" class="flex items-center justify-center">
-        <img src="@/static/zkSyncLogo.svg" class="head-logo" alt="Checkout by zkSync">
+      <nuxt-link to="/link" class="flex items-stretch justify-center">
+        <img src="@/static/zkSyncLogoFull.svg" class="head-logo" alt="Checkout by zkSync">
         <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
-          <h1 class="leading-1 -mb-1 lg:m-0 w-auto">zkCheckout</h1>
-          <span class="networkName text-sm font-light"
-                v-if="!isMainnet">
-            {{currentNetwork}}</span>
+          <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
+          <span
+            class="networkName text-sm font-light"
+            v-if="!isMainnet"
+          >
+            {{ currentNetwork }}</span>
         </div>
       </nuxt-link>
       <ul
@@ -86,7 +88,7 @@
         </li>
         <li class="mb-3">
           <i class="fad fa-check text-violet mr-2"/>
-          <span><a href="https://zksync.io/api/sdk/checkout/" CLASS="lightLink" target="_blank">zkCheckout SDK</a>&nbsp;for the fully-featured checkout</span>
+          <span><a href="https://zksync.io/api/sdk/checkout/" CLASS="lightLink" target="_blank">zkSync Checkout SDK</a>&nbsp;for the fully-featured checkout</span>
         </li>
         <li class="mb-3">
           <i class="fad fa-check text-violet mr-2"/>
@@ -117,7 +119,7 @@
             <template slot="default">
               <div class="text-sm text-gray font-light">
                 To unlock <span class="font-normal">“Build your payment link”</span> button below make sure to fill-up <span class="font-normal">“Receiver ETH address”</span>
-                and <span class="font-normal">“Amount”</span> {{ payments.length > 1 ? `for each of ${payments.length} transactions`: `of the transaction`}}.
+                and <span class="font-normal">“Amount”</span> {{ payments.length > 1 ? `for each of ${payments.length} transactions`:`of the transaction` }}.
               </div>
             </template>
           </zk-note>
@@ -126,11 +128,8 @@
       <zk-defbtn class="mx-auto mt-5" v-if="showAddLink" :outline="!validCheckoutConfiguration" :disabled="!validCheckoutConfiguration" big @click="generate()">Build your
         payment link
       </zk-defbtn>
-      <div class="poweredBy pt-10 pb-5 flex items-center justify-center">
-        <div class="text-violet mr-3">Powered by</div>
-        <a class="h-8 w-max-content" target="_blank" href="https://zksync.io/">
-          <block-logo class="h-8"/>
-        </a>
+      <div class="poweredBy pt-10 pb-5 flex items-center justify-between">
+        <block-footer/>
       </div>
     </div>
   </div>
@@ -157,7 +156,7 @@ export default Vue.extend({
   },
   computed: {
     isMainnet(): boolean {
-      return ETHER_PRODUCTION
+      return ETHER_PRODUCTION;
     },
     paymentLink(): string {
       return window.location.origin + "/link/" + this.paymentHash;
@@ -169,7 +168,7 @@ export default Vue.extend({
       return this.addLinkMode;
     },
     createLinkBlockTitle(): string {
-      const ethNetwork = this.isMainnet ? "" : `<strong>${this.currentNetwork}</strong>`;
+      const ethNetwork = this.isMainnet ? "":`<strong>${this.currentNetwork}</strong>`;
       return this.showAddLink ? `Create your ${ethNetwork} instant payment link:`:
         `Build instant ${ethNetwork} payout link in 5 min`;
     },
