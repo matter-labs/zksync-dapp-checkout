@@ -15,31 +15,19 @@ All notable changes to this project will be documented in this file. See [standa
 * **build:** Head-title fixed + moved addPayment to the relevant action ([c7f43e1](https://github.com/matter-labs/zksync-dapp-checkout/commit/c7f43e131d421e7a1bd612585d85e8343a479e0c))
 * **index:** fixed cpk ([857f07a](https://github.com/matter-labs/zksync-dapp-checkout/commit/857f07a8a2d3fec60a80052c005b4f575f164c78))
 * **index:** fixed isError state ([74f00a5](https://github.com/matter-labs/zksync-dapp-checkout/commit/74f00a51b78a924097ae2434e3d9ad58bbef3a1d))
-
-### [2.2.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.7...2.2.2) (2021-05-25)
-
-
-### Bug Fixes
-
 * **vuex:** TS error fixed ([15d1042](https://github.com/matter-labs/zksync-dapp-checkout/commit/15d1042bc20e734bb2ef6f9f41133e0194f8f1e1))
-
-### [2.1.4-prerelease](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.3...2.1.4-prerelease) (2021-03-17)
-
 
 ### ⚠ BREAKING CHANGES
 
 * **Upgrade:** Ledger support dropped
 
-Closes ZKF-368
-Closes ZKF-340
-Closes ZKF-339
-Closes ZKF-341
-Closes ZKF-342
+  - Closes ZKF-368
+  - Closes ZKF-340
+  - Closes ZKF-339
+  - Closes ZKF-341
+  - Closes ZKF-342
 
 * **Upgrade:** Huge update which includes features, fixes and refactoring ([4e3c64b](https://github.com/matter-labs/zksync-dapp-checkout/commit/4e3c64bdcf5369b51ed220b3018e9c7ec183afca))
-
-## [3.0.0-beta](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.5.0...3.0.0-beta)
-
 
 ## Published releases
 
