@@ -7,10 +7,13 @@
   grid-template-rows: max-content 1fr max-content;
   justify-content: center;
 
-  .font-mono
-  {
+  .font-mono{
     font-family: $firaCode;
     letter-spacing: -0.1em !important;
+  }
+
+  .inputContainer.disabled .inputBody input {
+    color: #696969;
   }
 
   .linkHeader {
