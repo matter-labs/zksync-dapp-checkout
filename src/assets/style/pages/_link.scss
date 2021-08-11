@@ -170,11 +170,13 @@
         max-width: $maxWidthMobile;
 
         .index,.delete {
-          top: 4px;
+          @apply text-sm;
+
+          top: 0.5rem;
           right: 0;
-          width: 25px;
-          height: 25px;
-          line-height: 25px;
+          width: 1.25rem;
+          height: 1.25rem;
+          line-height: 1.25rem;
         }
         .delete {
           background-color: transparentize($color: $gray, $amount: 0.85);

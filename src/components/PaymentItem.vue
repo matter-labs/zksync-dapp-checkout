@@ -1,15 +1,15 @@
 <template>
   <div class="paymentItem flex flex-col md:flex-row md:justify-between items-center lg:items-start">
     <transition name="fade">
-      <div class="index bg-white3 rounded-full text-gray text-sm" v-if="displayIndex">{{ index+1 }}</div>
+      <div class="index bg-white3 rounded-full text-gray text-sm desktopOnly" v-if="displayIndex">{{ index+1 }}</div>
     </transition>
     <transition name="fade">
       <div class="delete rounded-full text-gray text-sm cursor-pointer" @click="$emit('delete')" v-if="displayDelete">
-        <i class="fal fa-times"></i>
+        <i class="fal fa-times"/>
       </div>
     </transition>
     <div class="w-full">
-      <div class="label text-sm text-light">Receiver ETH address</div>
+      <div class="label text-sm text-light"><strong class="mobileOnly">Txn #{{ index + 1 }}:&nbsp;</strong>Receiver ETH address</div>
       <address-input v-model="valNow.address" />
     </div>
     <div class="md:pl-4 w-full md:w-auto">
