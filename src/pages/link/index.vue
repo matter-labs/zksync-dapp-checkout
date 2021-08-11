@@ -14,7 +14,7 @@
       </template>
     </zk-modal>
 
-    <zk-modal :not-closable="previewLoading" v-model="successModal" @close="successModal=false">
+    <zk-modal :not-closable="true" v-model="successModal" @close="successModal=false">
       <template slot="header">
         <div class="withIcon text-green">
           <i class="fad fa-box-check"/>
@@ -41,8 +41,8 @@
         </div>
       </template>
       <template slot="footer">
-        <div class="flex items-center justify-center flex-wrap gap-2">
-          <zk-defbtn :disabled="previewLoading" outline @click="successModal=false">
+        <div class="flex items-center justify-center flex-wrap">
+          <zk-defbtn class="mr-3" :disabled="previewLoading" outline @click="successModal=false">
             <i class="far fa-arrow-left"/>
             <span>Close</span>
           </zk-defbtn>

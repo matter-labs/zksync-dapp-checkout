@@ -1,7 +1,7 @@
 <template>
-  <footer class="zkFooterContainer flex justify-between items-center px-5 md:px-10">
+  <footer class="zkFooterContainer flex justify-between items-center md:px-10">
     <div class="whitespace-no-wrap">
-        <span class="desktopOnly">Made with ❤️</span><a href="https://matter-labs.io" target="_blank" class="lightLink">by&nbsp;Matter&nbsp;Labs</a>
+      <span class="desktopOnly">Made with ❤️</span><a href="https://matter-labs.io" target="_blank" class="lightLink">by&nbsp;Matter&nbsp;Labs</a>
     </div>
     <div class="rightSide flex items-stretch">
       <block-system-info />

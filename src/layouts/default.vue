@@ -6,7 +6,7 @@
       <block-logging-in/>
       <nuxt @step="step=$event" v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')" class="routeMain"/>
       <div class="zk-footer-space"></div>
-      <block-footer />
+      <block-footer class="px-5" />
     </div>
   </div>
 </template>

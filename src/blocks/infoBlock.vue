@@ -108,10 +108,10 @@
       </div>
       <div class="footerContainer hidden md:block">
         <footer>
-          <div class="poweredBy flex justify-between w-1/2 mx-auto items-center mt-3">
-            <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault lightLink">Terms of Service</a>
-            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault lightLink">Privacy Policy</a>
-            <nuxt-link class="linkDefault lightLink" to="/link">Online Link Builder</nuxt-link>
+          <div class="poweredBy flex justify-center mx-auto items-center mt-3">
+            <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault lightLink whitespace-no-wrap mr-5">Terms of Service</a>
+            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault lightLink whitespace-no-wrap mr-5">Privacy Policy</a>
+            <nuxt-link class="linkDefault lightLink whitespace-no-wrap" to="/link">Online Link Builder</nuxt-link>
           </div>
         </footer>
       </div>
