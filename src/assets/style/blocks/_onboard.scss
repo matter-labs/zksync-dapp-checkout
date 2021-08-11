@@ -1,11 +1,11 @@
 .bn-onboard-modal {
-
-  .bn-onboard-custom.bn-onboard-modal-content {
-    width: 100%;
-  }
-
   z-index: 4;
-  background-color: transparent !important;
+  background-color: transparentize($color: $black, $amount: 0.7);
+  
+  .bn-onboard-custom.bn-onboard-modal-content {
+    width: 85%;
+  }
+  
   @media screen and (min-width: $mobile) {
     left: 43% !important;
     width: 57% !important;
@@ -27,8 +27,7 @@
 
     @media (max-width: $mobile) {
       height: 100vh !important;
-      max-height: 100vh !important;
-      border-radius: 0 !important;
+      max-height: 75vh !important;
 
       .bn-onboard-modal-content-header {
         margin: 1rem 0 !important;

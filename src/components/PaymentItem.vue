@@ -1,5 +1,5 @@
 <template>
-  <div class="paymentItem flex flex-col md:flex-row md:justify-between items-center lg:items-start">
+  <div class="paymentItem flex flex-col md:flex-row md:justify-between lg:items-start">
     <transition name="fade">
       <div class="index bg-white3 rounded-full text-gray text-sm desktopOnly" v-if="displayIndex">{{ index+1 }}</div>
     </transition>
@@ -17,7 +17,7 @@
       <div class="tokenDropdown w-full md:w-64" :class="{'opened': dropdownOpened}">
         <div class="dropdownMain flex items-center justify-between border border-light rounded px-3">
           <div class="flex items-center pr-4 cursor-pointer select-none" @click="dropdownOpened=!dropdownOpened">
-            <div class="font-bold text-lg pr-2">{{ valNow.token }}</div>
+            <div class="font-bold text-lg pr-2 whitespace-no-wrap">{{ valNow.token }}</div>
             <i class="text-gray fal fa-angle-down"></i>
           </div>
           <amount-input :token="valNow.token" type="transfer" v-model="valNow.amount" />

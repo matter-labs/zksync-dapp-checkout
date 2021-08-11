@@ -7,10 +7,13 @@
   grid-template-rows: max-content 1fr max-content;
   justify-content: center;
 
-  .font-mono
-  {
+  .font-mono{
     font-family: $firaCode;
     letter-spacing: -0.1em !important;
+  }
+
+  .inputContainer.disabled .inputBody input {
+    color: #696969;
   }
 
   .linkHeader {
@@ -20,6 +23,9 @@
 
         height: 40px;
       }
+    }
+    .feature-list {
+      max-width: 500px;
     }
   }
 
@@ -141,6 +147,7 @@
           top: 0;
           left: 0;
           padding-top: 35px;
+          box-sizing: content-box;
           background-color: $white2;
           outline: none;
 
@@ -169,6 +176,9 @@
       @media screen and (max-width: $mobile) {
         max-width: $maxWidthMobile;
 
+        .label {
+          padding-bottom: 5px;
+        }
         .index,.delete {
           @apply text-sm;
 
