@@ -24,7 +24,7 @@
       <template slot="default">
         <div class="text-center leading-tight mb-4">Your payment link has been created!<br>Now you can share it with someone.</div>
         <div class="successLinkContainer">
-          <zk-input size="sm" :value="paymentLink" disabled/>
+          <zk-input size="sm" ref="linkInput" :value="paymentLink" readonly @click="$ref.linkInput.focus()"/>
           <zk-defbtn id="copy-link" @click="copyLink()" v-popover:copy-link.bottom>
             <span>Copy</span>
             <i class="fal fa-clipboard"/>
@@ -96,11 +96,11 @@
         </li>
       </ul>
     </div>
-    <div class="linkBody py-4 md:py-10">
+    <div class="linkBody py-4 md:py-10 mb-20">
       <h2 class="mx-auto text-center zk-container headline big text-violet mb-3" v-html="createLinkBlockTitle"/>
       <zk-defbtn class="mx-auto mt-5" v-if="!showAddLink" big @click="enableLink()">Try it now</zk-defbtn>
-      <div class="w-full py-2 md:py-1" v-for="(_item, index) in payments" :key="index" v-if="showAddLink">
-        <payment-item :displayIndex="payments.length>=5" :displayDelete="payments.length>=2" :index="index" v-model="payments[index]" @delete="deletePayment(index)"/>
+      <div class="paymentContainer w-full py-2 md:py-1" v-for="(_item, index) in payments" :key="index" v-if="showAddLink">
+        <payment-item :displayIndex="payments.length>=2" :displayDelete="payments.length>=2" :index="index" v-model="payments[index]" @delete="deletePayment(index)"/>
       </div>
       <zk-defbtn outline class="mx-auto mt-5" @click="addPayment()" v-if="showAddLink" :disabled="payments.length>=maxPayments">Add another transaction</zk-defbtn>
       <div class="text-gray text-sm text-center leading-tight pt-2" :class="{'text-dark': payments.length>=maxPayments}" v-if="showAddLink">{{
@@ -109,8 +109,8 @@
       </div>
 
     </div>
-    <div class="linkFooter">
-      <zk-max-height :value="!validCheckoutConfiguration && showAddLink" class="mt-5 md:mt-7 zk-container mx-auto">
+    <div class="linkFooter filter shadow-md">
+      <zk-max-height :value="!validCheckoutConfiguration && showAddLink" v-show="payments.length<3" class="mt-0 md:mt-5 md:mt-7 zk-container mx-auto">
         <div>
           <zk-note class="notificationNote">
             <template slot="icon">
@@ -125,10 +125,12 @@
           </zk-note>
         </div>
       </zk-max-height>
-      <zk-defbtn class="mx-auto mt-5" v-if="showAddLink" :outline="!validCheckoutConfiguration" :disabled="!validCheckoutConfiguration" big @click="generate()">Build your
+      <zk-defbtn class="mx-auto mt-5 md:mt-5"  v-if="showAddLink" :outline="!validCheckoutConfiguration" :disabled="!validCheckoutConfiguration" big
+                 @click="generate()">Build
+        your
         payment link
       </zk-defbtn>
-      <div class="poweredBy pt-10 pb-5 flex items-center justify-between">
+      <div class="poweredBy pt-5 md:pt-10 pb-5 flex items-center justify-between">
         <block-footer/>
       </div>
     </div>

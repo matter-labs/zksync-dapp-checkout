@@ -82,6 +82,11 @@
       height: max-content;
 
       .valuesBlockContainer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        grid-gap: 0.5rem;
+        white-space: nowrap;
         margin: 0;
 
         .valuesBlockRight .valuesBlockSecondary > div {
@@ -98,8 +103,17 @@
         }
 
 
-        &.noAddressPadding .valuesBlockRight .valuesBlockSecondary > div {
-          min-height: 0;
+        &.noAddressPadding .valuesBlockRight .valuesBlockSecondary {
+          flex-basis: auto;
+          width: auto;
+          overflow: hidden;
+
+          .address
+          {
+            max-width: calc(100% - 0.5rem);
+            overflow: hidden;
+            min-height: 0;
+          }
         }
 
       }

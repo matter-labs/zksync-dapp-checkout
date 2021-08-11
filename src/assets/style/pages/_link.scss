@@ -7,7 +7,7 @@
   grid-template-rows: max-content 1fr max-content;
   justify-content: center;
 
-  .font-mono{
+  .font-mono {
     font-family: $firaCode;
     letter-spacing: -0.1em !important;
   }
@@ -24,15 +24,14 @@
         height: 40px;
       }
     }
+
     .feature-list {
       max-width: 500px;
     }
   }
 
-  .lightLink
-  {
-    @media (max-width: $mobile)
-    {
+  .lightLink {
+    @media (max-width: $mobile) {
       &::after {
         visibility: visible !important;
         transform: scaleX(1) !important;
@@ -40,8 +39,7 @@
     }
   }
 
-  .headline
-  {
+  .headline {
     @apply text-center font-medium;
 
     font-weight: 400;
@@ -61,6 +59,7 @@
     }
 
   }
+
   .zk-container {
     position: relative;
     max-width: $maxWidthDefault;
@@ -68,13 +67,14 @@
       max-width: $maxWidthMobile;
     }
   }
+
   .linkBody {
     .paymentItem {
       position: relative;
       max-width: $maxWidthDefault;
       margin: 0 auto;
 
-      .index,.delete {
+      .index, .delete {
         position: absolute;
         width: 36px;
         height: 36px;
@@ -83,15 +83,18 @@
         text-align: center;
         line-height: 36px;
       }
+
       .index {
         left: -55px;
         will-change: opacity;
       }
+
       .delete {
         right: -50px;
         transition: $transition;
         transition-property: background-color, opacity;
         will-change: background-color, opacity;
+
         &:hover {
           background-color: $white3;
         }
@@ -101,23 +104,27 @@
           top: 1px;
         }
       }
+
       .addressInput {
         input {
           font-weight: 400;
         }
+
         .errorTextContainer {
           height: 18px;
         }
       }
+
       .amountInputGroup {
         width: 100%;
         padding: 0;
         border: none;
         height: max-content;
 
-        .penIcon,.rightSide {
+        .penIcon, .rightSide {
           display: none;
         }
+
         .amInputContainer {
           max-width: 160px;
 
@@ -125,12 +132,15 @@
             left: 0;
           }
         }
+
         .leftSide {
           width: 100%;
         }
       }
+
       .tokenDropdown {
         position: relative;
+
         &.opened {
           z-index: 1;
         }
@@ -139,6 +149,7 @@
           height: 36px;
           background-color: $white;
         }
+
         .dropdownBody {
           z-index: -1;
           position: absolute;
@@ -157,6 +168,7 @@
             background-color: $white2;
             padding-top: 8px;
           }
+
           .tokensList {
             width: 100%;
             height: max-content;
@@ -165,6 +177,7 @@
 
             .tokenItem {
               transition: background-color $transition;
+
               &:hover {
                 background-color: $white3;
               }
@@ -174,12 +187,13 @@
       }
 
       @media screen and (max-width: $mobile) {
+
         max-width: $maxWidthMobile;
 
         .label {
           padding-bottom: 5px;
         }
-        .index,.delete {
+        .index, .delete {
           @apply text-sm;
 
           top: 0.5rem;
@@ -191,9 +205,14 @@
         .delete {
           background-color: transparentize($color: $gray, $amount: 0.85);
         }
+
       }
+
     }
   }
+
+
+
   .successLinkContainer {
     display: grid;
     height: max-content;
@@ -204,6 +223,7 @@
     input {
       text-overflow: ellipsis;
     }
+
     .vue-popover {
       position: fixed;
       color: $lightViolet;
@@ -212,8 +232,7 @@
     }
   }
 
-  .zkFooterContainer
-  {
+  .zkFooterContainer {
     position: static;
   }
 }
