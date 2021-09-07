@@ -183,7 +183,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, TokenPrices, Transaction, CPKLocal, GweiBalance } from "@/types";
+import { TransactionData, TotalByToken, TokenPrices, CPKLocal, GweiBalance } from "@/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 import zkUtils from "@/plugins/utils";
@@ -195,6 +195,7 @@ import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import {ZkSyncTransaction} from "zksync-checkout-internal/src/types";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
+import {Transaction} from "zksync/build/wallet";
 
 interface UpdatedFee {
   type: "batch" | "cpk";
@@ -391,8 +392,10 @@ export default Vue.extend({
         });
         endHashes = validHashes.map((tx: any) => tx.txHash);
         console.log("Sent hashes", endHashes);
-        manager.notifyHashes(endHashes);
-
+        // @ts-ignore
+        if (manager.openerPromise) {
+          manager.notifyHashes(endHashes);
+        }
 
         this.finalTransactions.push(...transactions);
         this.subStep = "committing";
@@ -416,7 +419,7 @@ export default Vue.extend({
             }
           }
           this.errorModal = {
-            headline: "Activation error",
+            headline: "Activation error 1",
             text: errorMsg,
           };
         }

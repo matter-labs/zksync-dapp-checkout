@@ -1,8 +1,9 @@
 import {ExternalProvider, JsonRpcFetchFunc} from "@ethersproject/providers";
 import { BigNumber, Contract, ContractInterface, BigNumberish, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Balance, GweiBalance, Token, TokenSymbol, TotalByToken, Transaction } from "@/types/index";
+import { Address, Balance, GweiBalance, Token, TokenSymbol, TotalByToken } from "@/types/index";
 import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
+import {Transaction} from "zksync/build/wallet";
 
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 

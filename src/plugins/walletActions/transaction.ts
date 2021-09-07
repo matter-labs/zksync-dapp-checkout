@@ -1,23 +1,10 @@
 import {addCPKToBatch} from "@/plugins/walletActions/cpk";
 import {walletData} from "@/plugins/walletData";
 import {BigNumber} from "ethers";
-import {Address, TokenSymbol, Transaction} from "~/types/index.d";
-import {closestPackableTransactionFee, Provider} from "zksync";
+import {Address, TokenSymbol} from "~/types/index.d";
+import {closestPackableTransactionFee} from "zksync";
 import {ZkSyncTransaction} from "zksync-checkout/src/types";
-import {ETHOperation} from "zksync/build/wallet";
-import {SignedTransaction, TxEthSignature} from "zksync/build/types";
-
-
-export const submitSignedTransactionsBatch = async (provider: Provider, signedTxs: SignedTransaction[], ethSignatures?: TxEthSignature[]): Promise<Transaction[]> => {
-  const transactionHashes = await provider.submitTxsBatch(
-    signedTxs.map((tx) => {
-      return { tx: tx.tx, signature: tx.ethereumSignature };
-    }),
-    // @ts-ignore
-    ethSignatures,
-  );
-  return transactionHashes.map((txHash, idx) => new Transaction(signedTxs[idx], txHash, provider));
-};
+import {ETHOperation, submitSignedTransactionsBatch} from "zksync/build/wallet";
 
 /**
  * Transaction processing action
