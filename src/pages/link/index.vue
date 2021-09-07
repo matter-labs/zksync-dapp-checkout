@@ -109,7 +109,7 @@
       </div>
 
     </div>
-    <div class="linkFooter filter shadow-md">
+    <div class="linkFooter filter shadow-md rounded-b">
       <zk-max-height :value="!validCheckoutConfiguration && showAddLink" v-show="payments.length<3" class="mt-0 md:mt-5 md:mt-7 zk-container mx-auto">
         <div>
           <zk-note class="notificationNote">

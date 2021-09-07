@@ -4,10 +4,8 @@
 }
 
 .zkFooterContainer {
-  position: absolute;
   width: 100%;
-  bottom: 2rem;
-  left: 0;
+  align-self: end;
 
   a,
   span {
@@ -83,7 +81,7 @@
       }
 
       .zkFooterContainer {
-        bottom: 80px;
+        padding-bottom: 60px;
       }
     }
   }

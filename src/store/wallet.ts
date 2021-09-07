@@ -1,4 +1,15 @@
 import utils from "@/plugins/utils";
+import {ExternalProvider, JsonRpcFetchFunc} from "@ethersproject/providers";
+import { BigNumber, Contract, ContractInterface, BigNumberish, ethers } from "ethers";
+import { ActionTree, GetterTree, MutationTree } from "vuex";
+import { Address, Balance, GweiBalance, Token, TokenSymbol, TotalByToken } from "@/types/index";
+import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
+import {Transaction} from "zksync/build/wallet";
+
+import Onboard from "@matterlabs/zk-wallet-onboarding";
+
+import onboardConfig from "@/plugins/onboardConfig";
+import web3Wallet from "@/plugins/web3";
 import { ZK_API_BASE, ZK_NETWORK } from "@/plugins/build";
 
 import { walletData } from "@/plugins/walletData";

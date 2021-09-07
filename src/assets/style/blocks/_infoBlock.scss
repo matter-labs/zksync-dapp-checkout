@@ -11,7 +11,7 @@
     height: 100vh;
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: repeat(4, max-content);
+    grid-template-rows: repeat(3, max-content) 1fr;
 
     .valuesBlockContainer {
       align-items: flex-start;
@@ -53,12 +53,10 @@
 
     .footerContainer {
       z-index: 1;
-      height: 40px;
+      height: max-content;
+      align-self: end;
 
       .zkSyncFooter {
-        position: absolute;
-        bottom: 0;
-        left: 0;
         z-index: -1;
         width: 100%;
         height: auto;
@@ -67,9 +65,6 @@
     }
 
     footer {
-      position: absolute;
-      bottom: 25px;
-      left: 0;
       width: 100%;
       height: max-content;
     }

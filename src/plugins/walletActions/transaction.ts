@@ -1,5 +1,10 @@
 import { GweiBalance, ZkInNFT } from "@/types/lib";
 import { walletData } from "@/plugins/walletData";
+import {BigNumber} from "ethers";
+import {Address, TokenSymbol} from "~/types/index.d";
+import {closestPackableTransactionFee} from "zksync";
+import {ZkSyncTransaction} from "zksync-checkout/src/types";
+import {ETHOperation, submitSignedTransactionsBatch} from "zksync/build/wallet";
 import { accessorType } from "@/store";
 import { Transaction } from "zksync/build/wallet";
 import { Address, SignedTransaction, TokenSymbol, TxEthSignature } from "zksync/build/types";

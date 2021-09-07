@@ -20,7 +20,7 @@
             </div>
           </template>
           <template slot="left-bottom">
-            <div class="address hidden lg:block">
+            <div class="address">
               {{ item.to }}
             </div>
           </template>

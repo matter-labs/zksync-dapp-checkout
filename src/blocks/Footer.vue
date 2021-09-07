@@ -1,5 +1,5 @@
 <template>
-  <footer class="zkFooterContainer flex justify-between items-center md:px-10">
+  <footer class="zkFooterContainer flex justify-between items-center pt-1 md:py-5">
     <div class="whitespace-no-wrap">
       <span class="desktopOnly">Made with ❤️</span><a href="https://matter-labs.io" target="_blank" class="lightLink">by&nbsp;Matter&nbsp;Labs</a>
     </div>

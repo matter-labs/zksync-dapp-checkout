@@ -395,8 +395,10 @@ export default Vue.extend({
         });
         endHashes = validHashes.map((tx: any) => tx.txHash);
         console.log("Sent hashes", endHashes);
-        manager.notifyHashes(endHashes);
-
+        // @ts-ignore
+        if (manager.openerPromise) {
+          manager.notifyHashes(endHashes);
+        }
 
         this.finalTransactions.push(...transactions);
         this.subStep = "committing";
@@ -420,7 +422,7 @@ export default Vue.extend({
             }
           }
           this.errorModal = {
-            headline: "Activation error",
+            headline: "Activation error 1",
             text: errorMsg,
           };
         }

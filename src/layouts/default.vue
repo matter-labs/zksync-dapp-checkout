@@ -5,8 +5,8 @@
     <div class="routerContainer bg-white2 py-4 px-5 md:px-10">
       <block-logging-in/>
       <nuxt @step="step=$event" v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')" class="routeMain"/>
-      <div class="zk-footer-space"></div>
-      <block-footer class="px-5" />
+      <!-- <div class="zk-footer-space"></div> -->
+      <block-footer />
     </div>
   </div>
 </template>
