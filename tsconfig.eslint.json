@@ -4,10 +4,19 @@
   "include": [
     "**/*.ts",
     "**/*.vue",
-    "**/*.js"
+    "**/*.js",
+    ".eslintrc.js",
+    "../../../Library/Caches/JetBrains/PhpStorm2021.2/javascript/typings/node/16.7.0/node_modules/@types/node/globals.d.ts"
   ],
   "exclude": [
-    "tests/*",
+    "**sw.js",
+    "node_modules**",
+    ".nuxt**",
+    ".idea**",
+    ".ide-setup**",
+    ".firebase**",
+    ".github**",
+    "tests**"
   ],
   "compilerOptions": {
     "lib": [

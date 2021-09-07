@@ -1,27 +1,84 @@
+import { API } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
-import Vue from "@nuxt/vue-app";
-import { Provider } from "zksync/build";
+import { Route } from "vue-router/types";
+import { Provider } from "zksync";
 import {
   AccountState,
   Address,
   ChangePubKeyCREATE2,
   ChangePubKeyECDSA,
   ChangePubKeyOnchain,
+  ChangePubkeyTypes,
+  LegacyChangePubKeyFee,
+  NFT,
+  Order,
   PubKeyHash,
   SignedTransaction,
   TokenSymbol,
   TransactionReceipt,
 } from "zksync/build/types";
 import { ETHOperation, Transaction, Wallet, ZKSyncTxError } from "zksync/build/wallet";
-import { Store } from "vuex";
+import { ZkSyncTransaction } from "zksync-checkout/build/types";
 
-export declare type ZKTypeFeeOption = "fast" | "normal";
-export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit";
+export type TransactionData = {
+  transactions: Array<ZkSyncTransaction>;
+  fromAddress: Address;
+  feeToken: TokenSymbol;
+};
+export type TransactionFee = {
+  name: string;
+  key: string;
+  amount: BigNumber;
+  token: TokenSymbol;
+  to?: Address;
+};
+export type TotalByToken = {
+  [token: string]: BigNumber;
+};
+
+export interface ZkInFeesInterface {
+  [symbol: string]: {
+    [feeSymbol: string]: {
+      [type: string]: {
+        [address: string]: {
+          lastUpdated: number;
+          value: ZkInFeesObj;
+        };
+      };
+    };
+  };
+}
+
+export type PaymentItem = {
+  address: Address;
+  token: TokenSymbol;
+  amount: GweiBalance;
+};
+
+export declare type ZKTypeOperations =
+  | "Deposit"
+  | "Withdraw"
+  | "Transfer"
+  | "FastWithdraw"
+  | "MintNFT"
+  | "WithdrawNFT"
+  | "FastWithdrawNFT"
+  | "ChangePubKey"
+  | ChangePubkeyTypes
+  | LegacyChangePubKeyFee
+  | "Swap";
+export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit" | "nft-transfer" | "nft-withdraw";
 export declare type ZKTypeDisplayToken = {
   symbol: TokenSymbol;
   rawBalance?: BigNumber;
   status?: string;
   pendingBalance?: BigNumber;
+};
+
+export declare type ZKDisplayToken = {
+  symbol: string;
+  rawBalance: BigNumber | undefined;
+  status: string | undefined;
 };
 
 export declare type VueRefs = Vue & { validate: () => boolean };
@@ -31,7 +88,14 @@ export declare type ZKTypeDisplayBalances = {
 };
 
 export declare type GweiBalance = string | BigNumberish;
-export declare type DecimalBalance = string;
+export declare type DecimalBalance = string | GweiBalance;
+export declare type Hash = string;
+
+export declare interface ZkInFeeChange {
+  headline: string;
+  symbol: TokenSymbol;
+  amount: GweiBalance;
+}
 
 export declare interface ZkInTokenPrices {
   [token: string]: {
@@ -59,6 +123,10 @@ export interface ZkInBalance {
   address?: string;
 }
 
+export interface ZkInNFT extends NFT {
+  status: "Pending" | "Verified";
+}
+
 export declare interface ZkInTransactionInfo {
   continueBtnFunction: boolean;
   amount?: {
@@ -80,7 +148,7 @@ export declare interface ZkInTransactionInfo {
   explorerLink: string;
 }
 
-export interface ZkInTx {
+export interface ZkInTx extends ETHOperation {
   tx_id: string; // Unique identifier of a transaction, designated to be used in relative tx history queries.
   hash: string; // Hash of a transaction.
   eth_block?: number; // Number of Ethereum block in which priority operation was added. `null` for transactions.
@@ -92,6 +160,7 @@ export interface ZkInTx {
   created_at: string; // Timestamp of the transaction execution.
   confirmCount: number;
   tx: {
+    orders?: [Order, Order];
     // Transaction / Priority operation contents. Structure depends on the type of operation.
     fast: boolean;
     amount: string;
@@ -111,7 +180,11 @@ export interface ZkInTx {
     to?: string;
     token?: string;
     feeToken?: number;
-    type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
+    type: ZKTypeOperations;
+    creatorId?: number;
+    creatorAddress?: Address;
+    recipient?: Address;
+    contentHash?: string;
   };
 }
 
@@ -205,6 +278,11 @@ export interface iWalletData {
 export declare interface iWalletWrapper {
   set: (val: iWalletData) => void;
   get: () => iWalletData;
+  clear: () => void;
+  syncProvider: {
+    load: () => void;
+    get: () => Promise<Provider>;
+  };
 }
 
 export declare interface ZKInDepositTx extends ETHOperation {
@@ -218,14 +296,26 @@ export declare interface ZkInDeposits {
   [tokenSymbol: string]: ZKInDepositTx[];
 }
 
+export interface Token {
+  address: Address;
+  balance: string | BigNumber;
+  rawBalance: BigNumber;
+  symbol: TokenSymbol;
+  id: number;
+  formattedBalance?: string;
+  unlocked: boolean;
+  unlockedAmount: BigNumber;
+}
+
 export interface Balance {
   symbol: TokenSymbol;
   status: "Pending" | "Verified";
-  balance: GweiBalance;
+  balance: DecimalBalance;
   rawBalance: BigNumber;
-  verifiedBalance: GweiBalance;
+  verifiedBalance: DecimalBalance;
+  tokenPrice: string;
   restricted: boolean;
-  unlocked?: boolean;
+  unlocked?: BigNumber;
   address?: string;
 }
 
@@ -241,7 +331,6 @@ export declare interface ZkInWithdrawParams {
   amount: GweiBalance;
   fastWithdraw: boolean;
   fees: GweiBalance;
-  store: typeof Store;
 }
 
 export declare interface ZkInSyncTransfer {
@@ -326,9 +415,12 @@ export interface ZkIFeesInterface {
 export interface ZKIRootState {
   accountModalOpened: boolean;
   currentModal?: string;
+  previousRoute?: Route;
+  step: string;
+  darkMode: boolean;
 }
 
-export type BalancesList = {
+export type ZkInBalancesList = {
   [token: string]: BigNumber;
 };
 
@@ -350,4 +442,38 @@ export interface ZKIDepositStatus {
   amount: GweiBalance;
   status: string;
   confirmations: number;
+}
+
+export interface ZKStoreRequestBalancesParams {
+  force?: boolean;
+  offset?: number;
+}
+
+export declare interface feesInterface {
+  [symbol: string]: {
+    [feeSymbol: string]: {
+      [type: string]: {
+        [address: string]: {
+          lastUpdated: number;
+          value: ZkInFeesObj;
+        };
+      };
+    };
+  };
+}
+
+export declare interface iWallet {
+  onboard?: API;
+  isAccountLocked: boolean;
+  zkTokens: { lastUpdated: number; list: ZkInBalance[] };
+  nftTokens: { lastUpdated: number; list: ZkInNFT[] };
+  initialTokens: { lastUpdated: number; list: ZkInBalance[] };
+  transactionsHistory: { lastUpdated: number; list: ZkInTx[] };
+  withdrawalProcessingTime: false | { normal: number; fast: number };
+  fees: ZkInFeesInterface;
+}
+
+export interface zkTokensParam {
+  lastUpdated: number;
+  list: ZkInBalance[];
 }

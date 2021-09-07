@@ -14,7 +14,7 @@
     "declaration-block-semicolon-newline-after": "always",
     "declaration-block-trailing-semicolon": null,
     "font-family-name-quotes": "always-where-recommended",
-    "font-weight-notation": "numeric",
+    "font-weight-notation": null,
     "function-url-quotes": "always",
     "indentation": [
       2,
@@ -23,7 +23,7 @@
       }
     ],
     "no-descending-specificity": null,
-    "no-duplicate-selectors": null,
+    "no-duplicate-selectors": "never",
     "no-empty-source": [
       true,
       {
@@ -42,7 +42,7 @@
     ],
     "scss/at-rule-no-unknown": true,
     "selector-attribute-quotes": "always",
-    "selector-max-specificity": "never",
+    "selector-max-specificity": false,
     "selector-pseudo-class-no-unknown": [
       true,
       {
@@ -52,7 +52,7 @@
         ]
       }
     ],
-    "selector-pseudo-element-colon-notation": "single",
+    "selector-pseudo-element-colon-notation": "",
     "selector-type-no-unknown": [
       true,
       {
@@ -63,6 +63,6 @@
     ],
     "string-quotes": "double",
     "value-list-comma-newline-before": "never-multi-line",
-    "value-no-vendor-prefix": null
+    "value-no-vendor-prefix": false
   }
 }

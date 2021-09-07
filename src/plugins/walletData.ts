@@ -1,44 +1,57 @@
-import {Provider, Wallet} from "zksync";
-import { AccountState } from "@/types";
+import { iWalletData, iWalletWrapper } from "@/types/lib";
+import { getDefaultProvider, Provider } from "zksync";
+import { Network } from "zksync/build/types";
+import { ZK_NETWORK } from "@/plugins/build";
 
-interface WalletData {
-  syncProvider?: Provider;
-  syncWallet?: Wallet;
-  accountState?: AccountState;
-  zkSync?: unknown;
-}
-
-const internalWalletData: WalletData = {
+const internalWalletData: iWalletData = {
   syncProvider: undefined,
   syncWallet: undefined,
   accountState: undefined,
-  zkSync: undefined,
 };
+
+let providerPromise: Promise<Provider>;
 
 /**
  * Wrapper for the major Providers
- * @type {{accountState: null, syncProvider: null, syncWallet: null, zkSync: any|null}}
+ * @type iWalletWrapper
  */
-export const walletData = {
-  /**
-   * @return {Promise<null|*>}
-   */
-  zkSync: async (): Promise<any> => {
-    if (!process.client) {
-      return null;
+export const walletData: iWalletWrapper = {
+  get: () => internalWalletData,
+
+  set: (val) => {
+    if (Object.prototype.hasOwnProperty.call(val, "syncProvider")) {
+      internalWalletData.syncProvider = val.syncProvider;
     }
-    if (!internalWalletData.zkSync) {
-      [internalWalletData.zkSync] = await Promise.all([import("zksync")]);
+    if (Object.prototype.hasOwnProperty.call(val, "syncWallet")) {
+      internalWalletData.syncWallet = val.syncWallet;
     }
-    return internalWalletData.zkSync;
+    if (Object.prototype.hasOwnProperty.call(val, "accountState")) {
+      internalWalletData.accountState = val.accountState;
+    }
   },
-  get: (): WalletData => {
-    return internalWalletData;
+
+  clear: () => {
+    internalWalletData.syncWallet = undefined;
+    internalWalletData.accountState = undefined;
   },
-  set: (val: any): void => {
-    for (const [key, value] of Object.entries(val)) {
-      // @ts-ignore
-      internalWalletData[key] = value;
-    }
+
+  syncProvider: {
+    async load() {
+      if (internalWalletData.syncProvider) {
+        return;
+      }
+      providerPromise = getDefaultProvider(ZK_NETWORK as Network, "HTTP");
+      try {
+        internalWalletData.syncProvider = await providerPromise;
+      } catch (error) {
+        console.warn("Failed to load provider", error);
+      }
+    },
+    async get() {
+      if (!internalWalletData.syncProvider || typeof providerPromise === "undefined") {
+        await walletData.syncProvider.load();
+      }
+      return await providerPromise;
+    },
   },
 };

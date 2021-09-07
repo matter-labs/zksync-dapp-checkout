@@ -1,7 +1,9 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, DecimalBalance, GweiBalance, TokenSymbol } from "@/types/index";
-import { utils as zkUtils } from "zksync";
+import { DecimalBalance, GweiBalance, ZkInBalance, ZkInNFT, ZKTypeDisplayToken } from "@/types/lib";
+
 import { BigNumber, BigNumberish, utils } from "ethers";
+import { utils as zkUtils } from "zksync";
+import { Address, TokenSymbol } from "zksync/build/types";
 
 /**
  *
@@ -9,24 +11,25 @@ import { BigNumber, BigNumberish, utils } from "ethers";
  * @param amount
  * @return {BigNumber|*}
  */
-const parseToken = (symbol: TokenSymbol, amount: DecimalBalance | number) => {
-  /**
-   * skip already bignumber
-   */
-  if (typeof amount === "object") {
-    return amount;
-  }
-  if (typeof amount === "number") {
-    const tokenDecimals = walletData.get().syncProvider!.tokenSet.resolveTokenDecimals(symbol);
-    amount = amount.toFixed(tokenDecimals);
-  }
-  return walletData.get().syncProvider!.tokenSet.parseToken(symbol, amount.toString());
-};
+function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
+  return walletData.get().syncProvider?.tokenSet?.parseToken(symbol, amount.toString()) || BigNumber.from("0");
+}
 
-const handleFormatToken = (symbol: TokenSymbol, amount: any) => {
-  if (!amount || amount === "undefined") return "0";
-  return walletData.get().syncProvider!.tokenSet.formatToken(symbol, amount);
-};
+/**
+ * Formatting token amount output to human readable string
+ *
+ * @param {TokenSymbol} symbol
+ * @param {GweiBalance} amount
+ * @return {string}
+ */
+function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance): string {
+  if (!amount) return "0";
+  const result: string | undefined = walletData.get().syncProvider?.tokenSet?.formatToken(symbol, amount);
+  if (result === undefined) {
+    return "0";
+  }
+  return result && result.endsWith(".0") ? result.substr(0, result.length - 2) : result;
+}
 
 const handleFormatTokenPretty = (symbol: TokenSymbol, amount: GweiBalance) => {
   const firstFormated = handleFormatToken(symbol, amount);
@@ -64,6 +67,19 @@ export default {
     const minutes = Math.floor(timeInSec / 60) - hours * 60;
     const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
 
+    // const strArr = [];
+    // if (hours) {
+    //   strArr.push(`${hours} hours`);
+    // }
+    // if (minutes) {
+    //   strArr.push(`${minutes} minutes`);
+    // }
+    // if (seconds) {
+    //   strArr.push(`${seconds} seconds`);
+    // }
+
+    // return strArr.join(" ");
+
     return {
       hours,
       minutes,
@@ -78,12 +94,12 @@ export default {
   handleFormatTokenPretty,
 
   handleFormatTokenPrettyCeil: (symbol: TokenSymbol, amount: GweiBalance) => {
-    const firstFormated = handleFormatTokenPretty(symbol, amount);
-    const symbolsArr = firstFormated.split(".");
+    const firstFormatted = handleFormatTokenPretty(symbol, amount);
+    const symbolsArr = firstFormatted.split(".");
     const symbolsArrInt = symbolsArr[0];
     const symbolsArrDecimal = symbolsArr[1];
     if (!symbolsArrDecimal || symbolsArrDecimal === "0" || symbolsArrDecimal.length < 4) {
-      return firstFormated;
+      return firstFormatted;
     }
     /* Converting "14.63316" to "1463316" and adding 1 */
     const bigNumberString = BigNumber.from(`${symbolsArrInt}${symbolsArrDecimal}`).add("1").toString();
@@ -130,13 +146,54 @@ export default {
     }
   },
 
-  isAmountPackable: (amount: string): boolean => {
-    return zkUtils.isTransactionAmountPackable(amount as BigNumberish);
+  /**
+   * @todo Optimize sorting
+   *
+   * @param a
+   * @param b
+   * @return {number}
+   */
+  compareTokensById: (a: ZkInBalance | ZkInNFT, b: ZkInBalance | ZkInNFT) => {
+    if (a.id < b.id) {
+      return -1;
+    } else if (a.id > b.id) {
+      return 1;
+    }
+    return 0;
+  },
+
+  /**
+   * Soring by the token name
+   * @param {ZkInBalance} a
+   * @param {ZkInBalance} b
+   * @returns {number}
+   */
+  sortBalancesAZ: (a: ZkInBalance, b: ZkInBalance) => {
+    return a.symbol.localeCompare(b.symbol);
+  },
+
+  isAmountPackable: (amount: BigNumberish): boolean => {
+    return zkUtils.isTransactionAmountPackable(amount);
   },
 
   validateAddress: (address: Address): boolean => {
     return utils.isAddress(address);
   },
+
+  searchInArr: (search: string, list: Array<unknown> | ZKTypeDisplayToken[], searchParam: (e: unknown) => string) => {
+    if (!search.trim()) {
+      return list;
+    }
+    search = search.trim().toLowerCase();
+    return list.filter((e) => String(searchParam(e)).toLowerCase().includes(search));
+  },
+
+  /**
+   * Pre-processes any error to mute complex IT-debug and turn it into the human-readable text
+   *
+   * @param {Error} error
+   * @return {string | undefined}
+   */
 
   filterError: (error: Error): string | undefined => {
     if (error.message) {
@@ -150,5 +207,20 @@ export default {
         return error.message;
       }
     }
+  },
+
+  /**
+   * Copy text
+   */
+  copy(value: string) {
+    const elem = document.createElement("textarea");
+    elem.style.position = "absolute";
+    elem.style.left = -99999999 + "px";
+    elem.style.top = -99999999 + "px";
+    elem.value = value;
+    document.body.appendChild(elem);
+    elem.select();
+    document.execCommand("copy");
+    document.body.removeChild(elem);
   },
 };

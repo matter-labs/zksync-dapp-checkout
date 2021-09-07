@@ -15,7 +15,7 @@ jobs:
       - run: bash cli-dev.sh ci
 
       - name: "Build mainnet [prod]"
-        run: yarn run ci:build:mainnet
+        run: yarn run ci:build:prod
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

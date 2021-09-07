@@ -1,17 +1,23 @@
-import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { TokenPrices, Tokens, TokenSymbol, TokenItem } from "@/types/index";
 import { walletData } from "@/plugins/walletData";
-import { RootState } from "~/store";
+import { BigNumberish } from "ethers";
+import { TokenSymbol, Tokens } from "zksync/build/types";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { BalanceToReturn, TokenInfo, ZkInTokenPrices } from "~/types/lib";
+import { ZK_API_BASE } from "~/plugins/build";
 
 /**
  * Operations with the tokens (assets)
  * @return {{tokenPrices: {}, restrictedTokens: [string, string, string], allTokens: {}}}
  */
 export const state = () => ({
+  strict: process.env.NODE_ENV !== "production",
+
   /**
    * Restricted tokens, fee can't be charged in it
    */
   restrictedTokens: ["PHNX", "LAMB", "MLTT"] as Array<TokenSymbol>,
+
+  acceptableTokens: <TokenInfo[]>[],
 
   /**
    * All available tokens:
@@ -27,91 +33,113 @@ export const state = () => ({
   /**
    * Token prices
    */
-  tokenPrices: {} as TokenPrices,
+  tokenPrices: <ZkInTokenPrices>{},
+  tokenPricesTick: 0, // Used to force update component's
 });
 
 export type TokensModuleState = ReturnType<typeof state>;
 
-export const mutations: MutationTree<TokensModuleState> = {
+export const mutations = mutationTree(state, {
   setAllTokens(state, tokenList: Tokens): void {
     state.allTokens = tokenList;
   },
-  setTokenPrice(state, { symbol, obj }): void {
-    state.tokenPrices[symbol] = obj;
-  },
-};
-
-export const getters: GetterTree<TokensModuleState, RootState> = {
-  getAllTokens(state): Tokens {
-    return state.allTokens;
-  },
-  getTokenByID(state): unknown {
-    return (id: number): TokenItem | undefined => {
-      for (const symbol in state.allTokens) {
-        if (state.allTokens.hasOwnProperty(symbol) && state.allTokens[symbol].id === id) {
-          return state.allTokens[symbol];
-        }
-      }
-    };
-  },
-  getTokenBySymbol(state): unknown {
-    return (symbol: TokenSymbol): TokenItem | undefined => {
-      for (const tokenProp in state.allTokens) {
-        if (state.allTokens.hasOwnProperty(tokenProp) && state.allTokens[tokenProp].symbol === symbol) {
-          return state.allTokens[tokenProp];
-        }
-      }
-    };
-  },
-  getRestrictedTokens(state): Tokens {
-    return Object.fromEntries(Object.entries(state.allTokens).filter((e: any) => state.restrictedTokens.includes(e[1].symbol)));
-  },
-  getAvailableTokens(state): Tokens {
-    return Object.fromEntries(Object.entries(state.allTokens).filter((e: any) => !state.restrictedTokens.includes(e[1].symbol)));
-  },
-  getTokenPrices(state): TokenPrices {
-    return state.tokenPrices;
-  },
-};
-
-export const actions: ActionTree<TokensModuleState, RootState> = {
-  async loadAllTokens({ commit, dispatch, getters }): Promise<Tokens> {
-    /* By taking token list from syncProvider we avoid double getTokens request,
-        but the tokensBySymbol param is private on zksync utils types */
+  setTokenPrice(state, { symbol, obj }: { symbol: TokenSymbol; obj: { lastUpdated?: number; price: number } }): void {
     // @ts-ignore
-    const tokensList = walletData.get().syncProvider!.tokenSet.tokensBySymbol;
-    const totalByToken = this.getters["checkout/getTotalByToken"];
-    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
-    for (const symbol of usedTokens) {
-      await dispatch("getTokenPrice", symbol);
-    }
-    commit("setAllTokens", Object.entries(tokensList).sort(([,a],[,b]) => (a as TokenItem).id-(b as TokenItem).id).reduce((r, [k, v]) => ({ ...r, [k]: v }), {}));
-    return tokensList || {};
+    state.tokenPrices[symbol] = obj;
+    state.tokenPricesTick++;
   },
+  storeAcceptableTokens(state: TokensModuleState, tokenList: TokenInfo[]): void {
+    state.acceptableTokens = tokenList;
+  },
+  addRestrictedToken(state: TokensModuleState, token: TokenSymbol): void {
+    if (!state.restrictedTokens.includes(token) && token.toLowerCase() !== "eth") {
+      state.restrictedTokens.push(token);
+    }
+  },
+});
 
-  /**
-   *
-   * @param commit
-   * @param getters
-   * @param commit
-   * @param getters
-   * @param symbol
-   * @return {Promise<{n: number, d: number}|number|*>}
-   */
-  async getTokenPrice({ commit, getters }, symbol: TokenSymbol): Promise<number> {
-    const localPricesList = getters.getTokenPrices;
-    if (localPricesList.hasOwnProperty(symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
-      return localPricesList[symbol].price;
-    }
-    const syncProvider = walletData.get().syncProvider;
-    const tokenPrice = await syncProvider?.getTokenPrice(symbol);
-    commit("setTokenPrice", {
-      symbol,
-      obj: {
-        lastUpdated: new Date().getTime(),
-        price: tokenPrice,
-      },
-    });
-    return tokenPrice || 0;
+export const getters = getterTree(state, {
+  getAllTokens: (state: TokensModuleState): Tokens => state.allTokens,
+  getRestrictedTokens: (state: TokensModuleState): TokenSymbol[] => state.restrictedTokens,
+  getAvailableTokens: (state: TokensModuleState): Tokens => Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol))),
+  getTokenPrices: (state: TokensModuleState): ZkInTokenPrices => state.tokenPrices,
+  getTokenPriceTick: (state: TokensModuleState): number => state.tokenPricesTick,
+});
+
+export const actions = actionTree(
+  { state, getters, mutations },
+  {
+    async loadAllTokens({ commit, getters }): Promise<Tokens> {
+      if (Object.entries(getters.getAllTokens).length === 0) {
+        /* By taking token list from syncProvider we avoid double getTokens request,
+          but the tokensBySymbol param is private on zksync utils types */
+        const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
+        commit("setAllTokens", tokensList);
+        // Added async loading of the restricted tokens
+        await this.app.$accessor.tokens.loadAcceptableTokens();
+        return tokensList || {};
+      }
+      return getters.getAllTokens;
+    },
+    async loadAcceptableTokens({ commit }): Promise<void> {
+      const acceptableTokens: TokenInfo[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`);
+      commit("storeAcceptableTokens", acceptableTokens);
+    },
+
+    async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
+      const tokens: Tokens = await this.app.$accessor.tokens.loadAllTokens();
+      const zkBalance: { [p: string]: BigNumberish } | undefined = walletData.get().accountState?.committed.balances;
+      if (!zkBalance) {
+        return {
+          tokens,
+          zkBalances: <BalanceToReturn[]>[],
+        };
+      }
+      const zkBalances: BalanceToReturn[] = Object.keys(zkBalance).map((key: TokenSymbol) => {
+        return {
+          address: tokens[key].address,
+          balance: walletData.get().syncWallet!.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
+          symbol: tokens[key].symbol,
+          id: tokens[key].id,
+        } as BalanceToReturn;
+      });
+
+      return {
+        tokens,
+        zkBalances,
+      };
+    },
+
+    /**
+     *
+     * @param commit
+     * @param getters
+     * @param commit
+     * @param getters
+     * @param symbol
+     * @return {Promise<{n: number, d: number}|number|*>}
+     */
+    async getTokenPrice({ commit, getters }, symbol: TokenSymbol): Promise<number> {
+      try {
+        const localPricesList = getters.getTokenPrices;
+        if (Object.prototype.hasOwnProperty.call(localPricesList, symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
+          return localPricesList[symbol].price;
+        }
+        const syncProvider = walletData.get().syncProvider;
+        const tokenPrice = await syncProvider?.getTokenPrice(symbol);
+        // @ts-ignore
+        commit("setTokenPrice", {
+          symbol,
+          obj: {
+            lastUpdated: new Date().getTime(),
+            price: tokenPrice,
+          },
+        });
+        return tokenPrice || 0;
+      } catch (error) {
+        console.warn(`Failed to get ${symbol} price at requestZkBalances`, error);
+      }
+      return 0;
+    },
   },
-};
+);

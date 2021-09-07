@@ -1,9 +1,8 @@
 import { Wallet } from "zksync";
 import { Address, TokenSymbol } from "zksync/build/types";
+import { accessorType } from "@/store";
 import { BatchBuilder } from "zksync/build/batch-builder";
-import { CPKLocal } from "types";
-
-
+import { CPKLocal, GweiBalance } from "~/types/lib";
 
 function getCPKStorageKey(address: Address) {
   return `pubKeySignature-${address}`;
@@ -25,21 +24,24 @@ export const getCPKTx = (address: Address): CPKLocal | undefined => {
     throw new Error("Couldn't parse saved signed changePubKey");
   }
 };
-
-export const addCPKToBatch = async (syncWallet: Wallet, feeToken: TokenSymbol, batchBuilder: BatchBuilder, store: any) => {
+// ,
+export const addCPKToBatch = async (syncWallet: Wallet, fee: GweiBalance, feeToken: TokenSymbol, batchBuilder: BatchBuilder, store: typeof accessorType): Promise<void> => {
   let pubKeyTx: CPKLocal | undefined;
   try {
-    pubKeyTx = getCPKTx(store.getters["account/address"]);
-    if (typeof pubKeyTx!.accountId !== "number") {
+    pubKeyTx = getCPKTx(store.provider.address!);
+    if (typeof pubKeyTx?.accountId !== "number") {
       throw new TypeError("Wrong account ID. Try to sign account activation again.");
     }
   } catch (error) {
-    removeCPKTx(store.getters["account/address"]);
+    removeCPKTx(store.provider.address!);
     throw error;
   }
   if (!pubKeyTx) {
-    removeCPKTx(store.getters["account/address"]);
+    removeCPKTx(store.provider.address!);
     throw new Error("Sign account activation to continue.");
+  }
+  if (!pubKeyTx) {
+    return store.openModal("SignPubkey");
   }
   if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
     pubKeyTx.ethAuthData = {

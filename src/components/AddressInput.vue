@@ -18,8 +18,9 @@
 
 <script lang="ts">
 import utils from "@/plugins/utils";
-import { DecimalBalance } from "@/types";
+import { DecimalBalance } from "@/types/lib.d";
 import Vue, { PropOptions } from "vue";
+import {Address} from "zksync/build/types";
 
 export default Vue.extend({
   props: {
@@ -31,7 +32,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      inputtedWallet: this.value ?? "",
+      inputtedWallet: <Address> this.value || "",
     };
   },
   computed: {

@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { PaymentItem } from "@/types";
+import { PaymentItem } from "@/types/lib.d";
 import { decrypt } from "@/plugins/link";
 import utils from "@/plugins/utils";
 import { ZkSyncTransaction } from "zksync-checkout-internal/src/types";

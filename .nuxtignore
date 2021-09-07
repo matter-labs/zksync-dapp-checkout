@@ -1,3 +1,6 @@
+.github/*
+.idea/*
+environments/*
 tsconfig.json
 cypress.json
 public

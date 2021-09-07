@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { PaymentItem, Tokens, TokenItem } from "@/types";
+import { PaymentItem, Tokens, ZkInTokenItem } from "@/types/lib.d";
 
 export default Vue.extend({
   props: {
@@ -121,7 +121,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    setToken(token: TokenItem) {
+    setToken(token: ZkInTokenItem) {
       this.$set(this.valNow, 'token', token.symbol);
       this.dropdownOpened = false;
     },

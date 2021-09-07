@@ -1,39 +1,53 @@
-import moment from "moment";
-import { Network } from "zksync/build/types.d";
+import { Network } from "zksync/build/types";
 import { version as zkSyncVersion } from "zksync/package.json";
 import { version } from "../../package.json";
+import { networkEthId } from "~/types/lib";
+import moment from "moment";
 
-type networkIDS = {
-  [key: string]: number;
-};
-
-export const _ETHER_NETWORK_ID_DICTIONARY: networkIDS = {
-  rinkeby: 4,
-  ropsten: 3,
-  mainnet: 1,
-};
+export const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
+  { name: "rinkeby", id: 4 },
+  { name: "ropsten", id: 3 },
+  { name: "mainnet", id: 1 },
+];
 
 export const GIT_REVISION_DATE = process.env.APP_GIT_UPDATED_AT ?? moment().format("d.m.Y");
-
 export const GIT_REVISION: string = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
 export const GIT_REVISION_SHORT: string = GIT_REVISION.length > 8 ? GIT_REVISION.slice(-7) : GIT_REVISION;
 export const VERSION: string = version;
 export const ETHER_NETWORK_NAME: Network = process.env.APP_CURRENT_NETWORK as Network;
+export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
 
-export const ZK_LIB_VERSION = zkSyncVersion ?? "latest";
-export const ZK_IS_BETA: boolean = zkSyncVersion.search("beta") !== -1 || process.env.ZK_NETWORK !== undefined || ETHER_NETWORK_NAME === "ropsten";
+export const ZK_LIB_VERSION: string = zkSyncVersion as string;
+/**
+ * Beta marker is applied in case of:
+ *   1) Custom configuration “slug” imported from the ```.evn: ZK_NETWORK``` share the config w/t ```ZK_SPECIAL_API```.
+ *      Together this params should be considered **CUSTOM** API-endpoint && same **CUSTOM** config-file.
+ *      Obviously, the env is targeted testnets: (rinkeby | ropsten) *BUT...*
+ *
+ *   2) Simpler way to name beta-version is to search for the beta in .env-file, URL or API address.
+ *
+ * @type {boolean}
+ */
+export const ZK_IS_BETA = ZK_LIB_VERSION.search("beta") !== -1;
+
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;
 export const CURRENT_APP_NAME = "zkSync Checkout";
-export const CURRENT_APP_TITLE = process.env.SITE_TITLE || CURRENT_APP_NAME;
-
-export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
 
 export const ETHER_PREFIX: string = ETHER_PRODUCTION ? "" : ETHER_NETWORK_NAME;
 
 export const ETHER_PREFIX_DOT: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : ".");
 export const ETHER_PREFIX_MINUS: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : "-");
 
-export const ETHER_NETWORK_ID: number | undefined = _ETHER_NETWORK_ID_DICTIONARY[ETHER_NETWORK_NAME as string];
+export const ETHER_NETWORK_ID: number = _ETHER_NETWORK_ID_DICTIONARY.find((value: networkEthId): boolean => value?.name === (ETHER_NETWORK_NAME as string))?.id as number;
+
+/**
+ * The right way of strict-typing for the web3provider
+ *  — thanks to the [global.window] with type NodeJS.Global operation with the typed window is generally possible
+ *  — provider [window.ethereum] should be declared separately using shims (index.d.ts)
+ *    @see /src/types/index.d.ts
+ * @author: Serge B. | Matter Labs
+ */
+export const ethWindow: Window = global.window;
 
 export const ZK_API_BASE: string = process.env.ZK_SPECIAL_API ? process.env.ZK_SPECIAL_API : `${ETHER_PREFIX_MINUS}api.zksync.io`;
 export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
@@ -44,15 +58,26 @@ export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;
 /**
  * Onboard-only params
  */
-export const ONBOARD_FORCED_EXIT_LINK: string | undefined = `https://withdraw${ETHER_PREFIX_MINUS}${ETHER_PRODUCTION ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
+export const ONBOARD_APP_URL = process.browser && ethWindow!.location ? `https://${ethWindow!.location!.host}` : "";
+export const ONBOARD_APP_NAME = `${CURRENT_APP_NAME}:${ETHER_NETWORK_NAME}` + (process.browser && ethWindow!.location ? `@${ethWindow!.location!.host}` : "");
+export const ONBOARD_APP_LOGO = `${ONBOARD_APP_URL}/favicon-dark.png`;
+export const ONBOARD_APP_EMAIL = "support@zksync.io";
+export const ONBOARD_FORCED_EXIT_LINK = `https://withdraw${ETHER_PRODUCTION ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
 export const ONBOARD_FORTMATIC_KEY: string | undefined = process.env.APP_FORTMATIC;
+export const ONBOARD_FORTMATIC_SITE_VERIFICATION_META: string | undefined = process.env.APP_FORTMATIC_SITE_VERIFICATION_META!;
 export const ONBOARD_PORTIS_KEY: string | undefined = process.env.APP_PORTIS;
-export const ONBOARD_INFURA_KEY: string | undefined = process.env.APP_WALLET_CONNECT;
-export const ONBOARD_RPC_URL: string | undefined = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
+export const ONBOARD_INFURA_KEY: string = process.env.APP_WALLET_CONNECT as string;
+export const ONBOARD_RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WALLET_CONNECT_UNIVERSAL}`;
+export const ONBOARD_WALLET_CONNECT_RPC = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WALLET_CONNECT}`;
 
+export const rpc = {};
+for (const item in _ETHER_NETWORK_ID_DICTIONARY) {
+  const netCnf = _ETHER_NETWORK_ID_DICTIONARY[item];
+  rpc[netCnf.id] = netCnf.id === ETHER_NETWORK_ID ? ONBOARD_WALLET_CONNECT_RPC : `wss://${netCnf.name}.infura.io/ws/v3/${process.env.APP_WALLET_CONNECT_UNIVERSAL}`;
+}
 
 /**
  * zkLink
  */
-export const TWEET_URL = 'https://twitter.com/intent/tweet?url=';
-export const FACEBOOK_URL = 'https://www.facebook.com/sharer/sharer.php?u=';
+export const TWEET_URL = "https://twitter.com/intent/tweet?url=";
+export const FACEBOOK_URL = "https://www.facebook.com/sharer/sharer.php?u=";

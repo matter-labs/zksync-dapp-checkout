@@ -1,9 +1,13 @@
 {
-  "homepage": "https://checkout.zksync.io",
   "name": "@matterlabs/zksync-dapp-checkout",
   "title": "zkSync Checkout — simple permissionless DeFi payment gateway",
   "description": "zkSync Checkout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.",
-  "version": "2.6.0-0",
+  "main": "nuxt.config.ts",
+  "types": "src/types/index.d.ts",
+  "files": [
+    "src/types",
+    "src"
+  ],
   "keywords": [
     "zksync",
     "ethereum",
@@ -33,6 +37,8 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
+  "version": "2.6.0-0",
+  "homepage": "https://checkout.zksync.io",
   "repository": {
     "type": "git",
     "url": "matter-labs/zksync-dapp-checkout"
@@ -54,72 +60,88 @@
     "url": "https://linear.app/matterlabs/project/zkcheckout-eae8f3c3e539/ZKF"
   },
   "dependencies": {
-    "@babel/core": "^7.13.8",
-    "@babel/preset-env": "^7.13.9",
-    "@babel/runtime": "^7.13.9",
-    "@matterlabs/zk-wallet-onboarding": "1.18.6",
     "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/axios": "latest",
-    "@nuxtjs/google-gtag": "^1.0.4",
-    "@nuxtjs/sentry": "^5.0.2",
+    "@nuxtjs/google-gtag": "latest",
+    "@nuxtjs/sentry": "latest",
     "@nuxtjs/style-resources": "latest",
     "@nuxtjs/tailwindcss": "^4.0.1",
     "@nuxtjs/toast": "latest",
-    "@types/js-cookie": "^2.2.6",
-    "ethers": "^5.0.31",
+    "@types/js-cookie": "^2.2.1",
+    "@walletconnect/utils": "1.4.0",
+    "@walletconnect/web3-provider": "1.4.0",
+    "blockies-ts": "^1.0.0",
+    "bnc-onboard": "latest",
+    "css-loader": "^6.2.0",
+    "ethers": "^5.0.32",
     "js-cookie": "^2.2.1",
+    "lottie-web": "^5.7.8",
     "matter-zk-ui": "^1.0.9",
     "moment": "^2.29.1",
     "nuxt": "latest",
-    "nuxt-build-optimisations": "latest",
-    "nuxt-social-meta": "^0.0.5",
-    "nuxt-webfontloader": "^1.1.0",
+    "nuxt-typed-vuex": "latest",
+    "oh-vue-icons": "^0.4.7",
+    "typed-vuex": "latest",
     "vue": "^2.6.12",
     "vue-custom-scrollbar": "^1.4.0",
     "vue-js-popover": "^1.2.1",
-    "vuex": "^3.6.2",
-    "web3": "^1.3.4",
+    "web3": "^1.5.1",
     "zksync": "latest",
     "zksync-checkout": "^0.0.13",
     "zksync-checkout-internal": "^0.0.4"
   },
   "devDependencies": {
-    "@ethersproject/logger": "^5.0.9",
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "7.12.17",
+    "@babel/runtime": "^7.15.4",
     "@matterlabs/zksync-nuxt-ui": "^0.0.0",
+    "@nuxt/babel-preset-app": "^2.12.2",
     "@nuxt/types": "latest",
     "@nuxt/typescript": "latest",
     "@nuxt/typescript-build": "latest",
     "@nuxtjs/dotenv": "1.4.1",
-    "@nuxtjs/eslint-config-typescript": "^5.0.0",
+    "@nuxtjs/eslint-config-typescript": "latest",
+    "@nuxtjs/google-fonts": "latest",
+    "@nuxtjs/style-resources": "latest",
     "@tailwindcss/postcss7-compat": "^2.0.3",
-    "@types/jest": "^26.0.20",
+    "@types/babel__preset-env": "^7",
+    "@types/jest": "^26.0.23",
+    "@types/sass": "^1",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
     "autoprefixer": "^9",
     "babel-core": "^7.0.0-bridge.0",
     "commitlint": "^11.0.0",
     "cspell": "latest",
     "dotenv": "8.2.0",
+    "esbuild-loader": "^2.15.1",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-vue": "^7.7.0",
     "fork-ts-checker-webpack-plugin": "^6.1.0",
     "node-sass": "latest",
+    "nuxt-social-meta": "^0.0.5",
     "postcss": "latest",
+    "postcss-loader": "^6.1.1",
     "prettier": "^2.2.1",
-    "sass-loader": "^10.1.1",
+    "sass-loader": "10",
     "stylelint": "latest",
     "stylelint-config-standard": "latest",
     "stylelint-scss": "latest",
     "tailwindcss": "^1.9.6",
-    "webpack": "^5.11.1"
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "latest",
+    "vuex": "^3.6.2",
+    "web3-core": "^1.5.1",
+    "webpack": "4.46.0"
   },
   "peerDependencies": {
     "@babel/core": "*",
     "@babel/runtime": "*"
   },
   "optionalDependencies": {
-    "@sentry/webpack-plugin": "^1.14.0",
-    "fs-extra": "^9.1.0"
+    "@sentry/webpack-plugin": "^1.14.0"
   },
   "husky": {
     "hooks": {
@@ -139,7 +161,7 @@
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",
-    "ci:build:mainnet": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
+    "ci:build:prod": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
     "ci:build:rinkeby": "yarn ci:prepare:rinkeby && yarn generate --fail-on-error",
     "ci:build:ropsten": "yarn ci:prepare:ropsten && yarn generate --fail-on-error",
     "ci:build:rinkeby-beta": "yarn ci:prepare:rinkeby-beta && yarn generate --fail-on-error",
@@ -156,5 +178,6 @@
     "lint-ts:fix": "eslint --fix --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
     "lint-style:fix": "stylelint src/**/*.scss --config '.stylelintrc' --fix -f verbose",
     "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js} *.md"
-  }
+  },
+  "packageManager": "yarn@2.4.2"
 }

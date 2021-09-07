@@ -8,6 +8,8 @@ jobs:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     environment: dev
+    outputs:
+      rinkeby_urls: "${{ steps.rinkeby_deploy.outputs.urls }}"
     steps:
       - uses: actions/checkout@v2
       - run: bash cli-dev.sh ci
@@ -28,14 +30,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}'
           target: prod-ropsten
-          projectId: zsync-dapp-checkout
-
-
-      - name: "Build mainnet"
-        run: yarn run ci:build:mainnet
-      - uses: matter-labs/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}'
-          target: prod-mainnet
           projectId: zsync-dapp-checkout

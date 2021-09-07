@@ -140,7 +140,7 @@
 <script lang="ts">
 import {ETHER_NETWORK_NAME, ETHER_PRODUCTION, FACEBOOK_URL, TWEET_URL} from "@/plugins/build";
 import {encrypt} from "@/plugins/link";
-import {PaymentItem} from "@/types";
+import {PaymentItem} from "@/types/lib.d";
 import Vue from "vue";
 
 export default Vue.extend({

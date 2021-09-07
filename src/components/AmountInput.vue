@@ -1,30 +1,31 @@
 <template>
-  <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]" @click.self="focusInput()">
+  <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]"
+       @click.self="focusInput()">
     <div class="leftSide" @click="focusInput()">
       <div class="amInputContainer">
         <input
-          ref="input"
-          v-model="inputtedAmount"
-          :style="{ width: `${width}px` }"
-          :disabled="disabled"
-          type="text"
-          placeholder="Amount"
-          maxlength="15"
-          @focus="focused = true"
-          @blur="focused = false"
-          @keyup.enter="$emit('enter')"
+            ref="input"
+            v-model="inputtedAmount"
+            :style="{ width: `${width}px` }"
+            :disabled="disabled"
+            type="text"
+            placeholder="Amount"
+            maxlength="15"
+            @focus="focused = true"
+            @blur="focused = false"
+            @keyup.enter="$emit('enter')"
         />
         <span ref="sizeSpan" class="sizeSpan">{{ inputtedAmount }}</span>
         <div class="penIcon">
-          <i class="fad fa-pen" />
+          <i class="fad fa-pen"/>
         </div>
       </div>
       <div class="underInput">
-        <slot name="underInput" />
+        <slot name="underInput"/>
       </div>
     </div>
     <div class="rightSide">
-      <slot />
+      <slot/>
     </div>
   </div>
 </template>
@@ -59,7 +60,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      inputtedAmount: this.value ? this.value : "",
+      inputtedAmount: this.value ? this.value:"",
       error: "",
       focused: false,
       width: 0,
@@ -70,7 +71,7 @@ export default Vue.extend({
       immediate: true,
       handler(val) {
         let strVal = val;
-        if (typeof val === "string") {
+        if (typeof val==="string") {
           strVal = strVal.trim().replace(/,/g, ".");
           const dotParts = strVal.split(".");
           if (dotParts.length > 2) {
@@ -147,6 +148,7 @@ export default Vue.extend({
       }
     },
     calcWidth(): void {
+      // @ts-ignore
       const sizeSpan: Vue | Element | Vue[] | Element[] = this.$refs.sizeSpan;
       if (!sizeSpan || !(sizeSpan as HTMLElement).getBoundingClientRect().width) {
         return;

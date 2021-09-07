@@ -122,7 +122,7 @@
 <script lang="ts">
 import Vue from "vue";
 import utils from "@/plugins/utils";
-import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/types/index";
+import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/types/lib.d";
 import { BigNumber } from "ethers";
 import Logo from "@/blocks/logo.vue";
 import { ETHER_NETWORK_NAME, ETHER_PRODUCTION } from "~/plugins/build";
@@ -155,7 +155,7 @@ export default Vue.extend({
       return ETHER_PRODUCTION;
     },
     transactionData(): TransactionData {
-      return this.$store.getters["checkout/getTransactionData"];
+      return this.$accessor.checkout.getTransactionData;
     },
     allFees(): Array<TransactionFee> {
       if (!this.loggedIn) {

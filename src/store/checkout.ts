@@ -1,45 +1,40 @@
-import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, TokenSymbol, TransactionData, TransactionFee, TotalByToken } from "@/types/index";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { TransactionFee, TotalByToken, TransactionData } from "~/types/lib.d";
+import { Address, TokenSymbol } from "zksync/build/types";
 import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { closestPackableTransactionAmount, closestPackableTransactionFee } from "zksync";
 import { BigNumber } from "ethers";
 import { walletData } from "@/plugins/walletData";
-import { RootState } from "~/store";
 
 export const state = () => ({
   isError: <boolean>false,
   noDataError: <unknown | undefined>undefined,
   transactions: [] as Array<ZkSyncTransaction>,
   fromAddress: "" as Address,
-  feeToken: "" as TokenSymbol,
+  feeToken: <TokenSymbol | undefined>"",
   transactionBatchFee: {} as TransactionFee,
   accountUnlockedFee: false as false | BigNumber,
 });
 
 export type CheckoutModuleState = ReturnType<typeof state>;
 
-export const getters: GetterTree<CheckoutModuleState, RootState> = {
-  getTransactionData(state): TransactionData {
-    return {
-      transactions: state.transactions,
-      fromAddress: state.fromAddress,
-      feeToken: state.feeToken,
-    };
-  },
-  getTransactionBatchFee(state): TransactionFee {
-    return state.transactionBatchFee;
-  },
-  getAccountUnlockFee(state): false | BigNumber {
+export const getters = getterTree(state, {
+  getTransactionData: (state): TransactionData => ({
+    transactions: state.transactions,
+    fromAddress: state.fromAddress,
+    feeToken: state.feeToken as TokenSymbol,
+  }),
+  getAccountUnlockFee: (state): false | BigNumber => {
     return state.accountUnlockedFee;
   },
-  getAllFees(state: CheckoutModuleState, getters, rootState, rootGetters: any): Array<TransactionFee> {
+  getAllFees: (state: CheckoutModuleState, getters, rootState, rootGetters: any): Array<TransactionFee> => {
     if (state.isError) {
       return [];
     }
     const allFees = [] as Array<TransactionFee>;
     allFees.push(state.transactionBatchFee);
     if (state.accountUnlockedFee && rootGetters["wallet/isAccountLocked"]) {
-      allFees.push({
+      allFees.push(<TransactionFee>{
         name: "One-time account activation fee",
         key: "changePubKey",
         amount: state.accountUnlockedFee,
@@ -48,7 +43,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     }
     return allFees;
   },
-  getTotalByToken(state, getters): TotalByToken {
+  getTotalByToken: (state, getters): TotalByToken => {
     const allFees = getters.getAllFees;
     const totalByToken = new Map();
     const addToTotalByToken = (amount: BigNumber, token: TokenSymbol) => {
@@ -66,16 +61,16 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     }
     return Object.fromEntries(totalByToken);
   },
-  getErrorState(state: CheckoutModuleState): boolean {
+  getErrorState: (state: CheckoutModuleState): boolean => {
     return state.isError;
   },
-  getErrorData(state: CheckoutModuleState): unknown | undefined {
+  getErrorData: (state: CheckoutModuleState): unknown | undefined => {
     return state.noDataError;
   },
-};
+});
 
-export const mutations: MutationTree<CheckoutModuleState> = {
-  setTransactionData(state, { transactions, fromAddress, feeToken }: TransactionData) {
+export const mutations = mutationTree(state, {
+  setTransactionData(state, { transactions, fromAddress, feeToken }: TransactionData): void {
     state.transactions = transactions.map((tx) => {
       return {
         ...tx,
@@ -85,57 +80,68 @@ export const mutations: MutationTree<CheckoutModuleState> = {
     state.fromAddress = fromAddress;
     state.feeToken = feeToken;
   },
-  setTransactionBatchFee(state, transaction: TransactionFee) {
+  setTransactionBatchFee(state, transaction: TransactionFee): void {
     state.transactionBatchFee = transaction;
   },
-  setAccountUnlockFee(state, accountUnlockFee: false | BigNumber) {
+  setAccountUnlockFee(state, accountUnlockFee: false | BigNumber): void {
     state.accountUnlockedFee = accountUnlockFee;
   },
-  setError(state: CheckoutModuleState, errorData) {
+  setError(state, errorData): void {
     state.isError = !!errorData;
     state.noDataError = errorData;
   },
-};
+});
 
-export const actions: ActionTree<CheckoutModuleState, RootState> = {
-  setError({ commit }, error: unknown): void {
-    commit("setError", error);
-  },
-  async getTransactionBatchFee({ state, commit }): Promise<void> {
-    const syncProvider = walletData.get().syncProvider;
-    const types = new Array(state.transactions.length).fill("Transfer") as "Transfer"[];
-    const addresses = state.transactions.map((tx) => tx.to);
-    // The fee transaction
-    types.push(types[0]);
-    addresses.push(addresses[0]);
-    const transactionFee = await syncProvider!.getTransactionsBatchFee(types, addresses, state.feeToken);
-    const minFee = BigNumber.from(transactionFee);
-    commit("setTransactionBatchFee", {
-      name: "Tx Batch Fee / zkSync",
-      key: "txBatchFee",
-      amount: closestPackableTransactionFee(minFee.add(minFee.div("100").mul("5"))),
-      realAmount: BigNumber.from(transactionFee),
-      token: state.feeToken,
-    });
-  },
-  async getAccountUnlockFee({ state, commit }): Promise<void> {
-    const syncProvider = walletData.get().syncProvider;
-    const isAccountLocked = this.getters["wallet/isAccountLocked"];
-    if (isAccountLocked) {
-      const syncWallet = walletData.get().syncWallet;
-      const foundFee = await syncProvider?.getTransactionFee(
-        {
-          ChangePubKey: {
-            onchainPubkeyAuth: syncWallet?.ethSignerType?.verificationMethod === "ERC-1271",
+export const actions = actionTree(
+  { state, getters, mutations },
+  {
+    setError({ commit }, error: unknown): void {
+      commit("setError", error);
+    },
+    async getTransactionBatchFee({ state, commit }) {
+      const syncProvider = walletData.get().syncProvider;
+      const types = new Array(state.transactions.length).fill("Transfer") as "Transfer"[];
+      const addresses = state.transactions.map((tx) => tx.to);
+      // The fee transaction
+      types.push(types[0]);
+      addresses.push(addresses[0]);
+      const transactionFee = await syncProvider!.getTransactionsBatchFee(types, addresses, state.feeToken!);
+      const minFee = BigNumber.from(transactionFee);
+      // @ts-ignore
+      commit("setTransactionBatchFee", {
+        name: "Tx Batch Fee / zkSync",
+        key: "txBatchFee",
+        amount: closestPackableTransactionFee(minFee.add(minFee.div("100").mul("5"))),
+        realAmount: BigNumber.from(transactionFee),
+        token: state.feeToken! as TokenSymbol,
+      });
+      return {
+        name: "Tx Batch Fee / zkSync",
+        key: "txBatchFee",
+        amount: closestPackableTransactionFee(minFee.add(minFee.div("100").mul("5"))),
+        realAmount: BigNumber.from(transactionFee),
+        token: state.feeToken! as TokenSymbol,
+      };
+    },
+    async getAccountUnlockFee({ state, commit }): Promise<void> {
+      const syncProvider = walletData.get().syncProvider;
+      const isAccountLocked = this.getters["wallet/isAccountLocked"];
+      if (isAccountLocked) {
+        const syncWallet = walletData.get().syncWallet;
+        const foundFee = await syncProvider?.getTransactionFee(
+          {
+            ChangePubKey: {
+              onchainPubkeyAuth: syncWallet?.ethSignerType?.verificationMethod === "ERC-1271",
+            },
           },
-        },
-        syncWallet?.address() || "",
-        state.feeToken,
-      );
-      commit("setAccountUnlockFee", closestPackableTransactionFee(BigNumber.from(foundFee!.totalFee.toString())));
-    } else {
-      commit("setAccountUnlockFee", false);
-    }
+          syncWallet?.address() || "",
+          state.feeToken!,
+        );
+        commit("setAccountUnlockFee", closestPackableTransactionFee(BigNumber.from(foundFee!.totalFee.toString())));
+      } else {
+        commit("setAccountUnlockFee", false);
+      }
+    },
+    async closeCheckout(): Promise<void> {},
   },
-  async closeCheckout(): Promise<void> {},
-};
+);

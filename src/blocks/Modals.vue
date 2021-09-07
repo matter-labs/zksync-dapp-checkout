@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { TransactionData } from "@/types";
+import { TransactionData } from "@/types/lib.d";
 
 export default Vue.extend({
   computed: {

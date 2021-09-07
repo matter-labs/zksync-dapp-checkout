@@ -1,27 +1,38 @@
-import { NuxtConfig, Configuration } from "@nuxt/types";
+// noinspection ES6PreferShortImport
+
+import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+import { MetaPropertyName } from "vue-meta/types/vue-meta";
+import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
+import { Configuration } from "webpack";
+
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, ONBOARD_APP_LOGO, ONBOARD_FORTMATIC_SITE_VERIFICATION_META } from "./src/plugins/build";
 
 // @ts-ignore
 import * as zkTailwindDefault from "matter-zk-ui/tailwind.config.js";
-import { ToastObject } from "vue-toasted/types";
-
-//noinspection ES6PreferShortImport
-import {CURRENT_APP_NAME, CURRENT_APP_TITLE, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION} from "./src/plugins/build";
 
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
 const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
-const pageTitle = CURRENT_APP_TITLE;
+const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
 const pageImg = "/cover.jpg";
 
 const pageTitleTemplate = ETHER_PRODUCTION ? CURRENT_APP_NAME : `${ETHER_NETWORK_CAPITALIZED}`;
 
-const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
+const pageDescription = process.env.SITE_DESCRIPTION ?? "";
 const pageKeywords = process.env.SITE_KEYWORDS ?? "";
 
+const fortmaticMeta: MetaPropertyName[] = [];
+if (isProduction && ONBOARD_FORTMATIC_SITE_VERIFICATION_META) {
+  fortmaticMeta.push({
+    name: "fortmatic-site-verification",
+    content: ONBOARD_FORTMATIC_SITE_VERIFICATION_META,
+  });
+}
+
 const config: NuxtConfig = {
-  components: ["@/components/", {path: "@/blocks/", prefix: "block"}],
+  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
   ssr: false,
   target: "static",
@@ -36,8 +47,8 @@ const config: NuxtConfig = {
     ...process.env,
   },
 
-  /*
-   ** Headers of the page
+  /**
+   * Head-placed HTML-tags / configuration of the `<meta>`
    */
   head: {
     title: pageTitle as string | undefined,
@@ -47,6 +58,15 @@ const config: NuxtConfig = {
       amp: "true",
     },
     meta: [
+      /**
+       * Fortmatic
+       */
+      ...fortmaticMeta,
+      /**
+
+
+       * Cache-control
+       */
       {
         property: "cache-control",
         httpEquiv: "cache-control",
@@ -63,10 +83,22 @@ const config: NuxtConfig = {
         content: "no-cache , no-store, must-revalidate",
       },
       {
+        property: "expires",
         httpEquiv: "expires",
         content: "0",
-        property: "expires",
       },
+
+      /**
+       * UX / UI settings
+       */
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" },
+
+      /**
+       * Page meta:
+       * - SEO tags (keywords, description, author)
+       * - OpenGraph tags (thumbnail,
+       */
       {
         hid: "keywords",
         name: "keywords",
@@ -137,22 +169,19 @@ const config: NuxtConfig = {
         property: "og:image:alt",
         content: pageTitle,
       },
-
-      {charset: "utf-8"},
-      {name: "viewport", content: "width=device-width, initial-scale=1"},
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
-        content: "/favicon-dark.png",
+        content: ONBOARD_APP_LOGO,
       },
-      {hid: "theme-color", name: "theme-color", content: "#4e529a"},
+      { hid: "theme-color", name: "theme-color", content: "#4e529a" },
       {
         hid: "msapplication-TileColor",
         property: "msapplication-TileColor",
         content: "#4e529a",
       },
     ],
-    link: [{rel: "icon", type: "image/x-icon", href: "/favicon-dark.png"}],
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
   },
 
   /*
@@ -162,21 +191,26 @@ const config: NuxtConfig = {
     color: "#8c8dfc",
     continuous: true,
   },
-  /*
-   ** Global CSS
+
+  /**
+   * Single-entry global-scope scss
    */
   css: ["@/assets/style/main.scss"],
-  /*
-   ** Plugins to load before mounting the App
+
+  styleResources: {
+    scss: ["@/assets/style/vars/*.scss"],
+  },
+
+  /**
+   * Plugins that should be loaded before the mounting
    */
-  plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
+  plugins: ["@/plugins/icons", "@/plugins/main", "@/plugins/setCheckoutData"],
 
   router: {
     middleware: ["wallet"],
   },
-
-  /*
-   ** Nuxt.js dev-modules
+  /**
+   * Nuxt.js dev-modules
    */
   buildModules: [
     [
@@ -198,17 +232,18 @@ const config: NuxtConfig = {
         },
       },
     ],
-    "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/tailwindcss",
-    ["@nuxtjs/dotenv", {path: __dirname}], "matter-zk-ui",
+    "nuxt-typed-vuex",
+    "@nuxtjs/google-fonts",
+    ["@nuxtjs/dotenv", { path: __dirname }],
+    "matter-zk-ui",
   ],
 
-  /*
-   ** Nuxt.js modules
+  /**
+   * Nuxt.js modules
    */
   modules: [
-    "nuxt-webfontloader",
     [
       "nuxt-social-meta",
       {
@@ -226,30 +261,40 @@ const config: NuxtConfig = {
     "@nuxtjs/axios",
     "@nuxtjs/toast",
     "@nuxtjs/google-gtag",
-    "@nuxtjs/sentry"
+    "@nuxtjs/sentry",
   ],
-  toast: {
+
+  toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
-    position: "bottom-right",
+    position: "bottom-right" as ToastPosition,
     duration: 4000,
-    iconPack: "fontawesome",
-    action: {
+    className: "zkToastMain",
+    iconPack: "fontawesome" as ToastIconPack,
+    action: <ToastAction>{
       text: "OK",
+      class: "zkToastActionClose",
+      icon: "fa-times-circle",
       onClick: (_: unknown, toastObject: ToastObject) => {
         toastObject.goAway(100);
       },
     },
   },
-  styleResources: {
-    scss: ["@/assets/style/vars/*.scss"],
+
+  /**
+   * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
+   */
+  inkline: {
+    config: {
+      autodetectVariant: true,
+    },
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
     disableServerSide: true,
     config: {
       tracesSampleRate: 1.0,
-      environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
+      environment: isProduction ? "production" : env === "dev" ? "development" : env,
     },
   },
   "google-gtag": {
@@ -258,20 +303,15 @@ const config: NuxtConfig = {
       anonymize_ip: true, // anonymize IP
       send_page_view: true, // might be necessary to avoid duplicated page track on page reload
     },
-    debug: env !== "prod", // enable to track in dev mode
+    debug: !isProduction, // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
-  // Fonts loader https://www.npmjs.com/package/nuxt-webfontloader
-  webfontloader: {
-    google: {
-      families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
-    },
-  },
+
   tailwindcss: {
     config: {
       ...zkTailwindDefault,
       purge: {
-        enabled: process.env.NODE_ENV === "production",
+        enabled: isProduction,
         content: [
           `${srcDir}/components/**/*.vue`,
           `${srcDir}/blocks/**/*.vue`,
@@ -287,22 +327,35 @@ const config: NuxtConfig = {
           "./node_modules/matter-zk-ui/plugins/**/*.{js,ts}",
           "./node_modules/matter-zk-ui/nuxt.config.{js,ts}",
         ],
-      }
-      ,
-    }
-    ,
-  }
-  ,
-  /*
-   ** Build configuration
+      },
+    },
+  },
+
+  /**
+   * Build configuration
    */
   build: {
+    babel: {
+      compact: true,
+    },
+    transpile: ["oh-vue-icons"], // [v.2.4.0]: oh-vue-icons package
     hardSource: isProduction,
     ssr: false,
     extend: (config: Configuration) => {
       config.node = {
         fs: "empty",
       };
+    },
+  },
+  googleFonts: {
+    prefetch: true,
+    preconnect: true,
+    preload: true,
+    display: "swap",
+    families: {
+      "Fira+Sans": [300, 400, 500, 600],
+      "Fira+Sans+Condensed": [200, 400, 500, 600],
+      "Fira+Code": [300],
     },
   },
   generate: {

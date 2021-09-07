@@ -127,10 +127,11 @@
 </template>
 
 <script lang="ts">
-import { Address, Balance, GweiBalance, TokenPrices } from "@/types/index";
+import { Address,  } from "zksync/build/types";
 import { ETHER_NETWORK_NAME } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 import utils from "@/plugins/utils";
+import {Balance, GweiBalance, TokenPrices, ZkInBalance} from "@/types/lib";
 import { deposit, unlockToken } from "@/plugins/walletActions/transaction";
 import { BigNumber } from "ethers";
 import Vue from "vue";
@@ -163,7 +164,7 @@ export default Vue.extend({
   },
   computed: {
     unlocked(): boolean {
-      return this.enoughZkBalance || this.initialBalance.unlocked!.gte(this.needToDeposit);
+      return this.enoughZkBalance || this.initialBalance!.unlocked!.gte(this.needToDeposit);
     },
     isDeposit(): boolean {
       return !!this.depositBigNumber && this.enoughDepositAmount;
@@ -181,13 +182,13 @@ export default Vue.extend({
       return this.enoughZkBalance ? "text-green" : "text-red";
     },
     tokensPrices(): TokenPrices {
-      return this.$store.getters["tokens/getTokenPrices"];
+      return this.$accessor.tokens.getTokenPrices;
     },
-    zkBalance(): Balance {
-      return this.$store.getters["wallet/getzkBalances"].find((e: Balance) => e.symbol === this.token);
+    zkBalance(): Balance | undefined {
+      return this.$accessor.wallet.getzkBalances!.find((e: Balance) => e.symbol === this.token);
     },
-    initialBalance(): Balance {
-      return this.$store.getters["wallet/getInitialBalances"].find((e: Balance) => e.symbol === this.token);
+    initialBalance(): Balance | undefined {
+      return this.$accessor.wallet.getInitialBalances!.find((e: Balance) => e.symbol === this.token);
     },
     depositBigNumber(): GweiBalance {
       if (!this.depositAmount) {
@@ -202,9 +203,9 @@ export default Vue.extend({
     needToDeposit(): GweiBalance {
       try {
         const txBatchFee = this.$store.getters["checkout/getTransactionBatchFee"];
-        const recommendedAmount = BigNumber.from(this.total).sub(this.zkBalance.rawBalance);
+        const recommendedAmount = BigNumber.from(this.total).sub(this.zkBalance!.rawBalance);
         if(txBatchFee.token === this.token) {
-          const amount = BigNumber.from(this.total).sub(txBatchFee.amount).add(txBatchFee.realAmount).sub(this.zkBalance.rawBalance);
+          const amount = BigNumber.from(this.total).sub(txBatchFee.amount).add(txBatchFee.realAmount).sub(this.zkBalance!.rawBalance);
           if(amount.lte("0") && recommendedAmount.gt("0")) {
             return amount.toString();
           }
@@ -226,14 +227,14 @@ export default Vue.extend({
       }
     },
     enoughZkBalance(): boolean {
-      return (BigNumber.from(this.zkBalance.rawBalance).gte(this.total) || BigNumber.from(this.needToDeposit).lte("0"));
+      return (BigNumber.from(this.zkBalance!.rawBalance).gte(this.total) || BigNumber.from(this.needToDeposit).lte("0"));
     },
 
     /**
      * Returns (L1+L2 balance >= Total to pay)
      */
     enoughWithInitialBalance(): boolean {
-      return BigNumber.from(this.zkBalance.rawBalance).add(BigNumber.from(this.initialBalance.rawBalance)).gte(this.total);
+      return BigNumber.from(this.zkBalance!.rawBalance).add(BigNumber.from(this.initialBalance!.rawBalance)).gte(this.total);
     },
 
     /**
@@ -245,7 +246,7 @@ export default Vue.extend({
       }
       try {
         const depositAmountBigNumber = BigNumber.from(this.depositBigNumber);
-        return !depositAmountBigNumber.gt(BigNumber.from(this.initialBalance.rawBalance));
+        return !depositAmountBigNumber.gt(BigNumber.from(this.initialBalance!.rawBalance));
       } catch (error) {
         return false;
       }
@@ -300,7 +301,7 @@ export default Vue.extend({
   },
   methods: {
     setDepositMaxAmount() {
-      this.depositAmount = utils.handleFormatToken(this.token, this.initialBalance.rawBalance.toString());
+      this.depositAmount = utils.handleFormatToken(this.token, this.initialBalance!.rawBalance.toString());
     },
     setDepositMinAmount() {
       this.depositAmount = utils.handleFormatToken(this.token, this.needToDeposit);
@@ -323,7 +324,7 @@ export default Vue.extend({
         try {
           this.subStep = "waitingUserConfirmation";
           this.step = "depositing";
-          const transferTransaction = await deposit(this.token, this.depositBigNumber);
+          const transferTransaction = await deposit(this.token, this.depositBigNumber, this.$accessor);
           if (!transferTransaction) {
             throw new Error("Unexpected payment error!");
           }
@@ -355,7 +356,7 @@ export default Vue.extend({
       try {
         this.subStep = "waitingUserConfirmation";
         this.step = "unlocking";
-        const unlockTransaction = await unlockToken(this.initialBalance.address as Address);
+        const unlockTransaction = await unlockToken(this.initialBalance!.address as Address);
         this.subStep = "committing";
         await unlockTransaction.wait();
         await this.$store.dispatch("wallet/getInitialBalances", true);

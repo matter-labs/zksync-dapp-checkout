@@ -8,12 +8,14 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend( {
   computed: {
     loggedIn() {
       return this.$store.getters["account/loggedIn"];
     },
   },
-};
+});
 </script>

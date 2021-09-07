@@ -68,8 +68,8 @@ All notable changes to this project will be documented in this file. Dates are d
 #	src/assets/style/components/_modal.scss
 #	src/assets/style/components/_valuesBlock.scss
 #	src/assets/style/layouts/_default.scss
-#	src/blocks/connectedWallet.vue
-#	src/blocks/infoBlock.vue
+#	src/blocks/ConnectedWallet.vue
+#	src/blocks/InfoBlock.vue
 #	src/blocks/lineTableHeader.vue
 #	src/blocks/loggingIn.vue
 #	src/blocks/modals.vue
