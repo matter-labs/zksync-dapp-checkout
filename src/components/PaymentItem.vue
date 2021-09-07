@@ -96,7 +96,7 @@ export default Vue.extend({
     dropdownOpened(val) {
       if(val===true) {
         this.$nextTick(()=>{
-          (this.$refs.dropdownBody as HTMLElement)?.focus();
+          (this.$refs.dropdownBody as HTMLElement)?.querySelector('input')?.focus();
         });
       }
     },
@@ -124,6 +124,7 @@ export default Vue.extend({
     setToken(token: TokenItem) {
       this.$set(this.valNow, 'token', token.symbol);
       this.dropdownOpened = false;
+      this.dropdownSearch = "";
     },
   },
 });
