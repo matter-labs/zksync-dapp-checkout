@@ -2604,7 +2604,7 @@ __metadata:
     stylelint-config-standard: latest
     stylelint-scss: latest
     tailwindcss: ^1.9.6
-    ts-loader: ^9.2.5
+    ts-loader: 9.0.0
     typed-vuex: latest
     vue: ^2.6.12
     vue-custom-scrollbar: ^1.4.0
@@ -22153,6 +22153,22 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"ts-loader@npm:9.0.0":
+  version: 9.0.0
+  resolution: "ts-loader@npm:9.0.0"
+  dependencies:
+    chalk: ^4.1.0
+    enhanced-resolve: ^5.0.0
+    loader-utils: ^2.0.0
+    micromatch: ^4.0.0
+    semver: ^7.3.4
+  peerDependencies:
+    typescript: "*"
+    webpack: "*"
+  checksum: 07fd708f15808ef3d5c7312263ea0b7aeda71da31bff4b61e3c76a81c6124e7227056a2327f3b76865e578484899adbdffe2a1d20cdad5fe641f5dbe9fac9f1c
+  languageName: node
+  linkType: hard
+
 "ts-loader@npm:^8.0.17":
   version: 8.3.0
   resolution: "ts-loader@npm:8.3.0"
@@ -22166,21 +22182,6 @@ fsevents@~2.3.2:
     typescript: "*"
     webpack: "*"
   checksum: 7915f4494b23889606696da0eaed509254bd8cbda23d52776f48f487f787c1b84edf197efffbf03582ba5e1f5cbfa84d31f144ce6357e8b33e552592b821e778
-  languageName: node
-  linkType: hard
-
-"ts-loader@npm:^9.2.5":
-  version: 9.2.5
-  resolution: "ts-loader@npm:9.2.5"
-  dependencies:
-    chalk: ^4.1.0
-    enhanced-resolve: ^5.0.0
-    micromatch: ^4.0.0
-    semver: ^7.3.4
-  peerDependencies:
-    typescript: "*"
-    webpack: ^5.0.0
-  checksum: 4f43b27ef05c9b6d77bb44f6415f25f706d961c94b09be11173288ed2bb149c74d9e2879c88128e11a032cc775020d1cdf6cc26f6125da68701b4e0f9c7b962d
   languageName: node
   linkType: hard
 

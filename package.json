@@ -78,6 +78,7 @@
     "nuxt-social-meta": "^1.0.0",
     "nuxt-typed-vuex": "latest",
     "nuxt-webfontloader": "^1.1.0",
+    "ts-loader": "9.0.0",
     "typed-vuex": "latest",
     "vue": "^2.6.12",
     "vue-custom-scrollbar": "^1.4.0",
@@ -119,7 +120,6 @@
     "stylelint-config-standard": "latest",
     "stylelint-scss": "latest",
     "tailwindcss": "^1.9.6",
-    "ts-loader": "^9.2.5",
     "webpack": "^5.52.0"
   },
   "optionalDependencies": {
