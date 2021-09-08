@@ -37,7 +37,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "2.6.0-0",
+  "version": "3.0.0-pre",
   "homepage": "https://checkout.zksync.io",
   "repository": {
     "type": "git",
@@ -78,6 +78,7 @@
     "nuxt-social-meta": "^1.0.0",
     "nuxt-typed-vuex": "latest",
     "nuxt-webfontloader": "^1.1.0",
+    "ts-loader": "9.0.0",
     "typed-vuex": "latest",
     "vue": "^2.6.12",
     "vue-custom-scrollbar": "^1.4.0",
@@ -99,8 +100,6 @@
     "@nuxtjs/google-fonts": "latest",
     "@nuxtjs/sentry": "latest",
     "@tailwindcss/postcss7-compat": "^2.0.3",
-    "@types/babel__core": "^7",
-    "@types/babel__preset-env": "^7",
     "@types/jest": "^26.0.23",
     "autoprefixer": "^9",
     "babel-core": "^7.0.0-bridge.0",
@@ -121,7 +120,10 @@
     "stylelint-config-standard": "latest",
     "stylelint-scss": "latest",
     "tailwindcss": "^1.9.6",
+<<<<<<< HEAD
     "ts-loader": "^9.2.5",
+=======
+>>>>>>> cd64ac29f7c26aab54d81c026d75ab80a14272d1
     "webpack": "^5.52.0"
   },
   "optionalDependencies": {
@@ -146,7 +148,7 @@
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",
-    "ci:build:prod": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
+    "ci:build:mainnet": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
     "ci:build:rinkeby": "yarn ci:prepare:rinkeby && yarn generate --fail-on-error",
     "ci:build:ropsten": "yarn ci:prepare:ropsten && yarn generate --fail-on-error",
     "ci:build:rinkeby-beta": "yarn ci:prepare:rinkeby-beta && yarn generate --fail-on-error",

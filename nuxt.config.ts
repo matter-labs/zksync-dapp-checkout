@@ -229,9 +229,9 @@ const config: NuxtConfig = {
             },
             eslint: {
               config: [".eslintrc.js", "tsconfig-eslint.json"],
-              files: "**/*.{ts,js,vue}",
+              files: "src/**/*.{ts,js,vue}",
             },
-            files: "**/*.{ts,vue}",
+            files: "src/**/*.{ts,vue}",
           },
         },
       },
