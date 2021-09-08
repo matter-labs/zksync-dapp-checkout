@@ -1,17 +1,12 @@
 import { GweiBalance, ZkInNFT } from "@/types/lib";
 import { walletData } from "@/plugins/walletData";
-import {BigNumber} from "ethers";
-import {Address, TokenSymbol} from "~/types/index.d";
-import {closestPackableTransactionFee} from "zksync";
-import {ZkSyncTransaction} from "zksync-checkout/src/types";
-import {ETHOperation, submitSignedTransactionsBatch} from "zksync/build/wallet";
-import { accessorType } from "@/store";
-import { Transaction } from "zksync/build/wallet";
-import { Address, SignedTransaction, TokenSymbol, TxEthSignature } from "zksync/build/types";
-import { addCPKToBatch } from "@/plugins/walletActions/cpk";
+import { BigNumber } from "ethers";
 import { closestPackableTransactionFee, Provider } from "zksync";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
-import { BigNumber } from "ethers";
+import { Transaction } from "zksync/build/wallet";
+import { accessorType } from "@/store";
+import { Address, SignedTransaction, TokenSymbol, TxEthSignature } from "zksync/build/types";
+import { addCPKToBatch } from "@/plugins/walletActions/cpk";
 
 export const submitSignedTransactionsBatch = async (provider: Provider, signedTxs: SignedTransaction[], ethSignatures?: TxEthSignature[]): Promise<Transaction[]> => {
   const transactionHashes = await provider.submitTxsBatch(
@@ -36,7 +31,7 @@ export const submitSignedTransactionsBatch = async (provider: Provider, signedTx
  * @returns {Promise<Transaction | Transaction[]>}
  */
 export const transactionBatch = async (
-  transactions: Array<ZkSyncTransaction>,
+  transactions: ZkSyncTransaction[],
   feeToken: TokenSymbol,
   fee: BigNumber | string,
   nonce: number,
@@ -122,7 +117,7 @@ export const transaction = async (
   const batchTransactionData = await batchBuilder.build();
   const transactions = await submitSignedTransactionsBatch(walletData.get().syncProvider!, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash });
+    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r) => {});
   }
   return labelTransactions(transactions);
 };
@@ -173,7 +168,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
   const batchTransactionData = await batchBuilder.build();
   const transactions = await submitSignedTransactionsBatch(walletData.get().syncProvider!, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash });
+    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r) => {});
   }
   return labelTransactions(transactions);
 };
@@ -221,7 +216,7 @@ export const withdrawNFT = async ({ address, token, feeToken, fastWithdraw, fee,
   const batchTransactionData = await batchBuilder.build();
   const transactions = await submitSignedTransactionsBatch(walletData.get().syncProvider!, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash });
+    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r) => {});
   }
   return labelTransactions(transactions);
 };
@@ -259,7 +254,7 @@ export const transferNFT = async (
   const batchTransactionData = await batchBuilder.build();
   const transactions = await submitSignedTransactionsBatch(walletData.get().syncProvider!, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash });
+    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r) => {});
   }
   return labelTransactions(transactions);
 };
@@ -284,7 +279,7 @@ export const mintNFT = async (address: Address, hash: string, feeToken: TokenSym
   const batchTransactionData = await batchBuilder.build();
   const transactions = await submitSignedTransactionsBatch(walletData.get().syncProvider!, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash });
+    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r) => {});
   }
   return labelTransactions(transactions);
 };
@@ -343,7 +338,7 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: ty
     amount,
     ethTxOptions,
   });
-  store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount });
+  store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount }).then((r) => {});
   return depositResponse;
 };
 

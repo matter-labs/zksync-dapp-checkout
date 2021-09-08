@@ -1,5 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { TransactionFee, TotalByToken, TransactionData } from "~/types/lib.d";
+import { TotalByToken, TransactionData, ZKInBatchFee } from "~/types/lib.d";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { closestPackableTransactionAmount, closestPackableTransactionFee } from "zksync";
@@ -9,11 +9,11 @@ import { walletData } from "@/plugins/walletData";
 export const state = () => ({
   isError: <boolean>false,
   noDataError: <unknown | undefined>undefined,
-  transactions: [] as Array<ZkSyncTransaction>,
-  fromAddress: "" as Address,
+  transactions: <ZkSyncTransaction[]>[],
+  fromAddress: <Address | undefined>undefined,
   feeToken: <TokenSymbol | undefined>"",
-  transactionBatchFee: {} as TransactionFee,
-  accountUnlockedFee: false as false | BigNumber,
+  transactionBatchFee: <ZKInBatchFee | undefined>undefined,
+  accountUnlockedFee: <BigNumber | string>"",
 });
 
 export type CheckoutModuleState = ReturnType<typeof state>;
@@ -21,20 +21,20 @@ export type CheckoutModuleState = ReturnType<typeof state>;
 export const getters = getterTree(state, {
   getTransactionData: (state): TransactionData => ({
     transactions: state.transactions,
-    fromAddress: state.fromAddress,
+    fromAddress: state.fromAddress!,
     feeToken: state.feeToken as TokenSymbol,
   }),
-  getAccountUnlockFee: (state): false | BigNumber => {
+  getAccountUnlockFee: (state): string | BigNumber => {
     return state.accountUnlockedFee;
   },
-  getAllFees: (state: CheckoutModuleState, getters, rootState, rootGetters: any): Array<TransactionFee> => {
+  getAllFees: (state: CheckoutModuleState): ZKInBatchFee[] => {
     if (state.isError) {
       return [];
     }
-    const allFees = [] as Array<TransactionFee>;
-    allFees.push(state.transactionBatchFee);
-    if (state.accountUnlockedFee && rootGetters["wallet/isAccountLocked"]) {
-      allFees.push(<TransactionFee>{
+    const allFees: ZKInBatchFee[] = [];
+    allFees.push(state.transactionBatchFee!);
+    if (state.accountUnlockedFee && window!.$nuxt!.$accessor!.wallet!.isAccountLocked) {
+      allFees.push(<ZKInBatchFee>{
         name: "One-time account activation fee",
         key: "changePubKey",
         amount: state.accountUnlockedFee,
@@ -54,10 +54,12 @@ export const getters = getterTree(state, {
       }
     };
     for (const item of state.transactions) {
-      addToTotalByToken(BigNumber.from(item.amount), item.token);
+      const bigNumber = BigNumber.from(item.amount ? item.amount.toString() : "");
+      addToTotalByToken(bigNumber, item.token);
     }
     for (const item of allFees) {
-      addToTotalByToken(item.amount, item.token);
+      const bigNumber = BigNumber.from(item.amount ? item.amount.toString() : "");
+      addToTotalByToken(bigNumber, item.token);
     }
     return Object.fromEntries(totalByToken);
   },
@@ -80,10 +82,10 @@ export const mutations = mutationTree(state, {
     state.fromAddress = fromAddress;
     state.feeToken = feeToken;
   },
-  setTransactionBatchFee(state, transaction: TransactionFee): void {
+  setTransactionBatchFee(state, transaction: ZKInBatchFee): void {
     state.transactionBatchFee = transaction;
   },
-  setAccountUnlockFee(state, accountUnlockFee: false | BigNumber): void {
+  setAccountUnlockFee(state, accountUnlockFee: BigNumber = BigNumber.from("")): void {
     state.accountUnlockedFee = accountUnlockFee;
   },
   setError(state, errorData): void {
@@ -98,34 +100,30 @@ export const actions = actionTree(
     setError({ commit }, error: unknown): void {
       commit("setError", error);
     },
-    async getTransactionBatchFee({ state, commit }) {
-      const syncProvider = walletData.get().syncProvider;
+    getTransactionBatchFee: async ({ state, commit }): Promise<ZKInBatchFee> => {
       const types = new Array(state.transactions.length).fill("Transfer") as "Transfer"[];
       const addresses = state.transactions.map((tx) => tx.to);
       // The fee transaction
       types.push(types[0]);
       addresses.push(addresses[0]);
-      const transactionFee = await syncProvider!.getTransactionsBatchFee(types, addresses, state.feeToken!);
+      const transactionFee = await walletData.get().syncProvider!.getTransactionsBatchFee(types, addresses, state.feeToken!);
       const minFee = BigNumber.from(transactionFee);
-      // @ts-ignore
-      commit("setTransactionBatchFee", {
+
+      const batchFee = <ZKInBatchFee>{
         name: "Tx Batch Fee / zkSync",
         key: "txBatchFee",
         amount: closestPackableTransactionFee(minFee.add(minFee.div("100").mul("5"))),
-        realAmount: BigNumber.from(transactionFee),
-        token: state.feeToken! as TokenSymbol,
-      });
-      return {
-        name: "Tx Batch Fee / zkSync",
-        key: "txBatchFee",
-        amount: closestPackableTransactionFee(minFee.add(minFee.div("100").mul("5"))),
-        realAmount: BigNumber.from(transactionFee),
+        realAmount: transactionFee,
         token: state.feeToken! as TokenSymbol,
       };
+
+      commit("setTransactionBatchFee", batchFee);
+      return batchFee;
     },
-    async getAccountUnlockFee({ state, commit }): Promise<void> {
+    async fetchAccountUnlockFee({ state, commit }): Promise<BigNumber> {
       const syncProvider = walletData.get().syncProvider;
       const isAccountLocked = this.getters["wallet/isAccountLocked"];
+      let fetchedFee = BigNumber.from("");
       if (isAccountLocked) {
         const syncWallet = walletData.get().syncWallet;
         const foundFee = await syncProvider?.getTransactionFee(
@@ -137,10 +135,10 @@ export const actions = actionTree(
           syncWallet?.address() || "",
           state.feeToken!,
         );
-        commit("setAccountUnlockFee", closestPackableTransactionFee(BigNumber.from(foundFee!.totalFee.toString())));
-      } else {
-        commit("setAccountUnlockFee", false);
+        fetchedFee = closestPackableTransactionFee(BigNumber.from(foundFee!.totalFee.toString()));
       }
+      commit("setAccountUnlockFee", fetchedFee);
+      return fetchedFee;
     },
     async closeCheckout(): Promise<void> {},
   },

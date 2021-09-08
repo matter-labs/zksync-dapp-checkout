@@ -15,20 +15,20 @@
           <strong>{{ depositBigNumber | formatToken(token) }} {{ token }}</strong>
           to zkSync L2 account. Your on-chain balance is
           <strong
-            class="cursor-pointer"
-            @click="
+              class="cursor-pointer"
+              @click="
               setDepositMaxAmount();
               modal = '';
             "
-            >{{ initialBalance.rawBalance | formatToken(token) }} {{ token }}</strong
+          >{{ initialBalance.rawBalance | formatToken(token) }} {{ token }}</strong
           >.
         </div>
         <div v-else-if="modal === 'insufficientL1Min'" class="text-sm">
           <b>{{ depositBigNumber | formatTokenPretty(token) }} {{ token }}</b> will not be enough to commit the transaction. The minimal amount is:
         </div>
         <zk-values-block
-          class="mt-3 cursor-pointer"
-          @click="
+            class="mt-3 cursor-pointer"
+            @click="
             setDepositMinAmount();
             modal = '';
           "
@@ -44,8 +44,8 @@
           </template>
         </zk-values-block>
         <zk-values-block
-          class="mt-3 cursor-pointer"
-          @click="
+            class="mt-3 cursor-pointer"
+            @click="
             setDepositRecommendedAmount();
             modal = '';
           "
@@ -55,8 +55,8 @@
           </template>
           <template slot="right-top">
             <div class="flex flex-col items-end whitespace-nowrap">
-              <div class="value">{{ recommendedDeposit | formatToken(token) }} {{ token }}</div>
-              <div class="secondaryValue">{{ recommendedDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}</div>
+              <div class="value">{{  recommendedDeposit | formatToken(token) }} {{ token }}</div>
+              <div class="secondaryValue">{{  recommendedDeposit | formatUsdAmount(tokensPrices[token] && tokensPrices[token].price, token) }}</div>
             </div>
           </template>
         </zk-values-block>
@@ -66,7 +66,7 @@
     <zk-modal :value="modal === 'customError'" @close="modal = ''">
       <template slot="header">
         <div class="withIcon text-red">
-          <i class="fad fa-info-square" />
+          <i class="fad fa-info-square"/>
           <div>{{ errorModal.headline }}</div>
         </div>
       </template>
@@ -93,7 +93,7 @@
       <template v-if="isInProgress" slot="right">
         <div class="flex items-center">
           <div class="text-gray text-xs font-medium" :class="{ 'mr-2': isLoading }">{{ lineStateText }}</div>
-          <zk-loader v-if="isLoading" color="gray" size="sm" />
+          <zk-loader v-if="isLoading" color="gray" size="sm"/>
         </div>
       </template>
       <template v-else>
@@ -127,13 +127,13 @@
 </template>
 
 <script lang="ts">
-import { Address,  } from "zksync/build/types";
-import { ETHER_NETWORK_NAME } from "@/plugins/build";
-import { walletData } from "@/plugins/walletData";
+import {Address} from "zksync/build/types";
+import {ETHER_NETWORK_NAME} from "@/plugins/build";
+import {walletData} from "@/plugins/walletData";
 import utils from "@/plugins/utils";
-import {Balance, GweiBalance, TokenPrices, ZkInBalance} from "@/types/lib";
-import { deposit, unlockToken } from "@/plugins/walletActions/transaction";
-import { BigNumber } from "ethers";
+import {Balance, GweiBalance, TokenPrices, ZkInBalance, ZKInBatchFee} from "@/types/lib";
+import {deposit, unlockToken} from "@/plugins/walletActions/transaction";
+import {BigNumber} from "ethers";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -163,7 +163,14 @@ export default Vue.extend({
     };
   },
   computed: {
-    unlocked(): boolean {
+    fullEthBalances(): ZkInBalance[] {
+      return this.$accessor.wallet.getzkBalances;
+    },
+    fullZkBalances(): ZkInBalance[] {
+
+          return this.$accessor.wallet.getzkBalances;
+    },
+    async unlocked(): Promise<boolean> {
       return this.enoughZkBalance || this.initialBalance!.unlocked!.gte(this.needToDeposit);
     },
     isDeposit(): boolean {
@@ -185,10 +192,16 @@ export default Vue.extend({
       return this.$accessor.tokens.getTokenPrices;
     },
     zkBalance(): Balance | undefined {
-      return this.$accessor.wallet.getzkBalances!.find((e: Balance) => e.symbol === this.token);
+      let list = this.fullZkBalances;
+      const availableTokens = this.$accessor.tokens.getAvailableTokens;
+      list = (list as ZkInBalance[]).filter((e) => availableTokens.hasOwnProperty(e.symbol));
+      return list!.find((e: ZkInBalance) => e.symbol===this.token) as Balance
     },
     initialBalance(): Balance | undefined {
-      return this.$accessor.wallet.getInitialBalances!.find((e: Balance) => e.symbol === this.token);
+      let list = this.fullEthBalances;
+      const availableTokens = this.$accessor.tokens.getAvailableTokens;
+      list = (list as ZkInBalance[]).filter((e) => availableTokens.hasOwnProperty(e.symbol));
+      return list!.find((e: ZkInBalance) => e.symbol === this.token) as  Balance
     },
     depositBigNumber(): GweiBalance {
       if (!this.depositAmount) {
@@ -202,11 +215,11 @@ export default Vue.extend({
     },
     needToDeposit(): GweiBalance {
       try {
-        const txBatchFee = this.$store.getters["checkout/getTransactionBatchFee"];
-        const recommendedAmount = BigNumber.from(this.total).sub(this.zkBalance!.rawBalance);
-        if(txBatchFee.token === this.token) {
-          const amount = BigNumber.from(this.total).sub(txBatchFee.amount).add(txBatchFee.realAmount).sub(this.zkBalance!.rawBalance);
-          if(amount.lte("0") && recommendedAmount.gt("0")) {
+        const txBatchFee: ZKInBatchFee | undefined = this.$accessor.checkout.transactionBatchFee;
+        const recommendedAmount: BigNumber = BigNumber.from(this.total).sub(this.zkBalance!.rawBalance);
+        if(txBatchFee!.token === this.token) {
+          const amount: BigNumber = BigNumber.from(this.total).sub(txBatchFee!.amount).add(txBatchFee!.realAmount).sub(this.zkBalance!.rawBalance);
+          if (amount.lte("0") && recommendedAmount.gt("0")) {
             return amount.toString();
           }
         }
@@ -217,8 +230,10 @@ export default Vue.extend({
     },
     recommendedDeposit(): GweiBalance {
       try {
-        if(this.token === this.$store.getters["checkout/getTransactionData"].feeToken) {
-          const batchFee = this.$store.getters["checkout/getTransactionBatchFee"].realAmount.div(100).mul(30);
+        if(this.token === this.$accessor.checkout.getTransactionData!.feeToken) {
+          const txBatchFee = this.$accessor.checkout.transactionBatchFee;
+          console.log(txBatchFee);
+          const batchFee = BigNumber.from(txBatchFee!.realAmount).div(100).mul(30);
           return BigNumber.from(this.needToDeposit).add(batchFee).toString();
         }
         return this.needToDeposit;
@@ -279,11 +294,11 @@ export default Vue.extend({
       },
     },
     async subStep(val) {
-      if (val === "waitingUserConfirmation") {
+      if (val==="waitingUserConfirmation") {
         this.lineStateText = "Confirm operation";
-      } else if (val === "committing") {
+      } else if (val==="committing") {
         this.lineStateText = "Committing transaction...";
-      } else if (val === "confirming") {
+      } else if (val==="confirming") {
         const confirmations = await walletData.get().syncProvider!.getConfirmationsForEthOpAmount();
         this.lineStateText = `Waiting for ${confirmations} confirmations.`;
       } else {
@@ -291,7 +306,7 @@ export default Vue.extend({
       }
     },
     step(val) {
-      this.$emit("input", this.enoughZkBalance && val === "default");
+      this.$emit("input", this.enoughZkBalance && val==="default");
     },
   },
   mounted() {
@@ -300,16 +315,16 @@ export default Vue.extend({
     }
   },
   methods: {
-    setDepositMaxAmount() {
+    setDepositMaxAmount(): void {
       this.depositAmount = utils.handleFormatToken(this.token, this.initialBalance!.rawBalance.toString());
     },
-    setDepositMinAmount() {
+    async setDepositMinAmount(): Promise<void> {
       this.depositAmount = utils.handleFormatToken(this.token, this.needToDeposit);
     },
     setDepositRecommendedAmount() {
       this.depositAmount = utils.handleFormatToken(this.token, this.recommendedDeposit);
     },
-    async deposit() {
+    async deposit(): Promise<void> {
       if (!this.enoughOnInitialToDeposit) {
         this.modal = "insufficientL1Deposit";
       } else if (!this.enoughDepositAmount) {
@@ -332,7 +347,7 @@ export default Vue.extend({
           await transferTransaction.awaitEthereumTxCommit();
           this.subStep = "confirming";
           await transferTransaction.awaitReceipt();
-          await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
+          await this.$accessor.wallet.requestZkBalances({accountState: undefined, force: true});
           this.step = "default";
         } catch (error) {
           this.step = "default";
@@ -343,23 +358,23 @@ export default Vue.extend({
             };
           };
           createErrorModal(
-            error.message && !error.message.includes("User denied")
-              ? error.message.includes("Fee Amount is not packable")
-                ? "Fee Amount is not packable"
-                : "Transaction Amount is not packable"
-              : "Unknown error. Try again later.",
+              error.message && !error.message.includes("User denied")
+                  ? error.message.includes("Fee Amount is not packable")
+                      ? "Fee Amount is not packable"
+                      :"Transaction Amount is not packable"
+                  :"Unknown error. Try again later.",
           );
         }
       }
     },
-    async unlock() {
+    async unlock(): Promise<void> {
       try {
         this.subStep = "waitingUserConfirmation";
         this.step = "unlocking";
         const unlockTransaction = await unlockToken(this.initialBalance!.address as Address);
         this.subStep = "committing";
         await unlockTransaction.wait();
-        await this.$store.dispatch("wallet/getInitialBalances", true);
+        await this.$accessor.wallet.requestInitialBalances(true);
         this.step = "default";
       } catch (error) {
         this.step = "default";

@@ -1,7 +1,7 @@
 <template>
-  <div class="linkLayout min-h-screen">
+  <div class="linkLayout min-h-screen w-full">
     <block-modals />
-    <div class="routerContainer w-full h-full px-0 md:px-10">
+    <div class="routerContainer w-full h-full px-5 md:px-10">
       <block-logging-in/>
       <nuxt class="routeMain w-full h-full"/>
     </div>
@@ -13,8 +13,8 @@ import Vue from "vue";
 
 export default Vue.extend( {
   computed: {
-    loggedIn() {
-      return this.$store.getters["account/loggedIn"];
+    loggedIn(): boolean {
+      return this.$accessor.provider.loggedIn;
     },
   },
 });

@@ -39,15 +39,15 @@ export default Vue.extend({
       return window.location.hostname;
     },
     currentModal() {
-      return this.$store.getters.currentModal;
+      return this.$accessor.currentModal;
     },
     transactionData(): TransactionData {
-      return this.$store.getters["checkout/getTransactionData"];
+      return this.$accessor.checkout.getTransactionData;
     },
   },
   methods: {
     closeModal() {
-      this.$store.dispatch("closeActiveModal");
+      this.$accessor.closeActiveModal();
     },
   },
 });

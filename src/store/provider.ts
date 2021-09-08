@@ -33,6 +33,7 @@ const onboard: API = Onboard({
 export const state = () => ({
   onboard: <API>onboard,
   accountName: <string>"",
+  accountID: <number | undefined>undefined,
   authStep: <tProviderState>"ready",
   selectedWallet: <string | undefined>window.localStorage.getItem("onboardSelectedWallet") === null ? undefined : (window.localStorage.getItem("onboardSelectedWallet") as string),
   loadingHint: <string>"",
@@ -42,22 +43,38 @@ export const state = () => ({
 export type ProviderModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setAuthStage(state: ProviderModuleState, currentStep: tProviderState) {
+  setAuthStage(state: ProviderModuleState, currentStep: tProviderState): void {
     state.authStep = currentStep;
   },
-  setAddress(state: ProviderModuleState, address?: Address) {
+  setAddress(state: ProviderModuleState, address?: Address): void {
     state.address = address;
+    if (address) {
+      walletData
+        .get()
+        .syncProvider!.getState(address)
+        .then(
+          (accountState: AccountState): void => {
+            if (accountState!.id) {
+              state.accountID = accountState.id;
+            }
+          },
+          (error): void => {
+            console.warn(`Error while getting account ID: ${error}`);
+            state.accountID = undefined;
+          },
+        );
+    }
   },
-  storeSelectedWallet(state: ProviderModuleState, selectedWallet?: string) {
+  storeSelectedWallet(state: ProviderModuleState, selectedWallet?: string): void {
     if (selectedWallet) {
       localStorage.setItem("onboardSelectedWallet", selectedWallet);
     }
     state.selectedWallet = selectedWallet;
   },
-  setLoadingHint(state: ProviderModuleState, text: string) {
+  setLoadingHint(state: ProviderModuleState, text: string): void {
     state.loadingHint = text;
   },
-  setName(state: ProviderModuleState, name?: string) {
+  setName(state: ProviderModuleState, name?: string): void {
     if (name !== undefined) {
       state.accountName = name;
     }

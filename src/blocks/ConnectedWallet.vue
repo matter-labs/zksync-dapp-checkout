@@ -23,7 +23,7 @@
               <span>Open wallet</span>
               <i class="fas fa-external-link" />
             </zk-defbtn>
-            <zk-defbtn outline @click="logout()">
+            <zk-defbtn outline @click="logout">
               <span class="text-red">Disconnect</span>
               <i class="text-red far fa-times" />
             </zk-defbtn>
@@ -38,13 +38,16 @@
 import Vue from "vue";
 
 import {ETHER_NETWORK_NAME, ETHER_PRODUCTION} from "@/plugins/build";
-
+import {Address} from "zksync/build/types";
+import utils from "@/plugins/utils";
 
 export default Vue.extend({
   computed: {
+    address(): Address | undefined {
+      return this.$accessor.provider.address! as Address;
+    },
     ownAddress(): string[] {
-      const address = this.$store.getters["account/address"];
-      return [address.substr(0, 11), address.substr(11, address.length - 5 - 11), address.substr(address.length - 5, address.length)];
+      return [this.address!.substr(0, 11), this.address!.substr(11, this.address!.length - 5 - 11), this.address!.substr(this.address!.length - 5, this.address!.length)];
     },
     isProd(): boolean {
       return ETHER_PRODUCTION;
@@ -55,19 +58,12 @@ export default Vue.extend({
   },
   methods: {
     logout(): void {
-      this.$store.dispatch("wallet/logout");
-      this.$router.push("/connect");
+      this.$accessor.wallet.logout();
     },
     copyAddress(): void {
-      const elem = document.createElement("textarea");
-      elem.style.position = "absolute";
-      elem.style.left = -99999999 + "px";
-      elem.style.top = -99999999 + "px";
-      elem.value = this.$store.getters["account/address"];
-      document.body.appendChild(elem);
-      elem.select();
-      document.execCommand("copy");
-      document.body.removeChild(elem);
+      if (this.address) {
+        const copied = utils.copy(this.address)
+      }
     }
   },
 });

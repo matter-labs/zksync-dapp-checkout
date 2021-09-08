@@ -180,7 +180,7 @@ export default {
     return utils.isAddress(address);
   },
 
-  searchInArr: (search: string, list: Array<unknown> | ZKTypeDisplayToken[], searchParam: (e: unknown) => string) => {
+  searchInArr: (search: string, list: unknown[] | ZKTypeDisplayToken[], searchParam: (e: unknown) => string) => {
     if (!search.trim()) {
       return list;
     }
@@ -212,7 +212,7 @@ export default {
   /**
    * Copy text
    */
-  copy(value: string) {
+  copy(value: string): boolean {
     const elem = document.createElement("textarea");
     elem.style.position = "absolute";
     elem.style.left = -99999999 + "px";
@@ -220,7 +220,8 @@ export default {
     elem.value = value;
     document.body.appendChild(elem);
     elem.select();
-    document.execCommand("copy");
+    const result = document.execCommand("copy");
     document.body.removeChild(elem);
+    return result;
   },
 };

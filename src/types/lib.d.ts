@@ -1,4 +1,3 @@
-import { API } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { Route } from "vue-router/types";
 import { Provider } from "zksync";
@@ -20,22 +19,6 @@ import {
 import { ETHOperation, Transaction, Wallet, ZKSyncTxError } from "zksync/build/wallet";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
 
-export type TransactionData = {
-  transactions: Array<ZkSyncTransaction>;
-  fromAddress: Address;
-  feeToken: TokenSymbol;
-};
-export type TransactionFee = {
-  name: string;
-  key: string;
-  amount: BigNumber;
-  token: TokenSymbol;
-  to?: Address;
-};
-export type TotalByToken = {
-  [token: string]: BigNumber;
-};
-
 export interface ZkInFeesInterface {
   [symbol: string]: {
     [feeSymbol: string]: {
@@ -48,6 +31,30 @@ export interface ZkInFeesInterface {
     };
   };
 }
+
+export declare interface ZKInBatchFee {
+  name: string;
+  key: string;
+  amount: BigNumber | BigNumberish | GweiBalance;
+  realAmount: BigNumber | BigNumberish | GweiBalance;
+  token: TokenSymbol;
+}
+
+export type TransactionData = {
+  transactions: ZkSyncTransaction[];
+  fromAddress: Address;
+  feeToken?: TokenSymbol;
+};
+export type TransactionFee = {
+  name: string;
+  key: string;
+  amount: BigNumber;
+  token: TokenSymbol;
+  to?: Address;
+};
+export type TotalByToken = {
+  [token: string]: BigNumber;
+};
 
 export type PaymentItem = {
   address: Address;
@@ -77,8 +84,8 @@ export declare type ZKTypeDisplayToken = {
 
 export declare type ZKDisplayToken = {
   symbol: string;
-  rawBalance: BigNumber | undefined;
-  status: string | undefined;
+  rawBalance?: BigNumber;
+  status?: string;
 };
 
 export declare type VueRefs = Vue & { validate: () => boolean };
@@ -115,12 +122,25 @@ export interface ZkInBalance {
   id: number;
   symbol: TokenSymbol;
   status: "Pending" | "Verified";
-  balance: GweiBalance;
+  balance: DecimalBalance;
   rawBalance: BigNumber;
-  verifiedBalance: GweiBalance;
+  verifiedBalance: DecimalBalance;
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
+}
+
+export interface Balance {
+  id?: number;
+  symbol: TokenSymbol;
+  status: "Pending" | "Verified";
+  balance: DecimalBalance;
+  rawBalance: BigNumber;
+  verifiedBalance: DecimalBalance;
+  tokenPrice: string;
+  restricted: boolean;
+  unlocked?: BigNumber;
+  address?: Address;
 }
 
 export interface ZkInNFT extends NFT {
@@ -205,19 +225,6 @@ export interface ZkInToken {
   unlocked?: boolean;
   address?: string;
 }
-
-//
-// export declare interface ZkInTransactionInfo {
-//  continueBtnFunction: boolean;
-//  amount: GweiBalance;
-//  success: boolean;
-//  fee: { amount: GweiBalance; token: false | ZkInBalance };
-//  recipient?: Address;
-//  continueBtnText?: string;
-//  type: string;
-//  hash: string;
-//  explorerLink: string;
-// }
 
 export interface ZkInContact {
   address: Address;
@@ -305,18 +312,6 @@ export interface Token {
   formattedBalance?: string;
   unlocked: boolean;
   unlockedAmount: BigNumber;
-}
-
-export interface Balance {
-  symbol: TokenSymbol;
-  status: "Pending" | "Verified";
-  balance: DecimalBalance;
-  rawBalance: BigNumber;
-  verifiedBalance: DecimalBalance;
-  tokenPrice: string;
-  restricted: boolean;
-  unlocked?: BigNumber;
-  address?: string;
 }
 
 export declare interface networkEthId {
@@ -413,11 +408,15 @@ export interface ZkIFeesInterface {
 }
 
 export interface ZKIRootState {
-  accountModalOpened: boolean;
-  currentModal?: string;
+  accountModalOpened?: string;
   previousRoute?: Route;
+  /**
+   * Used to handle modals and simplify the code
+   */
+  currentModal?: string;
   step: string;
   darkMode: boolean;
+  lastScroll?: number;
 }
 
 export type ZkInBalancesList = {
@@ -463,10 +462,8 @@ export declare interface feesInterface {
 }
 
 export declare interface iWallet {
-  onboard?: API;
   isAccountLocked: boolean;
   zkTokens: { lastUpdated: number; list: ZkInBalance[] };
-  nftTokens: { lastUpdated: number; list: ZkInNFT[] };
   initialTokens: { lastUpdated: number; list: ZkInBalance[] };
   transactionsHistory: { lastUpdated: number; list: ZkInTx[] };
   withdrawalProcessingTime: false | { normal: number; fast: number };

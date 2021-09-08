@@ -3,7 +3,7 @@
     <div class="infoBlock border-none lg:min-h-screen py-4 md:py-10 px-5 md:px-10">
       <header class="lg:mb-6">
         <div class="flex items-end justify-center md:items-center mb-2">
-          <a href="https://zksync.io" class="logo-container" target="_blank"><logo /></a>
+          <a href="https://zksync.io" class="logo-container" target="_blank"><block-logo /></a>
           <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
             <span class="networkName text-sm font-light inline-flex items-center" v-if="!isMainnet">
@@ -122,15 +122,11 @@
 <script lang="ts">
 import Vue from "vue";
 import utils from "@/plugins/utils";
-import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/types/lib.d";
+import {GweiBalance, TokenPrices, TotalByToken, TransactionData, ZKInBatchFee} from "@/types/lib.d";
 import { BigNumber } from "ethers";
-import Logo from "@/blocks/logo.vue";
 import { ETHER_NETWORK_NAME, ETHER_PRODUCTION } from "~/plugins/build";
 
 export default Vue.extend({
-  components: {
-    Logo,
-  },
   data() {
     return {
       totalOpened: false,
@@ -143,10 +139,10 @@ export default Vue.extend({
       {
         return false;
       }
-      return this.$store.getters["checkout/getErrorState"] !== true
+      return this.$accessor.checkout.getErrorState !== true
     },
     loggedIn(): boolean {
-      return this.$store.getters["account/loggedIn"];
+      return this.$accessor.provider.loggedIn;
     },
     network(): string {
       return ETHER_NETWORK_NAME;
@@ -157,11 +153,11 @@ export default Vue.extend({
     transactionData(): TransactionData {
       return this.$accessor.checkout.getTransactionData;
     },
-    allFees(): Array<TransactionFee> {
+    allFees(): ZKInBatchFee[] {
       if (!this.loggedIn) {
-        return this.$store.getters["checkout/getAllFees"].filter((item: TransactionFee) => item.key !== "changePubKey");
+        return this.$accessor.checkout.getAllFees!.filter((item: ZKInBatchFee) => item.key !== "changePubKey");
       }
-      return this.$store.getters["checkout/getAllFees"];
+      return this.$accessor.checkout.getAllFees!;
     },
     totalFees(): GweiBalance {
       const allFees = this.allFees;
@@ -187,10 +183,10 @@ export default Vue.extend({
       return totalUSD < 0.01 ? "<$0.01" : `$${totalUSD.toFixed(2)}`;
     },
     totalByToken(): TotalByToken {
-      return this.$store.getters["checkout/getTotalByToken"];
+      return this.$accessor.checkout.getTotalByToken;
     },
     tokensPrices(): TokenPrices {
-      return this.$store.getters["tokens/getTokenPrices"];
+      return this.$accessor.tokens.getTokenPrices;
     },
   },
 });

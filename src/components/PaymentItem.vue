@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { PaymentItem, Tokens, ZkInTokenItem } from "@/types/lib.d";
+import {PaymentItem, Tokens, ZkInTokenItem} from "@/types/lib";
 
 export default Vue.extend({
   props: {
@@ -108,7 +108,7 @@ export default Vue.extend({
   },
   computed: {
     tokens: function(): Tokens {
-      return this.$store.getters["tokens/getAllTokens"];
+      return this.$accessor.tokens.getAllTokens;
     },
     displayedTokens: function(): Tokens {
       let result = {}, key;

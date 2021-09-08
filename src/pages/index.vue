@@ -66,7 +66,7 @@
       </template>
     </zk-modal>
 
-    <zk-modal v-if="errorModal !== false" :value="errorModal !== false" @close="errorModal = false">
+    <zk-modal v-if="errorModal" :value="errorModal" @close="errorModal = undefined">
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square"/>
@@ -80,7 +80,7 @@
       </template>
     </zk-modal>
 
-    <connected-wallet/>
+    <block-connected-wallet/>
 
     <div v-if="step === 'main'" class="w-full">
       <zk-max-height :value="!tokenItemsValid[transactionData.feeToken]" class="mt-5 md:mt-7">
@@ -91,7 +91,7 @@
             </template>
             <template slot="default">
               <div class="text-sm text-gray font-light">
-                The default recommended <span class="font-normal">{{ tr ansactionData.feeToken }}</span> amount to deposit is <span class="font-normal">25% higher</span> than the
+                The default recommended <span class="font-normal">{{ transactionData.feeToken }}</span> amount to deposit is <span class="font-normal">25% higher</span> than the
                 minimal required one for paying fees to take into account the risk of fluctuating transaction fees.
               </div>
             </template>
@@ -99,12 +99,12 @@
         </div>
       </zk-max-height>
 
-      <line-table-header class="mt-5 mb-2">
+      <block-line-table-header class="mt-5 mb-2">
         <template slot="first"> To pay</template>
         <template slot="second"> L2 balance</template>
         <template slot="first:md"> To pay / L2 balance</template>
         <template slot="right"/>
-      </line-table-header>
+      </block-line-table-header>
       <transaction-token v-for="(total, token) in totalByToken" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="total.toString()"/>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
@@ -141,12 +141,12 @@
           </zk-defbtn>
         </div>
       </div>
-      <line-table-header class="mt-10 md:mt-7 mb-2">
+      <block-line-table-header class="mt-10 md:mt-7 mb-2">
         <template slot="first"> Paid</template>
         <template slot="second"/>
         <template slot="first:md"> &nbsp;</template>
         <template slot="right"> Paid / TX Hash</template>
-      </line-table-header>
+      </block-line-table-header>
 
       <vue-custom-scrollbar class="customScrollList">
         <template v-for="(item, index) in finalTransactions">
@@ -186,7 +186,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import {TransactionData, TotalByToken, TokenPrices, CPKLocal, GweiBalance} from "@/types/lib.d";
+import {TransactionData, TotalByToken, TokenPrices, CPKLocal, GweiBalance, ZKInBatchFee} from "@/types/lib.d";
 import {APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME} from "@/plugins/build";
 import {walletData} from "@/plugins/walletData";
 import zkUtils from "@/plugins/utils";
@@ -194,22 +194,23 @@ import {utils, Transaction} from "zksync";
 import {getCPKTx, saveCPKTx} from "@/plugins/walletActions/cpk";
 import {transactionBatch} from "@/plugins/walletActions/transaction";
 
-import connectedWallet from "@/blocks/connectedWallet.vue";
-import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import {ZkSyncTransaction} from "zksync-checkout-internal/src/types";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
 import {BigNumber} from "ethers";
 
-interface UpdatedFee {
+export declare interface UpdatedFee {
   type: "batch" | "cpk";
-  previous: GweiBalance;
-  new: GweiBalance;
+  previous?: GweiBalance | BigNumber;
+  new?: GweiBalance | BigNumber
 }
+
+export declare type ZkTErrorModal = {
+  headline: string | undefined;
+  text: string | undefined;
+} | undefined
 
 export default Vue.extend({
   components: {
-    connectedWallet,
-    lineTableHeader,
   },
   filters: {
     formatTransaction(value: string) {
@@ -227,34 +228,33 @@ export default Vue.extend({
       tokenItemsValid: {} as {
         [token: string]: boolean;
       },
-      finalTransactions: [] as Array<Transaction>,
-      errorModal: false as false | {
-        headline: string;
-        text: string;
-      },
-      transactionFees: [] as UpdatedFee[],
+      finalTransactions: <Transaction[]> [],
+      errorModal: <ZkTErrorModal>undefined,
+      transactionFees: <UpdatedFee[]> [],
     };
   },
   watch: {
-    step(val) {
-      this.$store.commit('setStep', val);
+    step(val): void {
+      this.$accessor.setStep(val);
     }
   },
   computed: {
     currentNetworkName(): string {
       return ETHER_NETWORK_NAME;
     },
-    isAccountLocked(): TransactionData {
-      return this.$store.getters["wallet/isAccountLocked"];
+    isAccountLocked(): boolean {
+      return this.$accessor.wallet.isAccountLocked;
     },
     transactionData(): TransactionData {
-      return this.$store.getters["checkout/getTransactionData"];
+      return this.$accessor.checkout.getTransactionData;
     },
     totalByToken(): TotalByToken {
+      // @ts-ignore
       this.updateTransferAllowed;
-      return this.$store.getters["checkout/getTotalByToken"];
+      return this.$accessor.checkout.getTotalByToken;
     },
     transferAllowed(): boolean {
+      // @ts-ignore
       this.updateTransferAllowed;
       for (const [, state] of Object.entries(this.tokenItemsValid)) {
         if (!state) {
@@ -264,7 +264,7 @@ export default Vue.extend({
       return true;
     },
     tokensPrices(): TokenPrices {
-      return this.$store.getters["tokens/getTokenPrices"];
+      return this.$accessor.tokens.getTokenPrices;
     },
     displayActivateAccountBtn(): boolean {
       if (this.isAccountLocked) {
@@ -274,7 +274,7 @@ export default Vue.extend({
       return false;
     },
     canCPK(): boolean {
-      return typeof this.$store.getters["account/accountID"]==="number";
+      return this.$accessor.provider.accountID !== undefined;
     },
     cpkLoading(): boolean {
       return this.cpkState==="processing" || this.cpkState==="waitingUserConfirmation";
@@ -293,32 +293,33 @@ export default Vue.extend({
   },
   methods: {
     getTokenByID(id: number) {
-      return this.$store.getters["tokens/getTokenByID"](id)?.symbol;
+      return walletData.get().syncProvider!.tokenSet.resolveTokenSymbol(id);
     },
     getTxLink(hash: string) {
       return `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/${hash}`;
     },
     async checkFees() {
       this.transactionFees = [];
-      const transactionFeesPrevious = this.$store.getters["checkout/getTransactionBatchFee"].amount;
-      await this.$store.dispatch("checkout/getTransactionBatchFee");
-      const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].realAmount;
+      let txBatchFee: ZKInBatchFee = await this.$accessor.checkout.getTransactionBatchFee();
+      const transactionFeesPrevious = txBatchFee.amount as BigNumber;
+      txBatchFee = await this.$accessor.checkout.getTransactionBatchFee();
+      const transactionFeesNew = txBatchFee.realAmount;
       if (transactionFeesPrevious.lt(transactionFeesNew)) {
+
         this.transactionFees.push({
           type: "batch",
           previous: transactionFeesPrevious.toString(),
-          new: this.$store.getters["checkout/getTransactionBatchFee"].amount.toString(),
+          new: txBatchFee.amount.toString(),
         });
       }
       if (this.isAccountLocked) {
-        const accountUnlockFeePrevious = this.$store.getters["checkout/getAccountUnlockFee"];
-        await this.$store.dispatch("checkout/getAccountUnlockFee");
-        const accountUnlockFeeNew = this.$store.getters["checkout/getAccountUnlockFee"];
-        if (accountUnlockFeePrevious.lt(accountUnlockFeeNew)) {
+        const accountUnlockFeePrevious = this.$accessor.checkout.getAccountUnlockFee
+        const accountUnlockFeeNew = await this.$accessor.checkout.fetchAccountUnlockFee();
+        if (accountUnlockFeePrevious && BigNumber.from(accountUnlockFeePrevious).lt(accountUnlockFeeNew!)) {
           this.transactionFees.push({
             type: "cpk",
-            previous: accountUnlockFeePrevious.toString(),
-            new: accountUnlockFeeNew.toString(),
+            previous: accountUnlockFeePrevious,
+            new: accountUnlockFeeNew,
           });
         }
       }
@@ -332,18 +333,18 @@ export default Vue.extend({
           this.modal = "feeChanged";
           return;
         }
-        this.transfer();
+        this.transfer().then((r) => {})
       } catch (error) {
         this.step = "main";
         this.modal = false;
         if (error.message) {
           this.errorModal = {
-            headline: "Pretransfer error",
+            headline: "Transfer preparation failed",
             text: error.message,
           };
         } else {
           this.errorModal = {
-            headline: "Pretransfer error",
+            headline: "Transfer preparation failed",
             text: "Unknown error. Try again later.",
           };
         }
@@ -361,13 +362,13 @@ export default Vue.extend({
       try {
         const nonce = await walletData.get().syncWallet!.getNonce("committed");
         this.subStep = "waitingUserConfirmation";
-        const transactionsList = [] as Array<ZkSyncTransaction>;
+        const transactionsList = [] as ZkSyncTransaction[];
         transactionsList.push(...transactionData.transactions);
-        const transactionFees = this.$accessor.checkout.getTransactionBatchFee();
+        const transactionFees: ZKInBatchFee = await this.$accessor.checkout.getTransactionBatchFee();
         const transactions = await transactionBatch(
             transactionsList,
-            transactionData.feeToken,
-            transactionFees.hasOwnProperty("realAmount") ? transactionFees.realAmount : "0",
+            transactionData.feeToken!,
+            BigNumber.from(transactionFees!.realAmount),
             nonce,
             this.$accessor.wallet.isAccountLocked,
             this.$accessor
@@ -458,7 +459,7 @@ export default Vue.extend({
           validFrom: 0,
           validUntil: utils.MAX_TIMESTAMP,
         };
-        saveCPKTx(this.$store.getters["account/address"], changePubkeyTx);
+        saveCPKTx(this.$accessor.provider.address!, changePubkeyTx);
         this.cpkState = "processing";
         await new Promise((resolve) => {
           // Just for the UX reasons
@@ -481,7 +482,7 @@ export default Vue.extend({
     },
     checkCPKMessageSigned(): boolean {
       try {
-        getCPKTx(this.$store.getters["account/address"]);
+        getCPKTx(this.$accessor.provider.address!);
         this.cpkMessageSigned = true;
       } catch (error) {
         this.cpkMessageSigned = false;

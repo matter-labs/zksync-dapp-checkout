@@ -9,40 +9,42 @@ import { Route } from "vue-router/types";
 
 export const state = () =>
   <ZKIRootState>{
-    accountModalOpened: false,
-    previousRoute: <Route | undefined>undefined,
-    /**
-     * Used to handle modals and simplify the code
-     */
-    currentModal: <string | undefined>undefined,
-    step: "main" as string,
+    accountModalOpened: undefined,
+    previousRoute: undefined,
+    currentModal: undefined,
+    step: "main",
     darkMode: false,
+    lastScroll: undefined,
   };
 
 export type RootState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
   currentModal: (state) => state.currentModal,
-  getAccountModalState: (state) => state.accountModalOpened,
-  getPreviousRoute: (state) => state.previousRoute,
-  step: (state) => state.step,
-  darkMode: (state) => state.darkMode,
+  getAccountModalState: (state): string | undefined => state.accountModalOpened,
+  getPreviousRoute: (state): Route | undefined => state.previousRoute,
+  step: (state): string => state.step,
+  darkMode: (state): boolean => state.darkMode,
+  storedScrollPosition: (state): number | undefined => state.lastScroll,
 });
 
 export const mutations = mutationTree(state, {
   setStep(state, step: string) {
     state.step = step;
   },
-  setDarkMode(state, darkModeState: boolean) {
+  storeCurrentScrollPosition(state, incomingPosition: number | undefined = undefined): void {
+    state.lastScroll = incomingPosition ? incomingPosition : undefined;
+  },
+  setDarkMode(state, darkModeState: boolean): void {
     state.darkMode = darkModeState;
   },
-  setCurrentModal(state, modalName: string) {
+  setCurrentModal(state, modalName: string): void {
     state.currentModal = modalName;
   },
-  setPreviousRoute(state, route: Route) {
+  setPreviousRoute(state, route: Route): void {
     state.previousRoute = route;
   },
-  removeCurrentModal(state) {
+  removeCurrentModal(state): void {
     state.currentModal = undefined;
   },
 });

@@ -1,38 +1,38 @@
 <template>
-  <i-badge v-if="version" variant="secondary" class="system-info">
-    <i-popover size="sm" class="system-env-popover" :trigger="['hover']">
-      <span class="version">v.{{ version }}</span>
-      <template slot="header">Environment details</template>
-      <template slot="body">
-        <span class="env-details">
-          <v-icon name="ri-npmjs-fill" />
+  <div v-if="version" class="system-info flex flex-row mx-2">
+    <a id="system-b-popover" v-popover:env-details.top class="linkDefault version px-2">
+      v.{{ version }}
+    </a>
+    <popover name="env-details" transition="show-from-bottom" event="hover" class="system-env-popover p-5 rounded-md bg-gray-500">
+      <h2 class="w-full leading-5 text-left text-md bg-blue-400 px-2 py-1 font-light block">Environment details</h2>
+      <div class="flex flex-col justify-items-stretch items-start text-left px-2">
+        <span class="env-details text-xs font-light">
+          <i class="fab fa-npm"/>
           zkSync v.{{ zkLibVersion }}
         </span>
-        <span class="env-details">
-          <v-icon name="ri-reserved-fill" />
-          zkSync API <code class="_padding-y-0">{{ zkApiBase }}</code>
+        <span class="env-details text-xs font-light gap-2">
+        <i class="fad fa-code-branch"/>
+        zkSync API <code class="py-0">{{ zkApiBase }}</code>
+      </span>
+        <span class="env-details text-xs font-light gap-2 flex">
+        <i class="fad fa-code-branch"/>
+        Ethereum env <code class="py-0">{{ netName }}</code>
         </span>
-        <span class="env-details">
-          <v-icon name="ri-reserved-fill" />
-          Ethereum env <code class="_padding-y-0">{{ netName }}</code>
-        </span>
-      </template>
-    </i-popover>
-    <div class="beta-tag errorText">BETA</div>
-    <a :href="githubLink" class="revision _background-gray-40" target="_blank">
-      <v-icon name="ri-github-fill" />
-      {{ revision }}
+      </div>
+    </popover>
+    <a :href="githubLink" class="revision linkDefault x-2" target="_blank">
+      <i class="fab fa-github align-self-start"/> {{ revision }}
     </a>
-  </i-badge>
+  </div>
 </template>
 <script lang="ts">
-import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_LIB_VERSION, ZK_NETWORK } from "@/plugins/build";
+import {ETHER_NETWORK_NAME, GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_LIB_VERSION} from "@/plugins/build";
 import Vue from "vue";
 
 export default Vue.extend({
   computed: {
     netName(): string {
-      return ZK_NETWORK;
+      return ETHER_NETWORK_NAME;
     },
     zkLibVersion(): string {
       return ZK_LIB_VERSION;
@@ -41,7 +41,7 @@ export default Vue.extend({
       return VERSION;
     },
     githubLink(): string | undefined {
-      return `https://github.com/matter-labs/zksync-wallet-vue/commit/${this.revision}`;
+      return `https://github.com/matter-labs/zksync-dapp-checkout/commit/${this.revision}`;
     },
     revision(): string {
       return GIT_REVISION_SHORT;

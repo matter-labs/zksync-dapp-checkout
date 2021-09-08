@@ -14,7 +14,6 @@
     grid-template-rows: repeat(3, max-content) 1fr;
 
     .valuesBlockContainer {
-      align-items: flex-start;
       align-items: center;
     }
 
@@ -28,6 +27,7 @@
         max-height: 100%;
       }
     }
+
     .brandContainer {
       .networkName {
         @media screen and (max-width: $mobile) {
@@ -97,21 +97,19 @@
           max-width: 70%;
         }
 
-
         &.noAddressPadding .valuesBlockRight .valuesBlockSecondary {
           flex-basis: auto;
           width: auto;
           overflow: hidden;
 
-          .address
-          {
+          .address {
             max-width: calc(100% - 0.5rem);
             overflow: hidden;
             min-height: 0;
           }
         }
-
       }
+
       .infoBlock {
         height: auto;
         max-height: 45vh;
@@ -146,13 +144,12 @@
     }
   }
 
-  .border-b-2, .border-b-1,
-  {
+  .border-b-2,
+  .border-b-1, {
     border-bottom: 1px !important;
 
     &:last-of-type {
       display: none;
     }
   }
-
 }

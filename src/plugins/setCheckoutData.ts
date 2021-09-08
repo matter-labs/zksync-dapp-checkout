@@ -1,30 +1,32 @@
 import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
-import { Context } from "@nuxt/types";
+import { Context, Plugin } from "@nuxt/types";
 
-export default async (context: Context): Promise<void> => {
-  await context.store.dispatch("wallet/getProviders");
+const setCheckoutData: Plugin = async ({ app: { $accessor } }: Context): Promise<void> => {
   try {
+    await $accessor.wallet.getProviders();
     const checkoutManager = ZkSyncCheckoutManager.getManager();
     checkoutManager.startCheckout((e) => console.log(`Err ${e} has occurred`));
     const state = await checkoutManager.getCheckoutState();
     console.log("Checkout state", state);
-    await context.store.commit("checkout/setTransactionData", {
+    await $accessor.checkout.setTransactionData({
       ...state,
-      fromAddress: state.userAddress,
+      fromAddress: state.userAddress as string,
     });
-    await context.store.dispatch("checkout/getTransactionBatchFee");
+    await $accessor.checkout.getTransactionBatchFee();
   } catch (error) {
     console.log("ZkSyncCheckoutManager error", error);
-    await context.store.dispatch("checkout/setError", error);
+    await $accessor.checkout.setError(error);
   }
-  await context.store.dispatch("tokens/loadAllTokens");
-  
+  await $accessor.tokens.loadAllTokens();
+
   let colorTheme = localStorage.getItem("colorTheme");
   if (!colorTheme) {
     colorTheme = "light";
   }
   if (colorTheme === "dark") {
-    context.store.commit("setDarkMode", true);
+    $accessor.setDarkMode(true);
   }
   localStorage.setItem("colorTheme", colorTheme);
 };
+
+export default setCheckoutData;

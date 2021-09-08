@@ -130,18 +130,19 @@ export const actions = actionTree(
       }
     },
     async requestBalancesUpdate(): Promise<void> {
-      await this.app.$accessor.wallet.getzkBalances({ accountState: undefined, force: true });
-      await this.app.$accessor.wallet.getTransactionsHistory({ offset: 0, force: true });
+      await this.app.$accessor.wallet.requestZkBalances({ force: true });
+      await this.app.$accessor.wallet.requestTransactionsHistory({ offset: 0, force: true });
     },
 
     /**
      * Receive correct Fee amount
      * @param state
+     * @param _
      * @param address
      * @param feeToken
      * @return {Promise<any>}
      */
-    async fetchChangePubKeyFee({}, { address, feeToken }: { address: Address; feeToken: TokenSymbol }): Promise<Fee | undefined> {
+    async fetchChangePubKeyFee(_, { address, feeToken }: { address: Address; feeToken: TokenSymbol }): Promise<Fee | undefined> {
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {

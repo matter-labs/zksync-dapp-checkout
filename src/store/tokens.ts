@@ -28,7 +28,7 @@ export const state = () => ({
    *
    * Addressed by id
    */
-  allTokens: {} as Tokens,
+  allTokens: <Tokens>{},
 
   /**
    * Token prices
@@ -40,10 +40,10 @@ export const state = () => ({
 export type TokensModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setAllTokens(state, tokenList: Tokens): void {
+  setAllTokens(state: TokensModuleState, tokenList: Tokens): void {
     state.allTokens = tokenList;
   },
-  setTokenPrice(state, { symbol, obj }: { symbol: TokenSymbol; obj: { lastUpdated?: number; price: number } }): void {
+  setTokenPrice(state: TokensModuleState, { symbol, obj }: { symbol: TokenSymbol; obj: { lastUpdated?: number; price: number } }): void {
     // @ts-ignore
     state.tokenPrices[symbol] = obj;
     state.tokenPricesTick++;
@@ -59,9 +59,15 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  getAllTokens: (state: TokensModuleState): Tokens => state.allTokens,
-  getRestrictedTokens: (state: TokensModuleState): TokenSymbol[] => state.restrictedTokens,
-  getAvailableTokens: (state: TokensModuleState): Tokens => Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol))),
+  getAllTokens: (state: TokensModuleState): Tokens => {
+    return state.allTokens;
+  },
+  getRestrictedTokens: (state: TokensModuleState): TokenSymbol[] => {
+    return state.restrictedTokens;
+  },
+  getAvailableTokens: (state: TokensModuleState): Tokens => {
+    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol)));
+  },
   getTokenPrices: (state: TokensModuleState): ZkInTokenPrices => state.tokenPrices,
   getTokenPriceTick: (state: TokensModuleState): number => state.tokenPricesTick,
 });
@@ -70,10 +76,11 @@ export const actions = actionTree(
   { state, getters, mutations },
   {
     async loadAllTokens({ commit, getters }): Promise<Tokens> {
+      const syncProvider = await this.app.$accessor.wallet.getProviders();
       if (Object.entries(getters.getAllTokens).length === 0) {
         /* By taking token list from syncProvider we avoid double getTokens request,
           but the tokensBySymbol param is private on zksync utils types */
-        const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
+        const tokensList: Tokens = await syncProvider!.getTokens();
         commit("setAllTokens", tokensList);
         // Added async loading of the restricted tokens
         await this.app.$accessor.tokens.loadAcceptableTokens();

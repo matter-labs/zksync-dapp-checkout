@@ -9,25 +9,26 @@ import { decrypt } from "@/plugins/link";
 import utils from "@/plugins/utils";
 import { ZkSyncTransaction } from "zksync-checkout-internal/src/types";
 import { walletData } from "@/plugins/walletData";
+import {Address} from "zksync/build/types";
 
 export default Vue.extend({
   layout: "link",
   async fetch({store, params, redirect}) {
     try {
       const transactions: PaymentItem[] = decrypt(params.hash);
-      await store.dispatch("checkout/setError", false);
-      await store.commit("checkout/setTransactionData", {
-        transactions: <ZkSyncTransaction[]>transactions.map((e, index) => ({
+      this.$accessor.checkout.setError(false);
+      this.$accessor.checkout.setTransactionData({
+        transactions: <ZkSyncTransaction[]>transactions.map((e: PaymentItem, index) => ({
           to: e.address,
           token: e.token,
           amount: utils.parseToken(e.token, e.amount).toString(),
           description: `Payment ${index+1}`,
         })),
         feeToken: "ETH",
-        fromAddress: undefined,
+        fromAddress: "" as Address,
       });
-      await store.dispatch("checkout/getTransactionBatchFee");
-      await store.dispatch("tokens/loadAllTokens");
+      await this.$accessor.checkout.getTransactionBatchFee();
+      await this.$accessor.tokens.loadAllTokens();
       if(walletData.get().syncWallet) {
         await store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
         await store.dispatch("wallet/getInitialBalances", true);
