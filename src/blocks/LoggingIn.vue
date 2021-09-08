@@ -1,11 +1,11 @@
 <template>
   <transition name="fade">
     <div v-if=" loggingIn || loggedInAnimation" class="loggingInContainer">
-      <logo class="h-16" :is-zk-sync-logo="true" />
+      <block-logo class="h-16" :is-zk-sync-logo="true" ></block-logo>
       <h1 class="text-dark -dark text-3xl mt-3 text-center leading-tight">Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
       <transition-group v-if="hintText" tag="div" name="slide-vertical-fade" class="hint text-gray text-center text-sm mt-2">
         <div v-if="!loggedInAnimation" :key="hintText">{{ hintText }}</div>
-        <div v-else-if="loadingHint === 'processing'" key="processing">Processing...</div>
+        <div v-else-if="$accessor.provider.loadingHint === 'processing'" key="processing">Processing...</div>
         <div v-else key="success" class="green">Wallet successfully connected!</div>
       </transition-group>
       <div class="mt-5" />

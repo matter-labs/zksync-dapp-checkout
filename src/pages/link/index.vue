@@ -24,7 +24,7 @@
       <template slot="default">
         <div class="text-center leading-tight mb-4">Your payment link has been created!<br>Now you can share it with someone.</div>
         <div class="successLinkContainer">
-          <zk-input size="sm" ref="linkInput" :value="paymentLink" readonly @click="$ref.linkInput.focus()"/>
+          <zk-input size="sm" ref="linkInput" :value="paymentLink" readonly @click="$refs.linkInput.focus()"/>
           <zk-defbtn id="copy-link" @click="copyLink()" v-popover:copy-link.bottom>
             <span>Copy</span>
             <i class="fal fa-clipboard"/>
@@ -61,15 +61,15 @@
         <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
           <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
           <span
-            class="networkName text-sm font-light"
-            v-if="!isMainnet"
+              class="networkName text-sm font-light"
+              v-if="!isMainnet"
           >
             {{ currentNetwork }}</span>
         </div>
       </nuxt-link>
       <ul
-        class="feature-list zk-container font-light text-dark mt-4 mr-auto ml-auto mb-6  text-sm md:text-md flex-col items-center text-gray-600 dark:text-gray-100"
-        v-if="!showAddLink"
+          class="feature-list zk-container font-light text-dark mt-4 mr-auto ml-auto mb-6  text-sm md:text-md flex-col items-center text-gray-600 dark:text-gray-100"
+          v-if="!showAddLink"
       >
         <li class="flex-grow headline big text-violet mb-3">
           Get paid in tokens with zkSync:
@@ -104,12 +104,12 @@
       </div>
       <zk-defbtn outline class="mx-auto mt-5" @click="addPayment()" v-if="showAddLink" :disabled="payments.length>=maxPayments">Add another transaction</zk-defbtn>
       <div class="text-gray text-sm text-center leading-tight pt-2" :class="{'text-dark': payments.length>=maxPayments}" v-if="showAddLink">{{
-          payments.length >= 5 ? `${payments.length}/`:"Up to "
+          payments.length >= 5 ? `${payments.length}/` : 'Up to '
         }}{{ maxPayments }} transactions
       </div>
 
     </div>
-    <div class="linkFooter filter shadow-md rounded-b">
+    <div class="linkFooter filter rounded-b">
       <zk-max-height :value="!validCheckoutConfiguration && showAddLink" v-show="payments.length<3" class="mt-0 md:mt-5 md:mt-7 zk-container mx-auto">
         <div>
           <zk-note class="notificationNote">
@@ -119,13 +119,13 @@
             <template slot="default">
               <div class="text-sm text-gray font-light">
                 To unlock <span class="font-normal">“Build your payment link”</span> button below make sure to fill-up <span class="font-normal">“Receiver ETH address”</span>
-                and <span class="font-normal">“Amount”</span> {{ payments.length > 1 ? `for each of ${payments.length} transactions`:`of the transaction` }}.
+                and <span class="font-normal">“Amount”</span> {{ payments.length > 1 ? `for each of ${payments.length} transactions` : `of the transaction` }}.
               </div>
             </template>
           </zk-note>
         </div>
       </zk-max-height>
-      <zk-defbtn class="mx-auto mt-5 md:mt-5"  v-if="showAddLink" :outline="!validCheckoutConfiguration" :disabled="!validCheckoutConfiguration" big
+      <zk-defbtn class="mx-auto mt-5 md:mt-5" v-if="showAddLink" :outline="!validCheckoutConfiguration" :disabled="!validCheckoutConfiguration" big
                  @click="generate()">Build
         your
         payment link
@@ -172,7 +172,7 @@ export default Vue.extend({
     createLinkBlockTitle(): string {
       const ethNetwork = this.isMainnet ? "":`<strong>${this.currentNetwork}</strong>`;
       return this.showAddLink ? `Create your ${ethNetwork} instant payment link:`:
-        `Build instant ${ethNetwork} payout link in 5 min`;
+          `Build instant ${ethNetwork} payout link in 5 min`;
     },
     validCheckoutConfiguration(): boolean {
       if (this.payments.length < 1) {

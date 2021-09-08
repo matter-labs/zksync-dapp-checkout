@@ -36,14 +36,14 @@
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",
-      "@nuxt/http",
+      "@nuxt/axios",
       "@types/jest",
       "@nuxtjs/toast",
       "web3-core/types",
-      "@inkline/inkline/types",
       "btn-onboard",
-      "nuxt-typed-vuex",
       "typed-vuex",
+      "@nuxtjs/axios",
+      "nuxt-typed-vuex",
       "@walletconnect/types"
     ]
   },

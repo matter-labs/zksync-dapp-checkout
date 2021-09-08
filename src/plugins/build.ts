@@ -49,6 +49,8 @@ export const ETHER_NETWORK_ID: number = _ETHER_NETWORK_ID_DICTIONARY.find((value
  */
 export const ethWindow: Window = global.window;
 
+export const ZK_DAPP_URL: string = process.browser && ethWindow!.location ? `https://${ethWindow!.location!.host}` : "";
+
 export const ZK_API_BASE: string = process.env.ZK_SPECIAL_API ? process.env.ZK_SPECIAL_API : `${ETHER_PREFIX_MINUS}api.zksync.io`;
 export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
 export const APP_ZK_SCAN: string = process.env.ZK_SPECIAL_SCAN ? process.env.ZK_SPECIAL_SCAN : `https://${ETHER_PREFIX_DOT}zkscan.io`;
@@ -58,7 +60,7 @@ export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;
 /**
  * Onboard-only params
  */
-export const ONBOARD_APP_URL = process.browser && ethWindow!.location ? `https://${ethWindow!.location!.host}` : "";
+export const ONBOARD_APP_URL = ZK_DAPP_URL;
 export const ONBOARD_APP_NAME = `${CURRENT_APP_NAME}:${ETHER_NETWORK_NAME}` + (process.browser && ethWindow!.location ? `@${ethWindow!.location!.host}` : "");
 export const ONBOARD_APP_LOGO = `${ONBOARD_APP_URL}/favicon-dark.png`;
 export const ONBOARD_APP_EMAIL = "support@zksync.io";

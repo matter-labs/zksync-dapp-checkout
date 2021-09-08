@@ -149,6 +149,9 @@ export default Vue.extend({
       required: true,
     },
   },
+  beforeMount() {
+    this.$accessor.wallet.requestInitialBalances(true)
+  },
   data() {
     return {
       modal: "",

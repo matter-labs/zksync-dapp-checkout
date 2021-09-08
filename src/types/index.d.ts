@@ -9,6 +9,7 @@ import { accessorType } from "~/store";
 // All interfaces, mappings and specific types
 
 import "~/types/lib";
+import "~/types/vue-shim";
 
 declare module "vue/types/vue" {
   interface Vue {

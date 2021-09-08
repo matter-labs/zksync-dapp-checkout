@@ -89,7 +89,7 @@ export const actions = actionTree(
       return getters.getAllTokens;
     },
     async loadAcceptableTokens({ commit }): Promise<void> {
-      const acceptableTokens: TokenInfo[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`);
+      const acceptableTokens: TokenInfo[] = await this.app.$axios.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`);
       commit("storeAcceptableTokens", acceptableTokens);
     },
 

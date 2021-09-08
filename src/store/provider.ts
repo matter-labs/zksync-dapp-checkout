@@ -46,24 +46,11 @@ export const mutations = mutationTree(state, {
   setAuthStage(state: ProviderModuleState, currentStep: tProviderState): void {
     state.authStep = currentStep;
   },
-  setAddress(state: ProviderModuleState, address?: Address): void {
+  storeAddress(state: ProviderModuleState, address?: Address) {
     state.address = address;
-    if (address) {
-      walletData
-        .get()
-        .syncProvider!.getState(address)
-        .then(
-          (accountState: AccountState): void => {
-            if (accountState!.id) {
-              state.accountID = accountState.id;
-            }
-          },
-          (error): void => {
-            console.warn(`Error while getting account ID: ${error}`);
-            state.accountID = undefined;
-          },
-        );
-    }
+  },
+  storeAccountId(state: ProviderModuleState, accountID?: number) {
+    state.accountID = accountID;
   },
   storeSelectedWallet(state: ProviderModuleState, selectedWallet?: string): void {
     if (selectedWallet) {
@@ -110,6 +97,27 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
+    setAddress({ state, commit }, address?: Address): void {
+      commit("storeAddress", address);
+      if (address) {
+        walletData
+          .get()
+          .syncProvider!.getState(address)
+          .then(
+            (accountState: AccountState): void => {
+              if (accountState!.id) {
+                commit("storeAccountId", accountState.id);
+              }
+            },
+            (error): void => {
+              console.warn(`Error while getting account ID: ${error}`);
+              commit("storeAccountId", undefined);
+            },
+          );
+      } else {
+        commit("storeAccountId", undefined);
+      }
+    },
     authState({ state }): UserState {
       return state.onboard.getState();
     },
@@ -123,10 +131,10 @@ export const actions = actionTree(
       }
     },
 
-    reset({ state, commit }) {
+    reset({ state, commit, dispatch }) {
       localStorage.removeItem("walletconnect");
       state.onboard.walletReset();
-      commit("setAddress", undefined);
+      dispatch("setAddress", undefined);
       commit("storeSelectedWallet", undefined);
       commit("setAuthStage", "ready");
     },
@@ -181,7 +189,7 @@ export const actions = actionTree(
         const response = await providerWalletConnect.enable();
 
         if (response && Array.isArray(response) && response[0]) {
-          commit("setAddress", response[0]);
+          this.app.$accessor.provider.setAddress(response[0]);
         }
 
         // @ts-ignore
@@ -273,7 +281,7 @@ export const actions = actionTree(
            * Step #3: request access to the account
            **/
           const ethWallet: providers.Web3Provider = new providers.Web3Provider(web3Provider.eth!.currentProvider as ExternalProvider, ETHER_NETWORK_ID);
-          const syncProvider = await walletData.syncProvider.get();
+          const syncProvider = await walletData.get().syncProvider;
           if (!syncProvider) {
             throw new Error("Connection to L2 SyncProvider failed");
           }
@@ -297,7 +305,7 @@ export const actions = actionTree(
           throw new Error("Failed to get L2 wallet state");
         }
 
-        commit("setAddress", accountState.address);
+        this.app.$accessor.provider.setAddress(accountState.address);
 
         walletData.set({
           accountState,

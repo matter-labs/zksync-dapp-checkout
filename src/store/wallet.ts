@@ -1,4 +1,4 @@
-import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME, ZK_API_BASE } from "@/plugins/build";
+import { ETHER_NETWORK_NAME, ZK_API_BASE } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 
@@ -6,7 +6,6 @@ import {
   iWallet,
   ZkInBalance,
   ZkInFeesObj,
-  ZkInNFT,
   ZkInTx,
   ZkInFeesInterface,
   ZkInWithdrawalTime,
@@ -216,14 +215,14 @@ export const actions = actionTree(
      * @return {Promise<*[]|*>}
      */
     async requestInitialBalances({ commit, getters }, force = false): Promise<ZkInBalance[] | undefined> {
-      const savedAddress = this.app.$accessor.provider.address;
+      const savedAddress: Address | undefined = this.app.$accessor.provider.address!;
       const localList = getters.getTokensList;
 
       if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
         return localList.list;
       }
       const syncWallet = walletData.get().syncWallet;
-      const accountState = await syncWallet?.getAccountState();
+      const accountState = await syncWallet!.getAccountState();
       if (accountState !== undefined) {
         walletData.set({ accountState });
       }
@@ -260,7 +259,7 @@ export const actions = actionTree(
       const balances = (balancesResults.filter((token) => token && token.rawBalance.gt(0)) as ZkInBalance[]).sort(utils.compareTokensById);
       const balancesEmpty = (balancesResults.filter((token) => token && token.rawBalance.lte(0)) as ZkInBalance[]).sort(utils.sortBalancesAZ);
       balances.push(...balancesEmpty);
-      if (savedAddress !== this.app.$accessor.provider.address) {
+      if (savedAddress && savedAddress !== this.app.$accessor.provider.address) {
         return localList.list;
       }
       commit("setTokensList", {
@@ -389,7 +388,8 @@ export const actions = actionTree(
     },
 
     async getProviders(): Promise<Provider> {
-      const syncProvider = await getDefaultProvider(ETHER_NETWORK_NAME);
+      const syncProvider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
+      console.log(syncProvider);
       walletData.set({ syncProvider });
       return syncProvider;
     },

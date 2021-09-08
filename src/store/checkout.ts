@@ -88,7 +88,7 @@ export const mutations = mutationTree(state, {
   setAccountUnlockFee(state, accountUnlockFee: BigNumber = BigNumber.from("")): void {
     state.accountUnlockedFee = accountUnlockFee;
   },
-  setError(state, errorData): void {
+  storeError(state, errorData): void {
     state.isError = !!errorData;
     state.noDataError = errorData;
   },
@@ -98,7 +98,7 @@ export const actions = actionTree(
   { state, getters, mutations },
   {
     setError({ commit }, error: unknown): void {
-      commit("setError", error);
+      commit("storeError", error);
     },
     getTransactionBatchFee: async ({ state, commit }): Promise<ZKInBatchFee> => {
       const types = new Array(state.transactions.length).fill("Transfer") as "Transfer"[];

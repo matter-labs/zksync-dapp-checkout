@@ -4,9 +4,8 @@ import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { MetaPropertyName } from "vue-meta/types/vue-meta";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
-import { Configuration } from "webpack";
 
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, ONBOARD_APP_LOGO, ONBOARD_FORTMATIC_SITE_VERIFICATION_META } from "./src/plugins/build";
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, ONBOARD_APP_LOGO, ONBOARD_FORTMATIC_SITE_VERIFICATION_META, ZK_DAPP_URL } from "./src/plugins/build";
 
 // @ts-ignore
 import * as zkTailwindDefault from "matter-zk-ui/tailwind.config.js";
@@ -16,7 +15,7 @@ const srcDir = "./src/";
 const env = process.env.APP_ENV ?? "dev";
 const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
 const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
-const pageImg = "/cover.jpg";
+const pageImg = `${ZK_DAPP_URL}/cover.jpg`;
 
 const pageTitleTemplate = ETHER_PRODUCTION ? CURRENT_APP_NAME : `${ETHER_NETWORK_CAPITALIZED}`;
 
@@ -204,7 +203,7 @@ const config: NuxtConfig = {
   /**
    * Plugins that should be loaded before the mounting
    */
-  plugins: ["@/plugins/icons", "@/plugins/main", "@/plugins/setCheckoutData"],
+  plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
 
   router: {
     middleware: ["wallet"],
@@ -213,6 +212,10 @@ const config: NuxtConfig = {
    * Nuxt.js dev-modules
    */
   buildModules: [
+    "nuxt-typed-vuex",
+    "nuxt-build-optimisations",
+    "@nuxtjs/style-resources",
+    "@nuxtjs/tailwindcss",
     [
       "@nuxt/typescript-build",
       {
@@ -221,20 +224,17 @@ const config: NuxtConfig = {
             async: true,
             stylelint: {
               config: [".stylelintrc"],
-              files: "src/**/*.scss",
+              files: "src/**.scss",
             },
             eslint: {
-              config: ["tsconfig-eslint.json", ".eslintrc.js"],
-              files: "@/**/*.{ts,vue,js}",
+              config: [".eslintrc.js", "tsconfig-eslint.json"],
+              files: "**/*.{ts,js,vue}",
             },
-            files: "@/**/*.{ts,vue,js}",
+            files: "**/*.{ts,vue}",
           },
         },
       },
     ],
-    "@nuxtjs/style-resources",
-    "@nuxtjs/tailwindcss",
-    "nuxt-typed-vuex",
     "@nuxtjs/google-fonts",
     ["@nuxtjs/dotenv", { path: __dirname }],
     "matter-zk-ui",
@@ -247,15 +247,16 @@ const config: NuxtConfig = {
     [
       "nuxt-social-meta",
       {
-        url: "https://checkout.zksync.io",
+        url: ZK_DAPP_URL,
         title: pageTitle,
         site_name: pageTitle,
         description: pageDescription,
-        img: "/social.jpg",
+        img: pageImg,
+        img_size: { width: 2560, height: 1280 },
         locale: "en_US",
         twitter: "@zksync",
-        twitter_card: "https://checkout.zksync.io/social.jpg",
-        themeColor: "#4e529a",
+        twitter_card: pageImg,
+        theme_color: "#4e529a",
       },
     ],
     "@nuxtjs/axios",
@@ -281,14 +282,6 @@ const config: NuxtConfig = {
     },
   },
 
-  /**
-   * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
-   */
-  inkline: {
-    config: {
-      autodetectVariant: true,
-    },
-  },
   sentry: {
     dsn: process.env.SENTRY_DSN,
     disableServerSide: true,
@@ -338,10 +331,9 @@ const config: NuxtConfig = {
     babel: {
       compact: true,
     },
-    transpile: ["oh-vue-icons"], // [v.2.4.0]: oh-vue-icons package
     hardSource: isProduction,
     ssr: false,
-    extend: (config: Configuration) => {
+    extend(config) {
       config.node = {
         fs: "empty",
       };

@@ -16,7 +16,7 @@
         <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2" >
           <template slot="left-top">
             <div class="headline">
-              {{ item.description }}
+              {{ item.description }} / {{index}}
             </div>
           </template>
           <template slot="left-bottom">
@@ -27,7 +27,7 @@
           <template slot="right-top">
             <div class="flex flex-col items-end whitespace-nowrap">
               <div class="value">
-                {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
+                {{ item.amount | formatUsdAmount( tokensPrices[item.token] && tokensPrices[item.token].price ? tokensPrices[item.token].price : 0, item.token) }}
               </div>
               <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{ item.token }}</div>
             </div>
@@ -49,7 +49,8 @@
             <div class="flex items-center">
               <div class="flex flex-col">
                 <div class="value">
-                  {{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+                  {{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price ?
+                tokensPrices[transactionData.feeToken].price : 0, transactionData.feeToken) }}
                 </div>
               </div>
             </div>
@@ -65,7 +66,7 @@
             <template slot="right-top">
               <div class="flex flex-col items-end whitespace-nowrap">
                 <div class="value">
-                  {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
+                  {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price ? tokensPrices[item.token].price : 0, item.token) }}
                 </div>
                 <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{ item.token }}</div>
               </div>
@@ -151,13 +152,13 @@ export default Vue.extend({
       return ETHER_PRODUCTION;
     },
     transactionData(): TransactionData {
-      return this.$accessor.checkout.getTransactionData;
+      return this.$store.getters["checkout/getTransactionData"];
     },
     allFees(): ZKInBatchFee[] {
       if (!this.loggedIn) {
         return this.$accessor.checkout.getAllFees!.filter((item: ZKInBatchFee) => item.key !== "changePubKey");
       }
-      return this.$accessor.checkout.getAllFees!;
+      return this.$store.getters["checkout/getAllFees"];
     },
     totalFees(): GweiBalance {
       const allFees = this.allFees;
@@ -173,19 +174,25 @@ export default Vue.extend({
       return totalFeeBigNum?.toString();
     },
     totalUSD(): string {
+      this.$accessor.tokens.tokenPricesTick
       const transactionData = this.transactionData;
       const allFees = this.allFees;
       const tokensPrices = this.tokensPrices;
+      console.log(tokensPrices)
       let totalUSD = 0;
       for (const item of [...transactionData.transactions, ...allFees]) {
-        totalUSD += +tokensPrices[item.token].price * +utils.handleFormatToken(item.token, item.amount as string);
+        if (tokensPrices[item.token])
+        {
+          totalUSD += tokensPrices[item.token].price * +utils.handleFormatToken(item.token, item.amount as string);
+        }
       }
       return totalUSD < 0.01 ? "<$0.01" : `$${totalUSD.toFixed(2)}`;
     },
     totalByToken(): TotalByToken {
-      return this.$accessor.checkout.getTotalByToken;
+      return this.$store.getters["checkout/getTotalByToken"];
     },
     tokensPrices(): TokenPrices {
+      this.$accessor.tokens.getTokenPriceTick;
       return this.$accessor.tokens.getTokenPrices;
     },
   },

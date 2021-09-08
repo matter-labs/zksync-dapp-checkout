@@ -1,11 +1,11 @@
 <template>
   <div class="connectContainer">
-    <h1 class="font-bold text-center text-3xl text-dark">Connect to zkSync</h1>
-    <div class="container-fluid _flex-direction-row _display-flex connections">
+    <h1 class="font-bold text-center text-3xl my-2 text-dark">Connect to zkSync</h1>
+    <div class="container flex h-auto flex-row connections items-center justify-center">
       <div
           data-cy="core_connect_wallet_button"
-          class="tileContainer _margin-top-1 _margin-right-05 _margin-md-right-2 _text-center"
-          @click="$accessor.provider.connectWithOnboard"
+          class="tileContainer h-auto mr-10 text-center"
+          @click="$accessor.provider.connectWithOnboard()"
       >
         <div class="tile">
           <img src="@/static/eth.svg" alt="External"/>
@@ -15,8 +15,8 @@
 
       <div
           data-cy="core_connect_wallet_button"
-          class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center"
-          @click="$accessor.provider.connectWithWalletConnect"
+          class="tileContainer h-auto ml-10 text-center"
+          @click="$accessor.provider.connectWithWalletConnect()"
       >
         <div class="tile">
           <img src="@/static/wc.png" alt="Wallet Connect"/>

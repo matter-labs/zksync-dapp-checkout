@@ -16,7 +16,7 @@ export default Vue.extend({
   async fetch({store, params, redirect}) {
     try {
       const transactions: PaymentItem[] = decrypt(params.hash);
-      this.$accessor.checkout.setError(false);
+      this.$accessor.checkout.setError(undefined);
       this.$accessor.checkout.setTransactionData({
         transactions: <ZkSyncTransaction[]>transactions.map((e: PaymentItem, index) => ({
           to: e.address,
