@@ -87,7 +87,7 @@
       </template>
       <template slot="third">
         <div class="amount">
-          <span :class="amountClass">{{ zkBalance.rawBalance | formatTokenPretty(token) }}</span>
+          <span :class="amountClass" v-if="zkBalance">{{ zkBalance.rawBalance | formatTokenPretty(token) }}</span>
         </div>
       </template>
       <template v-if="isInProgress" slot="right">
@@ -165,7 +165,7 @@ export default Vue.extend({
   },
   computed: {
     unlocked(): boolean {
-      return this.enoughZkBalance || (this.initialBalance!.unlocked as BigNumber).gte(this.needToDeposit);
+      return this.enoughZkBalance || (this.zkBalance.unlocked as BigNumber).gte(this.needToDeposit);
     },
     isDeposit(): boolean {
       return !!this.depositBigNumber && this.enoughDepositAmount;
@@ -185,17 +185,12 @@ export default Vue.extend({
     tokensPrices(): ZkInTokenPrices {
       return this.$accessor.tokens.getTokenPrices;
     },
-    zkBalance(): ZkInBalance | undefined {
-      const list: ZkInBalance[] = this.$accessor.wallet.getzkList!.list;
-      const result = list.find((e: ZkInBalance) => e.symbol===this.token);
-      console.log(result);
-      return result;
+    zkBalance(): ZkInBalance {
+      return this.$store.getters["wallet/getzkBalances"].find((e: ZkInBalance) => e.symbol === this.token);
     },
-    initialBalance(): ZkInBalance | undefined {
-      const list: ZkInBalance[] = this.$accessor.wallet.getTokensList!.list;
-      const result = list.find((e: ZkInBalance) => e.symbol===this.token);
-      console.log(result);
-      return result;
+    initialBalance(): ZkInBalance {
+      console.log("Initial", this.token, this.$store.getters["wallet/getInitialBalances"].find((e: ZkInBalance) => e.symbol === this.token));
+      return this.$store.getters["wallet/getInitialBalances"].find((e: ZkInBalance) => e.symbol === this.token);
     },
     depositBigNumber(): GweiBalance {
       if (!this.depositAmount) {
@@ -210,15 +205,17 @@ export default Vue.extend({
     needToDeposit(): BigNumber {
       try {
         const txBatchFee = this.$store.getters["checkout/getTransactionBatchFee"];
-        const recommendedAmount = BigNumber.from(this.total).sub(this.zkBalance!.rawBalance);
+        console.log("txBatchFee", this.token, txBatchFee);
+        const recommendedAmount = BigNumber.from(this.total).sub(this.zkBalance.rawBalance);
         if(txBatchFee.token === this.token) {
-          const amount = BigNumber.from(this.total).sub(txBatchFee.amount).add(txBatchFee.realAmount).sub(this.zkBalance!.rawBalance);
+          const amount = BigNumber.from(this.total).sub(txBatchFee.amount).add(txBatchFee.realAmount).sub(this.zkBalance.rawBalance);
           if(amount.lte("0") && recommendedAmount.gt("0")) {
             return amount;
           }
         }
         return recommendedAmount;
       } catch (error) {
+        console.log("Error asdasd", error);
         return BigNumber.from("0");
       }
     },
@@ -236,14 +233,14 @@ export default Vue.extend({
       }
     },
     enoughZkBalance(): boolean {
-      return (this.zkBalance?.rawBalance.gte(this.total) || (this.needToDeposit as BigNumber).lte("0"));
+      return (this.zkBalance.rawBalance.gte(this.total) || (this.needToDeposit as BigNumber).lte("0"));
     },
 
     /**
      * Returns (L1+L2 balance >= Total to pay)
      */
     enoughWithInitialBalance(): boolean {
-      return this.zkBalance!.rawBalance.add(this.initialBalance!.rawBalance || BigNumber.from("0")).gte(this.total);
+      return this.zkBalance.rawBalance.add(this.initialBalance!.rawBalance || BigNumber.from("0")).gte(this.total);
     },
 
     /**
@@ -371,7 +368,7 @@ export default Vue.extend({
         const unlockTransaction = await unlockToken(this.initialBalance!.address as Address);
         this.subStep = "committing";
         await unlockTransaction.wait();
-        await this.$accessor.wallet.requestInitialBalances(true);
+        await Promise.all([this.$accessor.wallet.requestInitialBalances(true), this.$accessor.wallet.requestZkBalances({ force: true })]);
         this.step = "default";
       } catch (error: ReturnType<Error> | string) {
         this.step = "default";

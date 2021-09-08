@@ -29,7 +29,7 @@ export default async (context: Context): Promise<void> => {
       ...state,
       fromAddress: state.userAddress as string,
     });
-    await context.app.$accessor.checkout.getTransactionBatchFee();
+    await context.app.$accessor.checkout.requestTransactionBatchFee();
   } catch (error) {
     console.log("ZkSyncCheckoutManager error", error);
     await context.app.$accessor.checkout.setError(error);

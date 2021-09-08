@@ -343,9 +343,6 @@ export const actions = actionTree(
       console.log("subscription watcher (address): ", address);
       if (getters.loggedIn) {
         if ((address !== undefined && getters.address !== (address as Address)) || (getters.address !== undefined && address === undefined)) {
-          this.app.$toast.global?.zkException({
-            message: "Account switching spotted",
-          });
           this.app.$accessor.wallet.logout();
         }
       }

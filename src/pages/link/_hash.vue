@@ -16,30 +16,31 @@ export default Vue.extend({
   async fetch({store, params, redirect}) {
     try {
       const transactions: PaymentItem[] = decrypt(params.hash);
-      this.$accessor.checkout.setError(undefined);
-      this.$accessor.checkout.setTransactionData({
+      console.log(this, "this");
+      await store.dispatch("checkout/setError", undefined);
+      store.commit("checkout/setTransactionData", {
         transactions: <ZkSyncTransaction[]>transactions.map((e: PaymentItem, index) => ({
           to: e.address,
           token: e.token,
           amount: utils.parseToken(e.token, e.amount).toString(),
-          description: `Payment ${index+1}`,
+          description: `Payment`,
         })),
         feeToken: "ETH",
         fromAddress: "" as Address,
       });
-      await this.$accessor.checkout.getTransactionBatchFee();
-      await this.$accessor.tokens.loadAllTokens();
+      await store.dispatch("checkout/requestTransactionBatchFee");
+      await store.dispatch("tokens/loadAllTokens");
       if(walletData.get().syncWallet) {
         await store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
         await store.dispatch("wallet/getInitialBalances", true);
         await store.dispatch("wallet/checkLockedState");
         await store.dispatch("checkout/getAccountUnlockFee");
       }
-      await redirect("/connect");
+      return redirect("/connect");
     } catch (error) {
       console.log("zkLink error", error);
       await store.dispatch("openModal", "zkLinkParseFail");
-      await redirect("/link");
+      return redirect("/link");
     }
   },
 });

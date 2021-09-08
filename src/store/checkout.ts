@@ -19,6 +19,7 @@ export const state = () => ({
 export type CheckoutModuleState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
+  getTransactionBatchFee: (state) => state.transactionBatchFee,
   getTransactionData: (state): TransactionData => ({
     transactions: state.transactions,
     fromAddress: state.fromAddress!,
@@ -100,7 +101,7 @@ export const actions = actionTree(
     setError({ commit }, error: unknown): void {
       commit("storeError", error);
     },
-    getTransactionBatchFee: async ({ state, commit }): Promise<ZKInBatchFee> => {
+    requestTransactionBatchFee: async ({ state, commit }): Promise<ZKInBatchFee> => {
       const types = new Array(state.transactions.length).fill("Transfer") as "Transfer"[];
       const addresses = state.transactions.map((tx) => tx.to);
       // The fee transaction

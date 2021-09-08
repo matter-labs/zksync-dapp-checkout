@@ -16,7 +16,7 @@
         <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2" >
           <template slot="left-top">
             <div class="headline">
-              {{ item.description }} / {{index}}
+              {{ item.description }} | {{index+1}}
             </div>
           </template>
           <template slot="left-bottom">

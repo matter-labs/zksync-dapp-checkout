@@ -2,7 +2,7 @@ import { walletData } from "@/plugins/walletData";
 import { BigNumber, BigNumberish, Contract, ContractInterface } from "ethers";
 import { TokenSymbol, Tokens } from "zksync/build/types";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { BalanceToReturn, TokenInfo, ZkInBalance, ZkInTokenPrices } from "~/types/lib";
+import { BalanceToReturn, TokenInfo, ZkInTokenPrices } from "~/types/lib";
 import { ZK_API_BASE } from "~/plugins/build";
 import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE, isTokenETH } from "zksync/build/utils";
 
@@ -90,7 +90,7 @@ export const actions = actionTree(
       return getters.getAllTokens;
     },
     async loadAcceptableTokens({ commit }): Promise<void> {
-      const acceptableTokens: TokenInfo[] = await this.app.$axios.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`);
+      const acceptableTokens: TokenInfo[] = await this.app.$axios.get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`);
       commit("storeAcceptableTokens", acceptableTokens);
     },
 

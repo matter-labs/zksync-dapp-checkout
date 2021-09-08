@@ -289,9 +289,9 @@ export default Vue.extend({
     },
     async checkFees() {
       this.transactionFees = [];
-      let txBatchFee: ZKInBatchFee = await this.$accessor.checkout.getTransactionBatchFee();
+      let txBatchFee: ZKInBatchFee = await this.$accessor.checkout.requestTransactionBatchFee();
       const transactionFeesPrevious = txBatchFee.amount as BigNumber;
-      txBatchFee = await this.$accessor.checkout.getTransactionBatchFee();
+      txBatchFee = await this.$accessor.checkout.requestTransactionBatchFee();
       const transactionFeesNew = txBatchFee.realAmount;
       if (transactionFeesPrevious.lt(transactionFeesNew)) {
 
@@ -353,7 +353,7 @@ export default Vue.extend({
         this.subStep = "waitingUserConfirmation";
         const transactionsList = [] as ZkSyncTransaction[];
         transactionsList.push(...transactionData.transactions);
-        const transactionFees: ZKInBatchFee = await this.$accessor.checkout.getTransactionBatchFee();
+        const transactionFees: ZKInBatchFee = await this.$accessor.checkout.requestTransactionBatchFee();
         const transactions = await transactionBatch(
             transactionsList,
             transactionData.feeToken!,
