@@ -1,9 +1,10 @@
 import { walletData } from "@/plugins/walletData";
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, Contract, ContractInterface } from "ethers";
 import { TokenSymbol, Tokens } from "zksync/build/types";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { BalanceToReturn, TokenInfo, ZkInTokenPrices } from "~/types/lib";
+import { BalanceToReturn, TokenInfo, ZkInBalance, ZkInTokenPrices } from "~/types/lib";
 import { ZK_API_BASE } from "~/plugins/build";
+import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE, isTokenETH } from "zksync/build/utils";
 
 /**
  * Operations with the tokens (assets)
@@ -91,6 +92,20 @@ export const actions = actionTree(
     async loadAcceptableTokens({ commit }): Promise<void> {
       const acceptableTokens: TokenInfo[] = await this.app.$axios.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`);
       commit("storeAcceptableTokens", acceptableTokens);
+    },
+
+    /**
+     * New method to fetch allowance
+     * @param state
+     * @param symbol
+     */
+    async getTokenAllowance({ state }, symbol: TokenSymbol): Promise<BigNumber> {
+      if (!isTokenETH(symbol)) {
+        const tokenAddress = walletData.get().syncProvider!.tokenSet.resolveTokenAddress(symbol);
+        const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE as ContractInterface, walletData.get().syncWallet!.ethSigner);
+        return await erc20contract.allowance(this.app.$accessor.provider.address!, walletData.get().syncProvider!.contractAddress.mainContract);
+      }
+      return BigNumber.from(ERC20_APPROVE_TRESHOLD);
     },
 
     async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {

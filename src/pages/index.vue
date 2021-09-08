@@ -131,7 +131,7 @@
     </div>
     <div v-else-if="step === 'success'" class="successPage w-full">
       <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Done. Thank you!</div>
-      <zk-success-check-mark big class="w-11/12 max-w-xxs mx-auto py-5"/>
+      <zk-success-check-mark big class="w-11/12 max-w-xxs mx-auto py-5"></zk-success-check-mark>
       <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a></div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
@@ -184,13 +184,16 @@
 </template>
 
 <script lang="ts">
+// suppress BadExpressionStatementJS
+// suppress JSUnusedLocalSymbols
+
 import Vue from "vue";
 
-import {TransactionData, TotalByToken, TokenPrices, CPKLocal, GweiBalance, ZKInBatchFee} from "@/types/lib.d";
+import {CPKLocal, TokenPrices, TotalByToken, TransactionData, UpdatedFee, ZKInBatchFee, ZkTErrorModal} from "@/types/lib.d";
 import {APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME} from "@/plugins/build";
 import {walletData} from "@/plugins/walletData";
 import zkUtils from "@/plugins/utils";
-import {utils, Transaction} from "zksync";
+import {Transaction, utils} from "zksync";
 import {getCPKTx, saveCPKTx} from "@/plugins/walletActions/cpk";
 import {transactionBatch} from "@/plugins/walletActions/transaction";
 
@@ -198,20 +201,8 @@ import {ZkSyncTransaction} from "zksync-checkout-internal/src/types";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
 import {BigNumber} from "ethers";
 
-export declare interface UpdatedFee {
-  type: "batch" | "cpk";
-  previous?: GweiBalance | BigNumber;
-  new?: GweiBalance | BigNumber
-}
-
-export declare type ZkTErrorModal = {
-  headline: string | undefined;
-  text: string | undefined;
-} | undefined
-
 export default Vue.extend({
-  components: {
-  },
+  name: "index",
   filters: {
     formatTransaction(value: string) {
       return value.replace("sync-tx:", "");
@@ -249,12 +240,10 @@ export default Vue.extend({
       return this.$accessor.checkout.getTransactionData;
     },
     totalByToken(): TotalByToken {
-      // @ts-ignore
       this.updateTransferAllowed;
       return this.$accessor.checkout.getTotalByToken;
     },
     transferAllowed(): boolean {
-      // @ts-ignore
       this.updateTransferAllowed;
       for (const [, state] of Object.entries(this.tokenItemsValid)) {
         if (!state) {

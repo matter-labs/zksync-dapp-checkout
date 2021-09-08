@@ -14,12 +14,13 @@ import {
   ZKTypeDisplayBalances,
   ZKTypeDisplayToken,
   ZkInBalancesList,
+  BalanceToReturn,
 } from "@/types/lib";
 import { BigNumber, BigNumberish } from "ethers";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { closestPackableTransactionFee, getDefaultProvider, Provider } from "zksync";
-import { AccountState, Address, Fee, NFT, TokenSymbol } from "zksync/build/types";
+import { AccountState, Address, Fee, NFT, Tokens, TokenSymbol } from "zksync/build/types";
 
 let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
 
@@ -179,9 +180,11 @@ export const actions = actionTree(
         listCommitted = newAccountState?.committed.balances || {};
         listVerified = newAccountState?.verified.balances || {};
       }
-      const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
+      const loadedTokens: { zkBalances: BalanceToReturn[]; tokens: Tokens } = await this.app.$accessor.tokens.loadTokensAndBalances();
       for (const tokenSymbol in listCommitted) {
-        this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
+        const price: number = await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
+        const unlocked: BigNumber = await this.app.$accessor.tokens.getTokenAllowance(tokenSymbol);
+
         if (savedAddress !== this.app.$accessor.provider.address) {
           return {
             balances: state.zkTokens.list,
@@ -189,15 +192,19 @@ export const actions = actionTree(
         }
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
-        tokensList.push({
+
+        const fulfilledBalance: ZkInBalance = {
           id: loadedTokens.tokens[tokenSymbol].id,
+          tokenPrice: price,
           symbol: tokenSymbol,
+          unlocked: unlocked,
           status: committedBalance !== verifiedBalance ? "Pending" : "Verified",
           balance: committedBalance,
           rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
           verifiedBalance,
           restricted: !committedBalance || +committedBalance <= 0 || !this.app.$accessor.tokens.acceptableTokens[loadedTokens.tokens[tokenSymbol].id],
-        });
+        };
+        tokensList.push(fulfilledBalance);
       }
       commit("setZkTokens", {
         lastUpdated: new Date().getTime(),
@@ -301,10 +308,10 @@ export const actions = actionTree(
           list: offset === 0 ? fetchTransactionHistory : [...localList.list, ...fetchTransactionHistory],
         });
         return fetchTransactionHistory;
-      } catch (error) {
+      } catch (error: ReturnType<Error> | string) {
         this.app.$sentry?.captureException(error);
         this.app.$toast.global.zkException({
-          message: error.message,
+          message: error?.message || (error as string),
         });
         getTransactionHistoryAgain = setTimeout(() => {
           this.app.$accessor.wallet.requestTransactionsHistory({ force: true });
@@ -404,7 +411,7 @@ export const actions = actionTree(
       } catch (error) {
         console.warn("ERROR ON DISCONNECTION", error);
       }
-      this.$router!.push("/");
+      this.$router!.push("/connect");
     },
 
     /**

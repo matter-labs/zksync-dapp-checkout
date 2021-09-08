@@ -12,6 +12,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import Web3 from "web3";
 import { AccountState, Address } from "zksync/build/types";
 import { Wallet } from "zksync/build/wallet";
+import { Route } from "vue-router/types";
 
 export declare type tProviderState = "ready" | "isSelecting" | "walletSelected" | "isChecking" | "walletChecked" | "isSelectingAccount" | "accountSelected" | "authorized";
 
@@ -146,7 +147,7 @@ export const actions = actionTree(
      * @param {any} getters
      * @return {Promise<boolean | void | UserState>}
      */
-    async connectWithWalletConnect({ commit, state, getters }): Promise<boolean | void | UserState> {
+    async connectWithWalletConnect({ commit, state, getters }): Promise<boolean | void | UserState | Route> {
       const providerWalletConnect = new WalletConnectProvider({
         infuraId: ONBOARD_INFURA_KEY,
         pollingInterval: 6500,
@@ -155,6 +156,10 @@ export const actions = actionTree(
       });
 
       try {
+        if (state.authStep !== "ready") {
+          this.app.$accessor.provider.reset();
+        }
+
         if (!providerWalletConnect) {
           throw new Error("Provider not found");
         }
@@ -162,11 +167,11 @@ export const actions = actionTree(
         /**
          * Authorizing the wallet (better avoid since it's “async magic”
          */
-        providerWalletConnect.onConnect((connection: unknown) => {
+        providerWalletConnect.onConnect(() => {
           commit("setAuthStage", "walletChecked");
         });
 
-        providerWalletConnect.on("session_request", (error: Error, payload: unknown): void => {
+        providerWalletConnect.on("session_request", (error: Error): void => {
           if (error) {
             console.error(error);
           }
@@ -174,7 +179,7 @@ export const actions = actionTree(
           commit("setLoadingHint", "Follow the instructions in your wallet");
         });
 
-        providerWalletConnect.on("disconnect", (error: Error, payload: unknown): void => {
+        providerWalletConnect.on("disconnect", (error: Error): void => {
           if (error) {
             console.error(error);
           }
@@ -208,7 +213,8 @@ export const actions = actionTree(
     /**
      * Refreshing the wallet in case local storage keep token or signer fired event
      */
-    async connectWithOnboard({ state, commit }): Promise<boolean | void | UserState> {
+    async connectWithOnboard({ state, commit }): Promise<boolean | void | UserState | Route> {
+      console.log(state.onboard.getState());
       if (state.authStep !== "ready") {
         this.app.$accessor.provider.reset();
       }
@@ -249,7 +255,7 @@ export const actions = actionTree(
       }
     },
 
-    async __internalLogin({ dispatch, state, getters, commit }, web3Provider: Web3): Promise<boolean | void | UserState> {
+    async __internalLogin({ dispatch, state, getters, commit }, web3Provider: Web3): Promise<boolean | void | UserState | Route> {
       /**
        * Pre-run check: in case the __internalLogin method is called when the auth state doesn't allow to login
        **/
@@ -257,6 +263,7 @@ export const actions = actionTree(
       if (state.authStep === "ready") {
         return;
       }
+      const ethWallet: providers.Web3Provider = new providers.Web3Provider(web3Provider.eth!.currentProvider as ExternalProvider, ETHER_NETWORK_ID);
       try {
         /**
          * If no syncWallet or syncProvider fetched (supposed to be called once
@@ -276,22 +283,27 @@ export const actions = actionTree(
           }
 
           const walletAccount = fetchedAccounts.shift();
+          this.app.$accessor.provider.setAddress(walletAccount as Address);
 
           /**
            * Step #3: request access to the account
            **/
-          const ethWallet: providers.Web3Provider = new providers.Web3Provider(web3Provider.eth!.currentProvider as ExternalProvider, ETHER_NETWORK_ID);
-          const syncProvider = await walletData.get().syncProvider;
-          if (!syncProvider) {
-            throw new Error("Connection to L2 SyncProvider failed");
-          }
-          const syncWallet = await Wallet.fromEthSigner(ethWallet.getSigner(walletAccount), syncProvider);
-          walletData.set({
-            syncWallet,
-          });
-          commit("setLoadingHint", "Follow the instructions in your wallet");
+        } else {
+          const address = web3Provider.eth.defaultAccount;
+          this.app.$accessor.provider.setAddress(address as Address);
         }
 
+        const syncProvider = await walletData.get().syncProvider;
+        if (!syncProvider) {
+          throw new Error("Connection to L2 SyncProvider failed");
+        }
+
+        commit("setLoadingHint", "Follow the instructions in your wallet");
+
+        const syncWallet: Wallet = await Wallet.fromEthSigner(ethWallet.getSigner(web3Provider.eth.defaultAccount as Address), syncProvider);
+        walletData.set({
+          syncWallet,
+        });
         /* The user can press Cancel login anytime so we need to check if he did after every long action (request) */
         if (!walletData.get().syncWallet) {
           throw new Error("Sync Wallet not found");
@@ -313,11 +325,13 @@ export const actions = actionTree(
 
         commit("setAuthStage", "authorized");
 
+        await this.app.$accessor.wallet.preloadWallet();
+
         if (!getters.loggedIn) {
           throw new Error("Account disconnected");
         }
-        await this.$router.push("/account");
-        return true;
+        console.log(this.app.middleware);
+        return this.$router.push("/");
       } catch (error) {
         console.warn(error);
         this.app.$accessor.wallet.logout();
@@ -346,15 +360,10 @@ export const actions = actionTree(
 
         try {
           const web3Provider: Web3 = new Web3(wallet.provider);
-          this.app.$accessor.provider.__internalLogin(web3Provider).then(
-            (value) => {
-              // do nothing
-            },
-            (error) => {
-              console.warn(error);
-              this.app.$accessor.wallet.logout();
-            },
-          );
+          this.app.$accessor.provider.__internalLogin(web3Provider).catch((error) => {
+            console.warn(error);
+            this.app.$accessor.wallet.logout();
+          });
         } catch (error) {
           this.app.$accessor.wallet.logout();
         }

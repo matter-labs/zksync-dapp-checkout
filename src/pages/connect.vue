@@ -31,6 +31,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
+  name: "connect",
   data() {
     return {
       lockVisible: false,

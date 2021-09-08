@@ -9,6 +9,7 @@ import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, ONBOARD_
 
 // @ts-ignore
 import * as zkTailwindDefault from "matter-zk-ui/tailwind.config.js";
+import { Configuration } from "webpack";
 
 const srcDir = "./src/";
 
@@ -206,7 +207,7 @@ const config: NuxtConfig = {
   plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
 
   router: {
-    middleware: ["wallet"],
+    middleware: ["auth"],
   },
   /**
    * Nuxt.js dev-modules
@@ -262,7 +263,6 @@ const config: NuxtConfig = {
     "@nuxtjs/axios",
     "@nuxtjs/toast",
     "@nuxtjs/google-gtag",
-    "@nuxtjs/sentry",
   ],
 
   toast: <ToastOptions>{
@@ -281,7 +281,6 @@ const config: NuxtConfig = {
       },
     },
   },
-
   sentry: {
     dsn: process.env.SENTRY_DSN,
     disableServerSide: true,
@@ -333,10 +332,8 @@ const config: NuxtConfig = {
     },
     hardSource: isProduction,
     ssr: false,
-    extend(config) {
-      config.node = {
-        fs: "empty",
-      };
+    extend(config: Configuration) {
+      config.node = {};
     },
   },
   googleFonts: {

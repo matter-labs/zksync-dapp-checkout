@@ -123,11 +123,12 @@ export default Vue.extend({
       try {
         inputAmount = utils.parseToken(this.token, val);
       } catch (error) {
-        let errorInfo = "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
-        if (error.message && error.message.search("fractional component exceeds decimals")!== -1) {
-          errorInfo = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
+        let msg: string = (error as string) ||
+            "Amount processing error. Common reason behind it — inaccurate amount.Try again paying attention to the decimal amount number format — it should help";
+        if (msg.search("fractional")!== -1) {
+          msg = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
         }
-        this.error = errorInfo;
+        this.error = msg;
         return;
       }
 

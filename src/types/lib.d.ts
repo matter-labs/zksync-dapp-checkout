@@ -125,8 +125,9 @@ export interface ZkInBalance {
   balance: DecimalBalance;
   rawBalance: BigNumber;
   verifiedBalance: DecimalBalance;
+  tokenPrice?: number;
   restricted: boolean;
-  unlocked?: boolean;
+  unlocked?: boolean | BigNumber;
   address?: string;
 }
 
@@ -474,3 +475,16 @@ export interface zkTokensParam {
   lastUpdated: number;
   list: ZkInBalance[];
 }
+
+export declare interface UpdatedFee {
+  type: "batch" | "cpk";
+  previous?: GweiBalance | BigNumber;
+  new?: GweiBalance | BigNumber;
+}
+
+export declare type ZkTErrorModal =
+  | {
+      headline: string | undefined;
+      text: string | undefined;
+    }
+  | undefined;

@@ -60,10 +60,7 @@
     "url": "https://linear.app/matterlabs/project/zkcheckout-eae8f3c3e539/ZKF"
   },
   "dependencies": {
-    "@babel/core": "^7.13.8",
-    "@babel/preset-env": "^7.13.9",
-    "@babel/runtime": "^7.13.9",
-    "@nuxt/typescript-runtime": "^2.1.0",
+    "@nuxt/typescript-runtime": "latest",
     "@nuxtjs/axios": "latest",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/style-resources": "latest",
@@ -92,18 +89,22 @@
     "zksync-checkout-internal": "^0.0.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.4",
     "@matterlabs/zksync-nuxt-ui": "^0.0.0",
     "@nuxt/types": "latest",
-    "@nuxt/typescript": "latest",
     "@nuxt/typescript-build": "latest",
     "@nuxtjs/dotenv": "1.4.1",
     "@nuxtjs/eslint-config-typescript": "^5.0.0",
     "@nuxtjs/google-fonts": "latest",
     "@nuxtjs/sentry": "latest",
     "@tailwindcss/postcss7-compat": "^2.0.3",
+    "@types/babel__core": "^7",
+    "@types/babel__preset-env": "^7",
     "@types/jest": "^26.0.23",
     "autoprefixer": "^9",
     "babel-core": "^7.0.0-bridge.0",
+    "babel-loader": "^8.2.2",
     "commitlint": "^11.0.0",
     "cspell": "latest",
     "dotenv": "8.2.0",
@@ -111,7 +112,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-vue": "^7.7.0",
-    "fork-ts-checker-webpack-plugin": "^6.1.0",
+    "fork-ts-checker-webpack-plugin": "^6.3.3",
     "node-sass": "latest",
     "postcss": "latest",
     "prettier": "^2.2.1",
@@ -120,11 +121,9 @@
     "stylelint-config-standard": "latest",
     "stylelint-scss": "latest",
     "tailwindcss": "^1.9.6",
-    "webpack": "^5.11.1"
-  },
-  "peerDependencies": {
-    "@babel/core": "*",
-    "@babel/runtime": "*"
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.2",
+    "webpack": "^5.52.0"
   },
   "optionalDependencies": {
     "@sentry/webpack-plugin": "^1.14.0",
@@ -165,5 +164,6 @@
     "lint-ts:fix": "eslint --fix --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
     "lint-style:fix": "stylelint src/**/*.scss --config '.stylelintrc' --fix -f verbose",
     "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js} *.md"
-  }
+  },
+  "packageManager": "yarn@2.4.2"
 }
