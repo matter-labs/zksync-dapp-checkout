@@ -10,7 +10,7 @@ jobs:
     environment: dev
     steps:
       - uses: actions/checkout@v2
-      - run: sh cli-dev.sh ci 
+      - run: npm install 
 
       - name: "Build rinkeby"
         run: yarn run ci:build:rinkeby
