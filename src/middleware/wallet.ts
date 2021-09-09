@@ -25,7 +25,7 @@ const walletMiddleware: Middleware = (context: Context) => {
       return;
     }
 
-    const refreshWallet = await context.store.dispatch("wallet/walletRefresh");
+    const refreshWallet = await context.store.dispatch("wallet/walletRefresh", { });
     if (refreshWallet !== true) {
       await context.store.dispatch("wallet/logout");
       if (context.route.matched[0].path !== "/connect") {

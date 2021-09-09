@@ -66,6 +66,8 @@
     "@nuxtjs/tailwindcss": "^4.0.1",
     "@nuxtjs/toast": "latest",
     "@types/js-cookie": "^2.2.6",
+    "@walletconnect/utils": "1.4.0",
+    "@walletconnect/web3-provider": "1.4.0",
     "ethers": "^5.0.31",
     "js-cookie": "^2.2.1",
     "matter-zk-ui": "^1.0.9",

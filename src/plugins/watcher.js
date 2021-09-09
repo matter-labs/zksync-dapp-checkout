@@ -13,7 +13,7 @@ const changeNetworkHandle = (dispatch, context) => {
     if (!walletData.get().syncWallet) {
       return;
     }
-    const refreshWalletResult = await dispatch("walletRefresh", false);
+    const refreshWalletResult = await dispatch("walletRefresh", { firstSelect: false });
     if (refreshWalletResult === false) {
       await context.$router.push("/connect");
       await dispatch("logout");
