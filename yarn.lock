@@ -3812,7 +3812,6 @@ __metadata:
     "@types/babel__template": "*"
     "@types/babel__traverse": "*"
   checksum: e0212770e1cd520b8ad241642e9f99ef20b5c609c157ffe154c42e136c85f3c3f598ad7bfd452fda8abb304c483d6bce92de0b8ed0612f9f1c57b6c4a18da7b3
-<<<<<<< HEAD
   languageName: node
   linkType: hard
 
@@ -3826,8 +3825,6 @@ __metadata:
     "@types/babel__template": "*"
     "@types/babel__traverse": "*"
   checksum: 4a5f8c659082d0a43029b5e99b805615d2186b2c8e48d14ac9da0040e8ccffdfd2de0370c9a172ca2963d18ba682c78f3f8624dfe228c6c3c4cd08bde4596b57
-=======
->>>>>>> cd64ac29f7c26aab54d81c026d75ab80a14272d1
   languageName: node
   linkType: hard
 
@@ -3837,7 +3834,6 @@ __metadata:
   dependencies:
     "@babel/types": ^7.0.0
   checksum: 707d4b140cb71a0e77e2a6f64c7c6a8808eabfebb1e1385ea9e35bf5c0923efd6452463067108faf21825c4d633346bd8414dc88ee10416089d073ef3f31406a
-<<<<<<< HEAD
   languageName: node
   linkType: hard
 
@@ -3845,8 +3841,6 @@ __metadata:
   version: 7.9.2
   resolution: "@types/babel__preset-env@npm:7.9.2"
   checksum: 122a91555e59eb1cd19844b1941ca4add76bc4d99b94bca6e58770084687807d85b848a7f569aeb2aa12bf8e5b68862c95fd2f1a92c740c035eb2de52a015cdd
-=======
->>>>>>> cd64ac29f7c26aab54d81c026d75ab80a14272d1
   languageName: node
   linkType: hard
 
@@ -22191,11 +22185,7 @@ fsevents@~2.3.2:
   peerDependencies:
     typescript: "*"
     webpack: "*"
-<<<<<<< HEAD
   checksum: 7915f4494b23889606696da0eaed509254bd8cbda23d52776f48f487f787c1b84edf197efffbf03582ba5e1f5cbfa84d31f144ce6357e8b33e552592b821e778
-=======
-  checksum: 07fd708f15808ef3d5c7312263ea0b7aeda71da31bff4b61e3c76a81c6124e7227056a2327f3b76865e578484899adbdffe2a1d20cdad5fe641f5dbe9fac9f1c
->>>>>>> cd64ac29f7c26aab54d81c026d75ab80a14272d1
   languageName: node
   linkType: hard
 
@@ -22210,13 +22200,8 @@ fsevents@~2.3.2:
     semver: ^7.3.4
   peerDependencies:
     typescript: "*"
-<<<<<<< HEAD
     webpack: ^5.0.0
   checksum: 4f43b27ef05c9b6d77bb44f6415f25f706d961c94b09be11173288ed2bb149c74d9e2879c88128e11a032cc775020d1cdf6cc26f6125da68701b4e0f9c7b962d
-=======
-    webpack: "*"
-  checksum: 7915f4494b23889606696da0eaed509254bd8cbda23d52776f48f487f787c1b84edf197efffbf03582ba5e1f5cbfa84d31f144ce6357e8b33e552592b821e778
->>>>>>> cd64ac29f7c26aab54d81c026d75ab80a14272d1
   languageName: node
   linkType: hard
 
