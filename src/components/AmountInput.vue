@@ -1,34 +1,31 @@
 <template>
-  <div
-    class="amountInputGroup border rounded"
-    :class="[{ hasUnderInput: $slots['underInput'] }, { disabled: disabled }, { error: error }, { focused: focused }]"
-    @click.self="focusInput()"
-  >
+  <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]"
+       @click.self="focusInput()">
     <div class="leftSide" @click="focusInput()">
-      <div class="inputContainer">
+      <div class="amInputContainer">
         <input
-          ref="input"
-          v-model="inputtedAmount"
-          :style="{ width: `${width}px` }"
-          :disabled="disabled"
-          type="text"
-          placeholder="Amount"
-          maxlength="15"
-          @focus="focused = true"
-          @blur="focused = false"
-          @keyup.enter="$emit('enter')"
+            ref="input"
+            v-model="inputtedAmount"
+            :style="{ width: `${width}px` }"
+            :disabled="disabled"
+            type="text"
+            placeholder="Amount"
+            maxlength="15"
+            @focus="focused = true"
+            @blur="focused = false"
+            @keyup.enter="$emit('enter')"
         />
         <span ref="sizeSpan" class="sizeSpan">{{ inputtedAmount }}</span>
         <div class="penIcon">
-          <i class="fad fa-pen" />
+          <i class="fad fa-pen"/>
         </div>
       </div>
       <div class="underInput">
-        <slot name="underInput" />
+        <slot name="underInput"/>
       </div>
     </div>
     <div class="rightSide">
-      <slot />
+      <slot/>
     </div>
   </div>
 </template>
@@ -63,7 +60,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      inputtedAmount: this.value ? this.value : "",
+      inputtedAmount: this.value ? this.value:"",
       error: "",
       focused: false,
       width: 0,
@@ -74,7 +71,7 @@ export default Vue.extend({
       immediate: true,
       handler(val) {
         let strVal = val;
-        if (typeof val === "string") {
+        if (typeof val==="string") {
           strVal = strVal.trim().replace(/,/g, ".");
           const dotParts = strVal.split(".");
           if (dotParts.length > 2) {
@@ -106,15 +103,11 @@ export default Vue.extend({
     emitValue(val: string): void {
       const trimmed = val.trim();
       this.inputtedAmount = trimmed;
-      if (val !== trimmed) {
+      if (val!==trimmed) {
         return;
       }
       this.validateAmount(val);
-      if (!this.error) {
-        this.$emit("input", val);
-      } else {
-        this.$emit("input", "");
-      }
+      this.$emit("input", this.error ? "":val);
     },
     validateAmount(val: string): void {
       if (!val || !parseFloat(val as string)) {
@@ -130,11 +123,12 @@ export default Vue.extend({
       try {
         inputAmount = utils.parseToken(this.token, val);
       } catch (error) {
-        let errorInfo = "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
-        if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
-          errorInfo = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
+        let msg: string = (error as string) ||
+            "Amount processing error. Common reason behind it — inaccurate amount.Try again paying attention to the decimal amount number format — it should help";
+        if (msg.search("fractional")!== -1) {
+          msg = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
         }
-        this.error = errorInfo;
+        this.error = msg;
         return;
       }
 
@@ -143,28 +137,25 @@ export default Vue.extend({
         return;
       }
 
-      if (this.type === "transfer" && !utils.isAmountPackable(inputAmount.toString())) {
+      if (this.type==="transfer" && !utils.isAmountPackable(inputAmount.toString())) {
         this.error = "Max supported precision for transfers exceeded";
         return;
       }
       this.error = "";
     },
-
-    /* Misc */
     focusInput(): void {
-      if (this.disabled || this.focused) {
-        return;
+      if (!this.disabled && !this.focused) {
+        (this.$refs.input as HTMLElement)?.focus();
       }
-      (this.$refs.input as HTMLElement).focus();
     },
     calcWidth(): void {
-      const sizeSpan = this.$refs.sizeSpan;
-      if (!sizeSpan) {
+      // @ts-ignore
+      const sizeSpan: Vue | Element | Vue[] | Element[] = this.$refs.sizeSpan;
+      if (!sizeSpan || !(sizeSpan as HTMLElement).getBoundingClientRect().width) {
         return;
       }
-      const inputSize = (sizeSpan as HTMLElement).getBoundingClientRect().width;
-      this.width = inputSize + 4;
-    },
-  },
+      this.width = (sizeSpan as HTMLElement).getBoundingClientRect().width + 4;
+    }
+  }
 });
 </script>

@@ -1,5 +1,6 @@
-cypress
-_old
+.github/*
+.idea/*
+environments/*
 tsconfig.json
 cypress.json
 public
@@ -7,3 +8,5 @@ public
 .github
 .yarn
 .firebase
+.idea
+environments

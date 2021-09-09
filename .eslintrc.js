@@ -15,7 +15,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     extraFileExtensions: [".vue", ".scss"],
   },
-  ignorePatterns: ["node_modules"],
+  ignorePatterns: ["node_modules/*"],
   plugins: ["vue", "@typescript-eslint", "prettier"],
   root: true,
   rules: {

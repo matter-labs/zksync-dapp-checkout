@@ -33,7 +33,7 @@
     "strict": true,
     "target": "ESNext",
     "types": [
-      "@types/nuxt",
+      "@nuxtjs/toast/index",
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",
@@ -41,7 +41,11 @@
       "@types/jest",
       "@nuxtjs/toast",
       "web3-core/types",
-      "nuxt-typed-vuex"
+      "btn-onboard",
+      "typed-vuex",
+      "@nuxtjs/axios",
+      "nuxt-typed-vuex",
+      "@walletconnect/types"
     ]
   },
   "exclude": [

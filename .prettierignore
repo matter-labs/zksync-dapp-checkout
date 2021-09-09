@@ -7,6 +7,7 @@ public/*
 _nuxt/*
 *.example
 node_modules
+
 .eslintrc.js
 src/assets/fonts
 *.css
@@ -17,3 +18,13 @@ src/assets/fonts
 *.woff2
 successCheckmark.json
 sw.js
+.nuxt
+src/static
+.firebase
+.github
+.idea
+*yarn*
+environments
+public
+tests
+*.sh

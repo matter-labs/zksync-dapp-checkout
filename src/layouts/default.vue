@@ -1,55 +1,40 @@
 <template>
-  <div class="defaultLayout min-h-screen" :class="[{'darkMode': darkMode===true},{'loggedIn': loggedIn===true},{'footerUpStyle': footerUpStyle===true}]">
-    <modals />
-    <info-block />
+  <div class="defaultLayout min-h-screen" :class="layoutCssClass">
+    <block-modals/>
+    <block-info-block/>
     <div class="routerContainer bg-white2 py-4 px-5 md:px-10">
-      <logging-in/>
+      <block-logging-in/>
       <nuxt @step="step=$event" v-if="!loggingIn && (loggedIn || $route.path==='/connect' || $route.path==='/connect/')" class="routeMain"/>
-      <div class="zk-footer-space"></div>
-      <zk-footer />
+      <!-- <div class="zk-footer-space"></div> -->
+      <block-footer/>
     </div>
   </div>
 </template>
 
-<script>
-import infoBlock from "@/blocks/infoBlock.vue";
-import loggingIn from "@/blocks/loggingIn.vue";
-import modals from "@/blocks/modals.vue";
-import zkFooter from "@/blocks/footer.vue";
+<script lang="ts">
+import Vue from "vue";
+import {tProviderState} from "@/store/provider";
 
-export default {
-  components: {
-    infoBlock,
-    loggingIn,
-    modals,
-    zkFooter,
-  },
+export default Vue.extend({
   computed: {
-    step() {
-      return this.$store.getters["step"];
+    layoutCssClass(): object[] {
+      return [
+        {"loggedIn": this.loggedIn},
+        {"footerUpStyle": this.footerUpStyle}
+      ]
     },
-    footerUpStyle() {
-      return this.loggedIn===true && (this.step==='main' || this.step==='success');
+    step(): tProviderState {
+      return this.$accessor.provider.authStep;
     },
-    loggingIn() {
-      return this.$store.getters["account/loader"];
+    footerUpStyle(): boolean {
+      return this.loggedIn && (this.step === 'ready' || this.step === 'authorized');
     },
-    loggedIn() {
-      return this.$store.getters["account/loggedIn"];
+    loggingIn(): boolean {
+      return this.$accessor.provider.loader;
     },
-    darkMode() {
-      return this.$store.getters.darkMode;
+    loggedIn(): boolean {
+      return this.$accessor.provider.loggedIn;
     },
   },
-  created() {
-    let colorTheme = localStorage.getItem("colorTheme");
-    if (!colorTheme) {
-      colorTheme = "light";
-    }
-    if (colorTheme === "dark") {
-      this.$store.commit("setDarkMode", true);
-    }
-    localStorage.setItem("colorTheme", colorTheme);
-  },
-};
+});
 </script>

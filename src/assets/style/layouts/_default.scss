@@ -4,6 +4,14 @@
   grid-template-columns: 43% 1fr;
   grid-template-rows: 100%;
   color: $black2;
+  &.loggedIn {
+    .routerContainer {
+      display: grid;
+      grid-template-columns: 100%;
+      grid-template-rows: max-content 1fr;
+    }
+  }
+
   @media screen and (min-width: 1300px) {
     grid-template-columns: 600px 1fr;
   }
@@ -29,6 +37,23 @@
     .routerContainer {
       min-height: initial;
       height: 100%;
+
+      .routeMain {
+        max-width: calc(100vw - 2.5rem);
+      }
+    }
+  }
+
+  .modalContainer {
+    &.full {
+      @media screen and (min-width: $mobile+1) {
+        width: 57% !important;
+        left: 43% !important;
+      }
+      @media screen and (min-width: 1300px) {
+        left: 600px !important;
+        width: calc(100% - 600px) !important;
+      }
     }
   }
 }

@@ -14,6 +14,8 @@ ij_formatter_tags_enabled = false
 ij_smart_tabs = false
 ij_visual_guides = 160
 ij_wrap_on_typing = true
+trim_trailing_whitespace = true
+ij_any_spaces_within_brackets = true
 
 [*.sass]
 ij_sass_align_closing_brace_with_properties = false
@@ -237,6 +239,7 @@ ij_typescript_var_declaration_wrap = normal
 ij_typescript_while_brace_force = never
 ij_typescript_while_on_new_line = false
 ij_typescript_wrap_comments = false
+ij_typescript_use_double_quotes = true
 
 [{*.bash,*.sh,*.zsh}]
 
