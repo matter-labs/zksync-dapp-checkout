@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
+import {Provider} from "zksync";
 import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { ChangePubKeyCREATE2, ChangePubKeyECDSA, ChangePubKeyOnchain } from "zksync/build/types";
 
@@ -11,6 +12,11 @@ export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
 export declare type Nonce = number | "committed";
 
+export type PaymentItem = {
+  address: Address;
+  token: TokenSymbol;
+  amount: GweiBalance;
+};
 export type TransactionData = {
   transactions: Array<ZkSyncTransaction>;
   fromAddress: Address;
@@ -92,14 +98,13 @@ export interface Balance {
 export interface Token {
   address: Address;
   balance: string | BigNumber;
+  rawBalance: BigNumber;
   symbol: TokenSymbol;
   id: number;
   formattedBalance?: string;
+  unlocked: boolean;
+  unlockedAmount: BigNumber;
 }
-
-/*
-{ id: any; address: any; balance: BigNumber; formattedBalance: string; symbol: any; }
-*/
 export interface zksync {
   closestPackableTransactionAmount(num: DecimalBalance): GweiBalance;
 }
@@ -171,6 +176,71 @@ export declare class Signer {
   }>;
 }
 
+export declare class Wallet {
+  ethSigner: ethers.Signer;
+  cachedAddress: Address;
+  signer?: Signer;
+  accountId?: number;
+  ethSignerType?: EthSignerType;
+  provider: Provider;
+  private constructor();
+  connect(provider: Provider): this;
+  static fromEthSigner(ethWallet: ethers.Signer, provider: Provider, signer?: Signer, accountId?: number, ethSignerType?: EthSignerType): Promise<Wallet>;
+  static fromEthSignerNoKeys(ethWallet: ethers.Signer, provider: Provider, accountId?: number, ethSignerType?: EthSignerType): Promise<Wallet>;
+  getEthMessageSignature(message: string): Promise<TxEthSignature>;
+  signSyncTransfer(transfer: { to: Address; token: TokenLike; amount: BigNumberish; fee: BigNumberish; nonce: number }): Promise<SignedTransaction>;
+  signSyncForcedExit(forcedExit: { target: Address; token: TokenLike; fee: BigNumberish; nonce: number }): Promise<SignedTransaction>;
+  syncForcedExit(forcedExit: { target: Address; token: TokenLike; fee?: BigNumberish; nonce?: Nonce }): Promise<Transaction>;
+  syncMultiTransfer(
+    transfers: {
+      to: Address;
+      token: TokenLike;
+      amount: BigNumberish;
+      fee: BigNumberish;
+      nonce?: Nonce;
+    }[],
+  ): Promise<Transaction[]>;
+
+  batchBuilder: any;
+
+  syncTransfer(transfer: { to: Address; token: TokenLike; amount: BigNumberish; fee?: BigNumberish; nonce?: Nonce }): Promise<Transaction>;
+  signWithdrawFromSyncToEthereum(withdraw: { ethAddress: string; token: TokenLike; amount: BigNumberish; fee: BigNumberish; nonce: number }): Promise<SignedTransaction>;
+  withdrawFromSyncToEthereum(withdraw: {
+    ethAddress: string;
+    token: TokenLike;
+    amount: BigNumberish;
+    fee?: BigNumberish;
+    nonce?: Nonce;
+    fastProcessing?: boolean;
+  }): Promise<Transaction>;
+
+  isSigningKeySet(): Promise<boolean>;
+  signSetSigningKey(changePubKey: { feeToken: TokenLike; fee: BigNumberish; nonce: number; ethAuthType: string }): Promise<SignedTransaction>;
+  setSigningKey(changePubKey: { feeToken: TokenLike; fee?: BigNumberish; nonce?: Nonce; onchainAuth?: boolean; ethAuthType: string }): Promise<Transaction>;
+  isOnchainAuthSigningKeySet(nonce?: Nonce): Promise<boolean>;
+  onchainAuthSigningKey(nonce?: Nonce, ethTxOptions?: ethers.providers.TransactionRequest): Promise<ContractTransaction>;
+  getCurrentPubKeyHash(): Promise<PubKeyHash>;
+  getNonce(nonce?: Nonce): Promise<number>;
+  getAccountId(): Promise<number | undefined>;
+  address(): Address;
+  getAccountState(): Promise<AccountState>;
+  getBalance(token: TokenLike, type?: "committed" | "verified"): Promise<BigNumber>;
+  getEthereumBalance(token: TokenLike): Promise<BigNumber>;
+  isERC20DepositsApproved(token: TokenLike): Promise<boolean>;
+  approveERC20TokenDeposits(token: TokenLike, max_erc20_approve_amount?: BigNumber): Promise<ContractTransaction>;
+  depositToSyncFromEthereum(deposit: {
+    depositTo: Address;
+    token: TokenLike;
+    amount: BigNumberish;
+    ethTxOptions?: ethers.providers.TransactionRequest;
+    approveDepositAmountForERC20?: boolean;
+  }): Promise<ETHOperation>;
+
+  emergencyWithdraw(withdraw: { token: TokenLike; accountId?: number; ethTxOptions?: ethers.providers.TransactionRequest }): Promise<ETHOperation>;
+  private modifyEthersError;
+  private setRequiredAccountIdFromServer;
+}
+
 export declare class ETHOperation {
   ethTx: ContractTransaction;
   zkSyncProvider: Provider;
@@ -186,16 +256,56 @@ export declare class ETHOperation {
 }
 
 export declare class Transaction {
-  txData: any;
-  txHash: string;
-  sidechainProvider: Provider;
   state: "Sent" | "Committed" | "Verified" | "Failed";
-  error?: ZKSyncTxError;
-  constructor(txData: any, txHash: string, sidechainProvider: Provider);
-  awaitReceipt(): Promise<TransactionReceipt>;
-  awaitVerifyReceipt(): Promise<TransactionReceipt>;
-  private setErrorState;
-  private throwErrorIfFailedState;
+  error?: string;
+  sidechainProvider: Provider;
+
+  // @ts-ignore
+  constructor(public txData, public txHash: string, public sidechainProvider: Provider) {
+    this.state = "Sent";
+    this.sidechainProvider = sidechainProvider;
+  }
+
+  // @ts-ignore
+  async awaitReceipt(): Promise<TransactionReceipt> {
+    this.throwErrorIfFailedState();
+
+    // @ts-ignore
+    if (this.state !== "Sent") return;
+
+    // @ts-ignore
+    const receipt = await this.sidechainProvider.notifyTransaction(this.txHash, "COMMIT");
+
+    if (!receipt.success) {
+      // @ts-ignore
+      this.setErrorState(`zkSync transaction failed: ${receipt.failReason}` /* , receipt */);
+      this.throwErrorIfFailedState();
+    }
+
+    this.state = "Committed";
+    return receipt;
+  }
+
+  // @ts-ignore
+  async awaitVerifyReceipt(): Promise<TransactionReceipt> {
+    await this.awaitReceipt();
+    // @ts-ignore
+    const receipt = await this.sidechainProvider.notifyTransaction(this.txHash, "VERIFY");
+
+    this.state = "Verified";
+    return receipt;
+  }
+
+  // @ts-ignore
+  private setErrorState(error: string) {
+    this.state = "Failed";
+    this.error = error;
+  }
+
+  // @ts-ignore
+  private throwErrorIfFailedState() {
+    if (this.state === "Failed") throw this.error;
+  }
 }
 
 declare class ZKSyncTxError extends Error {
@@ -332,37 +442,6 @@ export interface BatchFee {
 }
 
 export declare function getDefaultProvider(network: "localhost" | "rinkeby" | "ropsten" | "mainnet", transport?: "WS" | "HTTP"): Promise<Provider>;
-
-export declare class Provider {
-  transport: AbstractJSONRPCTransport;
-  contractAddress: ContractAddress;
-  tokenSet: TokenSet;
-  pollIntervalMilliSecs: number;
-  private constructor();
-  static newWebsocketProvider(address: string): Promise<Provider>;
-  static newHttpProvider(address?: string, pollIntervalMilliSecs?: number): Promise<Provider>;
-  submitTx(tx: any, signature?: TxEthSignature, fastProcessing?: boolean): Promise<string>;
-  submitTxsBatch(
-    transactions: {
-      tx: any;
-      signature?: TxEthSignature;
-    }[],
-  ): Promise<string[]>;
-
-  getContractAddress(): Promise<ContractAddress>;
-  getTokens(): Promise<Tokens>;
-  getState(address: Address): Promise<AccountState>;
-  getTxReceipt(txHash: string): Promise<TransactionReceipt>;
-  getPriorityOpStatus(serialId: number): Promise<PriorityOperationReceipt>;
-  getConfirmationsForEthOpAmount(): Promise<number>;
-  getEthTxForWithdrawal(withdrawal_hash: any): Promise<string>;
-  notifyPriorityOp(serialId: number, action: "COMMIT" | "VERIFY"): Promise<PriorityOperationReceipt>;
-  notifyTransaction(hash: string, action: "COMMIT" | "VERIFY"): Promise<TransactionReceipt>;
-  getTransactionFee(txType: "Withdraw" | "Transfer" | "FastWithdraw" | ChangePubKeyFee, address: Address, tokenLike: TokenLike): Promise<Fee>;
-  getTransactionsBatchFee(txTypes: ("Withdraw" | "Transfer" | "FastWithdraw")[], addresses: Address[], tokenLike: TokenLike): Promise<BigNumber>;
-  getTokenPrice(tokenLike: TokenLike): Promise<number>;
-  disconnect(): Promise<any>;
-}
 
 export declare class ETHProxy {
   private ethersProvider;

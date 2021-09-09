@@ -9,12 +9,11 @@ let changeNetworkWasSet = false;
  * @return {function(): Promise<void>}
  */
 const changeNetworkHandle = (dispatch, context) => {
-  // context.$toast.info("Blockchain environment (Network) just changed");
   return async () => {
     if (!walletData.get().syncWallet) {
       return;
     }
-    const refreshWalletResult = await dispatch("walletRefresh", false);
+    const refreshWalletResult = await dispatch("walletRefresh", { firstSelect: false });
     if (refreshWalletResult === false) {
       await context.$router.push("/connect");
       await dispatch("logout");
@@ -31,7 +30,9 @@ const changeNetworkHandle = (dispatch, context) => {
  * @return {function(): Promise<void>}
  */
 const changeAccountHandle = (dispatch, context) => {
-  // context.$toast.info("Active account changed. Please re-login to used one");
+  //  context.$toast.global.zkException({
+  //    message: "You've changes active account. Restarting the DAPP",
+  //  });
   return async () => {
     if (!walletData.get().syncWallet) {
       return;
@@ -49,16 +50,16 @@ const changeAccountHandle = (dispatch, context) => {
  * @return {Promise<void>}
  */
 const changeNetworkSet = (dispatch, context) => {
-  if (changeNetworkWasSet !== true) {
-    if (process.client && window.ethereum) {
-      changeNetworkWasSet = true;
-      window.ethereum.on("disconnect", () => {
-        dispatch("toaster/error", "Connection with your Wallet was lost. Restarting the DAPP", { root: true });
-        dispatch("logout");
+  if (changeNetworkWasSet !== true && process.client && window.ethereum) {
+    changeNetworkWasSet = true;
+    window.ethereum?.on("disconnect", () => {
+      context.$toast.global?.zkException({
+        message: "Connection with your Wallet was lost. Restarting the DAPP",
       });
-      window.ethereum.on("chainChanged", changeNetworkHandle(dispatch, context));
-      window.ethereum.on("accountsChanged", changeAccountHandle(dispatch, context));
-    }
+      dispatch("logout");
+    });
+    window.ethereum?.on("chainChanged", changeNetworkHandle(dispatch, context));
+    window.ethereum?.on("accountsChanged", changeAccountHandle(dispatch, context));
   }
 };
 

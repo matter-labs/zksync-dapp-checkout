@@ -525,7 +525,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.1.0, @babel/parser@npm:^7.12.13, @babel/parser@npm:^7.13.0, @babel/parser@npm:^7.13.10, @babel/parser@npm:^7.5.5, @babel/parser@npm:^7.9.6":
+"@babel/parser@npm:^7.1.0, @babel/parser@npm:^7.12.13, @babel/parser@npm:^7.13.0, @babel/parser@npm:^7.13.10":
   version: 7.13.11
   resolution: "@babel/parser@npm:7.13.11"
   bin:
@@ -1770,7 +1770,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/traverse@npm:^7.13.0, @babel/traverse@npm:^7.5.5":
+"@babel/traverse@npm:^7.13.0":
   version: 7.13.0
   resolution: "@babel/traverse@npm:7.13.0"
   dependencies:
@@ -2745,33 +2745,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@intlify/shared@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "@intlify/shared@npm:9.0.0"
-  checksum: d20f2074a99ea9a6eb858dfc9fb665feec85860366fea73f9dac2b7d83e32c10218a0042d5812197b969fe5cf981d1e4e81b9c6a5f0954de1072f1a4094cc1a6
-  languageName: node
-  linkType: hard
-
-"@intlify/vue-i18n-extensions@npm:^1.0.1":
-  version: 1.0.2
-  resolution: "@intlify/vue-i18n-extensions@npm:1.0.2"
-  dependencies:
-    "@babel/parser": ^7.9.6
-  checksum: 4c361be17d01fbe20e672f30c3ff1d401499b0557710f8a6ef28e2b2b08d59147586714ff3053d4b636c612d888f3d325163a3b6ec6441a4f3ea8fee14f566d7
-  languageName: node
-  linkType: hard
-
-"@intlify/vue-i18n-loader@npm:^1.0.0":
-  version: 1.1.0
-  resolution: "@intlify/vue-i18n-loader@npm:1.1.0"
-  dependencies:
-    "@intlify/shared": ^9.0.0
-    js-yaml: ^3.13.1
-    json5: ^2.1.1
-  checksum: a03d8e36138de5b566ce25cde35ff2bf896636b72c7c32e21dbbe873ac54b11c685af02c28ea4000e86934445a2ce6779fff7cade3147e1b618ce107d07b5355
-  languageName: node
-  linkType: hard
-
 "@jest/types@npm:^26.6.2":
   version: 26.6.2
   resolution: "@jest/types@npm:26.6.2"
@@ -2943,7 +2916,8 @@ __metadata:
     "@tailwindcss/postcss7-compat": ^2.0.3
     "@types/jest": ^26.0.20
     "@types/js-cookie": ^2.2.6
-    "@walletconnect/web3-provider": ^1.3.6
+    "@walletconnect/utils": 1.4.0
+    "@walletconnect/web3-provider": 1.4.0
     autoprefixer: ^9
     babel-core: ^7.0.0-bridge.0
     commitlint: ^11.0.0
@@ -2957,13 +2931,11 @@ __metadata:
     fork-ts-checker-webpack-plugin: ^6.1.0
     fs-extra: ^9.1.0
     js-cookie: ^2.2.1
-    lottie-web: ^5.7.6
-    matter-zk-ui: ^1.0.4
+    matter-zk-ui: ^1.0.9
     moment: ^2.29.1
     node-sass: latest
     nuxt: latest
     nuxt-build-optimisations: latest
-    nuxt-i18n: ^6.20.4
     nuxt-social-meta: ^0.0.5
     nuxt-webfontloader: ^1.1.0
     postcss: latest
@@ -2985,8 +2957,6 @@ __metadata:
   peerDependencies:
     "@babel/core": "*"
     "@babel/runtime": "*"
-    typed-vuex: "*"
-    vuex: 3.5.1
   dependenciesMeta:
     "@sentry/webpack-plugin":
       optional: true
@@ -5165,7 +5135,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/utils@npm:^1.4.0":
+"@walletconnect/utils@npm:1.4.0, @walletconnect/utils@npm:^1.4.0":
   version: 1.4.0
   resolution: "@walletconnect/utils@npm:1.4.0"
   dependencies:
@@ -5180,7 +5150,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/web3-provider@npm:^1.3.1, @walletconnect/web3-provider@npm:^1.3.6":
+"@walletconnect/web3-provider@npm:1.4.0, @walletconnect/web3-provider@npm:^1.3.1":
   version: 1.4.0
   resolution: "@walletconnect/web3-provider@npm:1.4.0"
   dependencies:
@@ -7880,7 +7850,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:4.1.0, chalk@npm:^3.0.0 || ^4.0.0, chalk@npm:^4.0.0, chalk@npm:^4.1.0":
+"chalk@npm:4.1.0, chalk@npm:^4.0.0, chalk@npm:^4.1.0":
   version: 4.1.0
   resolution: "chalk@npm:4.1.0"
   dependencies:
@@ -7911,6 +7881,16 @@ __metadata:
     escape-string-regexp: ^1.0.5
     supports-color: ^5.3.0
   checksum: 22c7b7b5bc761c882bb6516454a1a671923f1c53ff972860065aa0b28a195f230163c1d46ee88bcc7a03e5539177d896457d8bc727de7f244c6e87032743038e
+  languageName: node
+  linkType: hard
+
+"chalk@npm:^3.0.0 || ^4.0.0":
+  version: 4.1.2
+  resolution: "chalk@npm:4.1.2"
+  dependencies:
+    ansi-styles: ^4.1.0
+    supports-color: ^7.1.0
+  checksum: e3901b97d953991712bf0b941d586175be7ca5da56a97d25187e07453c6b26cae0ac8d9c7aa9e87e7c5c986fff870771b3a8e2705b3becda868829e2e12c2a65
   languageName: node
   linkType: hard
 
@@ -8299,7 +8279,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"color-convert@npm:^1.9.0, color-convert@npm:^1.9.1":
+"color-convert@npm:^1.9.0, color-convert@npm:^1.9.1, color-convert@npm:^1.9.3":
   version: 1.9.3
   resolution: "color-convert@npm:1.9.3"
   dependencies:
@@ -8341,13 +8321,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"color@npm:^3.0.0, color@npm:^3.1.2, color@npm:^3.1.3":
+"color-string@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "color-string@npm:1.6.0"
+  dependencies:
+    color-name: ^1.0.0
+    simple-swizzle: ^0.2.2
+  checksum: d48692037a6d38bd1deb91886a075d8af82e4e8269c5ab33eadf174d8aa5e82753a2f3edfe6749e24e48898ea2eb76df706b603c65a721e10ddc57c5d6a078cf
+  languageName: node
+  linkType: hard
+
+"color@npm:^3.0.0, color@npm:^3.1.3":
   version: 3.1.3
   resolution: "color@npm:3.1.3"
   dependencies:
     color-convert: ^1.9.1
     color-string: ^1.5.4
   checksum: d0f4139e986806aaacaa748d170c9778faed93695fb776cd27d9c5825424263eb9354f69033804d0d2d350d9831a31d14dddff045da00713499f279da97e602f
+  languageName: node
+  linkType: hard
+
+"color@npm:^3.1.2":
+  version: 3.2.1
+  resolution: "color@npm:3.2.1"
+  dependencies:
+    color-convert: ^1.9.3
+    color-string: ^1.6.0
+  checksum: 2cf9436cba4cf0cd2da88d82aa69cbad548a850ec24abc1a64930778aa4bc6ef2839b178d85fa2bc254b2a5b982e7db1040c05764f6161a1266880bb0dd14d4f
   languageName: node
   linkType: hard
 
@@ -8663,7 +8663,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:^0.4.0, cookie@npm:^0.4.1":
+"cookie@npm:^0.4.1":
   version: 0.4.1
   resolution: "cookie@npm:0.4.1"
   checksum: b8e0928e3e7aba013087974b33a6eec730b0a68b7ec00fc3c089a56ba2883bcf671252fc2ed64775aa1ca64796b6e1f6fdddba25a66808aef77614d235fd3e06
@@ -14130,13 +14130,6 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"is-https@npm:^3.0.0":
-  version: 3.0.2
-  resolution: "is-https@npm:3.0.2"
-  checksum: 410cc66024278732c1f42c622d846ef1d87bd18664f249e55f4c23b25b6ba767cc681ebf7a4142fc97c41dd63d2ffa60f28f61fb87144e9e98543127a3bc9c03
-  languageName: node
-  linkType: hard
-
 "is-lambda@npm:^1.0.1":
   version: 1.0.1
   resolution: "is-lambda@npm:1.0.1"
@@ -14785,7 +14778,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"json5@npm:^2.1.1, json5@npm:^2.1.2, json5@npm:^2.2.0":
+"json5@npm:^2.1.2, json5@npm:^2.2.0":
   version: 2.2.0
   resolution: "json5@npm:2.2.0"
   dependencies:
@@ -15444,13 +15437,6 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"lottie-web@npm:^5.7.6":
-  version: 5.7.6
-  resolution: "lottie-web@npm:5.7.6"
-  checksum: 8410081e2f09e9fd67ea2aed77332ea20a3b63eb467865a25cad37520df461418dac84adb1019f1de78d14aba5573a3d166f422c9b397291920fa89c6457086b
-  languageName: node
-  linkType: hard
-
 "lottie-web@npm:^5.7.8":
   version: 5.7.8
   resolution: "lottie-web@npm:5.7.8"
@@ -15660,9 +15646,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"matter-zk-ui@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "matter-zk-ui@npm:1.0.4"
+"matter-zk-ui@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "matter-zk-ui@npm:1.0.9"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@nuxtjs/style-resources": ^1.0.0
@@ -15672,7 +15658,7 @@ fsevents@~2.3.1:
     nuxt: ^2.15.3
     nuxt-webfontloader: ^1.1.0
     ts-node: ^9.1.1
-  checksum: 9d08d0b2f7d6964ce399098f68c7c59c7d2d518c03c97d136b97f2fc24f3e2ac547ea634534177e23ae8f95dda82f1c29f1a310d822ecee5b352aa27b28adf6a
+  checksum: 2e003565309f19f5defa93aef8534dccfdfa41165b579efab5dd06c1965306984c7b2d51864a920e15f064a9b1ee8e8a167825d2f3b4b64e58ce01dd40a59e87
   languageName: node
   linkType: hard
 
@@ -17026,23 +17012,6 @@ node-sass@latest:
   languageName: node
   linkType: hard
 
-"nuxt-i18n@npm:^6.20.4":
-  version: 6.21.1
-  resolution: "nuxt-i18n@npm:6.21.1"
-  dependencies:
-    "@babel/parser": ^7.5.5
-    "@babel/traverse": ^7.5.5
-    "@intlify/vue-i18n-extensions": ^1.0.1
-    "@intlify/vue-i18n-loader": ^1.0.0
-    cookie: ^0.4.0
-    is-https: ^3.0.0
-    js-cookie: ^2.2.1
-    klona: ^2.0.4
-    vue-i18n: ^8.23.0
-  checksum: b696429ac7e14bff2b29feec6a3bca41db7f1eb74f3fd85742263a7eaf79ba89fe49a9b9b8626727cf2dd37cf3186194aeeb3210b26966d161c85c7ab0f7338c
-  languageName: node
-  linkType: hard
-
 "nuxt-social-meta@npm:^0.0.5":
   version: 0.0.5
   resolution: "nuxt-social-meta@npm:0.0.5"
@@ -17120,7 +17089,14 @@ node-sass@latest:
   languageName: node
   linkType: hard
 
-"object-hash@npm:^2.0.3, object-hash@npm:^2.1.1":
+"object-hash@npm:^2.0.3":
+  version: 2.2.0
+  resolution: "object-hash@npm:2.2.0"
+  checksum: 1f62307a1f97245382282652d4dc58d66fdbaf232fe97eb69cbd69bf2428935d6764c7fb9e8e8c559a97925362bcdd92258a50e47a7175b0aa6849d50e6fde9b
+  languageName: node
+  linkType: hard
+
+"object-hash@npm:^2.1.1":
   version: 2.1.1
   resolution: "object-hash@npm:2.1.1"
   checksum: fe49a0864cba7ac4055c604295692ae75f5f4d22ba929aaaa987469809d17ab030d1111e8f0d425a070fa4a78b8021b55260e26e98b66b59e0f7be2bd9069fb8
@@ -19052,7 +19028,7 @@ node-sass@latest:
   languageName: node
   linkType: hard
 
-"postcss@npm:7.x.x, postcss@npm:^7, postcss@npm:^7.0.0, postcss@npm:^7.0.1, postcss@npm:^7.0.11, postcss@npm:^7.0.14, postcss@npm:^7.0.17, postcss@npm:^7.0.18, postcss@npm:^7.0.2, postcss@npm:^7.0.21, postcss@npm:^7.0.26, postcss@npm:^7.0.27, postcss@npm:^7.0.32, postcss@npm:^7.0.35, postcss@npm:^7.0.5, postcss@npm:^7.0.6":
+"postcss@npm:7.x.x, postcss@npm:^7, postcss@npm:^7.0.0, postcss@npm:^7.0.1, postcss@npm:^7.0.14, postcss@npm:^7.0.17, postcss@npm:^7.0.18, postcss@npm:^7.0.2, postcss@npm:^7.0.21, postcss@npm:^7.0.26, postcss@npm:^7.0.27, postcss@npm:^7.0.32, postcss@npm:^7.0.35, postcss@npm:^7.0.5, postcss@npm:^7.0.6":
   version: 7.0.35
   resolution: "postcss@npm:7.0.35"
   dependencies:
@@ -19071,6 +19047,17 @@ node-sass@latest:
     source-map: ^0.6.1
     supports-color: ^5.4.0
   checksum: 9b61abdfb366491debc6a633ba3703ae43c674b6c1c64def54e131c8ec01862fc95b3271bde221db805389fc76c3b3f1447b5a9c1d0b332c53cfcc9bfe1b1fa6
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^7.0.11":
+  version: 7.0.36
+  resolution: "postcss@npm:7.0.36"
+  dependencies:
+    chalk: ^2.4.2
+    source-map: ^0.6.1
+    supports-color: ^6.1.0
+  checksum: 544ce0825fa998a77653e8c8bc62b3596273e0d589378b96fb575b74c6b14933a05025713aa5de8c822e9560db01a6c53d0a3fc9295374ffcb142e0fd55ded89
   languageName: node
   linkType: hard
 
@@ -23517,13 +23504,6 @@ typescript@~4.2:
   version: 2.3.4
   resolution: "vue-hot-reload-api@npm:2.3.4"
   checksum: dedefb87284bdba222a93bc55bc1441ee16d9e30546d57107c42d21102cfcafba058c8be35f2678370cee0588f1bf3ee7b32dbf3c1610e5c9bf851a5996a8351
-  languageName: node
-  linkType: hard
-
-"vue-i18n@npm:^8.23.0":
-  version: 8.24.1
-  resolution: "vue-i18n@npm:8.24.1"
-  checksum: ce99f0670852529761ef7b9913401c175ed6c741aad785f75c617b83d1adc7e4dc4f27194beaf0f346cbe3fd8afe4fd42d2703abae9cc2c23d063859024a113d
   languageName: node
   linkType: hard
 

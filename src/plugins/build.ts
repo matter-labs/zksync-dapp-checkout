@@ -1,6 +1,7 @@
 import moment from "moment";
-import { Network } from "zksync/build/types";
-import { version, dependencies } from "../../package.json";
+import { Network } from "zksync/build/types.d";
+import { version as zkSyncVersion } from "zksync/package.json";
+import { version } from "../../package.json";
 
 type networkIDS = {
   [key: string]: number;
@@ -13,20 +14,17 @@ export const _ETHER_NETWORK_ID_DICTIONARY: networkIDS = {
 };
 
 export const GIT_REVISION_DATE = process.env.APP_GIT_UPDATED_AT ?? moment().format("d.m.Y");
-/**
- * @deprecated
- */
-console.log(`This is ${version}, last commit was done at ${GIT_REVISION_DATE}`);
 
 export const GIT_REVISION: string = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
-export const GIT_REVISION_SHORT: string = GIT_REVISION ? GIT_REVISION.slice(-7) : "";
+export const GIT_REVISION_SHORT: string = GIT_REVISION.length > 8 ? GIT_REVISION.slice(-7) : GIT_REVISION;
 export const VERSION: string = version;
 export const ETHER_NETWORK_NAME: Network = process.env.APP_CURRENT_NETWORK as Network;
 
-export const ZK_LIB_VERSION = dependencies?.zksync ?? "latest";
-export const ZK_IS_BETA: boolean = dependencies?.zksync.search("beta") !== -1 || process.env.ZK_NETWORK !== undefined || ETHER_NETWORK_NAME === "ropsten";
+export const ZK_LIB_VERSION = zkSyncVersion ?? "latest";
+export const ZK_IS_BETA: boolean = zkSyncVersion.search("beta") !== -1 || process.env.ZK_NETWORK !== undefined || ETHER_NETWORK_NAME === "ropsten";
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;
-export const CURRENT_APP_NAME = 'zkSync Checkout';
+export const CURRENT_APP_NAME = "zkSync Checkout";
+export const CURRENT_APP_TITLE = process.env.SITE_TITLE || CURRENT_APP_NAME;
 
 export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
 
@@ -51,3 +49,10 @@ export const ONBOARD_FORTMATIC_KEY: string | undefined = process.env.APP_FORTMAT
 export const ONBOARD_PORTIS_KEY: string | undefined = process.env.APP_PORTIS;
 export const ONBOARD_INFURA_KEY: string | undefined = process.env.APP_WALLET_CONNECT;
 export const ONBOARD_RPC_URL: string | undefined = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
+
+
+/**
+ * zkLink
+ */
+export const TWEET_URL = 'https://twitter.com/intent/tweet?url=';
+export const FACEBOOK_URL = 'https://www.facebook.com/sharer/sharer.php?u=';

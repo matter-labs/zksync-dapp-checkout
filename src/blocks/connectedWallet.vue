@@ -2,7 +2,7 @@
   <div class="container">
     <div class="connectedWallet flex items-center">
       <i class="text-gray text-4xl mr-3 far fa-wallet" />
-      <popover name="copy-address" event="click" class="text-center block text-xs" :delay="400">
+      <popover name="copy-address" event="click" class="text-center block text-xs" :delay="100">
         Address copied!
       </popover>
       <zk-values-block>
@@ -19,7 +19,7 @@
         </template>
         <template slot="right-top">
           <div class="flex items-center flex-col md:flex-row">
-            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="testnetWalletUrl">
+            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="walletUrl">
               <span>Open wallet</span>
               <i class="fas fa-external-link" />
             </zk-defbtn>
@@ -37,8 +37,8 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { Address } from "@/types";
 import {ETHER_NETWORK_NAME, ETHER_PRODUCTION} from "@/plugins/build";
+
 
 export default Vue.extend({
   computed: {
@@ -49,12 +49,9 @@ export default Vue.extend({
     isProd(): boolean {
       return ETHER_PRODUCTION;
     },
-    currentNetwork(): string {
-      return ETHER_NETWORK_NAME;
+    walletUrl(): string {
+      return `///${ETHER_PRODUCTION ? "wallet" : ETHER_NETWORK_NAME }.zksync.io`;
     },
-    testnetWalletUrl(): string {
-      return `///${this.isProd ? "wallet.zksync.io" : `${ETHER_NETWORK_NAME}.zksync.io`}`
-    }
   },
   methods: {
     logout(): void {

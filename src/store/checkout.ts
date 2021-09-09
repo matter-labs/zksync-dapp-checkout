@@ -92,7 +92,7 @@ export const mutations: MutationTree<CheckoutModuleState> = {
     state.accountUnlockedFee = accountUnlockFee;
   },
   setError(state: CheckoutModuleState, errorData) {
-    state.isError = true;
+    state.isError = !!errorData;
     state.noDataError = errorData;
   },
 };
@@ -103,7 +103,6 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
   },
   async getTransactionBatchFee({ state, commit }): Promise<void> {
     const syncProvider = walletData.get().syncProvider;
-    await this.dispatch("wallet/restoreProviderConnection");
     const types = new Array(state.transactions.length).fill("Transfer") as "Transfer"[];
     const addresses = state.transactions.map((tx) => tx.to);
     // The fee transaction
@@ -122,7 +121,6 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
   async getAccountUnlockFee({ state, commit }): Promise<void> {
     const syncProvider = walletData.get().syncProvider;
     const isAccountLocked = this.getters["wallet/isAccountLocked"];
-    await this.dispatch("wallet/restoreProviderConnection");
     if (isAccountLocked) {
       const syncWallet = walletData.get().syncWallet;
       const foundFee = await syncProvider?.getTransactionFee(

@@ -1,7 +1,11 @@
+import {ExternalProvider, JsonRpcFetchFunc} from "@ethersproject/providers";
 import { BigNumber, Contract, ContractInterface, BigNumberish, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Balance, GweiBalance, Token, TokenSymbol, TotalByToken, Transaction } from "@/types/index";
+import { Address, Balance, GweiBalance, Token, TokenSymbol, TotalByToken } from "@/types/index";
 import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
+import {Transaction} from "zksync/build/wallet";
+import Web3 from "web3";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 
@@ -9,7 +13,7 @@ import onboardConfig from "@/plugins/onboardConfig";
 import web3Wallet from "@/plugins/web3";
 import utils from "@/plugins/utils";
 import watcher from "@/plugins/watcher";
-import { ZK_API_BASE, ETHER_NETWORK_NAME } from "@/plugins/build";
+import {ZK_API_BASE, ZK_NETWORK, ONBOARD_INFURA_KEY, ETHER_NETWORK_ID} from "@/plugins/build";
 
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
@@ -250,16 +254,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
   },
 
   /**
-   * Check if the connection to the sync provider is opened and if not - restore it
-   */
-  async restoreProviderConnection(): Promise<void> {
-    const syncProvider = walletData.get().syncProvider;
-    if (syncProvider && syncProvider.transport.ws && !syncProvider.transport.ws.isOpened) {
-      await syncProvider.transport.ws.open();
-    }
-  },
-
-  /**
    *
    * @param commit
    * @param dispatch
@@ -285,7 +279,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
         return localList.list;
       }
-      await dispatch("restoreProviderConnection");
       const newAccountState = await syncWallet!.getAccountState();
       this.commit("account/setAccountID", newAccountState.id);
       walletData.set({ accountState: newAccountState });
@@ -342,7 +335,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
       return localList.list;
     }
-    await dispatch("restoreProviderConnection");
     const syncWallet = walletData.get().syncWallet;
     if (!syncWallet) {
       return localList.list;
@@ -373,7 +365,17 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
           unlocked,
         };
       } catch (error) {
-        this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
+        console.warn(`Error getting ${currentToken.symbol} balance`, error);
+        this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance.`);
+        return {
+          id: currentToken.id,
+          address: currentToken.address,
+          balance: "0",
+          rawBalance: BigNumber.from("0"),
+          formattedBalance: "0",
+          symbol: currentToken.symbol,
+          unlocked: BigNumber.from("0"),
+        };
       }
     });
     const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
@@ -460,7 +462,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     } else {
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
-      await dispatch("restoreProviderConnection");
       const zksync = await walletData.zkSync();
       if (type === "withdraw") {
         if (symbol === feeSymbol) {
@@ -506,28 +507,32 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
   },
   async getProviders(): Promise<void> {
     const zksync = await walletData.zkSync();
-    const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
+    const syncProvider = await zksync.getDefaultProvider(ZK_NETWORK);
     walletData.set({ syncProvider });
   },
-  async walletRefresh({ getters, dispatch }, firstSelect: boolean = true): Promise<boolean> {
+  async walletRefresh({ getters, dispatch }, options: { firstSelect: boolean, web3Connected: boolean }): Promise<boolean> {
     try {
-      const onboard = getters.getOnboard;
       this.commit("account/setLoadingHint", "processing");
-      let walletCheck = false;
-      if (firstSelect) {
-        walletCheck = await onboard.walletSelect();
+      options = Object.assign({
+        firstSelect: true,
+        web3Connected: false,
+      }, options);
+      if(!options.web3Connected) {
+        const onboard = getters.getOnboard;
+        let walletCheck = false;
+        if (options.firstSelect) {
+          walletCheck = await onboard.walletSelect();
+          if (!walletCheck) {
+            return false;
+          }
+        }
+        walletCheck = await onboard.walletCheck();
         if (!walletCheck) {
           return false;
         }
       }
-      walletCheck = await onboard.walletCheck();
-      if (!walletCheck) {
-        return false;
-      }
-      if (!web3Wallet.get().eth) {
-        return false;
-      }
-      const getAccounts = await web3Wallet.get().eth.getAccounts();
+      const getAccounts = await web3Wallet.get()!.eth.getAccounts();
+      console.log("getAccounts", getAccounts);
       if (getAccounts.length === 0) {
         return false;
       }
@@ -543,16 +548,15 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
 
       /**
-       * @type {provider}
+       * @type {ExternalProvider | JsonRpcFetchFunc}
        */
-      const currentProvider = web3Wallet.get().eth.currentProvider;
+      const currentProvider = web3Wallet.get()!.eth.currentProvider as ExternalProvider | JsonRpcFetchFunc;
       /**
        * noinspection ES6ShorthandObjectProperty
        */
       const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
 
       const zksync = await walletData.zkSync();
-      await dispatch("restoreProviderConnection");
       this.commit("account/setLoadingHint", "followInstructions");
       const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, walletData.get().syncProvider);
 
@@ -568,7 +572,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
 
       this.commit("account/setAddress", syncWallet.address());
       this.commit("account/setAccountID", accountState.id);
-      
+
       await this.dispatch("checkout/getAccountUnlockFee");
 
       await watcher.changeNetworkSet(dispatch, this);
@@ -578,6 +582,79 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     } catch (error) {
       if (!error.message.includes("User denied")) {
         this.dispatch("toaster/error", error.message);
+      }
+      return false;
+    }
+  },
+  async connectWithWalletConnect({ dispatch }) {
+    this.commit("account/setLoadingHint", "processing");
+    this.commit("account/setSelectedWallet", "Wallet Connect");
+    const providerWalletConnect = new WalletConnectProvider({
+      infuraId: ONBOARD_INFURA_KEY,
+      pollingInterval: 6500,
+      qrcode: true,
+      chainId: ETHER_NETWORK_ID,
+    });
+
+    try {
+      if (!providerWalletConnect) {
+        throw new Error("Provider not found");
+      }
+
+      /**
+       * Authorizing the wallet (better avoid since it's “async magic”
+       */
+      providerWalletConnect.onConnect((connection: unknown) => {
+        // commit("setAuthStage", "walletChecked");
+        console.log("providerWalletConnect.onConnect", connection);
+      });
+
+      providerWalletConnect.on("session_request", (error: Error, payload: unknown): void => {
+        if (error) {
+          console.error(error);
+        }
+        // commit("setAuthStage", "isChecking");
+        this.commit("account/setLoadingHint", "followInstructions");
+        console.log(payload, "session_request");
+      });
+
+      providerWalletConnect.on("session_update", (error: Error, payload: unknown): void => {
+        if (error) {
+          console.error(error);
+        }
+        console.log("session_update", payload);
+      });
+
+      providerWalletConnect.on("disconnect", (error: Error, payload: unknown): void => {
+        if (error) {
+          console.error(error);
+        }
+        this.app.$accessor.wallet.logout();
+        console.log("disconnect", payload);
+      });
+
+      if (providerWalletConnect.connected || providerWalletConnect.isConnecting) {
+        await providerWalletConnect.disconnect();
+      }
+
+      //  Enable session (triggers QR Code modal)
+      const response = await providerWalletConnect.enable();
+
+      console.log("response qr", response);
+
+      if (response && Array.isArray(response) && response[0]) {
+        this.commit("account/setAddress", response[0]);
+      }
+
+      // @ts-ignore
+      const web3Provider: Web3 = new Web3(providerWalletConnect);
+      console.log("web3Provider", web3Provider);
+      web3Wallet.set(web3Provider);
+      return await dispatch("walletRefresh", { web3Connected: true });
+    } catch (error) {
+      console.log(error);
+      if ((providerWalletConnect!.isConnecting || providerWalletConnect!.connected) && providerWalletConnect.disconnect) {
+        await providerWalletConnect.disconnect();
       }
       return false;
     }
@@ -596,6 +673,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     });
   },
   logout({ commit, getters }): void {
+    localStorage.removeItem("walletconnect");
     const onboard = getters.getOnboard;
     onboard.walletReset();
     walletData.set({ syncWallet: null, accountState: null });

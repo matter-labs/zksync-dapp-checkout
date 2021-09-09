@@ -1,34 +1,33 @@
 <template>
-  <div v-if="version" class="system-info flex flex-row mx-2">
-    <a id="system-b-popover" v-popover:env-details.top class="linkDefault version px-2">
-      v.{{ version }}
-      <!-- <sup v-if="isBeta" class="beta text-danger ml-1 font-weight-bold">BETA</sup> -->
-    </a>
-    <popover name="env-details" transition="show-from-bottom" event="hover" class="system-env-popover p-5 rounded-md bg-gray-500">
-      <h2 class="w-full leading-5 text-left text-md bg-blue-400 px-2 py-1 font-light block">Environment details</h2>
-      <div class="flex flex-col justify-items-stretch items-start text-left px-2">
-        <span class="env-details text-xs font-light">
-          <i class="fab fa-npm"/>
-          zksync v.{{ zkLibVersion }}
+  <div v-if="version" class="system-info flex items-stretch">
+    <popover name="env-details" transition="show-from-bottom" event="hover" :width="200"
+             class="system-env-popover rounded-md bg-gray-500 flex-col justify-items-stretch p-5">
+      <span class="flex">
+          <i class="fab fa-npm mr-2"/>
+          zkSync.js: <strong class=" ml-auto">v.{{ zkLibVersion }}</strong>
         </span>
-        <span class="env-details text-xs font-light gap-2">
-          <i class="fad fa-code-branch"/>
-          zkSync API <code class="py-0">{{ zkApiBase }}</code>
+      <span class="flex">
+          <i class="fad fa-code-branch mr-2"/>
+          Network: <strong class=" ml-auto">{{ netName }}</strong>
         </span>
-        <span class="env-details text-xs font-light gap-2 flex">
-          <i class="fad fa-code-branch"/>
-          Ethereum env <code class="py-0">{{ netName }}</code>
+      <span class="flex whitespace-no-wrap">
+          <i class="fad fa-code-branch mr-2"/>
+          API: <strong class="ml-auto">{{ zkApiBase }}</strong>
         </span>
-      </div>
     </popover>
-    <a :href="githubLink" class="revision linkDefault x-2" target="_blank">
+    <a id="system-b-popover" v-popover:env-details.top class="version">
+      v.{{ version }}
+    </a>
+
+    <span class="mx-3 md:mx-2">|</span>
+    <a :href="githubLink" class="revision lightLink" target="_blank">
       <i class="fab fa-github align-self-start"/>
       {{ revision }}
     </a>
   </div>
 </template>
 <script lang="ts">
-import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_IS_BETA, ZK_LIB_VERSION, ETHER_NETWORK_NAME } from "~/plugins/build";
+import {ETHER_NETWORK_NAME, GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_IS_BETA, ZK_LIB_VERSION} from "~/plugins/build";
 import Vue from "vue";
 
 export default Vue.extend({

@@ -15,7 +15,7 @@
       border-color: $violet;
 
       .leftSide {
-        .inputContainer {
+        .amInputContainer {
           .penIcon {
             color: $violet;
           }
@@ -31,7 +31,7 @@
   &.error {
     border-color: $red !important;
 
-    .leftSide .inputContainer input {
+    .leftSide .amInputContainer input {
       color: $red;
     }
   }
@@ -51,7 +51,7 @@
     align-items: flex-end;
     cursor: default;
 
-    .inputContainer {
+    .amInputContainer {
       height: 18px;
       width: max-content;
       display: flex;
@@ -140,12 +140,12 @@
   &:not(:disabled).focused {
     border-color: $lightViolet;
 
-    .leftSide .inputContainer .penIcon {
+    .leftSide .amInputContainer .penIcon {
       color: $lightViolet;
     }
   }
   .leftSide {
-    .inputContainer input {
+    .amInputContainer input {
       color: $gray;
       &::placeholder {
         color: $dark2;

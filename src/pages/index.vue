@@ -1,12 +1,6 @@
 <template>
   <div class="indexPage">
-    <zk-modal v-if="modal === 'feeChanged'"
-      :value="modal === 'feeChanged'"
-      @close="
-        modal = false;
-        cancelTransfer();
-      "
-    >
+    <zk-modal :value="modal==='feeChanged'" v-if="modal==='feeChanged'" @close="modal=false;cancelTransfer();">
       <template slot="header">
         <div class="withIcon text-warning text-yellow">
           <i class="fad fa-info-square"/>
@@ -138,7 +132,7 @@
       <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a></div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <zk-defbtn @click="close()">
+          <zk-defbtn @click="close()" :disabled="!transferAllowed">
             <i class="far fa-times"/>
             <span>Close</span>
           </zk-defbtn>
@@ -189,7 +183,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { TransactionData, TotalByToken, TransactionFee, Transaction, TokenPrices, CPKLocal, GweiBalance } from "@/types/index";
+import { TransactionData, TotalByToken, TokenPrices, CPKLocal, GweiBalance } from "@/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 import zkUtils from "@/plugins/utils";
@@ -201,6 +195,7 @@ import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 import {ZkSyncTransaction} from "zksync-checkout-internal/src/types";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
+import {Transaction} from "zksync/build/wallet";
 
 interface UpdatedFee {
   type: "batch" | "cpk";
@@ -397,10 +392,11 @@ export default Vue.extend({
         });
         endHashes = validHashes.map((tx: any) => tx.txHash);
         console.log("Sent hashes", endHashes);
-        manager.notifyHashes(endHashes);
-
-
         // @ts-ignore
+        if (manager.openerPromise) {
+          manager.notifyHashes(endHashes);
+        }
+
         this.finalTransactions.push(...transactions);
         this.subStep = "committing";
 
@@ -423,7 +419,7 @@ export default Vue.extend({
             }
           }
           this.errorModal = {
-            headline: "Activation error",
+            headline: "Activation error 1",
             text: errorMsg,
           };
         }

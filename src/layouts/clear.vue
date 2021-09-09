@@ -12,6 +12,28 @@ export default {
   components: {
     modals,
   },
-  computed: {},
+  watch: {
+    $route: {
+      immediate: true,
+      handler(val, oldVal) {
+        if (!oldVal) {
+          return this.$nextTick(() => {
+            document.documentElement.scrollTop = 0;
+          });
+        }
+        if (val.path !== oldVal.path) {
+          this.$nextTick(() => {
+            const lastScroll = this.$store.getters["scroll/getLastScroll"];
+            document.documentElement.scrollTop = lastScroll !== false ? lastScroll.y : 0;
+          });
+        }
+      },
+    },
+  },
+  mounted() {
+    if (process ? process.client : undefined) {
+      window.history.scrollRestoration = "manual";
+    }
+  },
 };
 </script>

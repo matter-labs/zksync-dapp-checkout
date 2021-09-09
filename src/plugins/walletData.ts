@@ -1,5 +1,5 @@
-import { Wallet } from "zksync";
-import { Provider, AccountState } from "@/types/index";
+import {Provider, Wallet} from "zksync";
+import { AccountState } from "@/types";
 
 interface WalletData {
   syncProvider?: Provider;

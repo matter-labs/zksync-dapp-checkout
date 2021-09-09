@@ -1,6 +1,14 @@
 import { walletData } from "@/plugins/walletData";
+import { Context, Middleware } from "@nuxt/types";
 
-export default (context) => {
+const walletMiddleware: Middleware = (context: Context) => {
+  if (context.route.matched[0].path === "/link" || context.route.matched[0].path === "/link/:hash") {
+    return;
+  }
+  if (context.store.getters["checkout/getErrorState"]) {
+    context.redirect("/link");
+    return;
+  }
   if (walletData.get().syncWallet) {
     if (context.route.matched[0].path === "/connect") {
       context.redirect("/");
@@ -8,7 +16,7 @@ export default (context) => {
     return;
   }
   (async () => {
-    const onboardResult = await context.store.dispatch("wallet/onboard");
+    const onboardResult = await context.store?.dispatch("wallet/onboard");
     if (onboardResult !== true) {
       await context.store.dispatch("wallet/logout");
       if (context.route.matched[0].path !== "/connect") {
@@ -17,7 +25,7 @@ export default (context) => {
       return;
     }
 
-    const refreshWallet = await context.store.dispatch("wallet/walletRefresh");
+    const refreshWallet = await context.store.dispatch("wallet/walletRefresh", { });
     if (refreshWallet !== true) {
       await context.store.dispatch("wallet/logout");
       if (context.route.matched[0].path !== "/connect") {
@@ -28,3 +36,5 @@ export default (context) => {
     }
   })();
 };
+
+export default walletMiddleware;

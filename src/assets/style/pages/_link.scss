@@ -1,0 +1,238 @@
+.linkPage {
+  @apply w-full min-h-screen;
+
+  height: max-content;
+  display: grid;
+  grid-template-columns: 90vw;
+  grid-template-rows: max-content 1fr max-content;
+  justify-content: center;
+
+  .font-mono {
+    font-family: $firaCode;
+    letter-spacing: -0.1em !important;
+  }
+
+  .inputContainer.disabled .inputBody input {
+    color: #696969;
+  }
+
+  .linkHeader {
+    a {
+      img.head-logo {
+        @apply mr-2;
+
+        height: 40px;
+      }
+    }
+
+    .feature-list {
+      max-width: 500px;
+    }
+  }
+
+  .lightLink {
+    @media (max-width: $mobile) {
+      &::after {
+        visibility: visible !important;
+        transform: scaleX(1) !important;
+      }
+    }
+  }
+
+  .headline {
+    @apply text-center font-medium;
+
+    font-weight: 400;
+    font-size: 1.2rem;
+    font-family: $firaCondensed;
+    line-height: 125%;
+
+    &.big {
+      font-size: 1.4rem;
+    }
+
+    @media screen and (max-width: $mobile) {
+      font-size: 0.8rem;
+      &.big {
+        font-size: 1rem;
+      }
+    }
+
+  }
+
+  .zk-container {
+    position: relative;
+    max-width: $maxWidthDefault;
+    @media screen and (max-width: $mobile) {
+      max-width: $maxWidthMobile;
+    }
+  }
+
+  .linkBody {
+    .paymentItem {
+      position: relative;
+      max-width: $maxWidthDefault;
+      margin: 0 auto;
+
+      .index, .delete {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: center;
+        line-height: 36px;
+      }
+
+      .index {
+        left: -55px;
+        will-change: opacity;
+      }
+
+      .delete {
+        right: -50px;
+        transition: $transition;
+        transition-property: background-color, opacity;
+        will-change: background-color, opacity;
+
+        &:hover {
+          background-color: $white3;
+        }
+
+        i {
+          position: relative;
+          top: 1px;
+        }
+      }
+
+      .addressInput {
+        input {
+          font-weight: 400;
+        }
+
+        .errorTextContainer {
+          height: 18px;
+        }
+      }
+
+      .amountInputGroup {
+        width: 100%;
+        padding: 0;
+        border: none;
+        height: max-content;
+
+        .penIcon, .rightSide {
+          display: none;
+        }
+
+        .amInputContainer {
+          max-width: 160px;
+
+          input {
+            left: 0;
+          }
+        }
+
+        .leftSide {
+          width: 100%;
+        }
+      }
+
+      .tokenDropdown {
+        position: relative;
+
+        &.opened {
+          z-index: 1;
+        }
+
+        .dropdownMain {
+          height: 36px;
+          background-color: $white;
+        }
+
+        .dropdownBody {
+          z-index: -1;
+          position: absolute;
+          width: 100%;
+          height: max-content;
+          top: 0;
+          left: 0;
+          padding-top: 35px;
+          box-sizing: content-box;
+          background-color: $white2;
+          outline: none;
+
+          .searchField {
+            position: sticky;
+            top: 0;
+            background-color: $white2;
+            padding-top: 8px;
+          }
+
+          .tokensList {
+            width: 100%;
+            height: max-content;
+            max-height: 45vh;
+            overflow: auto;
+
+            .tokenItem {
+              transition: background-color $transition;
+
+              &:hover {
+                background-color: $white3;
+              }
+            }
+          }
+        }
+      }
+
+      @media screen and (max-width: $mobile) {
+
+        max-width: $maxWidthMobile;
+
+        .label {
+          padding-bottom: 5px;
+        }
+        .index, .delete {
+          @apply text-sm;
+
+          top: 0.5rem;
+          right: 0;
+          width: 1.25rem;
+          height: 1.25rem;
+          line-height: 1.25rem;
+        }
+        .delete {
+          background-color: transparentize($color: $gray, $amount: 0.85);
+        }
+
+      }
+
+    }
+  }
+
+
+
+  .successLinkContainer {
+    display: grid;
+    height: max-content;
+    grid-template-columns: 1fr repeat(3, max-content);
+    grid-template-rows: 100%;
+    grid-gap: .5rem;
+
+    input {
+      text-overflow: ellipsis;
+    }
+
+    .vue-popover {
+      position: fixed;
+      color: $lightViolet;
+      width: fit-content !important;
+      padding: 5px 10px;
+    }
+  }
+
+  .zkFooterContainer {
+    position: static;
+  }
+}

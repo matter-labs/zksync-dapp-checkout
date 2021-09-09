@@ -48,7 +48,7 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
   getTokenByID(state): unknown {
     return (id: number): TokenItem | undefined => {
       for (const symbol in state.allTokens) {
-        if (state.allTokens[symbol].id === id) {
+        if (state.allTokens.hasOwnProperty(symbol) && state.allTokens[symbol].id === id) {
           return state.allTokens[symbol];
         }
       }
@@ -57,7 +57,7 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
   getTokenBySymbol(state): unknown {
     return (symbol: TokenSymbol): TokenItem | undefined => {
       for (const tokenProp in state.allTokens) {
-        if (state.allTokens[tokenProp].symbol === symbol) {
+        if (state.allTokens.hasOwnProperty(tokenProp) && state.allTokens[tokenProp].symbol === symbol) {
           return state.allTokens[tokenProp];
         }
       }
@@ -76,21 +76,17 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
 
 export const actions: ActionTree<TokensModuleState, RootState> = {
   async loadAllTokens({ commit, dispatch, getters }): Promise<Tokens> {
-    if (Object.entries(getters.getAllTokens).length === 0) {
-      await this.dispatch("wallet/restoreProviderConnection");
-      /* By taking token list from syncProvider we avoid double getTokens request,
-          but the tokensBySymbol param is private on zksync utils types */
-      // @ts-ignore
-      const tokensList = walletData.get().syncProvider!.tokenSet.tokensBySymbol;
-      const totalByToken = this.getters["checkout/getTotalByToken"];
-      const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
-      for (const symbol of usedTokens) {
-        await dispatch("getTokenPrice", symbol);
-      }
-      commit("setAllTokens", tokensList);
-      return tokensList || {};
+    /* By taking token list from syncProvider we avoid double getTokens request,
+        but the tokensBySymbol param is private on zksync utils types */
+    // @ts-ignore
+    const tokensList = walletData.get().syncProvider!.tokenSet.tokensBySymbol;
+    const totalByToken = this.getters["checkout/getTotalByToken"];
+    const usedTokens = Object.entries(totalByToken).map((e) => e[0]);
+    for (const symbol of usedTokens) {
+      await dispatch("getTokenPrice", symbol);
     }
-    return getters.getAllTokens;
+    commit("setAllTokens", Object.entries(tokensList).sort(([,a],[,b]) => (a as TokenItem).id-(b as TokenItem).id).reduce((r, [k, v]) => ({ ...r, [k]: v }), {}));
+    return tokensList || {};
   },
 
   /**
@@ -107,7 +103,6 @@ export const actions: ActionTree<TokensModuleState, RootState> = {
     if (localPricesList.hasOwnProperty(symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
       return localPricesList[symbol].price;
     }
-    await this.dispatch("wallet/restoreProviderConnection");
     const syncProvider = walletData.get().syncProvider;
     const tokenPrice = await syncProvider?.getTokenPrice(symbol);
     commit("setTokenPrice", {
