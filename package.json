@@ -162,6 +162,5 @@
     "lint-ts:fix": "eslint --fix --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
     "lint-style:fix": "stylelint src/**/*.scss --config '.stylelintrc' --fix -f verbose",
     "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js} *.md"
-  },
-  "packageManager": "yarn@2.4.2"
+  }
 }
