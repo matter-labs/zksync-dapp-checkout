@@ -2,6 +2,7 @@ import { BigNumber, Contract, ContractInterface, BigNumberish, ethers } from "et
 import { ActionTree, GetterTree, MutationTree } from "vuex";
 import { Address, Balance, GweiBalance, Token, TokenSymbol, TotalByToken, Transaction } from "@/types/index";
 import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
+import { ExternalProvider } from "@ethersproject/providers";
 import Web3 from "web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
@@ -541,15 +542,16 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
           return false;
         }
       }
-      if (!web3Wallet.get().eth) {
-        return false;
+      if (!web3Wallet.get().eth!.currentProvider) {
+        throw new Error("Web3 Provider has no Eth-network connection unavailable");
       }
-      const getAccounts = await web3Wallet.get().eth.getAccounts();
-      if (getAccounts.length === 0) {
-        return false;
+      const fetchedAccounts = await web3Wallet.get().eth.getAccounts();
+      if (!fetchedAccounts) {
+        throw new Error("No account found");
       }
+      const walletAccount = fetchedAccounts.shift();
       const transactionData = this.getters["checkout/getTransactionData"];
-      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress.toLowerCase() !== getAccounts[0].toLowerCase()) {
+      if (typeof transactionData.fromAddress === "string" && transactionData.fromAddress.toLowerCase() !== fetchedAccounts[0].toLowerCase()) {
         this.commit("setCurrentModal", "wrongAccountAddress");
         return false;
       }
@@ -560,18 +562,14 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
 
       /**
-       * @type {provider}
-       */
-      const currentProvider = web3Wallet.get().eth.currentProvider;
-      /**
        * noinspection ES6ShorthandObjectProperty
        */
-      const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
+      const ethWallet: ethers.providers.Web3Provider = new ethers.providers.Web3Provider(web3Wallet.get().eth!.currentProvider as ExternalProvider, ETHER_NETWORK_ID);
 
       const zksync = await walletData.zkSync();
       await dispatch("restoreProviderConnection");
       this.commit("account/setLoadingHint", "followInstructions");
-      const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, walletData.get().syncProvider);
+      const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet.getSigner(walletAccount), walletData.get().syncProvider);
 
       this.commit("account/setLoadingHint", "loadingData");
       const accountState = await syncWallet.getAccountState();
