@@ -17,9 +17,9 @@
 </template>
 
 <script lang="ts">
-import utils from "@/plugins/utils";
-import { DecimalBalance } from "@/types";
 import Vue, { PropOptions } from "vue";
+import { utils } from "ethers";
+import { DecimalBalance } from "matter-dapp-module/types";
 
 export default Vue.extend({
   props: {
@@ -36,7 +36,7 @@ export default Vue.extend({
   },
   computed: {
     isValid(): boolean {
-      return utils.validateAddress(this.inputtedWallet) && this.inputtedWallet.startsWith("0x");
+      return utils.isAddress(this.inputtedWallet) && this.inputtedWallet.startsWith("0x");
     },
     error(): string {
       if (this.inputtedWallet && !this.isValid) {

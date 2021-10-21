@@ -1,5 +1,6 @@
 import { NuxtConfig, Configuration } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+import { ModuleOptions } from "matter-dapp-module/types";
 
 // @ts-ignore
 import * as zkTailwindDefault from "matter-zk-ui/tailwind.config.js";
@@ -169,7 +170,7 @@ const config: NuxtConfig = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
+  plugins: ["@/plugins/main", "@/plugins/setCheckoutData", "@/plugins/restoreSession"],
 
   router: {
     middleware: ["wallet"],
@@ -201,7 +202,24 @@ const config: NuxtConfig = {
     "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/tailwindcss",
-    ["@nuxtjs/dotenv", {path: __dirname}], "matter-zk-ui",
+    ["@nuxtjs/dotenv", {path: __dirname}],
+    "matter-zk-ui",
+    [
+      "matter-dapp-module",
+      <ModuleOptions>{
+        network: process.env.ZK_NETWORK,
+        apiKeys: {
+          FORTMATIC_KEY: process.env.APP_FORTMATIC,
+          PORTIS_KEY: process.env.APP_PORTIS,
+          INFURA_KEY: process.env.APP_INFURA_API_KEY,
+        },
+        onboardConfig: {
+          APP_NAME: pageTitle,
+          APP_ID: process.env.APP_ONBOARDING_APP_ID,
+        },
+        logoutRedirect: "/connect",
+      },
+    ],
   ],
 
   /*

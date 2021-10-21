@@ -1,10 +1,8 @@
-import {addCPKToBatch} from "@/plugins/walletActions/cpk";
-import {walletData} from "@/plugins/walletData";
 import {BigNumber} from "ethers";
-import {Address, TokenSymbol} from "~/types/index.d";
-import {closestPackableTransactionFee} from "zksync";
+import {Wallet} from "zksync";
 import {ZkSyncTransaction} from "zksync-checkout/src/types";
-import {ETHOperation, submitSignedTransactionsBatch} from "zksync/build/wallet";
+import {submitSignedTransactionsBatch} from "zksync/build/wallet";
+import {TokenSymbol, Address} from "zksync/build/types";
 
 /**
  * Transaction processing action
@@ -17,13 +15,10 @@ import {ETHOperation, submitSignedTransactionsBatch} from "zksync/build/wallet";
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}
  */
-export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumber, nonce: number, changePubKey: boolean, store: any) => {
-  const syncWallet = walletData.get().syncWallet!;
-
+export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumber, nonce: number, store: any, statusFunction: Function) => {
+  const syncWallet: Wallet = store.getters["zk-wallet/syncWallet"];
   const batchBuilder = syncWallet.batchBuilder(nonce);
-  if (changePubKey) {
-    await addCPKToBatch(syncWallet, feeToken, batchBuilder, store);
-  }
+  await store.dispatch("zk-transaction/addCPKToBatch", batchBuilder);
   for (const tx of transactions) {
     batchBuilder.addTransfer({
       fee: 0,
@@ -33,47 +28,13 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
     });
   }
   batchBuilder.addTransfer({
-    fee: closestPackableTransactionFee(store.getters["wallet/isAccountLocked"] ? fee.add(store.getters["checkout/getAccountUnlockFee"]) : fee),
+    fee,
     amount: 0,
-    to: syncWallet!.address(),
+    to: syncWallet.address(),
     token: feeToken,
   });
+  statusFunction("waitingUserConfirmation");
   const batchTransactionData = await batchBuilder.build();
+  statusFunction("processing");
   return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
-};
-
-/**
- * Deposit action method
- *
- * @param {TokenSymbol} token
- * @param {string} amount
- * @returns {Promise<ETHOperation>}
- */
-export const deposit = async (token: TokenSymbol, amount: string | BigNumber): Promise<ETHOperation | undefined> => {
-  const wallet = walletData.get().syncWallet;
-  // console.log(token)
-  const ethTxOptions =
-    token?.toLowerCase() === "eth"
-      ? {}
-      : {
-          gasLimit: "160000",
-        };
-  // store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
-  return wallet?.depositToSyncFromEthereum({
-    depositTo: wallet.address(),
-    token,
-    amount,
-    ethTxOptions,
-  });
-};
-
-/**
- * Unlock token action method
- *
- * @param {Address} address
- * @returns {Promise<any>}
- */
-export const unlockToken = async (address: Address) => {
-  const wallet = walletData.get().syncWallet;
-  return await wallet!.approveERC20TokenDeposits(address as string);
 };

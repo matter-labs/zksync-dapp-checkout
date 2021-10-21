@@ -1,55 +1,57 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, TokenSymbol, TransactionData, TransactionFee, TotalByToken } from "@/types/index";
+import { TransactionData, TransactionFee, TotalByToken } from "@/types/index";
 import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { closestPackableTransactionAmount, closestPackableTransactionFee } from "zksync";
+import { TokenSymbol, Address } from "zksync/build/types";
 import { BigNumber } from "ethers";
-import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
+import { ZkFee } from "matter-dapp-module/types";
 
 export const state = () => ({
   isError: <boolean>false,
   noDataError: <unknown | undefined>undefined,
   transactions: [] as Array<ZkSyncTransaction>,
   fromAddress: "" as Address,
-  feeToken: "" as TokenSymbol,
-  transactionBatchFee: {} as TransactionFee,
-  accountUnlockedFee: false as false | BigNumber,
 });
 
 export type CheckoutModuleState = ReturnType<typeof state>;
 
 export const getters: GetterTree<CheckoutModuleState, RootState> = {
-  getTransactionData(state): TransactionData {
+  getTransactionData(state, _, __, rootGetters): TransactionData {
     return {
       transactions: state.transactions,
       fromAddress: state.fromAddress,
-      feeToken: state.feeToken,
+      feeToken: rootGetters["zk-transaction/feeSymbol"],
     };
   },
-  getTransactionBatchFee(state): TransactionFee {
-    return state.transactionBatchFee;
-  },
-  getAccountUnlockFee(state): false | BigNumber {
-    return state.accountUnlockedFee;
-  },
-  getAllFees(state: CheckoutModuleState, getters, rootState, rootGetters: any): Array<TransactionFee> {
-    if (state.isError) {
-      return [];
+  getTransactionBatchFee(_, __, ___, rootGetters): false | TransactionFee {
+    rootGetters["zk-transaction/feeLoading"];
+    if(rootGetters["zk-transaction/fee"]) {
+      const minFee = BigNumber.from(rootGetters["zk-transaction/fee"]);
+      return {
+        // name: "Tx Batch Fee / zkSync",
+        key: "txBatchFee",
+        amount: closestPackableTransactionFee(minFee.add(minFee.div("100").mul("5").toString()).toString()),
+        realAmount: minFee,
+        token: rootGetters["zk-transaction/feeSymbol"],
+      }
     }
-    const allFees = [] as Array<TransactionFee>;
-    allFees.push(state.transactionBatchFee);
-    if (state.accountUnlockedFee && rootGetters["wallet/isAccountLocked"]) {
-      allFees.push({
-        name: "One-time account activation fee",
-        key: "changePubKey",
-        amount: state.accountUnlockedFee,
-        token: state.feeToken,
-      });
-    }
-    return allFees;
+    return false;
   },
-  getTotalByToken(state, getters): TotalByToken {
-    const allFees = getters.getAllFees;
+  getAccountUnlockFee(_, __, ___, rootGetters): false | BigNumber {
+    rootGetters["zk-transaction/activationFeeLoading"];
+    return rootGetters["zk-transaction/accountActivationFee"];
+  },
+  usedTokens(state, _, __, rootGetters): TokenSymbol[] {
+    const tokens: Set<string> = new Set();
+    tokens.add(rootGetters["zk-transaction/feeSymbol"]);
+    for (const item of state.transactions) {
+      tokens.add(item.token);
+    }
+    return Array.from(tokens);
+  },
+  getTotalByToken(state, _, __, rootGetters): TotalByToken {
+    const allFees = rootGetters["zk-transaction/fees"].map((e: ZkFee) => ({...e, token: rootGetters["zk-transaction/feeSymbol"]}));
     const totalByToken = new Map();
     const addToTotalByToken = (amount: BigNumber, token: TokenSymbol) => {
       if (totalByToken.has(token)) {
@@ -75,7 +77,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
 };
 
 export const mutations: MutationTree<CheckoutModuleState> = {
-  setTransactionData(state, { transactions, fromAddress, feeToken }: TransactionData) {
+  setTransactionData(state, { transactions, fromAddress }: TransactionData) {
     state.transactions = transactions.map((tx) => {
       return {
         ...tx,
@@ -83,13 +85,6 @@ export const mutations: MutationTree<CheckoutModuleState> = {
       };
     });
     state.fromAddress = fromAddress;
-    state.feeToken = feeToken;
-  },
-  setTransactionBatchFee(state, transaction: TransactionFee) {
-    state.transactionBatchFee = transaction;
-  },
-  setAccountUnlockFee(state, accountUnlockFee: false | BigNumber) {
-    state.accountUnlockedFee = accountUnlockFee;
   },
   setError(state: CheckoutModuleState, errorData) {
     state.isError = !!errorData;
@@ -98,44 +93,43 @@ export const mutations: MutationTree<CheckoutModuleState> = {
 };
 
 export const actions: ActionTree<CheckoutModuleState, RootState> = {
-  setError({ commit }, error: unknown): void {
-    commit("setError", error);
+  async setTransactionData({ commit, dispatch }, data: TransactionData) {
+    commit("setTransactionData", data);
+    commit("zk-transaction/setTransferBatch", data.transactions.map(e => ({address: e.to, token: e.token})), { root: true });
+    await dispatch("zk-transaction/setSymbol", data.feeToken, { root: true });
   },
-  async getTransactionBatchFee({ state, commit }): Promise<void> {
-    const syncProvider = walletData.get().syncProvider;
-    const types = new Array(state.transactions.length).fill("Transfer") as "Transfer"[];
-    const addresses = state.transactions.map((tx) => tx.to);
-    // The fee transaction
-    types.push(types[0]);
-    addresses.push(addresses[0]);
-    const transactionFee = await syncProvider!.getTransactionsBatchFee(types, addresses, state.feeToken);
-    const minFee = BigNumber.from(transactionFee);
-    commit("setTransactionBatchFee", {
-      name: "Tx Batch Fee / zkSync",
-      key: "txBatchFee",
-      amount: closestPackableTransactionFee(minFee.add(minFee.div("100").mul("5"))),
-      realAmount: BigNumber.from(transactionFee),
-      token: state.feeToken,
-    });
+  async requestInitialData({ getters, dispatch }) {
+    const usedTokens = getters.usedTokens;
+    const allowanceArr = [];
+    for (const symbol of usedTokens) {
+      allowanceArr.push(dispatch("zk-balances/requestAllowance", { force: true, symbol: symbol }, { root: true }));
+    }
+    await Promise.all([
+      dispatch("zk-transaction/requestAllFees", true, { root: true }),
+      dispatch("requestUsedTokensPrice"),
+      dispatch("requestUsedTokensEthereumBalance", true),
+      ...allowanceArr,
+    ]);
   },
-  async getAccountUnlockFee({ state, commit }): Promise<void> {
-    const syncProvider = walletData.get().syncProvider;
-    const isAccountLocked = this.getters["wallet/isAccountLocked"];
-    if (isAccountLocked) {
-      const syncWallet = walletData.get().syncWallet;
-      const foundFee = await syncProvider?.getTransactionFee(
-        {
-          ChangePubKey: {
-            onchainPubkeyAuth: syncWallet?.ethSignerType?.verificationMethod === "ERC-1271",
-          },
-        },
-        syncWallet?.address() || "",
-        state.feeToken,
-      );
-      commit("setAccountUnlockFee", closestPackableTransactionFee(BigNumber.from(foundFee!.totalFee.toString())));
-    } else {
-      commit("setAccountUnlockFee", false);
+  /* async getTransactionBatchFee({ state, getters, commit, dispatch }): Promise<void> {
+    
+  }, */
+  /* async getAccountUnlockFee({ state, commit, rootGetters }): Promise<void> {
+    
+  }, */
+  async requestUsedTokensPrice({ getters, dispatch }): Promise<void> {
+    const usedTokens = getters.usedTokens;
+    for (const symbol of usedTokens) {
+      dispatch("zk-tokens/getTokenPrice", symbol, { root: true });
     }
   },
-  async closeCheckout(): Promise<void> {},
+  async requestUsedTokensEthereumBalance({ getters, dispatch }, force =false): Promise<void> {
+    const usedTokens = getters.usedTokens;
+    console.log("usedTokens", usedTokens);
+    const balancesPromises = [];
+    for (const symbol of usedTokens) {
+      balancesPromises.push(dispatch("zk-balances/requestEthereumBalance", {symbol, force}, { root: true }));
+    }
+    await Promise.all(balancesPromises)
+  },
 };

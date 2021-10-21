@@ -1,4 +1,3 @@
-import { walletData } from "@/plugins/walletData";
 import { Context, Middleware } from "@nuxt/types";
 
 const walletMiddleware: Middleware = (context: Context) => {
@@ -9,32 +8,14 @@ const walletMiddleware: Middleware = (context: Context) => {
     context.redirect("/link");
     return;
   }
-  if (walletData.get().syncWallet) {
+  if (context.store.getters["zk-account/loggedIn"]) {
     if (context.route.matched[0].path === "/connect") {
       context.redirect("/");
     }
     return;
+  } else if (context.route.matched[0].path !== "/connect" && !context.store.getters["zk-onboard/restoringSession"]) {
+    context.redirect("/connect");
   }
-  (async () => {
-    const onboardResult = await context.store?.dispatch("wallet/onboard");
-    if (onboardResult !== true) {
-      await context.store.dispatch("wallet/logout");
-      if (context.route.matched[0].path !== "/connect") {
-        context.redirect("/connect");
-      }
-      return;
-    }
-
-    const refreshWallet = await context.store.dispatch("wallet/walletRefresh", { });
-    if (refreshWallet !== true) {
-      await context.store.dispatch("wallet/logout");
-      if (context.route.matched[0].path !== "/connect") {
-        context.redirect("/connect");
-      }
-    } else if (context.route.matched[0].path === "/connect") {
-      context.redirect("/");
-    }
-  })();
 };
 
 export default walletMiddleware;

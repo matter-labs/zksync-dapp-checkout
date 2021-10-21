@@ -27,47 +27,62 @@
           <template slot="right-top">
             <div class="flex flex-col items-end whitespace-nowrap">
               <div class="value">
-                {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
+                {{ item.amount | formattedPrice(item.token) }}
               </div>
-              <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{ item.token }}</div>
+              <div class="secondaryValue">{{ item.amount | parseBigNumberish(item.token) }} {{ item.token }}</div>
             </div>
           </template>
         </zk-values-block>
       </vue-custom-scrollbar>
       <div class="w-full">
-        <div v-if="isInfoAvailable !==false" class="w-full border-b-1 border-light -dark pt-1 lg:pt-3"/>
+        <div v-if="isInfoAvailable !==false" class="w-full border-b-1 border-light -dark pt-3"/>
         <zk-values-block v-if="isInfoAvailable" class="pt-1 pb-0 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
           <template slot="left-top">
             <div class="flex items-center">
               <div class="headline big">Fees</div>
-              <span class="ml-3">
-                <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${feesOpened === true ? -180 : 0}deg)` }" />
-              </span>
+              <transition name="fadeFast">
+                <span class="ml-3" v-if="!feesLoading">
+                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${feesOpened === true ? -180 : 0}deg)` }" />
+                </span>
+              </transition>
             </div>
           </template>
           <template slot="right-top">
             <div class="flex items-center">
               <div class="flex flex-col">
-                <div class="value">
-                  {{ totalFees | formatUsdAmount(tokensPrices[transactionData.feeToken] && tokensPrices[transactionData.feeToken].price, transactionData.feeToken) }}
+                <div class="value" v-if="!feesLoading">
+                  {{ totalFees | formattedPrice(transactionData.feeToken) }}
                 </div>
+                <div class="value" v-else>Loading...</div>
               </div>
             </div>
           </template>
         </zk-values-block>
         <zk-max-height v-model="feesOpened" :update-value="allFees.length">
+          <!-- <zk-values-block class="pt-3">
+            <template slot="left-top">
+              <div class="text-violet hover:text-lightviolet cursor-pointer">
+                Change fee token
+              </div>
+            </template>
+            <template slot="right-top">
+              <div class="flex flex-col items-end whitespace-nowrap">
+                <div class="text-violet hover:text-lightviolet cursor-pointer">{{ feeToken }}</div>
+              </div>
+            </template>
+          </zk-values-block> -->
           <zk-values-block v-for="(item, index) in allFees" :key="index" class="pt-1 lg:pt-3">
             <template slot="left-top">
               <div class="headline">
-                {{ item.name }}
+                {{ getFeeNameFromKey(item.key) }}
               </div>
             </template>
             <template slot="right-top">
               <div class="flex flex-col items-end whitespace-nowrap">
                 <div class="value">
-                  {{ item.amount | formatUsdAmount(tokensPrices[item.token] && tokensPrices[item.token].price, item.token) }}
+                  {{ item.amount | formattedPrice(feeToken) }}
                 </div>
-                <div class="secondaryValue">{{ item.amount | formatToken(item.token) }} {{ item.token }}</div>
+                <div class="secondaryValue">{{ item.amount | parseBigNumberish(feeToken) }} {{ feeToken }}</div>
               </div>
             </template>
           </zk-values-block>
@@ -80,9 +95,9 @@
           </zk-values-block>
         </zk-max-height>
 
-        <div v-if="isInfoAvailable !==false" class="w-full border-b-1 border-light -dark pt-1 lg:pt-3"/>
+        <div v-if="isInfoAvailable !== false" class="w-full border-b-1 border-light -dark pt-1 lg:pt-3"/>
         <transition name="fade">
-          <div v-if="loggedIn" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
+          <div v-if="loggedIn && !feesLoading" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
             <div class="flex-2">
               <div class="flex items-center">
                 <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark -dark">Total amount</div>
@@ -98,7 +113,7 @@
               <zk-max-height v-model="totalOpened" :update-value="allFees.length">
                 <div class="md:flex flex-col items-end">
                   <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 -dark pt-1 md:pt-2">
-                    <div>{{ item | formatToken(token) }} {{ token }}</div>
+                    <div>{{ item | parseBigNumberish(token) }} {{ token }}</div>
                   </div>
                 </div>
               </zk-max-height>
@@ -121,11 +136,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import utils from "@/plugins/utils";
-import { GweiBalance, TokenPrices, TotalByToken, TransactionData, TransactionFee } from "@/types/index";
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
+import { Network, TokenSymbol } from "zksync/build/types";
+import { ZkTokenPrices, ZkFeeType } from "matter-dapp-module/types";
+import { TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import Logo from "@/blocks/logo.vue";
-import { ETHER_NETWORK_NAME, ETHER_PRODUCTION } from "~/plugins/build";
 
 export default Vue.extend({
   components: {
@@ -138,6 +153,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    feesLoading(): boolean {
+      return this.$store.getters["zk-transaction/feeLoading"] || this.$store.getters["zk-transaction/activationFeeLoading"];
+    },
     isInfoAvailable(): boolean {
       if (this.transactionData.transactions.length < 1)
       {
@@ -146,29 +164,32 @@ export default Vue.extend({
       return this.$store.getters["checkout/getErrorState"] !== true
     },
     loggedIn(): boolean {
-      return this.$store.getters["account/loggedIn"];
+      return this.$store.getters["zk-account/loggedIn"];
     },
-    network(): string {
-      return ETHER_NETWORK_NAME;
+    network(): Network {
+      return this.$store.getters["zk-provider/network"];
     },
     isMainnet(): boolean {
-      return ETHER_PRODUCTION;
+      return this.network === "mainnet";
     },
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
+    feeToken(): TokenSymbol {
+      return this.$store.getters["zk-transaction/feeSymbol"];
+    },
     allFees(): Array<TransactionFee> {
       if (!this.loggedIn) {
-        return this.$store.getters["checkout/getAllFees"].filter((item: TransactionFee) => item.key !== "changePubKey");
+        return this.$store.getters["zk-transaction/fees"].filter((item: TransactionFee) => item.key !== "accountActivation");
       }
-      return this.$store.getters["checkout/getAllFees"];
+      return this.$store.getters["zk-transaction/fees"];
     },
-    totalFees(): GweiBalance {
+    totalFees(): BigNumberish {
       const allFees = this.allFees;
       let totalFeeBigNum = BigNumber.from("0");
 
       for (const item of allFees) {
-        if (item.key === "changePubKey" && !this.loggedIn) {
+        if (item.key === "accountActivation" && !this.loggedIn) {
           continue;
         }
         totalFeeBigNum = totalFeeBigNum.add(item.amount);
@@ -178,20 +199,32 @@ export default Vue.extend({
     },
     totalUSD(): string {
       const transactionData = this.transactionData;
-      const allFees = this.allFees;
+      const allFees = this.allFees.map(e => ({...e, amount: e.amount.toString(), token: this.feeToken}));
       const tokensPrices = this.tokensPrices;
       let totalUSD = 0;
       for (const item of [...transactionData.transactions, ...allFees]) {
-        totalUSD += +tokensPrices[item.token].price * +utils.handleFormatToken(item.token, item.amount as string);
+        if(!tokensPrices[item.token]) {
+          return "";
+        }
+        totalUSD += +tokensPrices[item.token] * +this.$options.filters!.parseBigNumberish(item.amount, item.token);
       }
       return totalUSD < 0.01 ? "<$0.01" : `$${totalUSD.toFixed(2)}`;
     },
     totalByToken(): TotalByToken {
       return this.$store.getters["checkout/getTotalByToken"];
     },
-    tokensPrices(): TokenPrices {
-      return this.$store.getters["tokens/getTokenPrices"];
+    tokensPrices(): ZkTokenPrices {
+      return this.$store.getters["zk-tokens/tokenPrices"];
     },
+  },
+  methods: {
+    getFeeNameFromKey(key: ZkFeeType) {
+      if(key === "txFee") {
+        return "Tx Batch Fee / zkSync";
+      } else if(key === "accountActivation") {
+        return "One-time account activation fee";
+      }
+    }
   },
 });
 </script>

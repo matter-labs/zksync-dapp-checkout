@@ -44,7 +44,9 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { PaymentItem, Tokens, TokenItem } from "@/types";
+import { Tokens } from "zksync/build/types";
+import { Token } from "matter-dapp-module/types";
+import { PaymentItem } from "@/types";
 
 export default Vue.extend({
   props: {
@@ -108,7 +110,7 @@ export default Vue.extend({
   },
   computed: {
     tokens: function(): Tokens {
-      return this.$store.getters["tokens/getAllTokens"];
+      return this.$store.getters["zk-tokens/zkTokens"];
     },
     displayedTokens: function(): Tokens {
       let result = {}, key;
@@ -121,7 +123,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    setToken(token: TokenItem) {
+    setToken(token: Token) {
       this.$set(this.valNow, 'token', token.symbol);
       this.dropdownOpened = false;
       this.dropdownSearch = "";

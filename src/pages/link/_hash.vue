@@ -4,41 +4,43 @@
 
 <script lang="ts">
 import Vue from "vue";
+
+import { parseDecimal } from "matter-dapp-module/utils";
+import { RestProvider } from "zksync";
 import { PaymentItem } from "@/types";
 import { decrypt } from "@/plugins/link";
-import utils from "@/plugins/utils";
-import { ZkSyncTransaction } from "zksync-checkout-internal/src/types";
-import { walletData } from "@/plugins/walletData";
 
 export default Vue.extend({
   layout: "link",
   async fetch({store, params, redirect}) {
     try {
+      const syncProvider: RestProvider = await store.dispatch("zk-provider/requestProvider");
+      await store.dispatch("zk-tokens/loadZkTokens");
       const transactions: PaymentItem[] = decrypt(params.hash);
-      await store.dispatch("checkout/setError", false);
-      await store.commit("checkout/setTransactionData", {
-        transactions: <ZkSyncTransaction[]>transactions.map((e, index) => ({
+      store.commit("checkout/setError", false);
+      console.log(transactions);
+      store.dispatch("checkout/setTransactionData", {
+        transactions: transactions.map((e, index) => ({
           to: e.address,
           token: e.token,
-          amount: utils.parseToken(e.token, e.amount).toString(),
+          amount: parseDecimal(syncProvider, e.token, e.amount.toString()),
           description: `Payment ${index+1}`,
         })),
         feeToken: "ETH",
         fromAddress: undefined,
       });
-      await store.dispatch("checkout/getTransactionBatchFee");
-      await store.dispatch("tokens/loadAllTokens");
-      if(walletData.get().syncWallet) {
-        await store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true });
-        await store.dispatch("wallet/getInitialBalances", true);
-        await store.dispatch("wallet/checkLockedState");
-        await store.dispatch("checkout/getAccountUnlockFee");
+      await store.dispatch("zk-tokens/loadZkTokens");
+      if(store.getters["zk-account/loggedIn"]) {
+        await Promise.all([
+          store.dispatch("checkout/requestInitialData"),
+          store.dispatch("zk-account/updateAccountState", true),
+        ]);
       }
-      await redirect("/connect");
+      redirect("/connect");
     } catch (error) {
       console.log("zkLink error", error);
       await store.dispatch("openModal", "zkLinkParseFail");
-      await redirect("/link");
+      redirect("/link");
     }
   },
 });

@@ -138,10 +138,12 @@
 </template>
 
 <script lang="ts">
-import {ETHER_NETWORK_NAME, ETHER_PRODUCTION, FACEBOOK_URL, TWEET_URL} from "@/plugins/build";
-import {encrypt} from "@/plugins/link";
-import {PaymentItem} from "@/types";
 import Vue from "vue";
+import { Network } from "zksync/build/types";
+import { copyToClipboard } from "matter-dapp-module/utils";
+import { FACEBOOK_URL, TWEET_URL } from "@/plugins/build";
+import { encrypt } from "@/plugins/link";
+import { PaymentItem } from "@/types";
 
 export default Vue.extend({
   layout: "link",
@@ -157,14 +159,14 @@ export default Vue.extend({
     };
   },
   computed: {
+    currentNetwork(): Network {
+      return this.$store.getters["zk-provider/network"];
+    },
     isMainnet(): boolean {
-      return ETHER_PRODUCTION;
+      return this.currentNetwork === "mainnet";
     },
     paymentLink(): string {
       return window.location.origin + "/link/" + this.paymentHash;
-    },
-    currentNetwork(): string {
-      return ETHER_NETWORK_NAME;
     },
     showAddLink(): boolean {
       return this.addLinkMode;
@@ -220,15 +222,7 @@ export default Vue.extend({
       this.successModal = true;
     },
     copyLink() {
-      const elem = document.createElement("textarea");
-      elem.style.position = "absolute";
-      elem.style.left = -99999999 + "px";
-      elem.style.top = -99999999 + "px";
-      elem.value = this.paymentLink;
-      document.body.appendChild(elem);
-      elem.select();
-      document.execCommand("copy");
-      document.body.removeChild(elem);
+      copyToClipboard(this.paymentLink);
     },
     twitterShare() {
       window.open(`${TWEET_URL}${encodeURIComponent(this.paymentLink)}`, "_blank");

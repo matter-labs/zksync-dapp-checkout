@@ -36,38 +36,32 @@
 
 <script lang="ts">
 import Vue from "vue";
-
-import {ETHER_NETWORK_NAME, ETHER_PRODUCTION} from "@/plugins/build";
-
+import { Network } from "zksync/build/types";
+import { copyToClipboard } from "matter-dapp-module/utils";
 
 export default Vue.extend({
   computed: {
     ownAddress(): string[] {
-      const address = this.$store.getters["account/address"];
+      const address = this.$store.getters["zk-account/address"];
+      if (!address) {return []}
       return [address.substr(0, 11), address.substr(11, address.length - 5 - 11), address.substr(address.length - 5, address.length)];
     },
+    network(): Network {
+      return this.$store.getters["zk-provider/network"];
+    },
     isProd(): boolean {
-      return ETHER_PRODUCTION;
+      return this.network === "mainnet";
     },
     walletUrl(): string {
-      return `///${ETHER_PRODUCTION ? "wallet" : ETHER_NETWORK_NAME }.zksync.io`;
+      return `///${this.isProd ? "wallet" : this.network }.zksync.io`;
     },
   },
   methods: {
     logout(): void {
-      this.$store.dispatch("wallet/logout");
-      this.$router.push("/connect");
+      this.$store.dispatch("zk-account/logout");
     },
     copyAddress(): void {
-      const elem = document.createElement("textarea");
-      elem.style.position = "absolute";
-      elem.style.left = -99999999 + "px";
-      elem.style.top = -99999999 + "px";
-      elem.value = this.$store.getters["account/address"];
-      document.body.appendChild(elem);
-      elem.select();
-      document.execCommand("copy");
-      document.body.removeChild(elem);
+      copyToClipboard(this.$store.getters["zk-account/address"]);
     }
   },
 });

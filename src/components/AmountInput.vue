@@ -31,8 +31,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-
-import utils from "@/plugins/utils";
+import {isTransactionAmountPackable} from "zksync/build/utils";
 
 export default Vue.extend({
   props: {
@@ -120,10 +119,10 @@ export default Vue.extend({
 
       let inputAmount = null;
       try {
-        inputAmount = utils.parseToken(this.token, val);
+        inputAmount = this.$options.filters!.parseDecimal(val, this.token);
       } catch (error) {
         let errorInfo = "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
-        if (error.message && error.message.search("fractional component exceeds decimals")!== -1) {
+        if ((error as Error).message && (error as Error).message.search("fractional component exceeds decimals")!== -1) {
           errorInfo = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
         }
         this.error = errorInfo;
@@ -135,7 +134,7 @@ export default Vue.extend({
         return;
       }
 
-      if (this.type==="transfer" && !utils.isAmountPackable(inputAmount.toString())) {
+      if (this.type==="transfer" && !isTransactionAmountPackable(inputAmount.toString())) {
         this.error = "Max supported precision for transfers exceeded";
         return;
       }

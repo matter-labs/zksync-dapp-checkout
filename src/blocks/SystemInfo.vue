@@ -27,16 +27,17 @@
   </div>
 </template>
 <script lang="ts">
-import {ETHER_NETWORK_NAME, GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_IS_BETA, ZK_LIB_VERSION} from "~/plugins/build";
 import Vue from "vue";
+import { ZkConfig } from "matter-dapp-module/types";
+import {GIT_REVISION_SHORT, VERSION, ZK_LIB_VERSION} from "~/plugins/build";
 
 export default Vue.extend({
   computed: {
-    netName(): string {
-      return ETHER_NETWORK_NAME;
+    config(): ZkConfig {
+      return this.$store.getters["zk-onboard/config"];
     },
-    isBeta(): boolean {
-      return ZK_IS_BETA;
+    netName(): string {
+      return this.config.ethereumNetwork.name;
     },
     zkLibVersion(): string {
       return ZK_LIB_VERSION;
@@ -45,13 +46,13 @@ export default Vue.extend({
       return VERSION;
     },
     githubLink(): string | undefined {
-      return `https://github.com/matter-labs/zksync-dapp-checkout/commit/${this.revision}`;
+      return `https://github.com/matter-labs/zksync-wallet-vue/commit/${this.revision}`;
     },
     revision(): string {
       return GIT_REVISION_SHORT;
     },
     zkApiBase(): string {
-      return ZK_API_BASE;
+      return this.config.zkSyncNetwork.api;
     },
   },
 });
