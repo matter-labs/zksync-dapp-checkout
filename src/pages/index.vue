@@ -296,7 +296,6 @@ export default Vue.extend({
       const accountUnlockFeePrevious = this.$store.getters["checkout/getAccountUnlockFee"];
       await this.$store.dispatch("zk-transaction/requestAllFees", true);
       const transactionFeesNew = this.$store.getters["checkout/getTransactionBatchFee"].realAmount;
-      console.log(transactionFeesPrevious.toString(), transactionFeesNew.toString());
       if (transactionFeesPrevious.lt(transactionFeesNew)) {
         this.transactionFees.push({
           type: "batch",

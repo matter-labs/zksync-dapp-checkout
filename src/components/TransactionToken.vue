@@ -333,7 +333,6 @@ export default Vue.extend({
           this.subStep = "waitingUserConfirmation";
           this.step = "depositing";
           const syncWallet: Wallet = this.$store.getters["zk-wallet/syncWallet"];
-          console.log("this.depositBigNumber", this.depositBigNumber.toString(), syncWallet.address());
           const depositResponse = await syncWallet.depositToSyncFromEthereum({
             depositTo: syncWallet.address(),
             token: this.token,

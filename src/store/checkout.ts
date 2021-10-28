@@ -93,9 +93,9 @@ export const mutations: MutationTree<CheckoutModuleState> = {
 };
 
 export const actions: ActionTree<CheckoutModuleState, RootState> = {
-  async setTransactionData({ commit, dispatch }, data: TransactionData) {
+  async setTransactionData({ commit, dispatch, rootGetters }, data: TransactionData) {
     commit("setTransactionData", data);
-    commit("zk-transaction/setTransferBatch", data.transactions.map(e => ({address: e.to, token: e.token})), { root: true });
+    commit("zk-transaction/setTransferBatch", [...data.transactions.map(e => ({address: e.to, token: e.token})), {address: rootGetters["zk-account/address"] ? rootGetters["zk-account/address"] : data.transactions[0].to, token: data.feeToken}], { root: true });
     await dispatch("zk-transaction/setSymbol", data.feeToken, { root: true });
   },
   async requestInitialData({ getters, dispatch }) {
@@ -125,7 +125,6 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
   },
   async requestUsedTokensEthereumBalance({ getters, dispatch }, force =false): Promise<void> {
     const usedTokens = getters.usedTokens;
-    console.log("usedTokens", usedTokens);
     const balancesPromises = [];
     for (const symbol of usedTokens) {
       balancesPromises.push(dispatch("zk-balances/requestEthereumBalance", {symbol, force}, { root: true }));

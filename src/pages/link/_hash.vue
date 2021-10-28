@@ -18,7 +18,7 @@ export default Vue.extend({
       await store.dispatch("zk-tokens/loadZkTokens");
       const transactions: PaymentItem[] = decrypt(params.hash);
       store.commit("checkout/setError", false);
-      console.log(transactions);
+      console.log("Transactions", transactions);
       store.dispatch("checkout/setTransactionData", {
         transactions: transactions.map((e, index) => ({
           to: e.address,
