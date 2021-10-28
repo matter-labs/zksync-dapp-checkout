@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import theme from "matter-dapp-module/utils/theme";
 export default {
   computed: {
     step() {
@@ -27,8 +26,5 @@ export default {
       return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
     },
   },
-  mounted() {
-    theme.setTheme("light");
-  }
 };
 </script>

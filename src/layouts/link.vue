@@ -9,15 +9,11 @@
 </template>
 
 <script>
-import theme from "matter-dapp-module/utils/theme";
 export default {
   computed: {
     loggedIn() {
       return this.$store.getters["zk-account/loggedIn"];
     },
   },
-  mounted() {
-    theme.setTheme("light");
-  }
 };
 </script>

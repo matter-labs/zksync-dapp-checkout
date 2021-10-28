@@ -70,7 +70,7 @@
     "@walletconnect/web3-provider": "1.4.0",
     "ethers": "^5.4.1",
     "js-cookie": "^2.2.1",
-    "matter-dapp-module": "^1.0.23",
+    "matter-dapp-module": "^1.0.29",
     "matter-zk-ui": "^1.0.9",
     "moment": "^2.29.1",
     "nuxt": "latest",

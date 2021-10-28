@@ -84,7 +84,8 @@
       </template>
       <template slot="second">
         <div class="amount">
-          <span v-if="total !== '0'">{{ total | parseBigNumberish(token) }}</span>
+          <span v-if="!isFeeTokenLoading">{{ total | parseBigNumberish(token) }}</span>
+          <span class="text-gray text-sm" v-else>Loading...</span>
         </div>
       </template>
       <template slot="third">

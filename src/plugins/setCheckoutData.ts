@@ -1,7 +1,11 @@
 import { Context } from "@nuxt/types";
 import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
+import theme from "matter-dapp-module/utils/theme";
 
 export default async ({ store }: Context): Promise<void> => {
+  if(theme.getUserTheme() === "dark") {
+    theme.toggleTheme();
+  };
   await store.dispatch("zk-provider/requestProvider");
   await store.dispatch("zk-tokens/loadZkTokens");
   try {
