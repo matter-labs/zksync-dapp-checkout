@@ -194,7 +194,7 @@ import { transactionBatch } from "@/plugins/walletActions/transaction";
 import { TransactionData, TotalByToken } from "@/types";
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
-import { TokenSymbol } from "zksync/build/types";
+import { Address, TokenSymbol } from "zksync/build/types";
 
 interface UpdatedFee {
   type: "batch" | "cpk";
@@ -234,9 +234,20 @@ export default Vue.extend({
   watch: {
     step(val) {
       this.$store.commit('setStep', val);
+    },
+    address(val) {
+      if(val && this.loggedIn && this.step === "success") {
+        this.step = "main";
+      }
     }
   },
   computed: {
+    loggedIn(): boolean {
+      return this.$store.getters["zk-account/loggedIn"];
+    },
+    address(): Address {
+      return this.$store.getters["zk-account/address"];
+    },
     cpkStatus(): ZkCPKStatus {
       return this.$store.getters["zk-wallet/cpk"];
     },

@@ -15,7 +15,7 @@
 <script>
 export default {
   watch: {
-    async address(val) {
+    address(val) {
       if(val && this.loggedIn) {
         this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
       }
