@@ -8,6 +8,7 @@ import { RootState } from "~/store";
 import { ZkFee } from "matter-dapp-module/types";
 
 export const state = () => ({
+  linkCheckout: <boolean>false,
   isError: <boolean>false,
   noDataError: <unknown | undefined>undefined,
   transactions: [] as Array<ZkSyncTransaction>,
@@ -75,9 +76,15 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
   getErrorData(state: CheckoutModuleState): unknown | undefined {
     return state.noDataError;
   },
+  isLinkCheckout(state: CheckoutModuleState): boolean {
+    return state.linkCheckout;
+  },
 };
 
 export const mutations: MutationTree<CheckoutModuleState> = {
+  setLinkCheckoutState(state, status: boolean) {
+    state.linkCheckout = status;
+  },
   setFeeToken(state, feeToken: TokenSymbol) {
     state.feeToken = feeToken;
   },

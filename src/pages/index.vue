@@ -132,7 +132,7 @@
       <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a></div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <zk-defbtn @click="close()" :disabled="!transferAllowed">
+          <zk-defbtn @click="close()" :disabled="!transferAllowed" v-if="!isLinkCheckout">
             <i class="far fa-times"/>
             <span>Close</span>
           </zk-defbtn>
@@ -293,6 +293,9 @@ export default Vue.extend({
     blockExplorerLink(): string {
       return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
     },
+    isLinkCheckout(): boolean {
+      return this.$store.getters["checkout/isLinkCheckout"];
+    }
   },
   methods: {
     getTokenByID(id: number) {

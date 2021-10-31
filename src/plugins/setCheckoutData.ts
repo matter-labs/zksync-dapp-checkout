@@ -13,6 +13,7 @@ export default async ({ store }: Context): Promise<void> => {
     checkoutManager.startCheckout((e) => console.log(`Err ${e} has occurred`));
     const state = await checkoutManager.getCheckoutState();
     console.log("Checkout state", state);
+    store.commit("checkout/setLinkCheckoutState", false);
     store.dispatch("checkout/setTransactionData", {
       ...state,
       fromAddress: state.userAddress,

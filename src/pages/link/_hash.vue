@@ -14,6 +14,7 @@ export default Vue.extend({
   layout: "link",
   async fetch({store, params, redirect}) {
     try {
+      store.commit("checkout/setLinkCheckoutState", true);
       const syncProvider: RestProvider = await store.dispatch("zk-provider/requestProvider");
       await store.dispatch("zk-tokens/loadZkTokens");
       const transactions: PaymentItem[] = decrypt(params.hash);
