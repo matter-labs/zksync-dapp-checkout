@@ -4,7 +4,9 @@
     <block-info-block />
     <div class="routerContainer bg-white2 py-4 px-5 md:px-10">
       <block-logging-in/>
-      <nuxt @step="step=$event" class="routeMain"/>
+      <transition name="fade">
+        <nuxt v-if="!loggingIn" @step="step=$event" class="routeMain"/>
+      </transition>
       <block-footer />
     </div>
   </div>
@@ -12,7 +14,20 @@
 
 <script>
 export default {
+  watch: {
+    async address(val) {
+      if(val && this.loggedIn) {
+        this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
+      }
+    }
+  },
   computed: {
+    loggedIn() {
+      return this.$store.getters["zk-account/loggedIn"];
+    },
+    address() {
+      return this.$store.getters["zk-account/address"];
+    },
     step() {
       return this.$store.getters["step"];
     },

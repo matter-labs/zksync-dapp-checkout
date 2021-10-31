@@ -29,7 +29,6 @@ export default Vue.extend({
         feeToken: "ETH",
         fromAddress: undefined,
       });
-      await store.dispatch("zk-transaction/setType", "TransferBatch", { root: true });
       store.dispatch("checkout/requestUsedTokensPrice");
       if(store.getters["zk-account/loggedIn"]) {
         await Promise.all([

@@ -17,7 +17,7 @@ export default async ({ store }: Context): Promise<void> => {
       ...state,
       fromAddress: state.userAddress,
     });
-    await store.dispatch("zk-transaction/setType", "TransferBatch", { root: true });
+    // await store.dispatch("zk-transaction/setType", "TransferBatch", { root: true });
     store.dispatch("checkout/requestUsedTokensPrice");
   } catch (error) {
     console.log("ZkSyncCheckoutManager error", error);

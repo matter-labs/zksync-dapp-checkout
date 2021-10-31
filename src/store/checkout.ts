@@ -12,16 +12,17 @@ export const state = () => ({
   noDataError: <unknown | undefined>undefined,
   transactions: [] as Array<ZkSyncTransaction>,
   fromAddress: "" as Address,
+  feeToken: undefined as TokenSymbol | undefined,
 });
 
 export type CheckoutModuleState = ReturnType<typeof state>;
 
 export const getters: GetterTree<CheckoutModuleState, RootState> = {
-  getTransactionData(state, _, __, rootGetters): TransactionData {
+  getTransactionData(state, _, __): TransactionData {
     return {
       transactions: state.transactions,
       fromAddress: state.fromAddress,
-      feeToken: rootGetters["zk-transaction/feeSymbol"],
+      feeToken: state.feeToken!,
     };
   },
   getTransactionBatchFee(_, __, ___, rootGetters): false | TransactionFee {
@@ -77,6 +78,9 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
 };
 
 export const mutations: MutationTree<CheckoutModuleState> = {
+  setFeeToken(state, feeToken: TokenSymbol) {
+    state.feeToken = feeToken;
+  },
   setTransactionData(state, { transactions, fromAddress }: TransactionData) {
     state.transactions = transactions.map((tx) => {
       return {
@@ -96,7 +100,9 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
   async setTransactionData({ commit, dispatch, rootGetters }, data: TransactionData) {
     commit("setTransactionData", data);
     commit("zk-transaction/setTransferBatch", [...data.transactions.map(e => ({address: e.to, token: e.token})), {address: rootGetters["zk-account/address"] ? rootGetters["zk-account/address"] : data.transactions[0].to, token: data.feeToken}], { root: true });
-    await dispatch("zk-transaction/setSymbol", data.feeToken, { root: true });
+    commit("setFeeToken", data.feeToken);
+    dispatch("zk-transaction/setType", "TransferBatch", { root: true });
+    dispatch("zk-transaction/setSymbol", data.feeToken, { root: true });
   },
   async requestInitialData({ getters, dispatch }) {
     const usedTokens = getters.usedTokens;
@@ -111,12 +117,6 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
       ...allowanceArr,
     ]);
   },
-  /* async getTransactionBatchFee({ state, getters, commit, dispatch }): Promise<void> {
-    
-  }, */
-  /* async getAccountUnlockFee({ state, commit, rootGetters }): Promise<void> {
-    
-  }, */
   async requestUsedTokensPrice({ getters, dispatch }): Promise<void> {
     const usedTokens = getters.usedTokens;
     for (const symbol of usedTokens) {
