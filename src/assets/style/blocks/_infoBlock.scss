@@ -6,8 +6,8 @@
   box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
 
   .infoBlock {
-    position: relative;
-    width: 100%;
+    position: fixed;
+    width: 43vw;
     height: 100vh;
     display: grid;
     grid-template-columns: 100%;
@@ -74,6 +74,8 @@
     }
 
     @media screen and (max-width: $mobile) {
+      position: relative;
+      width: 100%;
       height: max-content;
 
       .valuesBlockContainer {
@@ -146,8 +148,7 @@
     }
   }
 
-  .border-b-2, .border-b-1,
-  {
+  .border-b-2, .border-b-1 {
     border-bottom: 1px !important;
 
     &:last-of-type {
