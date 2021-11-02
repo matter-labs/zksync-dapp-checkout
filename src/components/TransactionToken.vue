@@ -104,7 +104,10 @@
           <div class="flex justify-between items-center text-xs font-medium mr-2 text-green">Ready <zk-success-check-mark class="w-8 h-8" /></div>
         </template>
         <template v-else slot="right">
-          <div v-if="!enoughWithInitialBalance" class="text-red text-xs">
+          <div v-if="isFeeTokenLoading" class="text-red text-xs">
+            <span class="text-gray text-sm">Loading...</span>
+          </div>
+          <div v-else-if="!enoughWithInitialBalance" class="text-red text-xs">
             Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance
           </div>
           <zk-defbtn v-else-if="!unlocked" @click="unlock()"> <i class="fas fa-unlock-alt" /><span>Unlock</span> </zk-defbtn>
@@ -301,8 +304,13 @@ export default Vue.extend({
     step(val) {
       this.$emit("input", this.enoughZkBalance && val === "default");
     },
+    isInProgress(val, oldVal) {
+      if(!val && oldVal && !this.depositAmount && !this.enoughZkBalance) {
+        this.setDepositRecommendedAmount();
+      }
+    },
   },
-  mounted() {
+  created() {
     if (!this.enoughZkBalance) {
       this.setDepositRecommendedAmount();
     }
@@ -315,7 +323,7 @@ export default Vue.extend({
       this.depositAmount = this.$options.filters!.parseBigNumberish(this.needToDeposit, this.token);
     },
     setDepositRecommendedAmount() {
-      this.depositAmount = this.$options.filters!.parseBigNumberish(this.recommendedDeposit, this.token);
+      this.$set(this, "depositAmount", this.$options.filters!.parseBigNumberish(this.recommendedDeposit, this.token));
     },
     async deposit() {
       if (!this.enoughOnInitialToDeposit) {
