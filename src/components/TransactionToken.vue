@@ -305,7 +305,7 @@ export default Vue.extend({
       this.$emit("input", this.enoughZkBalance && val === "default");
     },
     isInProgress(val, oldVal) {
-      if(!val && oldVal && !this.depositAmount && !this.enoughZkBalance) {
+      if(!val && oldVal && (!this.depositAmount || this.depositAmount === "0") && !this.enoughZkBalance) {
         this.setDepositRecommendedAmount();
       }
     },

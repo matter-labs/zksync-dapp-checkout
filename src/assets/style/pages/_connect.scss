@@ -55,5 +55,8 @@
 
   @media screen and (max-width: $mobile) {
     height: calc(100% - 60px);
+    @media screen and (max-height: 630px) {
+      height: calc(100% - 30px);
+    }
   }
 }

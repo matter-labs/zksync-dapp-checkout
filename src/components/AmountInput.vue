@@ -92,7 +92,6 @@ export default Vue.extend({
       this.emitValue(this.inputtedAmount);
     },
     value(val) {
-      console.log("Value", val);
       if (!this.error || (this.error && !!val)) {
         this.inputtedAmount = val;
       }

@@ -111,7 +111,7 @@
                 {{ totalUSD }}
               </div>
               <zk-max-height v-model="totalOpened" :update-value="allFees.length">
-                <div class="md:flex flex-col items-end">
+                <div class="md:flex flex-col items-end totalTokensList">
                   <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 -dark pt-1 md:pt-2">
                     <div>{{ item | parseBigNumberish(token) }} {{ token }}</div>
                   </div>

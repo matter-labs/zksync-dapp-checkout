@@ -1,6 +1,6 @@
 <template>
   <div v-if="version" class="system-info flex items-stretch">
-    <popover name="env-details" transition="show-from-bottom" event="hover" :width="200"
+    <popover name="env-details" transition="show-from-bottom" event="hover" :width="230"
              class="system-env-popover rounded-md bg-gray-500 flex-col justify-items-stretch p-5">
       <span class="flex">
           <i class="fab fa-npm mr-2"/>
@@ -12,7 +12,7 @@
         </span>
       <span class="flex whitespace-no-wrap">
           <i class="fad fa-code-branch mr-2"/>
-          API: <strong class="ml-auto">{{ zkApiBase }}</strong>
+          API: <strong class="ml-auto text-xs">{{ zkApiBase.replace("https://", "") }}</strong>
         </span>
     </popover>
     <a id="system-b-popover" v-popover:env-details.top class="version">
