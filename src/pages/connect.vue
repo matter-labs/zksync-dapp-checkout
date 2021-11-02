@@ -34,6 +34,7 @@ export default {
       const loginTry = await this.$store.dispatch("zk-onboard/loginWithOnboard");
       if (!loginTry) {
         await this.$store.dispatch("zk-account/logout");
+        this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
       } else {
         this.$store.dispatch("checkout/requestInitialData");
         await this.$router.push("/");
@@ -42,7 +43,8 @@ export default {
     async walletConnect() {
       const loginTry = await this.$store.dispatch("zk-onboard/loginWithWalletConnect");
       if (!loginTry) {
-        await this.$store.dispatch("zk-account/logout");
+        this.$store.dispatch("zk-account/logout");
+        this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
       } else {
         this.$store.dispatch("checkout/requestInitialData");
         await this.$router.push("/");

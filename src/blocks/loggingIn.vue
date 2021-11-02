@@ -52,8 +52,9 @@ export default Vue.extend({
     },
   },
   methods: {
-    async cancelLogin() {
-      await this.$store.dispatch("zk-account/logout");
+    cancelLogin() {
+      this.$store.dispatch("zk-account/logout");
+      this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
       this.$router.push("/connect");
     },
   },

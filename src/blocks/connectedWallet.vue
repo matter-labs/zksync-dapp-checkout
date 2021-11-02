@@ -57,8 +57,9 @@ export default Vue.extend({
     },
   },
   methods: {
-    logout(): void {
+    logout() {
       this.$store.dispatch("zk-account/logout");
+      this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
     },
     copyAddress(): void {
       copyToClipboard(this.$store.getters["zk-account/address"]);
