@@ -2,7 +2,7 @@
   <div class="container">
     <div class="connectedWallet flex items-center">
       <i class="text-gray text-4xl mr-3 far fa-wallet" />
-      <popover name="copy-address" event="click" class="text-center block text-xs" :delay="400">
+      <popover name="copy-address" event="click" class="text-center block text-xs" :delay="100">
         Address copied!
       </popover>
       <zk-values-block>
@@ -19,7 +19,7 @@
         </template>
         <template slot="right-top">
           <div class="flex items-center flex-col md:flex-row">
-            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="testnetWalletUrl">
+            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="walletUrl">
               <span>Open wallet</span>
               <i class="fas fa-external-link" />
             </zk-defbtn>
@@ -36,41 +36,33 @@
 
 <script lang="ts">
 import Vue from "vue";
-
-import { Address } from "@/types";
-import {ETHER_NETWORK_NAME, ETHER_PRODUCTION} from "@/plugins/build";
+import { Network } from "zksync/build/types";
+import { copyToClipboard } from "matter-dapp-module/utils";
 
 export default Vue.extend({
   computed: {
     ownAddress(): string[] {
-      const address = this.$store.getters["account/address"];
+      const address = this.$store.getters["zk-account/address"];
+      if (!address) {return []}
       return [address.substr(0, 11), address.substr(11, address.length - 5 - 11), address.substr(address.length - 5, address.length)];
     },
+    network(): Network {
+      return this.$store.getters["zk-provider/network"];
+    },
     isProd(): boolean {
-      return ETHER_PRODUCTION;
+      return this.network === "mainnet";
     },
-    currentNetwork(): string {
-      return ETHER_NETWORK_NAME;
+    walletUrl(): string {
+      return `///${this.isProd ? "wallet" : this.network }.zksync.io`;
     },
-    testnetWalletUrl(): string {
-      return `///${this.isProd ? "wallet.zksync.io" : `${ETHER_NETWORK_NAME}.zksync.io`}`
-    }
   },
   methods: {
-    logout(): void {
-      this.$store.dispatch("wallet/logout");
-      this.$router.push("/connect");
+    logout() {
+      this.$store.dispatch("zk-account/logout");
+      this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
     },
     copyAddress(): void {
-      const elem = document.createElement("textarea");
-      elem.style.position = "absolute";
-      elem.style.left = -99999999 + "px";
-      elem.style.top = -99999999 + "px";
-      elem.value = this.$store.getters["account/address"];
-      document.body.appendChild(elem);
-      elem.select();
-      document.execCommand("copy");
-      document.body.removeChild(elem);
+      copyToClipboard(this.$store.getters["zk-account/address"]);
     }
   },
 });

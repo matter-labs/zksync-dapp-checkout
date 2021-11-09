@@ -4,23 +4,17 @@
 }
 
 .zkFooterContainer {
-  position: absolute;
   width: 100%;
-  height: 60px;
-  bottom: 0;
-  left: 0;
-  padding-bottom: 10px;
-  justify-content: center;
+  align-self: end;
+
+  a,
+  span {
+    @apply text-sm font-light leading-normal;
+  }
 
   @media screen and (max-width: $mobile) {
-    height: 73px;
-    flex-wrap: wrap;
     text-align: center;
-    padding: 1rem 0;
-
-    .rightSide {
-      justify-content: center !important;
-    }
+    bottom: 1rem;
   }
 
   .colorTheme {
@@ -49,20 +43,10 @@
     }
   }
 
-  .leftSide {
-    width: max-content;
-    white-space: nowrap;
-  }
-
   .rightSide {
     width: 100%;
     text-align: right;
     justify-content: flex-end;
-
-    .linkDefault {
-      font-size: 14px;
-      font-weight: 300;
-    }
   }
 
   #system-b-popover {
@@ -97,7 +81,7 @@
       }
 
       .zkFooterContainer {
-        bottom: 62px;
+        padding-bottom: 60px;
       }
     }
   }

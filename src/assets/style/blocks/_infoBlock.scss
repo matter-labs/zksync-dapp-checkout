@@ -1,27 +1,52 @@
 .infoBlockContainer {
   z-index: 4;
   width: 100%;
-  box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
-  overflow: auto;
   height: 100%;
+  overflow: auto;
+  box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
 
   .infoBlock {
-    position: relative;
-    width: 100%;
+    position: fixed;
+    width: 43vw;
     height: 100vh;
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: repeat(4, max-content);
-
-    .brandContainer {
-      width: max-content;
-      position: relative;
-
-      .networkName {
-        position: absolute;
-        left: 100%;
-        top: -0.4em;
+    grid-template-rows: repeat(3, max-content) 1fr;
+    @media screen and (min-width: 1300px) {
+      width: 600px;
+    }
+    @media screen and (min-width: $mobile) {
+      .totalTokensList {
+        max-height: 19vh;
+        overflow: auto;
       }
+    }
+
+    .valuesBlockContainer {
+      align-items: flex-start;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: inline-flex;
+
+      .zkSyncLogo {
+        @apply mr-2;
+
+        height: 1.8rem;
+        max-height: 100%;
+      }
+    }
+    .brandContainer {
+      .networkName {
+        @media screen and (max-width: $mobile) {
+          top: auto;
+        }
+      }
+    }
+
+    sup {
+      top: -1em;
     }
 
     header {
@@ -33,18 +58,15 @@
     .transactionsList {
       height: max-content;
       max-height: 40vh;
-      min-height: 104px;
     }
 
     .footerContainer {
       z-index: 1;
-      height: 40px;
+      height: max-content;
+      align-self: end;
 
       .zkSyncFooter {
         z-index: -1;
-        position: absolute;
-        left: 0;
-        bottom: 0;
         width: 100%;
         height: auto;
         opacity: 0.6;
@@ -52,47 +74,95 @@
     }
 
     footer {
-      position: absolute;
-      left: 0;
-      bottom: 25px;
       width: 100%;
       height: max-content;
     }
-  }
 
-  @media screen and (max-width: $mobile) {
-    height: max-content;
+    .zkSyncLogoFull {
+      height: 2.5rem;
+    }
 
-    .infoBlock {
-      height: auto;
-      max-height: 45vh;
-      grid-template-rows: max-content 1fr repeat(2, max-content);
+    @media screen and (max-width: $mobile) {
+      position: relative;
+      width: 100%;
+      height: max-content;
 
-      header {
+      .valuesBlockContainer {
         display: flex;
         align-items: center;
         justify-content: space-between;
-      }
+        grid-gap: 0.5rem;
+        white-space: nowrap;
+        margin: 0;
 
-      .transactionsList {
-        height: 100%;
-        max-height: initial;
-        min-height: initial;
+        .valuesBlockRight .valuesBlockSecondary > div {
+          height: 100%;
+          min-height: 36px;
+
+          .secondaryValue {
+            font-size: 0.65rem !important;
+          }
+        }
+
+        .valuesBlockLeft {
+          max-width: 70%;
+        }
+
+
+        &.noAddressPadding .valuesBlockRight .valuesBlockSecondary {
+          flex-basis: auto;
+          width: auto;
+          overflow: hidden;
+
+          .address
+          {
+            max-width: calc(100% - 0.5rem);
+            overflow: hidden;
+            min-height: 0;
+          }
+        }
+
+      }
+      .infoBlock {
+        height: auto;
+        max-height: 45vh;
+        grid-template-rows: max-content 1fr repeat(2, max-content);
+
+        header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .transactionsList {
+          height: 100%;
+          max-height: initial;
+          min-height: initial;
+        }
       }
     }
   }
 
   .linkDefault {
-    font-size: 14px;
     font-weight: 300;
+    font-size: 14px;
   }
-}
 
-.darkMode .infoBlockContainer {
-  background-color: $darkBlue;
+  .darkMode .infoBlockContainer {
+    background-color: $darkBlue;
 
-  .linkDefault {
-    font-weight: 400;
-    color: $lightViolet;
+    .linkDefault {
+      font-weight: 400;
+      color: $lightViolet;
+    }
   }
+
+  .border-b-2, .border-b-1 {
+    border-bottom: 1px !important;
+
+    &:last-of-type {
+      display: none;
+    }
+  }
+
 }
