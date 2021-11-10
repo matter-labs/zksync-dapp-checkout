@@ -1773,6 +1773,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.13.10":
+  version: 7.16.3
+  resolution: "@babel/runtime@npm:7.16.3"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: ee47a2b6edf56ec25437b34407a98439eb0b71149675e7b2781e5d1b2b6d858772120f590349fd9adbb0f2a186d2eb584b2b3a1819ca673b60dd5959bb02839f
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.14.0":
   version: 7.14.0
   resolution: "@babel/runtime@npm:7.14.0"
@@ -4049,6 +4058,7 @@ __metadata:
     "@nuxtjs/style-resources": latest
     "@nuxtjs/tailwindcss": ^4.0.1
     "@nuxtjs/toast": latest
+    "@ramp-network/ramp-instant-sdk": ^2.5.0
     "@sentry/webpack-plugin": ^1.14.0
     "@tailwindcss/postcss7-compat": ^2.0.3
     "@types/jest": ^26.0.20
@@ -4068,7 +4078,7 @@ __metadata:
     fork-ts-checker-webpack-plugin: ^6.1.0
     fs-extra: ^9.1.0
     js-cookie: ^2.2.1
-    matter-dapp-module: ^1.0.29
+    matter-dapp-module: ^1.0.34
     matter-zk-ui: ^1.0.9
     moment: ^2.29.1
     node-sass: latest
@@ -4083,6 +4093,7 @@ __metadata:
     stylelint-config-standard: latest
     stylelint-scss: latest
     tailwindcss: ^1.9.6
+    v-tooltip: ^2.1.3
     vue: ^2.6.12
     vue-custom-scrollbar: ^1.4.0
     vue-js-popover: ^1.2.1
@@ -4935,6 +4946,15 @@ __metadata:
     pocket-js-core: 0.0.3
     web3-provider-engine: 16.0.1
   checksum: e62a9ddbcfeafa15c801f202553c1ed80627e446e6b579f9702151a3776652140c5315f73fa8d3c57f9937b73a94a84ab93a3696bbbd312a862ea260dde67787
+  languageName: node
+  linkType: hard
+
+"@ramp-network/ramp-instant-sdk@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "@ramp-network/ramp-instant-sdk@npm:2.5.0"
+  dependencies:
+    body-scroll-lock: ^2.6.4
+  checksum: 6f2f789e1fe8f51befb97635bcf8d8f84eb1c9f3eeba8278ca52a6be9668e8c75e8d65719877d746a14a1d6f90cb78e7d4c0f49686775b7d01c3a8a486562ad1
   languageName: node
   linkType: hard
 
@@ -9205,6 +9225,13 @@ __metadata:
     raw-body: 2.4.0
     type-is: ~1.6.17
   checksum: 18c2a81df5eabc7e3541bc9ace394b88e6fbd390989b5e764ff34c3f9dbd097e19986c31baa9b855ec5c2cff2b79157449afb0cdfb97bb99c11d6239b2c47a34
+  languageName: node
+  linkType: hard
+
+"body-scroll-lock@npm:^2.6.4":
+  version: 2.7.1
+  resolution: "body-scroll-lock@npm:2.7.1"
+  checksum: d8ca7825c768850abbe28afef9ebffc7d10fa4a7f2ba601db3b3dd0881514b3eaba1d145e5e3716407117870b73dc2700e893ad9b2f199e85796d2abe85d4061
   languageName: node
   linkType: hard
 
@@ -18650,9 +18677,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"matter-dapp-module@npm:^1.0.29":
-  version: 1.0.29
-  resolution: "matter-dapp-module@npm:1.0.29"
+"matter-dapp-module@npm:^1.0.34":
+  version: 1.0.34
+  resolution: "matter-dapp-module@npm:1.0.34"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@nuxtjs/style-resources": ^1.0.0
@@ -18669,7 +18696,7 @@ fsevents@~2.3.1:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.11.5-beta.0
-  checksum: 9c1a7c46a40195c3bfa6bcd6bc7c45786198c68ec963ac3866fc51b691e238636eec9f38465f664aeaeef1eab8bbbfcf9e3f8c0c5ca211c3d33c3786b626d2e8
+  checksum: dfd9462dc8d4224dd39c781378d34f981246fc0a231a43d947541014feed78eba21c02f5ebbf296b23095ed0d58278166e4ad9caddd277bce364f00a42fb06b1
   languageName: node
   linkType: hard
 
@@ -21254,6 +21281,13 @@ node-sass@latest:
   dependencies:
     axios: ^0.18.0
   checksum: 8d31c7ec7f10c3304fd1260c5b48a725947633b322ae73f7234179f59abb4d9b843b6bfe8ff44825ab5f7e2315b20c5254a343a0bdce73ee749132107ff0ec54
+  languageName: node
+  linkType: hard
+
+"popper.js@npm:^1.16.1":
+  version: 1.16.1
+  resolution: "popper.js@npm:1.16.1"
+  checksum: eb53806fb7680e31c7d1db096f95438a40a7cb869f7ee0e27100c0860f11583a0d322606c6073618e7fe8865f834ec36482901b547256d9a0cf2b22434bca75d
   languageName: node
   linkType: hard
 
@@ -27275,6 +27309,18 @@ typescript@~4.2:
   languageName: node
   linkType: hard
 
+"v-tooltip@npm:^2.1.3":
+  version: 2.1.3
+  resolution: "v-tooltip@npm:2.1.3"
+  dependencies:
+    "@babel/runtime": ^7.13.10
+    lodash: ^4.17.21
+    popper.js: ^1.16.1
+    vue-resize: ^1.0.1
+  checksum: b80de6333b2c8789fb699dbb8f7688d16f7ef28da2662edcfbed264d9509cada909b72e245fa9feed8ca04edc0a0a5b08f388bb538da1c8db49762c3cf9b3d09
+  languageName: node
+  linkType: hard
+
 "v8-compile-cache@npm:^2.0.3, v8-compile-cache@npm:^2.3.0":
   version: 2.3.0
   resolution: "v8-compile-cache@npm:2.3.0"
@@ -27477,6 +27523,17 @@ typescript@~4.2:
   version: 1.1.1
   resolution: "vue-no-ssr@npm:1.1.1"
   checksum: 70b5009985a303c5063020bda4daeecbe267ba1d733e3c2aebbdc73f0e44109092b8fa5e6afa1d97602cf1b625dc2edca603329aea0893599fe4e3804e2c60b1
+  languageName: node
+  linkType: hard
+
+"vue-resize@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "vue-resize@npm:1.0.1"
+  dependencies:
+    "@babel/runtime": ^7.13.10
+  peerDependencies:
+    vue: ^2.6.0
+  checksum: 3d6fb3d13ae9d317ed91d23483ee5c9caabd7704bf3582d1b8d5975b9110543538c9c529103c39a055fe0346aed569656bc8c2d40210aed5a5bbae01507f5650
   languageName: node
   linkType: hard
 

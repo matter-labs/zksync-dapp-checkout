@@ -7,7 +7,10 @@
       </popover>
       <zk-values-block>
         <template slot="left-top">
-          <div class="headline">My wallet</div>
+          <a target="_blank" :href="walletUrl" class="headline" v-tooltip.bottom="`Open wallet`">
+            My wallet
+            <i style="position: relative; top: -1px;" class="fas fa-external-link text-xs ml-1 text-dark2" />
+          </a>
         </template>
         <template slot="left-bottom">
           <div @click="copyAddress()" id="copy-address" v-popover:copy-address.bottom class="address">
@@ -18,15 +21,9 @@
           </div>
         </template>
         <template slot="right-top">
-          <div class="flex items-center flex-col md:flex-row">
-            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="walletUrl">
-              <span>Open wallet</span>
-              <i class="fas fa-external-link" />
-            </zk-defbtn>
-            <zk-defbtn outline @click="logout()">
-              <span class="text-red">Disconnect</span>
-              <i class="text-red far fa-times" />
-            </zk-defbtn>
+          <div class="flex items-center flex-row">
+            <buy-with-ramp-btn text="Top up with" class="mr-3" />
+            <i v-tooltip.bottom="`Disconnect wallet`" @click="logout()" class="far fa-power-off iconBtn text-lg"></i>
           </div>
         </template>
       </zk-values-block>

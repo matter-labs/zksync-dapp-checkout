@@ -21,3 +21,19 @@ export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWOR
  */
 export const TWEET_URL = 'https://twitter.com/intent/tweet?url=';
 export const FACEBOOK_URL = 'https://www.facebook.com/sharer/sharer.php?u=';
+
+
+export const rampConfig = {
+    mainnet: {
+        url: undefined, // default
+        hostApiKey: process.env.RAMP_MAINNET_HOST_API_KEY,
+    },
+    rinkeby: {
+        url: "https://ri-widget-staging.firebaseapp.com/",
+        hostApiKey: process.env.RAMP_RINKEBY_HOST_API_KEY,
+    },
+    // ropsten: {
+    //   url: "https://ri-widget-staging-ropsten.firebaseapp.com/",
+    //   hostApiKey: process.env.RAMP_ROPSTEN_HOST_API_KEY,
+    // },
+}; 
