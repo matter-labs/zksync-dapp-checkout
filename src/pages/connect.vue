@@ -37,7 +37,7 @@ export default {
         this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
       } else {
         this.$store.dispatch("checkout/requestInitialData");
-        await this.$router.push("/");
+        await this.$router.push({query: this.$route.query, path: "/"});
       }
     },
     async walletConnect() {
@@ -47,7 +47,7 @@ export default {
         this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
       } else {
         this.$store.dispatch("checkout/requestInitialData");
-        await this.$router.push("/");
+        await this.$router.push({query: this.$route.query, path: "/"});
       }
     },
   },
