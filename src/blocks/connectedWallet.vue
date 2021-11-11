@@ -50,7 +50,7 @@ export default Vue.extend({
       return this.network === "mainnet";
     },
     walletUrl(): string {
-      return `///${this.isProd ? "wallet" : this.network }.zksync.io`;
+      return `///wallet.zksync.io/${this.network!=="mainnet" ? "?network="+this.network : "" }`;
     },
   },
   methods: {
