@@ -134,7 +134,6 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     const usedTokens = getters.usedTokens;
     const balancesPromises = [];
     for (const symbol of usedTokens) {
-      console.log("symbol", symbol);
       balancesPromises.push(dispatch("zk-balances/requestEthereumBalance", {symbol, force}, { root: true }));
     }
     await Promise.all(balancesPromises)
