@@ -109,7 +109,8 @@
           </div>
           <div class="flex items-center" v-else-if="!enoughWithInitialBalance">
             <i v-tooltip.bottom="`Update ${token} balance`" :disabled="ethereumBalanceLoading" @click="refreshBalance()" class="far fa-sync-alt iconBtn text-md mr-3"></i>
-            <buy-with-ramp-btn :disabled="ethereumBalanceLoading" />
+            <buy-with-ramp-btn :token="token" v-if="allowedRampZkTokens.includes(token)" :disabled="ethereumBalanceLoading" />
+            <span class="text-red text-xs" v-else>Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance</span>
           </div>
           <zk-defbtn v-else-if="!unlocked" @click="unlock()"> <i class="fas fa-unlock-alt" /><span>Unlock</span> </zk-defbtn>
           <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{ error: !enoughDepositAmount }">
@@ -137,7 +138,7 @@
 import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
 import { RestProvider, Wallet } from "zksync";
-import { Network } from "zksync/build/types";
+import { Network, TokenSymbol } from "zksync/build/types";
 import { ZkTokenBalance } from "matter-dapp-module/types";
 import { filterError } from "matter-dapp-module/utils";
 
@@ -241,6 +242,9 @@ export default Vue.extend({
     },
     enoughZkBalance(): boolean {
       return (BigNumber.from(this.zkBalance?.balance || "0").gte(this.total) || BigNumber.from(this.needToDeposit).lte("0"));
+    },
+    allowedRampZkTokens(): TokenSymbol[] {
+      return this.$store.getters["checkout/getAllowedRampZkTokens"];
     },
 
     /**

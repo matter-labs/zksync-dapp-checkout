@@ -166,7 +166,6 @@
             </template>
             <template slot="third">
               <a class="transactionLink linkDefault" :href="getTxLink(item.txHash)" target="_blank">
-                <!--<span v-if="item.txData.tx.fee!=='0'" class="text-gray text-xs col-span-2">Fee transaction</span>-->
                 <div class="font-light txHash text-xxs md:text-right">
                   {{ item.txHash | formatTransaction }}
                 </div>

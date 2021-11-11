@@ -9,6 +9,7 @@
 import Vue from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
 import { rampConfig } from "@/plugins/build";
+import { TokenSymbol } from "zksync/build/types";
 
 export default Vue.extend({
     props: {
@@ -16,7 +17,12 @@ export default Vue.extend({
             type: String,
             default: "Buy with",
             required: false,
-        }
+        },
+        token: {
+            type: String,
+            default: "",
+            required: false,
+        },
     },
     computed: {
         config(): {
@@ -28,6 +34,9 @@ export default Vue.extend({
         address(): string {
             return this.$store.getters["zk-account/address"];
         },
+        allowedRampZkTokens(): TokenSymbol[] {
+            return this.$store.getters["checkout/getAllowedRampZkTokens"];
+        },
         isRampSupported(): boolean {
             return !!this.config;
         },
@@ -38,10 +47,11 @@ export default Vue.extend({
                 throw new Error("Ramp is not supported on this environment.");
             }
             new RampInstantSDK({
-                hostAppName: "zkSync Wallet",
+                hostAppName: "zkSync Checkout",
                 hostLogoUrl: window.location.origin + "/favicon-dark.png",
                 variant: "hosted-auto",
-                swapAsset: "ZKSYNC_ETH,ZKSYNC_DAI,ZKSYNC_USDT,ZKSYNC_USDC",
+                swapAsset: "ZKSYNC_*",
+                defaultAsset: this.token ? `ZKSYNC_${this.token}` : undefined,
                 userAddress: this.address,
                 ...this.config,
             })
