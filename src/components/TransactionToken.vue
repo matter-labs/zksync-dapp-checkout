@@ -139,8 +139,8 @@ import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
 import { RestProvider, Wallet } from "zksync";
 import { Network, TokenSymbol } from "zksync/build/types";
-import { ZkTokenBalance } from "matter-dapp-module/types";
-import { filterError } from "matter-dapp-module/utils";
+import { ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
+import { filterError } from "@matterlabs/zksync-nuxt-core/utils";
 
 export default Vue.extend({
   props: {

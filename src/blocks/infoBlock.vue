@@ -126,7 +126,7 @@
 import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
 import { Network, TokenSymbol } from "zksync/build/types";
-import { ZkTokenPrices, ZkFeeType } from "matter-dapp-module/types";
+import { ZkTokenPrices, ZkFeeType } from "@matterlabs/zksync-nuxt-core/types";
 import { TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import Logo from "@/blocks/logo.vue";
 

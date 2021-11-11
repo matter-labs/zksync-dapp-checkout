@@ -5,7 +5,7 @@ import { closestPackableTransactionAmount, closestPackableTransactionFee } from 
 import { TokenSymbol, Address } from "zksync/build/types";
 import { BigNumber } from "ethers";
 import { RootState } from "~/store";
-import { ZkFee } from "matter-dapp-module/types";
+import { ZkFee } from "@matterlabs/zksync-nuxt-core/types";
 import { rampConfig } from "@/plugins/build";
 
 export const state = () => ({

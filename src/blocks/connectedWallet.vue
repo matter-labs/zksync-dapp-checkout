@@ -34,7 +34,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Network } from "zksync/build/types";
-import { copyToClipboard } from "matter-dapp-module/utils";
+import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 
 export default Vue.extend({
   computed: {
