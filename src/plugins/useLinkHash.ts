@@ -1,5 +1,5 @@
 import { Context } from "@nuxt/types";
-import { parseDecimal } from "matter-dapp-module/utils";
+import { parseDecimal } from "@matterlabs/zksync-nuxt-core/utils";
 import { RestProvider } from "zksync";
 import { PaymentItem } from "@/types";
 import { decrypt } from "@/plugins/link";
