@@ -13,11 +13,11 @@ const walletMiddleware: Middleware = (context: Context) => {
     return;
   }
   if (context.store.getters["zk-account/loggedIn"]) {
-    if (context.route.matched[0].path === "/connect") {
+    if (context.route.path.startsWith("/connect")) {
       context.redirect({query: context.route.query, path: "/"});
     }
     return;
-  } else if (context.route.matched[0].path !== "/connect" && !context.store.getters["zk-onboard/restoringSession"]) {
+  } else if (!context.route.path.startsWith("/connect") && !context.store.getters["zk-onboard/restoringSession"]) {
     context.redirect({query: context.route.query, path: "/connect"});
   }
 };

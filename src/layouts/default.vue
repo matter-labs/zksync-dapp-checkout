@@ -1,5 +1,5 @@
 <template>
-  <div class="defaultLayout min-h-screen" :class="[{'loggedIn': loggedIn===true && $route.path!=='/connect'},{'footerUpStyle': footerUpStyle===true}]">
+  <div class="defaultLayout min-h-screen" :class="[{'loggedIn': loggedIn===true && !$route.path.startsWith('/connect')},{'footerUpStyle': footerUpStyle===true}]">
     <block-modals />
     <block-info-block />
     <div class="routerContainer bg-white2 py-4 px-5 md:px-10">

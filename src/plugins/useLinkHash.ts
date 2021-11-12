@@ -29,7 +29,7 @@ export default async ({store, route, redirect}: Context, hash: string) => {
                 store.dispatch("zk-account/updateAccountState", true),
             ]);
         }
-        if(route.path !== "/connect") {
+        if(!route.path.startsWith("/connect")) {
             redirect({ path: "/connect", query: {"link": hash}});
         }
     } catch (error) {
