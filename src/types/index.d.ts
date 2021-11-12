@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { DecimalBalance } from "matter-dapp-module/types";
+import { DecimalBalance } from "@matterlabs/zksync-nuxt-core/types";
 import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { TokenSymbol, Address } from "zksync/build/types";
 

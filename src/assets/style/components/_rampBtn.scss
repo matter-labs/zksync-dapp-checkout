@@ -1,0 +1,10 @@
+.defbtn.rampBtn.filled {
+    background-color: $rampGreen;
+    padding: 0 10px;
+    &:not(:disabled):hover {
+        background-color: lighten($color: $rampGreen, $amount: 5);
+    }
+    &:not(:disabled):active {
+        background-color: $rampGreen;
+    }
+}

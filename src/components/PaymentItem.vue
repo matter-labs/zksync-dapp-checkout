@@ -45,7 +45,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { Tokens } from "zksync/build/types";
-import { Token } from "matter-dapp-module/types";
+import { Token } from "@matterlabs/zksync-nuxt-core/types";
 import { PaymentItem } from "@/types";
 
 export default Vue.extend({

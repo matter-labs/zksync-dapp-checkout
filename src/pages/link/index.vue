@@ -140,7 +140,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Network } from "zksync/build/types";
-import { copyToClipboard } from "matter-dapp-module/utils";
+import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 import { FACEBOOK_URL, TWEET_URL } from "@/plugins/build";
 import { encrypt } from "@/plugins/link";
 import { PaymentItem } from "@/types";

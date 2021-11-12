@@ -107,8 +107,10 @@
           <div v-if="isFeeTokenLoading" class="text-red text-xs">
             <span class="text-gray text-sm">Loading...</span>
           </div>
-          <div v-else-if="!enoughWithInitialBalance" class="text-red text-xs">
-            Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance
+          <div class="flex items-center" v-else-if="!enoughWithInitialBalance">
+            <i v-tooltip.bottom="`Update ${token} balance`" :disabled="ethereumBalanceLoading" @click="refreshBalance()" class="far fa-sync-alt iconBtn text-md mr-3"></i>
+            <buy-with-ramp-btn :token="token" v-if="allowedRampZkTokens.includes(token)" :disabled="ethereumBalanceLoading" />
+            <span class="text-red text-xs" v-else>Insufficient <strong>{{ token }} {{ currentNetworkName }}</strong> balance</span>
           </div>
           <zk-defbtn v-else-if="!unlocked" @click="unlock()"> <i class="fas fa-unlock-alt" /><span>Unlock</span> </zk-defbtn>
           <amount-input v-else ref="amountInput" v-model="depositAmount" :token="token" type="deposit" :class="{ error: !enoughDepositAmount }">
@@ -136,9 +138,9 @@
 import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
 import { RestProvider, Wallet } from "zksync";
-import { Network } from "zksync/build/types";
-import { ZkTokenBalance } from "matter-dapp-module/types";
-import { filterError } from "matter-dapp-module/utils";
+import { Network, TokenSymbol } from "zksync/build/types";
+import { ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
+import { filterError } from "@matterlabs/zksync-nuxt-core/utils";
 
 export default Vue.extend({
   props: {
@@ -171,7 +173,7 @@ export default Vue.extend({
       return this.$store.getters["zk-account/accountStateRequested"];
     },
     ethereumBalanceLoading(): boolean {
-      return this.$store.getters["zk-account/accountStateRequested"][this.token];
+      return this.$store.getters["zk-balances/ethereumBalanceLoading"][this.token];
     },
     unlocked(): boolean {
       this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
@@ -200,7 +202,7 @@ export default Vue.extend({
       return this.$store.getters["zk-balances/balances"][this.token];
     },
     initialBalance(): BigNumber {
-      return BigNumber.from(this.$store.getters["zk-balances/ethereumBalance"](this.token) || "0");
+      return BigNumber.from(this.$store.getters["zk-balances/ethereumBalances"][this.token] || "0");
     },
     depositBigNumber(): BigNumberish {
       if (!this.depositAmount) {
@@ -240,6 +242,9 @@ export default Vue.extend({
     },
     enoughZkBalance(): boolean {
       return (BigNumber.from(this.zkBalance?.balance || "0").gte(this.total) || BigNumber.from(this.needToDeposit).lte("0"));
+    },
+    allowedRampZkTokens(): TokenSymbol[] {
+      return this.$store.getters["checkout/getAllowedRampZkTokens"];
     },
 
     /**
@@ -294,7 +299,7 @@ export default Vue.extend({
       } else if (val === "committing") {
         this.lineStateText = "Committing transaction...";
       } else if (val === "confirming") {
-        const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider", null, { root: true });
+        const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider", null);
         const confirmations = await syncProvider.getConfirmationsForEthOpAmount();
         this.lineStateText = `Waiting for ${confirmations} confirmations.`;
       } else {
@@ -316,6 +321,10 @@ export default Vue.extend({
     }
   },
   methods: {
+    refreshBalance() {
+      this.$store.dispatch("zk-balances/requestEthereumBalance", {symbol: this.token, force: true});
+      this.$store.dispatch("zk-account/updateAccountState");
+    },
     setDepositMaxAmount() {
       this.depositAmount = this.$options.filters!.parseBigNumberish(this.initialBalance.toString(), this.token);
     },
@@ -355,12 +364,12 @@ export default Vue.extend({
           await depositResponse.awaitReceipt();
           console.log("depositResponse", depositResponse);
           const dataPromises = [
-            this.$store.dispatch("zk-balances/requestEthereumBalance", { force: true, symbol: "ETH" }, { root: true }),
-            this.$store.dispatch("zk-account/updateAccountState", true, { root: true }),
+            this.$store.dispatch("zk-balances/requestEthereumBalance", { force: true, symbol: "ETH" }),
+            this.$store.dispatch("zk-account/updateAccountState", true),
           ];
           if (this.token !== "ETH") {
-            dataPromises.push(this.$store.dispatch("zk-balances/requestAllowance", { force: true, symbol: this.token }, { root: true }));
-            dataPromises.push(this.$store.dispatch("zk-balances/requestEthereumBalance", { force: true, symbol: this.token }, { root: true }));
+            dataPromises.push(this.$store.dispatch("zk-balances/requestAllowance", { force: true, symbol: this.token }));
+            dataPromises.push(this.$store.dispatch("zk-balances/requestEthereumBalance", { force: true, symbol: this.token }));
           }
           await Promise.all(dataPromises);
           this.step = "default";
@@ -387,8 +396,8 @@ export default Vue.extend({
         this.subStep = "committing";
         await unlockTransaction.wait();
         await Promise.all([
-          this.$store.dispatch("zk-balances/requestAllowance", { force: true, symbol: this.token }, { root: true }),
-          this.$store.dispatch("zk-balances/requestEthereumBalance", { force: true, symbol: "ETH" }, { root: true }),
+          this.$store.dispatch("zk-balances/requestAllowance", { force: true, symbol: this.token }),
+          this.$store.dispatch("zk-balances/requestEthereumBalance", { force: true, symbol: "ETH" }),
         ]);
         this.step = "default";
       } catch (error) {

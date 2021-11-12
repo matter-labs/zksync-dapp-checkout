@@ -47,7 +47,7 @@ input[type="number"] {
 }
 
 .desktopOnly {
-  @media screen and (max-width: $mobile+1) {
+  @media screen and (max-width: ($mobile+1)) {
     display: none !important;
   }
 }
@@ -91,6 +91,23 @@ input[type="number"] {
       transition: $transition;
       transition-property: width, height;
     }
+  }
+}
+
+.iconBtn {
+  color: $violet;
+  cursor: pointer;
+  transition: $transition;
+  &:disabled {
+    opacity: 0.7;
+    cursor: default;
+  }
+  &:not(:disabled):active {
+    transition-duration: 0.001s;
+    color: $violet;
+  }
+  &:not(:disabled):hover {
+    color: $lightViolet;
   }
 }
 

@@ -19,7 +19,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { utils } from "ethers";
-import { DecimalBalance } from "matter-dapp-module/types";
+import { DecimalBalance } from "@matterlabs/zksync-nuxt-core/types";
 
 export default Vue.extend({
   props: {
