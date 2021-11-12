@@ -59,18 +59,6 @@
           </template>
         </zk-values-block>
         <zk-max-height v-model="feesOpened" :update-value="allFees.length">
-          <!-- <zk-values-block class="pt-3">
-            <template slot="left-top">
-              <div class="text-violet hover:text-lightviolet cursor-pointer">
-                Change fee token
-              </div>
-            </template>
-            <template slot="right-top">
-              <div class="flex flex-col items-end whitespace-nowrap">
-                <div class="text-violet hover:text-lightviolet cursor-pointer">{{ feeToken }}</div>
-              </div>
-            </template>
-          </zk-values-block> -->
           <zk-values-block v-for="(item, index) in allFees" :key="index" class="pt-1 lg:pt-3">
             <template slot="left-top">
               <div class="headline">
@@ -138,7 +126,7 @@
 import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
 import { Network, TokenSymbol } from "zksync/build/types";
-import { ZkTokenPrices, ZkFeeType } from "matter-dapp-module/types";
+import { ZkTokenPrices, ZkFeeType } from "@matterlabs/zksync-nuxt-core/types";
 import { TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import Logo from "@/blocks/logo.vue";
 

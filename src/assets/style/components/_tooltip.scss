@@ -1,0 +1,25 @@
+.tooltip {
+    display: block !important;
+    z-index: 9999;
+    opacity: 1;
+    transition: $transition;
+    transition-property: visibility, opacity;
+    will-change: visibility, opacity;
+    pointer-events: none;
+
+    .tooltip-inner {
+        margin-top: 7px;
+        background: #00000046;
+        color: $white;
+        border-radius: 4px;
+        font-size: 14px;
+        padding: 3px 10px;
+    }
+    .tooltip-arrow {
+        display: none;
+    }
+    &[aria-hidden='true'] {
+        visibility: hidden;
+        opacity: 0;
+    }
+}

@@ -5,7 +5,8 @@ import { closestPackableTransactionAmount, closestPackableTransactionFee } from 
 import { TokenSymbol, Address } from "zksync/build/types";
 import { BigNumber } from "ethers";
 import { RootState } from "~/store";
-import { ZkFee } from "matter-dapp-module/types";
+import { ZkFee } from "@matterlabs/zksync-nuxt-core/types";
+import { rampConfig } from "@/plugins/build";
 
 export const state = () => ({
   linkCheckout: <boolean>false,
@@ -14,6 +15,7 @@ export const state = () => ({
   transactions: [] as Array<ZkSyncTransaction>,
   fromAddress: "" as Address,
   feeToken: undefined as TokenSymbol | undefined,
+  allowedRampZkTokens: ["ETH","DAI","USDT","USDC"] as TokenSymbol[],
 });
 
 export type CheckoutModuleState = ReturnType<typeof state>;
@@ -76,6 +78,9 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
   getErrorData(state: CheckoutModuleState): unknown | undefined {
     return state.noDataError;
   },
+  getAllowedRampZkTokens(state: CheckoutModuleState): TokenSymbol[] {
+    return state.allowedRampZkTokens;
+  },
   isLinkCheckout(state: CheckoutModuleState): boolean {
     return state.linkCheckout;
   },
@@ -100,6 +105,9 @@ export const mutations: MutationTree<CheckoutModuleState> = {
   setError(state: CheckoutModuleState, errorData) {
     state.isError = !!errorData;
     state.noDataError = errorData;
+  },
+  setAllowedRampZkTokens(state: CheckoutModuleState, tokens: TokenSymbol[]) {
+    state.allowedRampZkTokens = tokens;
   },
 };
 
