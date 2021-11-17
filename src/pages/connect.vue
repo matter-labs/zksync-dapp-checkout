@@ -32,24 +32,21 @@ export default {
   methods: {
     async customWallet() {
       const loginTry = await this.$store.dispatch("zk-onboard/loginWithOnboard");
-      if (!loginTry) {
-        await this.$store.dispatch("zk-account/logout");
-        this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
-      } else {
-        this.$store.dispatch("checkout/requestInitialData");
-        await this.$router.push("/");
-      }
+      this.connect(loginTry);
     },
     async walletConnect() {
       const loginTry = await this.$store.dispatch("zk-onboard/loginWithWalletConnect");
-      if (!loginTry) {
+      this.connect(loginTry);
+    },
+    async connect(loginTry) {
+       if (!loginTry) {
         this.$store.dispatch("zk-account/logout");
         this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
       } else {
         this.$store.dispatch("checkout/requestInitialData");
-        await this.$router.push("/");
+        await this.$router.push({query: this.$route.query, path: "/"});
       }
-    },
+    }
   },
 };
 </script>

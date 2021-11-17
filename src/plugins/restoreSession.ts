@@ -5,7 +5,7 @@ export default ({ store, route, redirect }: Context) => {
   if (route.matched[0].path === "/link" || route.matched[0].path === "/link/:hash") {
     return;
   }
-  if (route.path !== "/connect") {
+  if (!route.path.startsWith("/connect")) {
     redirect("/connect");
   }
 };
