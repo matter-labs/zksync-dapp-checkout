@@ -5,6 +5,10 @@
 
 .zkFooterContainer {
   width: 100%;
+  height: 60px;
+  bottom: 0;
+  left: 0;
+  padding-bottom: 10px;
   align-self: end;
 
   a,
@@ -13,6 +17,7 @@
   }
 
   @media screen and (max-width: $mobile) {
+    height: 73px;
     text-align: center;
     bottom: 1rem;
   }

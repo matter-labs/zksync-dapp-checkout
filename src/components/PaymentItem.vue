@@ -113,10 +113,10 @@ export default Vue.extend({
       return this.$store.getters["zk-tokens/zkTokens"];
     },
     displayedTokens: function(): Tokens {
-      let result = {}, key;
+      let result = <Tokens>{}, key;
       for (key in this.tokens) {
         if (this.tokens.hasOwnProperty(key) && this.tokens[key].symbol.toLowerCase().includes(this.dropdownSearch.toLowerCase())) {
-          result[key] = this.tokens[key];
+          result[key] = this.tokens[key] as Token
         }
       }
       return result;

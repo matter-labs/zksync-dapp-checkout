@@ -15,7 +15,7 @@ export const state = () => ({
   transactions: [] as Array<ZkSyncTransaction>,
   fromAddress: "" as Address,
   feeToken: undefined as TokenSymbol | undefined,
-  allowedRampZkTokens: ["ETH","DAI","USDT","USDC"] as TokenSymbol[],
+  allowedRampZkTokens: ["ETH", "DAI", "USDT", "USDC"] as TokenSymbol[],
 });
 
 export type CheckoutModuleState = ReturnType<typeof state>;
@@ -30,7 +30,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
   },
   getTransactionBatchFee(_, __, ___, rootGetters): false | TransactionFee {
     rootGetters["zk-transaction/feeLoading"];
-    if(rootGetters["zk-transaction/fee"]) {
+    if (rootGetters["zk-transaction/fee"]) {
       const minFee = BigNumber.from(rootGetters["zk-transaction/fee"]);
       return {
         // name: "Tx Batch Fee / zkSync",
@@ -38,7 +38,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
         amount: closestPackableTransactionFee(minFee.add(minFee.div("100").mul("5").toString()).toString()),
         realAmount: minFee,
         token: rootGetters["zk-transaction/feeSymbol"],
-      }
+      };
     }
     return false;
   },
@@ -55,7 +55,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     return Array.from(tokens);
   },
   getTotalByToken(state, _, __, rootGetters): TotalByToken {
-    const allFees = rootGetters["zk-transaction/fees"].map((e: ZkFee) => ({...e, token: rootGetters["zk-transaction/feeSymbol"]}));
+    const allFees = rootGetters["zk-transaction/fees"].map((e: ZkFee) => ({ ...e, token: rootGetters["zk-transaction/feeSymbol"] }));
     const totalByToken = new Map();
     const addToTotalByToken = (amount: BigNumber, token: TokenSymbol) => {
       if (totalByToken.has(token)) {
@@ -114,7 +114,14 @@ export const mutations: MutationTree<CheckoutModuleState> = {
 export const actions: ActionTree<CheckoutModuleState, RootState> = {
   async setTransactionData({ commit, dispatch, rootGetters }, data: TransactionData) {
     commit("setTransactionData", data);
-    commit("zk-transaction/setTransferBatch", [...data.transactions.map(e => ({address: e.to, token: e.token})), {address: rootGetters["zk-account/address"] ? rootGetters["zk-account/address"] : data.transactions[0].to, token: data.feeToken}], { root: true });
+    commit(
+      "zk-transaction/setTransferBatch",
+      [
+        ...data.transactions.map((e) => ({ address: e.to, token: e.token })),
+        { address: rootGetters["zk-account/address"] ? rootGetters["zk-account/address"] : data.transactions[0].to, token: data.feeToken },
+      ],
+      { root: true }
+    );
     commit("setFeeToken", data.feeToken);
     dispatch("zk-transaction/setType", "TransferBatch", { root: true });
     dispatch("zk-transaction/setSymbol", data.feeToken, { root: true });
@@ -138,12 +145,12 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
       dispatch("zk-tokens/getTokenPrice", symbol, { root: true });
     }
   },
-  async requestUsedTokensEthereumBalance({ getters, dispatch }, force =false): Promise<void> {
+  async requestUsedTokensEthereumBalance({ getters, dispatch }, force = false): Promise<void> {
     const usedTokens = getters.usedTokens;
     const balancesPromises = [];
     for (const symbol of usedTokens) {
-      balancesPromises.push(dispatch("zk-balances/requestEthereumBalance", {symbol, force}, { root: true }));
+      balancesPromises.push(dispatch("zk-balances/requestEthereumBalance", { symbol, force }, { root: true }));
     }
-    await Promise.all(balancesPromises)
+    await Promise.all(balancesPromises);
   },
 };
