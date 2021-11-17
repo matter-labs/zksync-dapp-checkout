@@ -1,7 +1,8 @@
 {
   "branches": "master",
-  "repositoryUrl": "https://github.com/abdelrahmanahmed/semantic-release-example",
-  "debug": "true",
+  "repositoryUrl": "git@github.com:matter-labs/zksync-dapp-checkout.git",
+  "debug": false,
+  "tagFormat": "v${version}",
   "npmPublish": false,
   "plugins": [
     "@semantic-release/commit-analyzer",
@@ -18,7 +19,7 @@
       {
         "assets": [
           "package.json",
-          "package-lock.json",
+          "yarn.lock",
           "CHANGELOG.md"
         ],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
