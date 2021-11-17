@@ -3,7 +3,7 @@
     <div class="infoBlock border-none lg:min-h-screen py-4 md:py-10 px-5 md:px-10">
       <header class="lg:mb-6">
         <div class="flex items-end justify-center md:items-center mb-2">
-          <a href="https://zksync.io" class="logo-container" target="_blank"><logo /></a>
+          <a href="//zksync.io" class="logo-container" target="_blank"><logo /></a>
           <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
             <span class="networkName text-sm font-light inline-flex items-center" v-if="!isMainnet">
@@ -111,11 +111,7 @@
       </div>
       <div class="footerContainer hidden md:block">
         <footer>
-          <div class="poweredBy flex justify-center mx-auto items-center mt-3">
-            <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault lightLink whitespace-no-wrap mr-5">Terms of Service</a>
-            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault lightLink whitespace-no-wrap mr-5">Privacy Policy</a>
-            <nuxt-link class="linkDefault lightLink whitespace-no-wrap" to="/link">Online Link Builder</nuxt-link>
-          </div>
+          <block-bottom-menu />
         </footer>
       </div>
     </div>
@@ -129,6 +125,7 @@ import { Network, TokenSymbol } from "zksync/build/types";
 import { ZkTokenPrices, ZkFeeType } from "@matterlabs/zksync-nuxt-core/types";
 import { TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import Logo from "@/blocks/logo.vue";
+import { ETHER_NETWORK_NAME } from "~/plugins/build";
 
 export default Vue.extend({
   components: {
@@ -171,6 +168,9 @@ export default Vue.extend({
         return this.$store.getters["zk-transaction/fees"].filter((item: TransactionFee) => item.key !== "accountActivation");
       }
       return this.$store.getters["zk-transaction/fees"];
+    },
+    zkWalletLink(): string {
+      return `//wallet.zksync.io?network=${ETHER_NETWORK_NAME}`
     },
     totalFees(): BigNumberish {
       const allFees = this.allFees;

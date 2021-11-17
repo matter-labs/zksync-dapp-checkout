@@ -1,7 +1,3 @@
-body {
-  overscroll-behavior-y: none;
-}
-
 #__nuxt,
 #__layout {
   width: 100%;
@@ -17,11 +13,12 @@ body {
 }
 
 body {
+  overscroll-behavior-y: none;
   font-family: $mainFontFamily;
   color: $black2;
   width: 100%;
   min-height: 100vh;
-  @media (max-width:$mobile) {
+  @media (max-width: $mobile) {
     font-size: 1rem;
   }
 }

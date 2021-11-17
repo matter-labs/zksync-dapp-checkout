@@ -8,7 +8,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
-import { rampConfig } from "@/plugins/build";
+import { rampConfig, ZKISingleRampConfig } from "@/plugins/build";
 import { TokenSymbol } from "zksync/build/types";
 
 export default Vue.extend({
@@ -25,11 +25,12 @@ export default Vue.extend({
         },
     },
     computed: {
-        config(): {
+        config():{
             url: string | undefined;
             hostApiKey: string | undefined;
         } | null {
-            return rampConfig[this.$store.getters["zk-provider/network"]];
+            // @ts-ignore
+            return rampConfig[this.$store.getters["zk-provider/network"]] as ZKISingleRampConfig;
         },
         address(): string {
             return this.$store.getters["zk-account/address"];

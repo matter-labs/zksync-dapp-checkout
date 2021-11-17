@@ -109,7 +109,7 @@
       </div>
 
     </div>
-    <div class="linkFooter filter shadow-md rounded-b px-5">
+    <div class="linkFooter filter rounded-b px-5">
       <zk-max-height :value="!validCheckoutConfiguration && showAddLink" v-show="payments.length<3" class="mt-0 md:mt-5 md:mt-7 zk-container mx-auto">
         <div>
           <zk-note class="notificationNote">
@@ -131,7 +131,7 @@
         payment link
       </zk-defbtn>
       <div class="poweredBy pt-5 md:pt-10 pb-5 flex items-center justify-between">
-        <block-footer/>
+        <block-footer :fullFooterMenu="true"/>
       </div>
     </div>
   </div>

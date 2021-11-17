@@ -1,11 +1,11 @@
 .bn-onboard-modal {
   z-index: 4;
   background-color: transparentize($color: $black, $amount: 0.7);
-  
+
   .bn-onboard-custom.bn-onboard-modal-content {
     width: 85%;
   }
-  
+
   @media screen and (min-width: $mobile) {
     left: 43% !important;
     width: 57% !important;

@@ -6,10 +6,21 @@
   }
 }
 
+@media (min-width: $mobile) {
+  .linkPage .zkFooterContainer .whitespace-no-wrap {
+    white-space: nowrap;
+  }
+  .linkLayout .linkPage .zkFooterContainer #built-by-matterlabs {
+    position: absolute;
+    bottom: 40px;
+  }
+}
+
 @media (max-width: $mobile) {
   .linkPage {
     .maxHeightBlock {
       @apply bg-white shadow-sm;
+
       height: 110px;
       position: absolute !important;
       top: -1.5rem;
@@ -18,11 +29,32 @@
       padding: 0 5vw;
       left: 0;
     }
-    .linkFooter
-    {
-      @apply fixed bottom-0 w-full px-3 bg-white left-0;
 
+    .linkFooter {
+      @apply fixed bottom-0 w-full bg-white left-0 p-0;
+    }
+
+    .zkFooterContainer {
       box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05), 0 -2px 4px -1px rgba(0, 0, 0, 0.05);
+      flex-direction: column;
+      height: auto;
+      align-items: center;
+      grid-gap: 5px;
+
+      & > * {
+        margin-bottom: 5px;
+      }
+
+      .poweredBy {
+        margin-left: 0;
+      }
+
+      .rightSide {
+        justify-content: center;
+        margin-bottom: 0;
+      }
+
+
     }
   }
 }

@@ -2,54 +2,53 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": "./src",
+    "baseUrl": "./src/",
     "checkJs": false,
     "declaration": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "jsx": "preserve",
     "lib": [
-      "es2019",
-      "dom",
-      "es2019.object",
-      "esnext",
-      "esnext.asynciterable"
+      "ESNext",
+      "ESNext.AsyncIterable",
+      "DOM"
     ],
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "noEmit": true,
     "noImplicitAny": true,
     "paths": {
-      "@/*": [
-        "*"
-      ],
       "~/*": [
-        "*"
+        "./*"
+      ],
+      "@/*": [
+        "./*"
       ]
     },
     "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
-    "target": "ESNext",
+    "target": "ES2018",
     "types": [
-      "@types/node",
       "@nuxt/types",
+      "@types/node",
       "@nuxtjs/sentry",
       "@matterlabs/zksync-nuxt-core",
+      "matter",
+      "@nuxt/axios",
       "@types/jest",
       "@nuxtjs/toast",
       "web3-core/types"
     ]
   },
   "exclude": [
-    "node_modules/*",
-    "dist/*",
-    ".yarn/*",
-    "public/*",
-    ".nuxt/*",
-    ".github/*",
-    "environments/*",
-    "tests/*"
+    "node_modules",
+    ".nuxt",
+    "dist",
+    ".nuxt",
+    ".github",
+    "environments",
+    ".yarn",
+    "tests"
   ]
 }
