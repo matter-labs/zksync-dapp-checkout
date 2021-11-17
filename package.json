@@ -3,7 +3,7 @@
   "title": "zkSync Checkout — simple permissionless DeFi payment gateway",
   "homepage": "https://checkout.zksync.io",
   "description": "zkSync Checkout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.",
-  "version": "2.6.0-0",
+  "version": "0.0.0-development",
   "keywords": [
     "zksync",
     "ethereum",
@@ -75,8 +75,8 @@
     "@nuxtjs/style-resources": "latest",
     "@nuxtjs/stylelint-module": "^4.0.0",
     "@nuxtjs/tailwindcss": "^4.2.0",
-    "@rabsana/semantic-release-rabsana-config": "^1.0.9",
     "@ramp-network/ramp-instant-sdk": "^2.5.0",
+    "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
     "@vue/test-utils": "^1.2.1",
     "babel-core": "7.0.0-bridge.0",
