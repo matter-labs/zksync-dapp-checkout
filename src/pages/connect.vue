@@ -39,7 +39,7 @@ export default {
       this.connect(loginTry);
     },
     async connect(loginTry) {
-      if (!loginTry) {
+       if (!loginTry) {
         this.$store.dispatch("zk-account/logout");
         this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
       } else {

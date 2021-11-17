@@ -4,7 +4,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-
 import useLinkHash from "@/plugins/useLinkHash";
 
 export default Vue.extend({
