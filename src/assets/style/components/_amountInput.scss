@@ -1,3 +1,4 @@
+
 .amountInputGroup {
   width: max-content;
   height: 36px;
@@ -133,7 +134,7 @@
     width: max-content;
     padding-left: 7px;
   }
-}
+    }
 
 .darkMode .amountInputGroup {
   border-color: $dark2;
@@ -147,12 +148,13 @@
   .leftSide {
     .amInputContainer input {
       color: $gray;
+
       &::placeholder {
         color: $dark2;
       }
     }
     .underInput {
       color: $dark3;
+  }
     }
   }
-}

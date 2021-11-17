@@ -32,7 +32,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { TransactionData } from "@/types";
-import {APP_ZK_LINK} from "@/plugins/build";
 
 export default Vue.extend({
   computed: {
@@ -45,9 +44,6 @@ export default Vue.extend({
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
-    zkLink(): string {
-      return APP_ZK_LINK as string;
-    }
   },
   methods: {
     closeModal() {

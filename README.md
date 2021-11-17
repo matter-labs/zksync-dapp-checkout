@@ -76,6 +76,19 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ---
 
+## Release CI
+
+> This sharable configuration conforms to angular standard
+
+* Using [@semantic-release/commit-analyzer](https://github.com/semantic-release/commit-analyzer) ensures that commits are conformed to the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/) specification. 
+    * **PATCH** version created if any of **build**, **ci**, **chore**, **docs**, **refactor**, **style**, **test** commit types pushed to master 
+    * **MINOR** version created if fix commit type pushed MAJOR version created if feat commit type pushed
+    * **MAJOR** version created if feat commit type pushed
+* By default, config used publishes the new version to NPM. But in zkSync's case release flow differs from the deployment flow.
+    * Bumps a version in package.json. 
+    * Generates or updates a [changelog](CHANGELOG.md) file including all **PATCH** keywords (not included in default angular package). 
+    * Releases new release for the GitHub repo
+
 ## Solutions used
 
 * [Nuxt.js](https://nuxtjs.org)

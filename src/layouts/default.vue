@@ -37,9 +37,6 @@ export default {
     loggingIn() {
       return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
     },
-    loggedIn() {
-      return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
-    },
   },
 };
 </script>
