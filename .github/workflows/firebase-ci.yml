@@ -20,7 +20,7 @@ jobs:
           node-version: '12.16.2'
 
       - name: Install Pacakges
-        run: sh cli-build.sh ci
+        run: sh cli-dev.sh ci
 
       - name: Build Step
         env:
