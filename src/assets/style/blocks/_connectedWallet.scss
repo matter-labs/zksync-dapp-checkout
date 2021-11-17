@@ -44,6 +44,11 @@
       will-change: opacity;
     }
   }
+  .headline {
+    &:hover {
+      color: $violet;
+    }
+  }
 
   .vue-popover {
     position: fixed;

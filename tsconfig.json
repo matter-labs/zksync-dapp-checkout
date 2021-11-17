@@ -33,15 +33,13 @@
     "strict": true,
     "target": "ESNext",
     "types": [
-      "@types/nuxt",
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",
-      "@nuxt/axios",
+      "@matterlabs/zksync-nuxt-core",
       "@types/jest",
       "@nuxtjs/toast",
-      "web3-core/types",
-      "nuxt-typed-vuex"
+      "web3-core/types"
     ]
   },
   "exclude": [

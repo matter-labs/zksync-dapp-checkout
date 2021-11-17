@@ -2,15 +2,45 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+
 ## Beta-releases
 
+## [3.0.0-beta](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.5.0...3.0.0-beta)
 
+## [2.6.0-0](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.5.0...2.6.0-0) 
+> 10 August 2021
+
+- chore(pre-release): changelog update [`295d50b`](https://github.com/matter-labs/zksync-dapp-checkout/commit/295d50be64ed7f122e643550f9e71cd3c875ee1a)
+- Feature/experiments with ci [`#46`](https://github.com/matter-labs/zksync-dapp-checkout/pull/46)
+- Keriat zkf 730 ci final configuration and version [`#48`](https://github.com/matter-labs/zksync-dapp-checkout/pull/48)
+- Update zkLink branch [`#49`](https://github.com/matter-labs/zksync-dapp-checkout/pull/49)
+- v.2.5.0-PR (dev) zkSync Checkout [`#39`](https://github.com/matter-labs/zksync-dapp-checkout/pull/39)
+- Pushing version to production [`#33`](https://github.com/matter-labs/zksync-dapp-checkout/pull/33)
 ## [3.0.0-beta](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.5.0...3.0.0-beta)
 
 
 ## Published releases
 
+## [2.6.0-0](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.5.0...2.6.0-0)
+
+> 10 August 2021
+
+- chore(pre-release): changelog update [`295d50b`](https://github.com/matter-labs/zksync-dapp-checkout/commit/295d50be64ed7f122e643550f9e71cd3c875ee1a)
+- Feature/experiments with ci [`#46`](https://github.com/matter-labs/zksync-dapp-checkout/pull/46)
+- Keriat zkf 730 ci final configuration and version [`#48`](https://github.com/matter-labs/zksync-dapp-checkout/pull/48)
+- Update zkLink branch [`#49`](https://github.com/matter-labs/zksync-dapp-checkout/pull/49)
+- v.2.5.0-PR (dev) zkSync Checkout [`#39`](https://github.com/matter-labs/zksync-dapp-checkout/pull/39)
+- Pushing version to production [`#33`](https://github.com/matter-labs/zksync-dapp-checkout/pull/33)
+
 ### [2.5.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.0.0-beta...2.5.0)
+
+- Last fixes [`#37`](https://github.com/matter-labs/zksync-dapp-checkout/pull/37)
+- Hide unlock button when not enough L1 balance [`#36`](https://github.com/matter-labs/zksync-dapp-checkout/pull/36)
+- +25% default fee + note [`#35`](https://github.com/matter-labs/zksync-dapp-checkout/pull/35)
+- Fee changes and small style edits [`#34`](https://github.com/matter-labs/zksync-dapp-checkout/pull/34)
+
+## [2.5.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.4.0...2.5.0) 
+> 16 June 2021
 
 - Last fixes [`#37`](https://github.com/matter-labs/zksync-dapp-checkout/pull/37)
 - Hide unlock button when not enough L1 balance [`#36`](https://github.com/matter-labs/zksync-dapp-checkout/pull/36)
@@ -29,7 +59,7 @@ All notable changes to this project will be documented in this file. Dates are d
 ### [2.4.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.4.0-prerelease...2.4.0)
 
 
-### [2.4.0-prerelease](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.3.0...2.4.0-prerelease)
+### [2.4.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.4.0-prerelease...2.4.0) | [2.4.0-prerelease](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.3.0...2.4.0-prerelease)
 
 - Small bug fixes [`#31`](https://github.com/matter-labs/zksync-dapp-checkout/pull/31)
 - Update firebase-hosting-merge.yml [`#27`](https://github.com/matter-labs/zksync-dapp-checkout/pull/27)
@@ -52,6 +82,7 @@ All notable changes to this project will be documented in this file. Dates are d
 
 
 ### [2.3.0-prerelease](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.2.2...2.3.0-prerelease)
+## [2.3.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.3.0-prerelease...2.3.0) | [2.3.0-prerelease](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.2.2...2.3.0-prerelease)
 
 ```bash
 # Conflicts:
@@ -115,7 +146,6 @@ All notable changes to this project will be documented in this file. Dates are d
 * removed inkline
 * added tailwind config
 * created uber UI
-
 - Transaction process fixes and updates [`#15`](https://github.com/matter-labs/zksync-dapp-checkout/pull/15)
 - Fixed checkout transaction check loop [`#14`](https://github.com/matter-labs/zksync-dapp-checkout/pull/14)
 - changes [`#13`](https://github.com/matter-labs/zksync-dapp-checkout/pull/13)
@@ -144,8 +174,8 @@ All notable changes to this project will be documented in this file. Dates are d
 ### [2.1.9](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.8...2.1.9)
 
 
-# Conflicts:
-#	src/pages/index.vue
+### Conflicts:
+```src/pages/index.vue```
 
 - Fixes around the code [`7386dbe`](https://github.com/matter-labs/zksync-dapp-checkout/commit/7386dbed5b9204ac7fbba204f6f65f8e8be68eb0)
 - Update: Transfer [`b59301d`](https://github.com/matter-labs/zksync-dapp-checkout/commit/b59301dc206b11319fedfcb9e86ec3a2f1c725ac)
@@ -203,10 +233,7 @@ Transaction process fixes and updates
 
 - Transaction process fixes and updates [`#15`](https://github.com/matter-labs/zksync-dapp-checkout/pull/15)
 
-### [2.1.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.1-prerelease...2.1.1)
-
-
-### [2.1.1-prerelease](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.0...2.1.1-prerelease)
+## [2.1.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.1-prerelease...2.1.1) | [2.1.1-prerelease](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.0...2.1.1-prerelease)
 
 
 - Update firebase-hosting-merge.yml [`#27`](https://github.com/matter-labs/zksync-dapp-checkout/pull/27)
@@ -216,11 +243,8 @@ Transaction process fixes and updates
 - Transaction process fixes and updates [`#15`](https://github.com/matter-labs/zksync-dapp-checkout/pull/15)
 - Fixed checkout transaction check loop [`#14`](https://github.com/matter-labs/zksync-dapp-checkout/pull/14)
 
+## [2.1.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.0-prerelease...2.1.0) | [2.1.0-prerelease](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.0-beta...2.1.0-prerelease) 
 ### [2.1.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.0-prerelease...2.1.0)
-
-
-### [2.1.0-prerelease](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.1.0-beta...2.1.0-prerelease)
-
 
 - build(build): Small configs change [`27a3c87`](https://github.com/matter-labs/zksync-dapp-checkout/commit/27a3c878acd2626143abcd538d997ab2b87e00db)
 - build(config): Fix critical yarn issue (ending part) [`602651a`](https://github.com/matter-labs/zksync-dapp-checkout/commit/602651aa53a630c859e5c3cd0d550baac622d9d0)
@@ -280,9 +304,6 @@ Fix hashes notifications 2
 
 
 ### [1.1.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/1.0.0...1.1.0)
-
-
-Checking the realisation made
 
 - Checking the realisation made [`#1`](https://github.com/matter-labs/zksync-dapp-checkout/pull/1)
 - Fix hashes notifications 2 [`#4`](https://github.com/matter-labs/zksync-dapp-checkout/pull/4)

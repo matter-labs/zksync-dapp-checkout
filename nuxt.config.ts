@@ -1,27 +1,27 @@
-import { NuxtConfig, Configuration } from "@nuxt/types";
+import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
-import { ToastObject } from "vue-toasted/types";
-
-//noinspection ES6PreferShortImport
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, VERSION, ZK_IS_BETA, ZK_LIB_VERSION } from "./src/plugins/build";
+import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+import { Configuration } from "webpack";
 
 // @ts-ignore
 import * as zkTailwindDefault from "matter-zk-ui/tailwind.config.js";
+
+import {CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION} from "~/plugins/build";
 
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
 const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
-const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Checkout";
+const pageTitle = CURRENT_APP_NAME.toString() ?? "zkSync Checkout";
 const pageImg = "/cover.jpg";
 
-const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED}${ZK_IS_BETA ? "-beta" : ""} v.${VERSION} | zksync: v.${ZK_LIB_VERSION}`;
+const pageTitleTemplate = ETHER_PRODUCTION ? CURRENT_APP_NAME : `${ETHER_NETWORK_CAPITALIZED}`;
 
 const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
 const pageKeywords = process.env.SITE_KEYWORDS ?? "";
 
 const config: NuxtConfig = {
-  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
+  components: ["@/components/", {path: "@/blocks/", prefix: "block"}],
   telemetry: false,
   ssr: false,
   target: "static",
@@ -47,6 +47,26 @@ const config: NuxtConfig = {
       amp: "true",
     },
     meta: [
+      {
+        property: "cache-control",
+        httpEquiv: "cache-control",
+        content: "no-cache , no-store, must-revalidate",
+      },
+      {
+        httpEquiv: "pragma",
+        content: "no-cache",
+        property: "pragma",
+      },
+      {
+        httpEquiv: "cache-control",
+        property: "cache-control",
+        content: "no-cache , no-store, must-revalidate",
+      },
+      {
+        httpEquiv: "expires",
+        content: "0",
+        property: "expires",
+      },
       {
         hid: "keywords",
         name: "keywords",
@@ -118,21 +138,21 @@ const config: NuxtConfig = {
         content: pageTitle,
       },
 
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      {charset: "utf-8"},
+      {name: "viewport", content: "width=device-width, initial-scale=1"},
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
         content: "/favicon-dark.png",
       },
-      { hid: "theme-color", name: "theme-color", content: "#4e529a" },
+      {hid: "theme-color", name: "theme-color", content: "#4e529a"},
       {
         hid: "msapplication-TileColor",
         property: "msapplication-TileColor",
         content: "#4e529a",
       },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
+    link: [{rel: "icon", type: "image/x-icon", href: "/favicon-dark.png"}],
   },
 
   /*
@@ -149,18 +169,16 @@ const config: NuxtConfig = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
+  plugins: ["@/plugins/main", "@/plugins/setCheckoutData", "@/plugins/restoreSession"],
 
   router: {
     middleware: ["wallet"],
   },
+
   /*
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    "nuxt-build-optimisations",
-    "@nuxtjs/style-resources",
-    "@nuxtjs/tailwindcss",
     [
       "@nuxt/typescript-build",
       {
@@ -169,51 +187,64 @@ const config: NuxtConfig = {
             async: true,
             stylelint: {
               config: [".stylelintrc"],
-              files: "src/**.scss",
+              files: "src/**/*.scss",
             },
             eslint: {
-              config: [".eslintrc.js", "tsconfig-eslint.json"],
-              files: "**/*.{ts,js,vue}",
+              config: ["tsconfig-eslint.json", ".eslintrc.js"],
+              files: "@/**/*.{ts,vue,js}",
             },
-            files: "**/*.{ts,vue}",
+            files: "@/**/*.{ts,vue,js}",
           },
         },
       },
     ],
-    ["@nuxtjs/dotenv", { path: __dirname }],
+    "nuxt-build-optimisations",
+    "@nuxtjs/style-resources",
+    "@nuxtjs/tailwindcss",
+    ["@nuxtjs/dotenv", {path: __dirname}],
     "matter-zk-ui",
+    [
+      "@matterlabs/zksync-nuxt-core",
+      <ModuleOptions>{
+        network: process.env.ZK_NETWORK,
+        apiKeys: {
+          FORTMATIC_KEY: process.env.APP_FORTMATIC,
+          PORTIS_KEY: process.env.APP_PORTIS,
+          INFURA_KEY: process.env.APP_INFURA_API_KEY,
+        },
+        onboardConfig: {
+          APP_NAME: pageTitle,
+          APP_ID: process.env.APP_ONBOARDING_APP_ID,
+        },
+        logoutRedirect: "/connect",
+      },
+    ],
   ],
 
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "nuxt-webfontloader", "@nuxtjs/sentry"],
-  webfontloader: {
-    google: {
-      families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
-    },
-  },
-  toast: {
-    singleton: true,
-    keepOnHover: true,
-    position: "bottom-right",
-    duration: 4000,
-    iconPack: "fontawesome",
-    action: {
-      text: "OK",
-      onClick: (_: unknown, toastObject: ToastObject) => {
-        toastObject.goAway(100);
+  modules: [
+    "nuxt-webfontloader",
+    [
+      "nuxt-social-meta",
+      {
+        url: "https://checkout.zksync.io",
+        title: pageTitle,
+        site_name: pageTitle,
+        description: pageDescription,
+        img: "/social.jpg",
+        locale: "en_US",
+        twitter: "@zksync",
+        twitter_card: "https://checkout.zksync.io/social.jpg",
+        themeColor: "#4e529a",
       },
-    },
-  },
-  i18n: {
-    vueI18n: {
-      fallbackLocale: "en",
-      messages: {
-        en: require(`./${srcDir}/locales/en/translations.json`),
-      },
-    },
-  },
+    ],
+    "@nuxtjs/axios",
+    "@nuxtjs/toast",
+    "@nuxtjs/google-gtag",
+    "@nuxtjs/sentry"
+  ],
   styleResources: {
     scss: ["@/assets/style/vars/*.scss"],
   },
@@ -233,6 +264,12 @@ const config: NuxtConfig = {
     },
     debug: env !== "prod", // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
+  },
+  // Fonts loader https://www.npmjs.com/package/nuxt-webfontloader
+  webfontloader: {
+    google: {
+      families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
+    },
   },
   tailwindcss: {
     config: {
@@ -254,13 +291,17 @@ const config: NuxtConfig = {
           "./node_modules/matter-zk-ui/plugins/**/*.{js,ts}",
           "./node_modules/matter-zk-ui/nuxt.config.{js,ts}",
         ],
-      },
-    },
-  },
+      }
+      ,
+    }
+    ,
+  }
+  ,
   /*
    ** Build configuration
    */
   build: {
+    hardSource: isProduction,
     ssr: false,
     extend: (config: Configuration) => {
       config.node = {
@@ -268,14 +309,6 @@ const config: NuxtConfig = {
       };
     },
   },
-  /* buildOptimisations: {
-    profile: env !== "prod" ? "risky" : "experimental",
-    features: {
-      postcssNoPolyfills: isProduction,
-      hardSourcePlugin: isProduction,
-    },
-    esbuildLoaderOptions: "esnext",
-  }, */
   generate: {
     dir: "public",
     fallback: "404.html",

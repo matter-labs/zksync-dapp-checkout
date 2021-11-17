@@ -1,7 +1,6 @@
 // Core
 @import "./default.scss";
 @import "./transitions.scss";
-@import "./fonts.scss";
 
 //Layouts
 @import "./layouts/default.scss";
@@ -20,7 +19,10 @@
 @import "./components/amountInput.scss";
 @import "./components/maxHeight.scss";
 @import "./components/transactionToken.scss";
+@import "./components/rampBtn.scss";
+@import "./components/tooltip.scss";
 
 //Pages
 @import "./pages/index.scss";
 @import "./pages/connect.scss";
+@import "./pages/link.scss";
