@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/v1.0.0...v1.0.1) (2021-11-18)
+
+
+### Bug Fixes
+
+* add semantic-release/npm to bump version ([c3bae1d](https://github.com/matter-labs/zksync-dapp-checkout/commit/c3bae1d6a7aa6f1932e1596528ef7a86c405490c))
+
 # 1.0.0 (2021-11-18)
 
 
