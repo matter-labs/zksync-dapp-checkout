@@ -1,6 +1,5 @@
 {
   "branches": "master",
-  "repositoryUrl": "git@github.com:matter-labs/zksync-dapp-checkout.git",
   "debug": false,
   "tagFormat": "v${version}",
   "npmPublish": false,
