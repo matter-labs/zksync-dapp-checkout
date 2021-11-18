@@ -35,7 +35,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/matter-labs/zksync-dapp-checkout"
+    "url": "git+https://github.com/matter-labs/zksync-dapp-checkout.git"
   },
   "author": "Matter Labs",
   "browserslist": {
