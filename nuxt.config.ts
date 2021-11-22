@@ -229,7 +229,6 @@ const config: NuxtConfig = {
         themeColor: "#4e529a",
       },
     ],
-    "@nuxtjs/axios",
     "@nuxtjs/google-gtag",
     "@nuxtjs/sentry",
   ],
