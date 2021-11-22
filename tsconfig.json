@@ -34,10 +34,7 @@
       "@types/node",
       "@nuxtjs/sentry",
       "@matterlabs/zksync-nuxt-core",
-      "matter",
-      "@nuxt/axios",
       "@types/jest",
-      "@nuxtjs/toast",
       "web3-core/types"
     ]
   },

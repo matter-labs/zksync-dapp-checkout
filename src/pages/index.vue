@@ -129,7 +129,7 @@
     <div v-else-if="step === 'success'" class="successPage w-full">
       <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Done. Thank you!</div>
       <zk-success-check-mark big class="w-11/12 max-w-xxs mx-auto py-5"/>
-      <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault" href="https://zksync.io/" target="_blank">zkSync</a></div>
+      <div class="text-md text-center font-light pt-2">Wasn't that easy? Learn more about <a class="linkDefault lightLink" href="https://zksync.io/" target="_blank">zkSync</a></div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
           <zk-defbtn @click="close()" :disabled="!transferAllowed" v-if="!isLinkCheckout">
@@ -343,7 +343,7 @@ export default Vue.extend({
         const realError = filterError(error as Error);
         if (realError) {
           this.errorModal = {
-            headline: "Pretransfer error",
+            headline: "Error while preparing the transfer",
             text: realError,
           };
         }
