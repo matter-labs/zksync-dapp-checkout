@@ -8,13 +8,14 @@ name: "Deploy: with preview"
       target:
         description: "Deploy to prod-mainnet, prod-rinkeby, prod-ropsten, rinkeby-beta or ropsten-beta"
         required: true
-        default: "mainnet"
+        default: "prod-rinkeby"
       env_config:
         description: "Env config from /environments/"
         required: true
-        default: "mainnet"
+        default: "rinkeby"
 jobs:
   build_and_preview:
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     environment: dev
     steps:
@@ -26,7 +27,7 @@ jobs:
         run: yarn install
 
       - name: "Prepare #2: Configuring env"
-        run: yarn ci:env ${{ github.event.inputs.env_config }} prod 1
+        run: yarn run ci:env ${{ github.event.inputs.env_config }} prod 1
 
       - name: "Prepare #2: Generating static build"
         run: yarn generate --fail-on-error
@@ -34,7 +35,7 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}"
-          target: ${{ github.event.inputs.target }}
+          target: '${{ github.event.inputs.target }}'
           projectId: zsync-dapp-checkout
 
   deployment:
@@ -42,12 +43,19 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     steps:
-      - name: "Build ropsten [beta]"
-        run: yarn ci:env ${{ github.event.inputs.env_config }} prod 1 && yarn generate --fail-on-error
+      - uses: actions/checkout@v2
+
+      - uses: c-hive/gha-yarn-cache@v2 # using cache
+
+      - name: "Deploy #1: Installing deps"
+        run: yarn install
+
+      - name: "Deploy #2: generating spa"
+        run: yarn run ci:env ${{ github.event.inputs.env_config }} prod 1 && yarn run generate --fail-on-error
       - uses: matter-labs/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: ${{ github.event.inputs.target }}
+          target: "${{ github.event.inputs.target }}"
           projectId: zsync-dapp-checkout
           channelID: live

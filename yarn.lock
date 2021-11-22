@@ -2830,7 +2830,7 @@ __metadata:
     "@babel/eslint-parser": ^7.14.7
     "@commitlint/cli": ^12.1.4
     "@commitlint/config-conventional": ^12.1.4
-    "@matterlabs/zksync-nuxt-core": ^1.1.4
+    "@matterlabs/zksync-nuxt-core": ^1.2.0
     "@matterlabs/zksync-nuxt-ui": ^0.0.0
     "@nuxt/types": ^2.15.7
     "@nuxt/typescript-build": ^2.1.0
@@ -2886,9 +2886,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@matterlabs/zksync-nuxt-core@npm:^1.1.4":
-  version: 1.3.1
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.3.1"
+"@matterlabs/zksync-nuxt-core@npm:^1.2.0":
+  version: 1.3.2
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.3.2"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.6.6
@@ -2903,7 +2903,7 @@ __metadata:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.11.5-beta.0
-  checksum: b8a8e107ee1768c87e8076a7584d0a4fd8dc53f301cc6d1a3ffaeb80c7ac1e5e05ecaaeb99ae060ae8d0141b368fd9d2f17bb97194fc2e3f8fc897c0b673527c
+  checksum: 2f6a29a1dda5229b1c526f360aa4f5972e3bcc063377ddd4aeb1f7a69a8de9f94edc5a3cb45471c8cbf1a43831a68ea21bc02f3f4534b4a3633505aaa2f71aaa
   languageName: node
   linkType: hard
 
