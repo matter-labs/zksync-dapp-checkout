@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file. Dates are d
 - Update zkLink branch [`#49`](https://github.com/matter-labs/zksync-dapp-checkout/pull/49)
 - v.2.5.0-PR (dev) zkSync Checkout [`#39`](https://github.com/matter-labs/zksync-dapp-checkout/pull/39)
 - Pushing version to production [`#33`](https://github.com/matter-labs/zksync-dapp-checkout/pull/33)
+## [3.0.0-beta](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.5.0...3.0.0-beta)
+
 
 ## Published releases
 
@@ -24,6 +26,9 @@ All notable changes to this project will be documented in this file. Dates are d
 - Update zkLink branch [`#49`](https://github.com/matter-labs/zksync-dapp-checkout/pull/49)
 - v.2.5.0-PR (dev) zkSync Checkout [`#39`](https://github.com/matter-labs/zksync-dapp-checkout/pull/39)
 - Pushing version to production [`#33`](https://github.com/matter-labs/zksync-dapp-checkout/pull/33)
+
+### [2.5.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.0.0-beta...2.5.0)
+
 - Last fixes [`#37`](https://github.com/matter-labs/zksync-dapp-checkout/pull/37)
 - Hide unlock button when not enough L1 balance [`#36`](https://github.com/matter-labs/zksync-dapp-checkout/pull/36)
 - +25% default fee + note [`#35`](https://github.com/matter-labs/zksync-dapp-checkout/pull/35)
