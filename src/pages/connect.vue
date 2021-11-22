@@ -1,6 +1,6 @@
 <template>
   <div class="connectContainer">
-    <div class="font-bold text-center text-3xl text-dark">Connect to zkSync</div>
+    <div class="font-bold text-center text-3xl text-dark">Connect your L1 ETH Wallet to proceed</div>
     <div class="container flex h-auto flex-row connections items-center justify-center">
       <div
           data-cy="core_connect_wallet_button"
