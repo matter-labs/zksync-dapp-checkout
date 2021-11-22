@@ -146,7 +146,7 @@ export default Vue.extend({
       }
     },
     calcWidth(): void {
-      const sizeSpan: Vue | Element | Vue[] | Element[] = this.$refs.sizeSpan;
+      const sizeSpan = this.$refs.sizeSpan as Element;
       if (!sizeSpan || !(sizeSpan as HTMLElement).getBoundingClientRect().width) {
         return;
       }

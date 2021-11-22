@@ -3,7 +3,7 @@
   "title": "zkSync Checkout — simple permissionless DeFi payment gateway",
   "homepage": "https://checkout.zksync.io",
   "description": "zkSync Checkout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.",
-  "version": "1.0.1",
+  "version": "2.6.0",
   "keywords": [
     "zksync",
     "ethereum",
@@ -66,6 +66,7 @@
     "@matterlabs/zksync-nuxt-core": "^1.1.4",
     "@matterlabs/zksync-nuxt-ui": "^0.0.0",
     "@nuxt/types": "^2.15.7",
+    "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/eslint-config-typescript": "^6.0.1",
     "@nuxtjs/eslint-module": "^3.0.2",
