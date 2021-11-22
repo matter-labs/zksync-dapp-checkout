@@ -26,7 +26,7 @@ jobs:
         run: yarn install
 
       - name: "Prepare #2: Configuring env"
-        run: yarn ci:env ${{ github.event.inputs.env_config }} prod 1
+        run: yarn run ci:env ${{ github.event.inputs.env_config }} prod 1
 
       - name: "Prepare #2: Generating static build"
         run: yarn generate --fail-on-error
