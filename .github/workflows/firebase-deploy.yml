@@ -6,18 +6,13 @@ name: "Deploy: with preview"
   workflow_dispatch:
     inputs:
       target:
-        description: "Deploy to mainnet, testnets, beta-ropsten, beta-rinkeby"
+        description: "Deploy to prod-mainnet, prod-rinkeby, prod-ropsten, rinkeby-beta or ropsten-beta"
         required: true
         default: "mainnet"
       env_config:
         description: "Env config from /environments/"
         required: true
         default: "mainnet"
-      mode:
-        description: "Mode: preview or real"
-        required: true
-        default: "preview"
-
 jobs:
   build_and_preview:
     runs-on: ubuntu-latest
@@ -53,6 +48,6 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: ${{ github.event.inputs.env_config }}
+          target: ${{ github.event.inputs.target }}
           projectId: zsync-dapp-checkout
           channelID: live
