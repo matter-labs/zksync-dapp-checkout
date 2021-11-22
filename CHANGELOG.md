@@ -1,3 +1,15 @@
+## [1.0.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/v1.0.1...v1.0.2) (2021-11-22)
+
+
+### Bug Fixes
+
+* **ci:** fixed release sequence ([#66](https://github.com/matter-labs/zksync-dapp-checkout/issues/66)) ([93b141c](https://github.com/matter-labs/zksync-dapp-checkout/commit/93b141c8ec9e4298d487efab8576746f5745937a))
+
+
+### Reverts
+
+* Revert "fix(ci): fixed release sequence (#66)" (#67) ([dff729c](https://github.com/matter-labs/zksync-dapp-checkout/commit/dff729c7c07c6331d894a81c556f6d5c2bf5c0c0)), closes [#66](https://github.com/matter-labs/zksync-dapp-checkout/issues/66) [#67](https://github.com/matter-labs/zksync-dapp-checkout/issues/67)
+
 ## [1.0.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/v1.0.0...v1.0.1) (2021-11-18)
 
 
