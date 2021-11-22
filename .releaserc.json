@@ -1,7 +1,7 @@
 {
   "branches": "master",
   "debug": false,
-  "tagFormat": "${version}",
+  "tagFormat": "v${version}",
   "npmPublish": false,
   "plugins": [
     "@semantic-release/commit-analyzer",
