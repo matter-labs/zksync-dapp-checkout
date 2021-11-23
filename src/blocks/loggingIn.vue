@@ -8,7 +8,7 @@
       </transition-group>
       <div class="mt-5" />
       <zk-loader size="md" />
-      <zk-defbtn class="cancelButton mt-6" @click="cancelLogin()"> Cancel </zk-defbtn>
+      <zk-defbtn class="cancelButton mt-6" @click="cancelLogin()">Cancel</zk-defbtn>
     </div>
   </transition>
 </template>
@@ -16,12 +16,12 @@
 <script lang="ts">
 import Vue from "vue";
 
-let loggedInAnimationTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
   name: "LoggingInLoader",
   data() {
     return {
       loggingInScreenDelay: false,
+      loggedInAnimationTimeout: <ReturnType<typeof setTimeout> | undefined> undefined,
     };
   },
   computed: {
@@ -40,10 +40,12 @@ export default Vue.extend({
   },
   watch: {
     loggingIn(val) {
-      clearTimeout(loggedInAnimationTimeout);
+      if (this.loggedInAnimationTimeout) {
+        clearTimeout(this.loggedInAnimationTimeout);
+      }
       if (val === true) {
         this.loggingInScreenDelay = true;
-        loggedInAnimationTimeout = setTimeout(() => {
+        this.loggedInAnimationTimeout = setTimeout(() => {
           this.loggingInScreenDelay = false;
         }, 150);
       } else {

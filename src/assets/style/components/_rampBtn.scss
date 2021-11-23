@@ -8,3 +8,19 @@
         background-color: $rampGreen;
     }
 }
+
+@media screen and (max-width: $mobile)
+{
+  .valuesRightTop .rampBtn.filled
+  {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+    height: auto;
+    font-size: 10px !important;
+    text-align: left;
+    span span
+    {
+      display: block;
+    }
+  }
+}

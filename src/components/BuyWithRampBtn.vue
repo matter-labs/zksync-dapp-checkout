@@ -8,7 +8,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
-import { rampConfig, ZKISingleRampConfig } from "@/plugins/build";
+import { ZKISingleRampConfig } from "@/types";
+import { rampConfig} from "@/plugins/build";
 import { TokenSymbol } from "zksync/build/types";
 
 export default Vue.extend({

@@ -47,6 +47,13 @@
   background-color: $darkBlue;
 }
 
+@media screen and (max-width: $mobile)  {
+  .loggingInContainer {
+    .hint {
+      font-size: 14px !important;
+    }
+  }
+}
 @media screen and (max-width: 400px) {
   .loggingInContainer {
     & > div,

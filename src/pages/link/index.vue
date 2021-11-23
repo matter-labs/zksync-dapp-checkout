@@ -24,7 +24,7 @@
       <template slot="default">
         <div class="text-center leading-tight mb-4">Your payment link has been created!<br>Now you can share it with someone.</div>
         <div class="successLinkContainer">
-          <zk-input size="sm" ref="linkInput" :value="paymentLink" readonly @click="$ref.linkInput.focus()"/>
+          <zk-input size="sm" ref="linkInput" :value="paymentLink" readonly @click="$refs.linkInput.focus()"/>
           <zk-defbtn id="copy-link" @click="copyLink()" v-popover:copy-link.bottom>
             <span>Copy</span>
             <i class="fal fa-clipboard"/>
@@ -96,21 +96,19 @@
         </li>
       </ul>
     </div>
-    <div class="linkBody py-4 md:py-10 mb-20">
+    <div class="linkBody py-4 md:py-10 mb-20" ref="paymentsContainer">
       <h2 class="mx-auto text-center zk-container headline big text-violet mb-3" v-html="createLinkBlockTitle"/>
       <zk-defbtn class="mx-auto mt-5" v-if="!showAddLink" big @click="enableLink()">Try it now</zk-defbtn>
-      <div class="paymentContainer w-full py-2 md:py-1" v-for="(_item, index) in payments" :key="index" v-if="showAddLink">
+      <div class="paymentContainer w-full py-2 md:py-1" v-for="index in payments.keys()" :key="index" v-if="showAddLink">
         <payment-item :displayIndex="payments.length>=2" :displayDelete="payments.length>=2" :index="index" v-model="payments[index]" @delete="deletePayment(index)"/>
       </div>
       <zk-defbtn outline class="mx-auto mt-5" @click="addPayment()" v-if="showAddLink" :disabled="payments.length>=maxPayments">Add another transaction</zk-defbtn>
-      <div class="text-gray text-sm text-center leading-tight pt-2" :class="{'text-dark': payments.length>=maxPayments}" v-if="showAddLink">{{
-          payments.length >= 5 ? `${payments.length}/`:"Up to "
-        }}{{ maxPayments }} transactions
+      <div class="text-gray text-sm text-center leading-tight pt-2" :class="{'text-dark': payments.length>=maxPayments}" v-if="showAddLink">{{payments.length >= 5 ? `${payments.length}/`:"Up to "}}{{ maxPayments }} transactions
       </div>
 
     </div>
     <div class="linkFooter filter rounded-b px-5">
-      <zk-max-height :value="!validCheckoutConfiguration && showAddLink" v-show="payments.length<3" class="mt-0 md:mt-5 md:mt-7 zk-container mx-auto">
+      <zk-max-height :value="!validConfig && showAddLink" v-show="payments.length<3" class="mt-0 md:mt-5 md:mt-7 zk-container mx-auto">
         <div>
           <zk-note class="notificationNote">
             <template slot="icon">
@@ -125,12 +123,9 @@
           </zk-note>
         </div>
       </zk-max-height>
-      <zk-defbtn class="mx-auto mt-5 md:mt-5"  v-if="showAddLink" :outline="!validCheckoutConfiguration" :disabled="!validCheckoutConfiguration" big
-                 @click="generate()">Build
-        your
-        payment link
-      </zk-defbtn>
-      <div class="poweredBy pt-5 md:pt-10 pb-5 flex items-center justify-between">
+      <zk-defbtn class="mx-auto mt-5 md:mt-5 shadow-sm" id="" v-if="showAddLink" :outline="!validConfig" :disabled="!validConfig" big @click="generate()">Build your payment
+        link</zk-defbtn>
+      <div class="poweredBy pt-5 md:pt-10 pb-0 md:pb-5 flex items-center justify-between">
         <block-footer :fullFooterMenu="true"/>
       </div>
     </div>
@@ -173,10 +168,10 @@ export default Vue.extend({
     },
     createLinkBlockTitle(): string {
       const ethNetwork = this.isMainnet ? "":`<strong>${this.currentNetwork}</strong>`;
-      return this.showAddLink ? `Create your ${ethNetwork} instant payment link:`:
+      return this.showAddLink ? `Compose batch of your ${ethNetwork} payments:`:
         `Build instant ${ethNetwork} payout link in 5 min`;
     },
-    validCheckoutConfiguration(): boolean {
+    validConfig(): boolean {
       if (this.payments.length < 1) {
         return false;
       }
@@ -211,6 +206,9 @@ export default Vue.extend({
     enableLink() {
       this.addLinkMode = true;
       this.addPayment();
+      setTimeout(() => {
+        console.log((this.$refs.paymentsContainer as HTMLElement).querySelector("input")?.focus());
+      }, 500);
     },
     generate() {
       for (const payment of this.payments) {

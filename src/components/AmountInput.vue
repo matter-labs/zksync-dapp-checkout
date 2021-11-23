@@ -1,17 +1,18 @@
 <template>
-  <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]" @click.self="focusInput()">
-    <div class="leftSide" @click="focusInput()">
+  <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]"
+       @click.self="focusInput">
+    <div class="leftSide">
       <div class="amInputContainer">
         <input
           ref="input"
           v-model="inputtedAmount"
           :style="{ width: `${width}px` }"
           :disabled="disabled"
-          type="text"
+          type="number"
           placeholder="Amount"
           maxlength="15"
-          @focus="focused = true"
-          @blur="focused = false"
+          @focus="focused = true;"
+          @blur="blurInput"
           @keyup.enter="$emit('enter')"
         />
         <span ref="sizeSpan" class="sizeSpan">{{ inputtedAmount }}</span>
@@ -142,7 +143,13 @@ export default Vue.extend({
     },
     focusInput(): void {
       if (!this.disabled && !this.focused) {
+        this.focused = true;
         (this.$refs.input as HTMLElement)?.focus();
+      }
+    },
+    blurInput(): void {
+      if (!this.disabled && this.focused) {
+        this.focused = false;
       }
     },
     calcWidth(): void {

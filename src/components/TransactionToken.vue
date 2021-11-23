@@ -176,6 +176,7 @@ export default Vue.extend({
       return this.$store.getters["zk-balances/ethereumBalanceLoading"][this.token];
     },
     unlocked(): boolean {
+      // noinspection BadExpressionStatementJS
       this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
       return this.enoughZkBalance || BigNumber.from(this.$store.getters["zk-balances/tokenAllowance"](this.token) || "0").gte(this.needToDeposit);
     },
@@ -186,6 +187,7 @@ export default Vue.extend({
       return (this.token === this.$store.getters["zk-transaction/feeSymbol"] && (this.$store.getters["zk-transaction/feeLoading"] || this.$store.getters["zk-transaction/activationFeeLoading"]));
     },
     isAllowanceLoading(): boolean {
+      // noinspection BadExpressionStatementJS
       this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
       return !!this.$store.getters["zk-balances/tokensAllowanceLoading"][this.token];
     },
