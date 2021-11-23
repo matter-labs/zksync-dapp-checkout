@@ -8,7 +8,7 @@ name: "CI workflow production [Production]"
       - master
 jobs:
   build_and_deploy:
-  if: '${{ github.event.repository.full_name == github.repository }}'
+    if: '${{ github.event.repository.full_name == github.repository }}'
     runs-on: ubuntu-latest
     environment: dev
     steps:
