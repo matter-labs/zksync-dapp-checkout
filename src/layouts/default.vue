@@ -7,6 +7,7 @@
       <transition name="fade">
         <nuxt v-if="!loggingIn" @step="step=$event" class="routeMain" />
       </transition>
+      <block-wrong-network-modal />
       <block-footer />
     </div>
   </div>
