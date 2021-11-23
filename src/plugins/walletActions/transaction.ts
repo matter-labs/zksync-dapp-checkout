@@ -1,8 +1,8 @@
-import {BigNumber} from "ethers";
-import {Wallet} from "zksync";
-import {ZkSyncTransaction} from "zksync-checkout/src/types";
-import {submitSignedTransactionsBatch} from "zksync/build/wallet";
-import {TokenSymbol, Address} from "zksync/build/types";
+import { BigNumber } from "ethers";
+import { Wallet } from "zksync";
+import { ZkSyncTransaction } from "zksync-checkout/build/types";
+import { submitSignedTransactionsBatch } from "zksync/build/wallet";
+import { TokenSymbol, Address } from "zksync/build/types";
 
 /**
  * Transaction processing action
@@ -11,8 +11,8 @@ import {TokenSymbol, Address} from "zksync/build/types";
  * @param {TokenSymbol} feeToken
  * @param fee
  * @param nonce
- * @param changePubKey
  * @param store
+ * @param statusFunction
  * @returns {Promise<Transaction | Transaction[]>}
  */
 export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumber, nonce: number, store: any, statusFunction: Function) => {

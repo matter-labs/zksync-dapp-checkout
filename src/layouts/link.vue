@@ -8,13 +8,3 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  computed: {
-    loggedIn() {
-      return this.$store.getters["zk-account/loggedIn"];
-    },
-  },
-};
-</script>

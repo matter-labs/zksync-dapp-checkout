@@ -1,10 +1,10 @@
 <template>
   <div class="connectContainer">
-    <div class="font-bold text-center text-3xl text-dark">Connect your L1 ETH Wallet to proceed</div>
+    <div class="font-bold text-center text-2xl md:text-3xl text-dark">Connect with your Wallet</div>
     <div class="container flex h-auto flex-row connections items-center justify-center">
       <div
           data-cy="core_connect_wallet_button"
-          class="tileContainer h-auto mr-10 text-center"
+          class="tileContainer h-auto mr-5 md:mr-10 text-center"
           @click="customWallet()"
       >
         <div class="tile">
@@ -15,7 +15,7 @@
 
       <div
           data-cy="core_connect_wallet_button"
-          class="tileContainer h-auto ml-10 text-center"
+          class="tileContainer h-auto ml-5 md:ml-10 text-center"
           @click="walletConnect()"
       >
         <div class="tile">

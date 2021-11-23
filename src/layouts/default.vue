@@ -3,9 +3,9 @@
     <block-modals />
     <block-info-block />
     <div class="routerContainer bg-white2 py-4 px-5 md:px-10">
-      <block-logging-in/>
+      <block-logging-in />
       <transition name="fade">
-        <nuxt v-if="!loggingIn" @step="step=$event" class="routeMain"/>
+        <nuxt v-if="!loggingIn" @step="step=$event" class="routeMain" />
       </transition>
       <block-wrong-network-modal />
       <block-footer />
@@ -13,31 +13,33 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   watch: {
     address(val) {
-      if(val && this.loggedIn) {
+      if (val && this.loggedIn) {
         this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
       }
     }
   },
   computed: {
-    loggedIn() {
-      return this.$store.getters["zk-account/loggedIn"];
+    loggedIn(): boolean {
+      return this.$store.getters["zk-onboard/onboardStatus"]==="authorized";
     },
-    address() {
+    address(): string {
       return this.$store.getters["zk-account/address"];
     },
-    step() {
+    step(): string {
       return this.$store.getters["step"];
     },
-    footerUpStyle() {
-      return this.loggedIn===true && (this.step==='main' || this.step==='success');
+    footerUpStyle(): boolean {
+      return this.loggedIn && (this.step==='main' || this.step==='success');
     },
-    loggingIn() {
-      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
+    loggingIn(): boolean {
+      return this.$store.getters["zk-onboard/onboardStatus"]==="connecting" || this.$store.getters["zk-onboard/restoringSession"];
     },
-  },
-};
+  }
+});
 </script>

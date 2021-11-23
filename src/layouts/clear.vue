@@ -1,17 +1,14 @@
 <template>
   <div class="defaultLayout min-h-screen">
-    <modals />
+    <block-modals />
     <div class="routerContainer bg-white2 md:min-h-screen py-4 md:py-10 px-5 md:px-10" />
   </div>
 </template>
 
-<script>
-import modals from "@/blocks/modals.vue";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
-  components: {
-    modals,
-  },
+export default Vue.extend({
   watch: {
     $route: {
       immediate: true,
@@ -35,5 +32,5 @@ export default {
       window.history.scrollRestoration = "manual";
     }
   },
-};
+})
 </script>

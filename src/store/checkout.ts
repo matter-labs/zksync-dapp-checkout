@@ -1,12 +1,11 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
 import { TransactionData, TransactionFee, TotalByToken } from "@/types/index";
-import { ZkSyncTransaction } from "zksync-checkout/src/types";
+import { ZkSyncTransaction } from "zksync-checkout/build/types";
 import { closestPackableTransactionAmount, closestPackableTransactionFee } from "zksync";
 import { TokenSymbol, Address } from "zksync/build/types";
 import { BigNumber } from "ethers";
 import { RootState } from "~/store";
 import { ZkFee } from "@matterlabs/zksync-nuxt-core/types";
-import { rampConfig } from "@/plugins/build";
 
 export const state = () => ({
   linkCheckout: <boolean>false,
@@ -29,11 +28,11 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     };
   },
   getTransactionBatchFee(_, __, ___, rootGetters): false | TransactionFee {
+    // noinspection BadExpressionStatementJS
     rootGetters["zk-transaction/feeLoading"];
     if (rootGetters["zk-transaction/fee"]) {
       const minFee = BigNumber.from(rootGetters["zk-transaction/fee"]);
       return {
-        // name: "Tx Batch Fee / zkSync",
         key: "txBatchFee",
         amount: closestPackableTransactionFee(minFee.add(minFee.div("100").mul("5").toString()).toString()),
         realAmount: minFee,
@@ -43,6 +42,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     return false;
   },
   getAccountUnlockFee(_, __, ___, rootGetters): false | BigNumber {
+    // noinspection BadExpressionStatementJS
     rootGetters["zk-transaction/activationFeeLoading"];
     return rootGetters["zk-transaction/accountActivationFee"];
   },

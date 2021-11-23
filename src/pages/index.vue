@@ -167,7 +167,7 @@
             <template slot="third">
               <a class="transactionLink linkDefault" :href="getTxLink(item.txHash)" target="_blank">
                 <div class="font-light txHash text-xxs md:text-right">
-                  {{ item.txHash | formatTransaction }}
+                  <span class="lightLink">{{ item.txHash | formatTransaction }}</span>
                 </div>
                 <i class="text-xs text-violet -dark pl-1 fal fa-external-link"/>
               </a>
@@ -257,10 +257,12 @@ export default Vue.extend({
       return this.$store.getters["checkout/usedTokens"];
     },
     totalByToken(): TotalByToken {
+      // noinspection BadExpressionStatementJS
       this.updateTransferAllowed;
       return this.$store.getters["checkout/getTotalByToken"];
     },
     transferAllowed(): boolean {
+      // noinspection BadExpressionStatementJS
       this.updateTransferAllowed;
       for (const [, state] of Object.entries(this.tokenItemsValid)) {
         if (!state) {

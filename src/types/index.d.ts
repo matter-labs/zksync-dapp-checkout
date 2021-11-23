@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import { DecimalBalance } from "@matterlabs/zksync-nuxt-core/types";
-import { ZkSyncTransaction } from "zksync-checkout/src/types";
+import { ZkSyncTransaction } from "zksync-checkout/build/types";
 import { TokenSymbol, Address } from "zksync/build/types";
 
 export type PaymentItem = {
@@ -22,4 +22,22 @@ export type TransactionFee = {
 };
 export type TotalByToken = {
   [token: string]: BigNumber;
+};
+
+export type ZkSingleToken = {
+  address: string;
+  id: number;
+  symbol: string;
+  decimals: number;
+};
+// Tokens are indexed by their symbol (e.g. "ETH")
+export type ZkTokens = Iterator<string, ZkSingleToken>;
+
+export type ZKISingleRampConfig = {
+  url?: string;
+  hostApiKey: string;
+};
+export type ZKIRampConfig = {
+  rinkeby: ZKISingleRampConfig;
+  mainnet: ZKISingleRampConfig;
 };
