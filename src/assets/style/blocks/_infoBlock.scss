@@ -36,6 +36,7 @@
         max-height: 100%;
       }
     }
+
     .brandContainer {
       .networkName {
         position: absolute;
@@ -118,8 +119,7 @@
           width: auto;
           overflow: hidden;
 
-          .address
-          {
+          .address {
             max-width: calc(100% - 0.5rem);
             overflow: hidden;
             min-height: 0;
@@ -166,6 +166,12 @@
 
     &:last-of-type {
       display: none;
+    }
+  }
+
+  @media (min-width: $mobile) {
+    .footerContainer {
+      margin-bottom: -10px;
     }
   }
 

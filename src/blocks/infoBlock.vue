@@ -2,11 +2,11 @@
   <aside class="infoBlockContainer bg-white h-screen">
     <div class="infoBlock border-none lg:min-h-screen py-4 md:py-10 px-5 md:px-10">
       <header class="lg:mb-6">
-        <div class="flex items-end justify-center md:items-center mb-2">
+        <div class="flex justify-center md:items-center mb-2">
           <a href="//zksync.io" class="logo-container" target="_blank"><logo /></a>
           <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
-            <span class="networkName text-sm font-light inline-flex items-center" v-if="!isMainnet">
+            <span class="networkName text-sm font-light inline-flex items-center -mr-10 md:mr-0" v-if="!isMainnet">
               {{ network }}
             </span>
           </div>
@@ -110,7 +110,7 @@
         </transition>
       </div>
       <div class="footerContainer hidden md:block">
-        <footer>
+        <footer c>
           <block-bottom-menu />
         </footer>
       </div>

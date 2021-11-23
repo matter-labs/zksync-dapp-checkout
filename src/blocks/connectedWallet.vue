@@ -60,9 +60,6 @@ export default Vue.extend({
     },
     copyAddress(): void {
       copyToClipboard(this.$store.getters["zk-account/address"]);
-      setTimeout(() => {
-        // this.hideEvent = "hover";
-      }, 1500)
     },
     hide(): void {
       setTimeout(() => {

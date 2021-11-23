@@ -19,7 +19,7 @@
 @media (max-width: $mobile) {
   .linkPage {
     .maxHeightBlock {
-      @apply bg-white shadow-sm;
+      @apply bg-white;
 
       height: 110px;
       position: absolute !important;
