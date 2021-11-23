@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.0.0...3.0.1) (2021-11-23)
+
+
+### Bug Fixes
+
+* wrong network modal ([#70](https://github.com/matter-labs/zksync-dapp-checkout/issues/70)) ([fd4177e](https://github.com/matter-labs/zksync-dapp-checkout/commit/fd4177ed23f875618014e12401b9c93f99afc3ea))
+
 # [3.0.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/2.4.0...3.0.0) (2021-11-22)
 
 
