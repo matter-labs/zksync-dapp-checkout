@@ -1,21 +1,18 @@
 <template>
-  <div
-    class="amountInputGroup border rounded"
-    :class="[{ hasUnderInput: $slots['underInput'] }, { disabled: disabled }, { error: error }, { focused: focused }]"
-    @click.self="focusInput()"
-  >
-    <div class="leftSide" @click="focusInput()">
-      <div class="inputContainer">
+  <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]"
+       @click.self="focusInput">
+    <div class="leftSide">
+      <div class="amInputContainer">
         <input
           ref="input"
           v-model="inputtedAmount"
           :style="{ width: `${width}px` }"
           :disabled="disabled"
-          type="text"
+          type="number"
           placeholder="Amount"
           maxlength="15"
-          @focus="focused = true"
-          @blur="focused = false"
+          @focus="focused = true;"
+          @blur="blurInput"
           @keyup.enter="$emit('enter')"
         />
         <span ref="sizeSpan" class="sizeSpan">{{ inputtedAmount }}</span>
@@ -35,8 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-
-import utils from "@/plugins/utils";
+import {isTransactionAmountPackable} from "zksync/build/utils";
 
 export default Vue.extend({
   props: {
@@ -106,15 +102,11 @@ export default Vue.extend({
     emitValue(val: string): void {
       const trimmed = val.trim();
       this.inputtedAmount = trimmed;
-      if (val !== trimmed) {
+      if (val!==trimmed) {
         return;
       }
       this.validateAmount(val);
-      if (!this.error) {
-        this.$emit("input", val);
-      } else {
-        this.$emit("input", "");
-      }
+      this.$emit("input", this.error ? "":val);
     },
     validateAmount(val: string): void {
       if (!val || !parseFloat(val as string)) {
@@ -128,10 +120,10 @@ export default Vue.extend({
 
       let inputAmount = null;
       try {
-        inputAmount = utils.parseToken(this.token, val);
+        inputAmount = this.$options.filters!.parseDecimal(val, this.token);
       } catch (error) {
         let errorInfo = "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
-        if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
+        if ((error as Error).message && (error as Error).message.search("fractional component exceeds decimals")!== -1) {
           errorInfo = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
         }
         this.error = errorInfo;
@@ -143,28 +135,30 @@ export default Vue.extend({
         return;
       }
 
-      if (this.type === "transfer" && !utils.isAmountPackable(inputAmount.toString())) {
+      if (this.type==="transfer" && !isTransactionAmountPackable(inputAmount.toString())) {
         this.error = "Max supported precision for transfers exceeded";
         return;
       }
       this.error = "";
     },
-
-    /* Misc */
     focusInput(): void {
-      if (this.disabled || this.focused) {
-        return;
+      if (!this.disabled && !this.focused) {
+        this.focused = true;
+        (this.$refs.input as HTMLElement)?.focus();
       }
-      (this.$refs.input as HTMLElement).focus();
+    },
+    blurInput(): void {
+      if (!this.disabled && this.focused) {
+        this.focused = false;
+      }
     },
     calcWidth(): void {
-      const sizeSpan = this.$refs.sizeSpan;
-      if (!sizeSpan) {
+      const sizeSpan = this.$refs.sizeSpan as Element;
+      if (!sizeSpan || !(sizeSpan as HTMLElement).getBoundingClientRect().width) {
         return;
       }
-      const inputSize = (sizeSpan as HTMLElement).getBoundingClientRect().width;
-      this.width = inputSize + 4;
-    },
-  },
+      this.width = (sizeSpan as HTMLElement).getBoundingClientRect().width + 4;
+    }
+  }
 });
 </script>

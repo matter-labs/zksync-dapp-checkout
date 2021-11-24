@@ -1,5 +1,5 @@
 .connectContainer {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 60px - 2rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -55,5 +55,8 @@
 
   @media screen and (max-width: $mobile) {
     height: calc(100% - 60px);
+    @media screen and (max-height: 630px) {
+      height: calc(100% - 30px);
+    }
   }
 }

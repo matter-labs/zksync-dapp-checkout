@@ -1,21 +1,19 @@
-import { NuxtConfig, Configuration } from "@nuxt/types";
+import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
-import { ToastObject } from "vue-toasted/types";
+import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
 
-//noinspection ES6PreferShortImport
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, VERSION, ZK_IS_BETA, ZK_LIB_VERSION } from "./src/plugins/build";
+const zkTailwindDefault = require("matter-zk-ui/tailwind.config.js");
 
-// @ts-ignore
-import * as zkTailwindDefault from "matter-zk-ui/tailwind.config.js";
+// noinspection ES6PreferShortImport
+import { nuxtBuildConfig, isProduction, isDebugEnabled, CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
 
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
-const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
-const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Checkout";
+const pageTitle = `${CURRENT_APP_NAME}`.toString() ?? "zkSync Checkout";
 const pageImg = "/cover.jpg";
 
-const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED}${ZK_IS_BETA ? "-beta" : ""} v.${VERSION} | zksync: v.${ZK_LIB_VERSION}`;
+const pageTitleTemplate = ETHER_PRODUCTION ? CURRENT_APP_NAME : `${ETHER_NETWORK_CAPITALIZED}`;
 
 const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
 const pageKeywords = process.env.SITE_KEYWORDS ?? "";
@@ -23,8 +21,13 @@ const pageKeywords = process.env.SITE_KEYWORDS ?? "";
 const config: NuxtConfig = {
   components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
+
+  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
+
+  // Target: https://go.nuxtjs.dev/config-target
   target: "static",
+
   srcDir: `${srcDir}`,
   vue: {
     config: {
@@ -36,8 +39,8 @@ const config: NuxtConfig = {
     ...process.env,
   },
 
-  /*
-   ** Headers of the page
+  /**
+   * Global page headers: https://go.nuxtjs.dev/config-head
    */
   head: {
     title: pageTitle as string | undefined,
@@ -47,6 +50,26 @@ const config: NuxtConfig = {
       amp: "true",
     },
     meta: [
+      {
+        property: "cache-control",
+        httpEquiv: "cache-control",
+        content: "no-cache , no-store, must-revalidate",
+      },
+      {
+        httpEquiv: "pragma",
+        content: "no-cache",
+        property: "pragma",
+      },
+      {
+        httpEquiv: "cache-control",
+        property: "cache-control",
+        content: "no-cache , no-store, must-revalidate",
+      },
+      {
+        httpEquiv: "expires",
+        content: "0",
+        property: "expires",
+      },
       {
         hid: "keywords",
         name: "keywords",
@@ -142,70 +165,73 @@ const config: NuxtConfig = {
     color: "#8c8dfc",
     continuous: true,
   },
-  /*
-   ** Global CSS
+
+  /**
+   *  Global CSS: https://go.nuxtjs.dev/config-css
    */
   css: ["@/assets/style/main.scss"],
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main", "@/plugins/setCheckoutData"],
+  plugins: ["@/plugins/main", "@/plugins/setCheckoutData", "@/plugins/restoreSession"],
 
   router: {
     middleware: ["wallet"],
   },
+
   /*
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    "nuxt-build-optimisations",
-    "@nuxtjs/style-resources",
+    // https://go.nuxtjs.dev/typescript
+    "@nuxt/typescript-build",
+    // https://go.nuxtjs.dev/stylelint
+    "@nuxtjs/stylelint-module",
+    // https://go.nuxtjs.dev/tailwindcss
     "@nuxtjs/tailwindcss",
-    [
-      "@nuxt/typescript-build",
-      {
-        typescript: {
-          typeCheck: {
-            async: true,
-            stylelint: {
-              config: [".stylelintrc"],
-              files: "src/**.scss",
-            },
-            eslint: {
-              config: [".eslintrc.js", "tsconfig-eslint.json"],
-              files: "**/*.{ts,js,vue}",
-            },
-            files: "**/*.{ts,vue}",
-          },
-        },
-      },
-    ],
+    "@nuxtjs/style-resources",
     ["@nuxtjs/dotenv", { path: __dirname }],
     "matter-zk-ui",
+    [
+      "@matterlabs/zksync-nuxt-core",
+      <ModuleOptions>{
+        network: process.env.ZK_NETWORK,
+        apiKeys: {
+          FORTMATIC_KEY: process.env.APP_FORTMATIC,
+          PORTIS_KEY: process.env.APP_PORTIS,
+          INFURA_KEY: process.env.APP_INFURA_API_KEY,
+        },
+        onboardConfig: {
+          APP_NAME: pageTitle,
+          APP_ID: process.env.APP_ONBOARDING_APP_ID,
+        },
+        logoutRedirect: "/connect",
+      },
+    ],
   ],
 
-  /*
-   ** Nuxt.js modules
+  /**
+   * Modules: https://go.nuxtjs.dev/config-modules
    */
-  modules: ["@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "nuxt-webfontloader", "@nuxtjs/sentry"],
-  webfontloader: {
-    google: {
-      families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
-    },
-  },
-  toast: {
-    singleton: true,
-    keepOnHover: true,
-    position: "bottom-right",
-    duration: 4000,
-    iconPack: "fontawesome",
-    action: {
-      text: "OK",
-      onClick: (_: unknown, toastObject: ToastObject) => {
-        toastObject.goAway(100);
+  modules: [
+    "nuxt-webfontloader",
+    [
+      "nuxt-social-meta",
+      {
+        url: "https://checkout.zksync.io",
+        title: pageTitle,
+        site_name: pageTitle,
+        description: pageDescription,
+        img: "/social.jpg",
+        locale: "en_US",
+        twitter: "@zksync",
+        twitter_card: "https://checkout.zksync.io/social.jpg",
+        themeColor: "#4e529a",
       },
-    },
-  },
+    ],
+    "@nuxtjs/google-gtag",
+    "@nuxtjs/sentry",
+  ],
   i18n: {
     vueI18n: {
       fallbackLocale: "en",
@@ -215,26 +241,43 @@ const config: NuxtConfig = {
     },
   },
   styleResources: {
-    scss: ["@/assets/style/vars/*.scss"],
+    scss: ["@/assets/style/_variables.scss"],
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
     disableServerSide: true,
+    disabled: !isProduction,
     config: {
+      debug: isDebugEnabled,
       tracesSampleRate: 1.0,
-      environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
+      environment: isProduction ? "production" : env === "dev" ? "development" : env,
     },
   },
   "google-gtag": {
-    id: process.env.GTAG_ID,
+    id: process.env.GTAG_ID, // required
     config: {
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false,
+      // this is the config options for `gtag
+      // check out official docs: https://developers.google.com/analytics/devguides/collection/gtagjs/
       anonymize_ip: true, // anonymize IP
-      send_page_view: true, // might be necessary to avoid duplicated page track on page reload
+      send_page_view: isProduction, // might be necessary to avoid duplicated page track on page reload
+      linker: {
+        domains: ["checkout.zksync.io", "checkout-rinkeby.zksync.io", "ropsten-rinkeby.zksync.io", "web.app"],
+      },
     },
-    debug: env !== "prod", // enable to track in dev mode
-    disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
+    debug: isDebugEnabled, // enable to track in dev mode
+    disableAutoPageTrack: !isProduction, // disable if you don't want to track each page route with router.afterEach(...)
+    // optional you can add more configuration like [AdWords](https://developers.google.com/adwords-remarketing-tag/#configuring_the_global_site_tag_for_multiple_accounts)
+  },
+  // Fonts loader https://www.npmjs.com/package/nuxt-webfontloader
+  webfontloader: {
+    google: {
+      families: ["Fira+Sans:300,400,500,600", "Fira+Sans+Condensed:200,400,500,600", "Fira+Code:300"],
+    },
   },
   tailwindcss: {
+    mode: "jit",
     config: {
       ...zkTailwindDefault,
       purge: {
@@ -257,29 +300,17 @@ const config: NuxtConfig = {
       },
     },
   },
+
   /*
    ** Build configuration
    */
   build: {
-    ssr: false,
-    extend: (config: Configuration) => {
-      config.node = {
-        fs: "empty",
-      };
-    },
+    ...nuxtBuildConfig,
   },
-  /* buildOptimisations: {
-    profile: env !== "prod" ? "risky" : "experimental",
-    features: {
-      postcssNoPolyfills: isProduction,
-      hardSourcePlugin: isProduction,
-    },
-    esbuildLoaderOptions: "esnext",
-  }, */
   generate: {
     dir: "public",
     fallback: "404.html",
-    devtools: env !== "prod",
+    devtools: !isProduction,
   },
 };
 export default config;

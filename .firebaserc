@@ -16,6 +16,12 @@
         ],
         "rinkeby-beta": [
           "rinkeby-beta-checkout-zksync"
+        ],
+        "ropsten-beta": [
+          "ropsten-beta-checkout-zksync"
+        ],
+        "staging": [
+          "staging-checkout-v1-zksync"
         ]
       }
     }
