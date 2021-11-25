@@ -317,8 +317,9 @@ export default Vue.extend({
       }
     },
   },
-  created() {
+  async created() {
     if (!this.enoughZkBalance) {
+      await this.$store.dispatch("zk-account/updateAccountState");
       this.setDepositRecommendedAmount();
     }
   },
@@ -337,6 +338,7 @@ export default Vue.extend({
       this.$set(this, "depositAmount", this.$options.filters!.parseBigNumberish(this.recommendedDeposit, this.token));
     },
     async deposit() {
+      await this.$store.dispatch("zk-balances/requestEthereumBalance", {symbol: this.token, force: true});
       if (!this.enoughOnInitialToDeposit) {
         this.modal = "insufficientL1Deposit";
       } else if (!this.enoughDepositAmount) {
@@ -349,8 +351,8 @@ export default Vue.extend({
         };
       } else {
         try {
-          this.subStep = "waitingUserConfirmation";
           this.step = "depositing";
+          this.subStep = "waitingUserConfirmation";
           const syncWallet: Wallet = this.$store.getters["zk-wallet/syncWallet"];
           const depositResponse = await syncWallet.depositToSyncFromEthereum({
             depositTo: syncWallet.address(),
