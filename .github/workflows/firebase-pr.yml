@@ -9,12 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     steps:
+      - uses: c-hive/gha-yarn-cache@v2
       - uses: actions/checkout@v2
 
-      - uses: c-hive/gha-yarn-cache@v2
-
       - name: "#1: Installing deps"
-        run: yarn
+        run: yarn install —immutable
 
       - name: "#2: Building rinkeby"
         run: yarn run ci:build:rinkeby
