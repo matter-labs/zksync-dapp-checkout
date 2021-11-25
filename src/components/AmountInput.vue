@@ -8,7 +8,7 @@
           v-model="inputtedAmount"
           :style="{ width: `${width}px` }"
           :disabled="disabled"
-          type="number"
+          type="text"
           placeholder="Amount"
           maxlength="15"
           @focus="focused = true;"
