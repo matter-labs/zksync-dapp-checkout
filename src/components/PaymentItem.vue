@@ -32,10 +32,7 @@
           </div>
           <div class="tokensList">
             <div @click="setToken(item, index)" class="tokenItem py-1 px-3 text-lg cursor-pointer flex justify-between items-center" :class="{selected: selectedToken ===
-            index}"
-                 v-for="(item, index ) in
-            displayedTokens"
-                 :key="index">
+            index}" v-for="(item, index) in displayedTokens" :key="index">
               <div>{{ item.symbol }}</div>
               <i class="text-gray fal fa-check" v-if="item.symbol === valNow.token" />
             </div>
@@ -87,15 +84,6 @@ export default Vue.extend({
     };
   },
   watch: {
-    displayedTokens: {
-      deep: true,
-      handler(tokens: ZkSingleToken[]) {
-        if (tokens.filter((singleToken: ZkSingleToken) => this.valNow.token===singleToken.symbol).length===0) {
-          this.value.token = this.displayedTokens[0].symbol;
-          this.selectedToken = 0;
-        }
-      }
-    },
     value: {
       deep: true,
       handler(val) {
@@ -162,8 +150,10 @@ export default Vue.extend({
       return event;
     },
     setToken(token: ZkSingleToken, index: number = 0): void {
-      this.$set(this.valNow, "token", token.symbol);
-      this.selectedToken = index;
+      if(token) {
+        this.$set(this.valNow, "token", token.symbol);
+        this.selectedToken = index;
+      }
       this.dropdownOpened = false;
       this.isDropdownFocused = true;
       this.dropdownSearch = "";
