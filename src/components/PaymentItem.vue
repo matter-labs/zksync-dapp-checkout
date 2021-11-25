@@ -14,7 +14,7 @@
     </div>
     <div class="md:pl-4 w-full md:w-auto">
       <div class="label text-sm text-light desktopOnly">&nbsp;</div>
-      <div class="tokenDropdown w-full md:w-64" :class="{'opened': dropdownOpened, 'focused': isDropdownFocused}">
+      <div class="tokenDropdown w-full md:w-64" :class="{'opened': dropdownOpened, 'focused': isDropdownFocused}" v-click-outside="unFocused">
         <div class="dropdownMain flex items-center justify-between border border-light rounded px-3">
           <div class="flex items-center pr-4 cursor-pointer select-none" @mouseup="focusedOnDropdown">
             <div class="font-bold text-lg pr-2 whitespace-no-wrap">{{ valNow.token }}</div>
@@ -51,8 +51,15 @@ import Vue, { PropOptions } from "vue";
 import { ZKIPaymentItem, ZKISingleToken, ZkTokens } from "@/types";
 import { Address } from "zksync/build/types";
 
+// @ts-ignore
+import vClickOutside from "v-click-outside";
+
 export default Vue.extend({
+  directives: {
+    clickOutside: vClickOutside.directive
+  },
   props: {
+
     displayDelete: {
       type: Boolean,
       default: false,

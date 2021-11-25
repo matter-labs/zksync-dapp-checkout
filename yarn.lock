@@ -2609,6 +2609,7 @@ __metadata:
     stylelint-config-prettier: ^8.0.2
     stylelint-config-standard: ^22.0.0
     tailwindcss: "npm:@tailwindcss/postcss7-compat@^2.2.17"
+    v-click-outside: ^3.1.2
     v-tooltip: ^2.1.3
     vue-custom-scrollbar: ^1.4.0
     vue-js-popover: ^1.2.1
@@ -24018,6 +24019,13 @@ cspell@latest:
   dependencies:
     uuid: 7.0.2
   checksum: fe28eb6db1698d2275a6e3b150cff7a4de967a590c79aaacc40dd93b5c60af4851dfab9b011b210311b7b72eaca8cf8f731e22e849ac9b4b4935b7c27529979d
+  languageName: node
+  linkType: hard
+
+"v-click-outside@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "v-click-outside@npm:3.1.2"
+  checksum: a330889794400898df46c494dfc56150ddea0201cc65ad022ddf417f649bac498d023e492390fdb1c5fc22e37836951de060dd1e640d5c209edd0de095717ab7
   languageName: node
   linkType: hard
 
