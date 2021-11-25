@@ -55,9 +55,8 @@
     </zk-modal>
 
     <div class="linkHeader">
-
-      <nuxt-link to="/link" class="flex items-stretch justify-center">
-        <img src="@/static/zkSyncLogoFull.svg" class="head-logo" alt="Checkout by zkSync">
+      <div class="flex items-stretch justify-center horizontalLogoContainer">
+        <a href="https://zksync.io" target="_blank" class="headline"><img src="@/static/zkSyncLogoFull.svg" class="head-logo" alt="Checkout by zkSync"></a>
         <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
           <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
           <span
@@ -66,7 +65,7 @@
           >
             {{ currentNetwork }}</span>
         </div>
-      </nuxt-link>
+      </div>
       <ul
         class="feature-list zk-container font-light text-dark mt-4 mr-auto ml-auto mb-6  text-sm md:text-md flex-col items-center text-gray-600 dark:text-gray-100"
         v-if="!showAddLink"

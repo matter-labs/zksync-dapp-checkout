@@ -1,6 +1,6 @@
 <template>
   <div v-if="version" class="system-info flex items-stretch">
-    <popover name="env-details" transition="show-from-bottom" event="hover" :width="230"
+    <popover name="env-details" transition="show-from-bottom" :event="isMobile ? 'click' : 'hover'" :width="230"
              class="system-env-popover rounded-md bg-gray-500 flex-col justify-items-stretch p-5">
       <template slot="header">Environment details</template>
       <span class="flex">
@@ -34,6 +34,9 @@ import { GIT_REVISION_SHORT, VERSION, ZK_LIB_VERSION } from "@/plugins/build";
 
 export default Vue.extend({
   computed: {
+    isMobile(): boolean {
+      return window.visualViewport.width < 768;
+    },
     config(): ZkConfig {
       return this.$store.getters["zk-onboard/config"];
     },
