@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="poweredBy flex justify-center mx-auto items-center mr-5">
     <a target="_blank" href="//zksync.io/legal/terms.html" class="linkDefault lightLink whitespace-no-wrap mr-3">Our&nbsp;terms</a>
     <a target="_blank" href="//zksync.io/legal/privacy.html" class="linkDefault lightLink whitespace-no-wrap mr-3">Privacy</a>
@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ETHER_NETWORK_NAME } from "~/plugins/build";
+import { APP_ZK_SCAN, APP_ZK_WALLET } from "~/plugins/build";
 
 export default Vue.extend({
   computed: {
@@ -20,10 +20,10 @@ export default Vue.extend({
       return this.$route.path.startsWith("/link")
     },
     blockExplorerLink(): string {
-      return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
+      return APP_ZK_SCAN;
     },
     zkWalletLink(): string {
-      return `//wallet.zksync.io?network=${ETHER_NETWORK_NAME}`;
+      return APP_ZK_WALLET;
     }
   }
 });

@@ -71,8 +71,11 @@ export const CURRENT_APP_TITLE = process.env.SITE_TITLE || CURRENT_APP_NAME;
 export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
 
 /**
- * zkLink
+ * Infrastructural links
  */
+export const APP_ZK_WALLET = `https://wallet.zksync.io?network=${ETHER_NETWORK_NAME}`;
+export const APP_ZK_SCAN: string = process.env.ZK_SPECIAL_SCAN || `https://${ETHER_NETWORK_NAME}.zkscan.io`;
+export const APP_ZKSYNC_BLOCK_EXPLORER = `${APP_ZK_SCAN}/explorer`;
 export const TWEET_URL = "https://twitter.com/intent/tweet?url=";
 export const FACEBOOK_URL = "https://www.facebook.com/sharer/sharer.php?u=";
 
