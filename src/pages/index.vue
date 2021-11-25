@@ -70,17 +70,17 @@
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square"/>
-          <div>{{ errorModal.headline }}</div>
+          <div>{{ errorModal ? errorModal.headline : "" }}</div>
         </div>
       </template>
       <template slot="default">
         <div class="text-sm">
-          {{ errorModal.text }}
+          {{ errorModal ? errorModal.text : "" }}
         </div>
       </template>
     </zk-modal>
 
-    <connected-wallet/>
+    <block-connected-wallet/>
 
     <div v-if="step === 'main'" class="w-full">
       <zk-max-height :value="!tokenItemsValid[transactionData.feeToken]" class="mt-5 md:mt-7">
@@ -98,12 +98,12 @@
         </div>
       </zk-max-height>
 
-      <line-table-header class="mt-5 mb-2">
+      <block-line-table-header class="mt-5 mb-2">
         <template slot="first"> To pay</template>
         <template slot="second"> L2 balance</template>
         <template slot="first:md"> To pay / L2 balance</template>
         <template slot="right"/>
-      </line-table-header>
+      </block-line-table-header>
       <transaction-token v-for="token in usedTokens" :key="token" v-model="tokenItemsValid[token]" :token="token" :total="totalByToken[token] ? totalByToken[token].toString() : '0'"/>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
@@ -138,12 +138,12 @@
           </zk-defbtn>
         </div>
       </div>
-      <line-table-header class="mt-10 md:mt-7 mb-2">
+      <block-line-table-header class="mt-10 md:mt-7 mb-2">
         <template slot="first"> Paid</template>
         <template slot="second"/>
         <template slot="first:md"> &nbsp;</template>
         <template slot="right"> Paid / TX Hash</template>
-      </line-table-header>
+      </block-line-table-header>
 
       <vue-custom-scrollbar class="customScrollList">
         <template v-for="(item, index) in finalTransactions">
@@ -181,8 +181,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-
-import { BigNumberish } from "ethers";
 import { Wallet } from "zksync";
 import { ZkSyncTransaction } from "zksync-checkout-internal/src/types";
 import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
@@ -190,22 +188,10 @@ import { Transaction } from "zksync/build/wallet";
 import { ZkCPKStatus } from "@matterlabs/zksync-nuxt-core/types";
 import { filterError } from "@matterlabs/zksync-nuxt-core/utils";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
-import { TransactionData, TotalByToken } from "@/types";
-import connectedWallet from "@/blocks/connectedWallet.vue";
-import lineTableHeader from "@/blocks/lineTableHeader.vue";
+import { ZKTotalByToken, ZKITransactionData, ZKIUpdatedFee } from "@/types";
 import { Address, TokenSymbol } from "zksync/build/types";
 
-interface UpdatedFee {
-  type: "batch" | "cpk";
-  previous: BigNumberish;
-  new: BigNumberish;
-}
-
 export default Vue.extend({
-  components: {
-    connectedWallet,
-    lineTableHeader,
-  },
   filters: {
     formatTransaction(value: string) {
       return value.replace("sync-tx:", "");
@@ -227,7 +213,7 @@ export default Vue.extend({
         headline: string;
         text: string;
       },
-      transactionFees: [] as UpdatedFee[],
+      transactionFees: [] as ZKIUpdatedFee[],
     };
   },
   watch: {
@@ -250,13 +236,13 @@ export default Vue.extend({
     cpkStatus(): ZkCPKStatus {
       return this.$store.getters["zk-wallet/cpk"];
     },
-    transactionData(): TransactionData {
+    transactionData(): ZKITransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
     usedTokens(): TokenSymbol[] {
       return this.$store.getters["checkout/usedTokens"];
     },
-    totalByToken(): TotalByToken {
+    totalByToken(): ZKTotalByToken {
       // noinspection BadExpressionStatementJS
       this.updateTransferAllowed;
       return this.$store.getters["checkout/getTotalByToken"];

@@ -1,43 +1,54 @@
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { DecimalBalance } from "@matterlabs/zksync-nuxt-core/types";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
-import { TokenSymbol, Address } from "zksync/build/types";
+import { Address, TokenSymbol } from "zksync/build/types";
 
-export type PaymentItem = {
+export interface ZKIPaymentItem {
   address: Address;
   token: TokenSymbol;
   amount: DecimalBalance;
-};
-export type TransactionData = {
+}
+
+export interface ZKITransactionData {
   transactions: Array<ZkSyncTransaction>;
   fromAddress: Address;
   feeToken: TokenSymbol;
-};
-export type TransactionFee = {
+}
+
+export interface ZKITransactionFee {
   key: string;
   amount: BigNumber;
   realAmount: BigNumber;
   token: TokenSymbol;
   to?: Address;
-};
-export type TotalByToken = {
+}
+
+export type ZKTotalByToken = {
   [token: string]: BigNumber;
 };
 
-export type ZkSingleToken = {
+export interface ZKISingleToken {
   address: string;
   id: number;
   symbol: string;
   decimals: number;
-};
-// Tokens are indexed by their symbol (e.g. "ETH")
-export type ZkTokens = Iterator<string, ZkSingleToken>;
+}
 
-export type ZKISingleRampConfig = {
+// Tokens are indexed by their symbol (e.g. "ETH")
+export type ZkTokens = Iterator<string, ZKISingleToken>;
+
+export interface ZKISingleRampConfig {
   url?: string;
   hostApiKey: string;
-};
-export type ZKIRampConfig = {
+}
+
+export interface ZKIRampConfig {
   rinkeby: ZKISingleRampConfig;
   mainnet: ZKISingleRampConfig;
-};
+}
+
+export interface ZKIUpdatedFee {
+  type: "batch" | "cpk";
+  previous: BigNumberish;
+  new: BigNumberish;
+}

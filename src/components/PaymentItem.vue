@@ -48,22 +48,14 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { PaymentItem, ZkSingleToken, ZkTokens } from "@/types";
+import { ZKIPaymentItem, ZKISingleToken, ZkTokens } from "@/types";
+import { Address } from "zksync/build/types";
 
 export default Vue.extend({
   props: {
-    value: {
-      type: Object,
-      default: () => ({
-        address: "",
-        amount: "",
-        token: "ETH"
-      }),
-      required: false
-    } as PropOptions<PaymentItem>,
-    index: {
-      type: Number,
-      default: 0,
+    displayDelete: {
+      type: Boolean,
+      default: false,
       required: false
     },
     displayIndex: {
@@ -71,35 +63,71 @@ export default Vue.extend({
       default: false,
       required: false
     },
-    displayDelete: {
-      type: Boolean,
-      default: false,
+    index: {
+      type: Number,
+      default: 0,
       required: false
-    }
+    },
+    value: {
+      type: Object,
+      default: (): ZKIPaymentItem => ({
+        address: <Address>"",
+        amount: "",
+        token: "ETH"
+      }),
+      required: false
+    } as PropOptions<ZKIPaymentItem>
   },
   data() {
     return {
-      valNow: <PaymentItem>this.value,
+      valNow: <ZKIPaymentItem>this.value,
       dropdownOpened: <boolean>false,
       dropdownSearch: <string>"",
       isDropdownFocused: <boolean>false,
-      selectedToken: 0
+      selectedToken: <number>0
     };
+  },
+  computed: {
+    displayedTokens(): ZKISingleToken[] {
+      let result: ZKISingleToken[] = [];
+      for (const key in this.tokens) {
+        if (this.tokens.hasOwnProperty(key)) {
+          if (this.dropdownSearch && !this.tokens[key].symbol.toLowerCase().includes(this.dropdownSearch.toLowerCase())) {
+            continue;
+          }
+          result.push(this.tokens[key] as ZKISingleToken);
+        }
+      }
+      return result;
+    },
+    tokens(): ZkTokens {
+      return this.$store.getters["zk-tokens/zkTokens"] as ZkTokens;
+    }
+  },
+  mounted() {
+    this.value.address = (this.$store.getters["zk-account/address"] || "") as Address;
+    console.log(this.value)
   },
   watch: {
     displayedTokens: {
       deep: true,
-      handler(tokens: ZkSingleToken[]) {
-        if (tokens.filter((singleToken: ZkSingleToken) => this.valNow.token===singleToken.symbol).length===0) {
+      handler(tokens: ZKISingleToken[]) {
+        if (tokens.filter((singleToken: ZKISingleToken) => this.valNow.token===singleToken.symbol).length===0) {
           this.value.token = this.displayedTokens[0].symbol;
           this.selectedToken = 0;
         }
       }
     },
-    value: {
-      deep: true,
-      handler(val) {
-        this.valNow = val;
+    dropdownOpened(val:boolean): void {
+      if (val) {
+        this.$nextTick(() => {
+          (this.$refs.dropdownBody as HTMLElement)?.querySelector("input")?.focus();
+        });
+      }
+    },
+    focused(val:boolean): void {
+      if (!val) {
+        this.dropdownOpened = false;
       }
     },
     valNow: {
@@ -108,34 +136,11 @@ export default Vue.extend({
         this.$emit("input", val);
       }
     },
-    dropdownOpened(val) {
-      if (val===true) {
-        this.$nextTick(() => {
-          (this.$refs.dropdownBody as HTMLElement)?.querySelector("input")?.focus();
-        });
+    value: {
+      deep: true,
+      handler(val) {
+        this.valNow = val;
       }
-    },
-    focused(val) {
-      if (val===false) {
-        this.dropdownOpened = false;
-      }
-    }
-  },
-  computed: {
-    tokens(): ZkTokens {
-      return this.$store.getters["zk-tokens/zkTokens"] as ZkTokens;
-    },
-    displayedTokens(): ZkSingleToken[] {
-      let result: ZkSingleToken[] = [], key: string;
-      for (key in this.tokens) {
-        if (this.tokens.hasOwnProperty(key)) {
-          if (this.dropdownSearch && !this.tokens[key].symbol.toLowerCase().includes(this.dropdownSearch.toLowerCase())) {
-            continue;
-          }
-          result.push(this.tokens[key] as ZkSingleToken);
-        }
-      }
-      return result;
     }
   },
   methods: {
@@ -161,13 +166,9 @@ export default Vue.extend({
       }
       return event;
     },
-    setToken(token: ZkSingleToken, index: number = 0): void {
-      this.$set(this.valNow, "token", token.symbol);
-      this.selectedToken = index;
+    focusedOnAmount(): void {
       this.dropdownOpened = false;
       this.isDropdownFocused = true;
-      this.dropdownSearch = "";
-      ((this.$refs.amountInput as Vue).$refs.input as HTMLElement).focus();
     },
     focusedOnDropdown(event: Event): boolean | Event {
       event.preventDefault();
@@ -175,9 +176,13 @@ export default Vue.extend({
       this.isDropdownFocused = true;
       return false;
     },
-    focusedOnAmount(): void {
+    setToken(token: ZKISingleToken, index: number = 0): void {
+      this.$set(this.valNow, "token", token.symbol);
+      this.selectedToken = index;
       this.dropdownOpened = false;
       this.isDropdownFocused = true;
+      this.dropdownSearch = "";
+      ((this.$refs.amountInput as Vue).$refs.input as HTMLElement).focus();
     },
     unFocused(): void {
       this.dropdownOpened = false;

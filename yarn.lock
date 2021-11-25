@@ -2581,7 +2581,7 @@ __metadata:
     "@nuxtjs/style-resources": latest
     "@nuxtjs/stylelint-module": ^4.0.0
     "@nuxtjs/tailwindcss": ^4.2.0
-    "@ramp-network/ramp-instant-sdk": ^2.5.0
+    "@ramp-network/ramp-instant-sdk": ^3.0.0
     "@semantic-release/changelog": ^6.0.1
     "@semantic-release/git": ^10.0.1
     "@semantic-release/npm": ^8.0.3
@@ -3676,12 +3676,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ramp-network/ramp-instant-sdk@npm:^2.5.0":
-  version: 2.5.2
-  resolution: "@ramp-network/ramp-instant-sdk@npm:2.5.2"
+"@ramp-network/ramp-instant-sdk@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@ramp-network/ramp-instant-sdk@npm:3.0.0"
   dependencies:
     body-scroll-lock: ^2.6.4
-  checksum: 4c85ebdfd57d06952b856e2dbdaf186240a836e98771592d7017c86b2a7baf47d56415c905e9cf779cbb9afd46bea40bfae2a0cc21b847e0cc24740e88643843
+  checksum: fb9965f933df1cad7757f653f57219d61cbfbb1ca83f01fa25d07a3cfff5c163eb32556dd98b4c8138ced2c594bae542dae382896e89e1b2adf614b6a61d805a
   languageName: node
   linkType: hard
 

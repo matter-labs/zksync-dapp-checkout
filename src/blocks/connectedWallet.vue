@@ -35,6 +35,7 @@
 import Vue from "vue";
 import { Network } from "zksync/build/types";
 import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
+import { APP_ZK_WALLET } from "~/plugins/build";
 
 export default Vue.extend({
   computed: {
@@ -50,7 +51,7 @@ export default Vue.extend({
       return this.network === "mainnet";
     },
     walletUrl(): string {
-      return `///wallet.zksync.io/${this.network!=="mainnet" ? "?network="+this.network : "" }`;
+      return APP_ZK_WALLET;
     },
   },
   methods: {

@@ -134,18 +134,18 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Network } from "zksync/build/types";
+import { Address, Network } from "zksync/build/types";
 import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 import { FACEBOOK_URL, TWEET_URL } from "@/plugins/build";
 import { encrypt } from "@/plugins/link";
-import { PaymentItem } from "@/types";
+import { ZKIPaymentItem } from "@/types";
 
 export default Vue.extend({
   layout: "link",
   data() {
     return {
       addLinkMode: false,
-      payments: <PaymentItem[]>[],
+      payments: <ZKIPaymentItem[]>[],
       wrongDataModal: false,
       successModal: false,
       previewLoading: false,
@@ -191,7 +191,7 @@ export default Vue.extend({
       if (this.payments.length >= this.maxPayments) {
         return;
       }
-      let address = "";
+      let address = (this.$store.getters["zk-account/address"] || "") as Address
       let token = "ETH";
       if (this.payments.length > 0) {
         address = this.payments[this.payments.length - 1].address;

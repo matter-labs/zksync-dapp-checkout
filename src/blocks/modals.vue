@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { TransactionData } from "@/types";
+import { ZKITransactionData } from "@/types";
 
 export default Vue.extend({
   computed: {
@@ -41,7 +41,7 @@ export default Vue.extend({
     currentModal() {
       return this.$store.getters.currentModal;
     },
-    transactionData(): TransactionData {
+    transactionData(): ZKITransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
   },

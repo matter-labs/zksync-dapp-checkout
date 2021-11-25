@@ -47,7 +47,7 @@ export default Vue.extend({
       return VERSION;
     },
     githubLink(): string | undefined {
-      return `https://github.com/matter-labs/zksync-wallet-vue/commit/${this.revision}`;
+      return `https://github.com/matter-labs/zksync-dapp-checkout/commit/${this.revision}`;
     },
     revision(): string {
       return GIT_REVISION_SHORT;

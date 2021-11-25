@@ -34,7 +34,8 @@
       "@types/node",
       "@nuxtjs/sentry",
       "@matterlabs/zksync-nuxt-core",
-      "web3-core/types"
+      "web3-core/types",
+      "@ramp-network/ramp-instant-sdk"
     ]
   },
   "exclude": [

@@ -1,28 +1,30 @@
 import { Context, Middleware } from "@nuxt/types";
 import useLinkHash from "@/plugins/useLinkHash";
 
-const walletMiddleware: Middleware = (context: Context) => {
-  if (context.route.matched[0].path === "/link" || context.route.matched[0].path === "/link/:hash") {
+const walletMiddleware: Middleware = (ctx: Context): Promise<void> | void => {
+  // Case #1: Excluding linkBuilder
+  if (ctx.route.path.startsWith("/link")) {
     return;
   }
-  if (context.store.getters["checkout/getErrorState"]) {
-    if (
-      (context.route.matched[0].path === "/connect" || context.route.matched[0].path === "") &&
-      typeof context.query.link === "string" &&
-      !context.store.getters["checkout/isLinkCheckout"]
-    ) {
-      return useLinkHash(context, context.query.link);
+
+  // Case #2: Processing an error
+  if (ctx.store.getters["checkout/getErrorState"]) {
+    console.log("router:", ctx.route);
+    if ((ctx.route.path.startsWith("/connect") || ctx.route.path.match(/\/?/)) && typeof ctx.query.link === "string" && !ctx.store.getters["checkout/isLinkCheckout"]) {
+      return useLinkHash(ctx, ctx.query.link as string);
     }
-    context.redirect("/link");
-    return;
+    return ctx.redirect("/link");
   }
-  if (context.store.getters["zk-account/loggedIn"]) {
-    if (context.route.path.startsWith("/connect")) {
-      context.redirect({ query: context.route.query, path: "/" });
+
+  // Case #3: Restoring the session
+  if (ctx.store.getters["zk-account/loggedIn"]) {
+    if (ctx.route.path.startsWith("/connect")) {
+      return ctx.redirect({ query: ctx.route.query, path: "/" });
     }
-    return;
-  } else if (!context.route.path.startsWith("/connect") && !context.store.getters["zk-onboard/restoringSession"]) {
-    context.redirect({ query: context.route.query, path: "/connect" });
+  } else {
+    if (!ctx.route.path.startsWith("/connect") && !ctx.store.getters["zk-onboard/restoringSession"]) {
+      ctx.redirect({ query: ctx.route.query, path: "/connect" });
+    }
   }
 };
 

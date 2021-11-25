@@ -3,7 +3,7 @@
     <div class="infoBlock border-none lg:min-h-screen py-4 md:py-10 px-5 md:px-10">
       <header class="lg:mb-6">
         <div class="flex justify-center md:items-center mb-2">
-          <a href="//zksync.io" class="logo-container" target="_blank"><logo /></a>
+          <a href="//zksync.io" class="logo-container" target="_blank"><block-logo /></a>
           <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
             <span class="networkName text-sm font-light inline-flex items-center -mr-10 md:mr-0" v-if="!isMainnet">
@@ -123,18 +123,14 @@ import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
 import { Network, TokenSymbol } from "zksync/build/types";
 import { ZkTokenPrices, ZkFeeType } from "@matterlabs/zksync-nuxt-core/types";
-import { TotalByToken, TransactionData, TransactionFee } from "@/types/index";
-import Logo from "@/blocks/logo.vue";
+import { ZKTotalByToken,ZKITransactionData, ZKITransactionFee } from "@/types/index";
 import { ETHER_NETWORK_NAME } from "~/plugins/build";
 
 export default Vue.extend({
-  components: {
-    Logo,
-  },
   data() {
     return {
-      totalOpened: false,
-      feesOpened: false,
+      totalOpened: <boolean>false,
+      feesOpened: <boolean>false,
     };
   },
   computed: {
@@ -157,15 +153,15 @@ export default Vue.extend({
     isMainnet(): boolean {
       return this.network === "mainnet";
     },
-    transactionData(): TransactionData {
+   transactionData():ZKITransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
     feeToken(): TokenSymbol {
       return this.$store.getters["zk-transaction/feeSymbol"];
     },
-    allFees(): Array<TransactionFee> {
+    allFees(): ZKITransactionFee[] {
       if (!this.loggedIn) {
-        return this.$store.getters["zk-transaction/fees"].filter((item: TransactionFee) => item.key !== "accountActivation");
+        return this.$store.getters["zk-transaction/fees"].filter((item: ZKITransactionFee) => item.key !== "accountActivation");
       }
       return this.$store.getters["zk-transaction/fees"];
     },
@@ -198,7 +194,7 @@ export default Vue.extend({
       }
       return totalUSD < 0.01 ? "<$0.01" : `$${totalUSD.toFixed(2)}`;
     },
-    totalByToken(): TotalByToken {
+    totalByToken(): ZKTotalByToken {
       return this.$store.getters["checkout/getTotalByToken"];
     },
     tokensPrices(): ZkTokenPrices {

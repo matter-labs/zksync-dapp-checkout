@@ -1,5 +1,5 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { TransactionData, TransactionFee, TotalByToken } from "@/types/index";
+import { ZKITransactionData, ZKITransactionFee, ZKTotalByToken } from "@/types/index";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
 import { closestPackableTransactionAmount, closestPackableTransactionFee } from "zksync";
 import { TokenSymbol, Address } from "zksync/build/types";
@@ -20,14 +20,14 @@ export const state = () => ({
 export type CheckoutModuleState = ReturnType<typeof state>;
 
 export const getters: GetterTree<CheckoutModuleState, RootState> = {
-  getTransactionData(state, _, __): TransactionData {
+  getTransactionData(state, _, __): ZKITransactionData {
     return {
       transactions: state.transactions,
       fromAddress: state.fromAddress,
       feeToken: state.feeToken!,
     };
   },
-  getTransactionBatchFee(_, __, ___, rootGetters): false | TransactionFee {
+  getTransactionBatchFee(_, __, ___, rootGetters): false | ZKITransactionFee {
     // noinspection BadExpressionStatementJS
     rootGetters["zk-transaction/feeLoading"];
     if (rootGetters["zk-transaction/fee"]) {
@@ -54,7 +54,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     }
     return Array.from(tokens);
   },
-  getTotalByToken(state, _, __, rootGetters): TotalByToken {
+  getTotalByToken(state, _, __, rootGetters): ZKTotalByToken {
     const allFees = rootGetters["zk-transaction/fees"].map((e: ZkFee) => ({ ...e, token: rootGetters["zk-transaction/feeSymbol"] }));
     const totalByToken = new Map();
     const addToTotalByToken = (amount: BigNumber, token: TokenSymbol) => {
@@ -93,7 +93,7 @@ export const mutations: MutationTree<CheckoutModuleState> = {
   setFeeToken(state, feeToken: TokenSymbol) {
     state.feeToken = feeToken;
   },
-  setTransactionData(state, { transactions, fromAddress }: TransactionData) {
+  setTransactionData(state, { transactions, fromAddress }: ZKITransactionData) {
     state.transactions = transactions.map((tx) => {
       return {
         ...tx,
@@ -112,7 +112,7 @@ export const mutations: MutationTree<CheckoutModuleState> = {
 };
 
 export const actions: ActionTree<CheckoutModuleState, RootState> = {
-  async setTransactionData({ commit, dispatch, rootGetters }, data: TransactionData) {
+  async setTransactionData({ commit, dispatch, rootGetters }, data: ZKITransactionData) {
     commit("setTransactionData", data);
     commit(
       "zk-transaction/setTransferBatch",

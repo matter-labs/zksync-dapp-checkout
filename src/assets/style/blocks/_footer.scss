@@ -86,7 +86,12 @@
       }
 
       .zkFooterContainer {
-        padding-bottom: 80px;
+        z-index: 200;
+        padding: 20px 20px;
+        margin: 0 auto;
+        position: absolute;
+        bottom: 0;
+        background: #fbfbfb;
       }
     }
   }

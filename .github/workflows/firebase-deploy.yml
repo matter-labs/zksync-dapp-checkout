@@ -5,12 +5,12 @@ name: "Test & deploy"
 "on":
   workflow_dispatch:
     inputs:
-      target:
-        description: "Deploy to prod-mainnet, prod-rinkeby, prod-ropsten, rinkeby-beta or ropsten-beta"
+      tag:
+        description: "Input release version to deploy"
         required: true
-        default: "prod-rinkeby"
+        default: "3.0.0"
       env_config:
-        description: "Env config from /environments/"
+        description: "Env config from /environments/ for the test-build"
         required: true
         default: "rinkeby"
 jobs:
@@ -20,6 +20,12 @@ jobs:
     environment: dev
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "Checking out chosen tag..."
+        run: git checkout tags/${{ github.event.inputs.env_config }} -b ${{ github.event.ref_name }}
+
       - uses: actions/setup-node@v2
         with:
           node-version: 14.17.3
@@ -40,7 +46,7 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}"
-          target: '${{ github.event.inputs.target }}'
+          target: "prod-rinkeby"
           channelID: "prerelease"
           projectId: zsync-dapp-checkout
         env:
@@ -52,18 +58,35 @@ jobs:
     environment: prod
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "Checking out chosen tag..."
+        run: git checkout tags/${{ github.event.inputs.env_config }} -b ${{ github.event.ref_name }}
+
 
       - uses: c-hive/gha-yarn-cache@v2 # using cache
 
       - name: "Deploy #1: Installing deps"
         run: yarn install
 
-      - name: "Deploy #2: generating spa"
+
+      - name: "Deploy #2: generating spa && deploying it to the mainnet"
         run: yarn run ci:env ${{ github.event.inputs.env_config }} prod 1 && yarn run generate --fail-on-error
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
           target: "${{ github.event.inputs.target }}"
-          projectId: zsync-dapp-checkout
+          projectId: "prod-mainnet"
+          channelID: live
+
+      - name: "Deploy #3: generating spa && deploying it to the rinkeby"
+        run: yarn run ci:env ${{ github.event.inputs.env_config }} prod 1 && yarn run generate --fail-on-error
+      - uses: matter-labs/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
+          target: "${{ github.event.inputs.target }}"
+          projectId: "prod-ropsten"
           channelID: live
