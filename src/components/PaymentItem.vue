@@ -32,10 +32,7 @@
           </div>
           <div class="tokensList">
             <div @click="setToken(item, index)" class="tokenItem py-1 px-3 text-lg cursor-pointer flex justify-between items-center" :class="{selected: selectedToken ===
-            index}"
-                 v-for="(item, index ) in
-            displayedTokens"
-                 :key="index">
+            index}" v-for="(item, index) in displayedTokens" :key="index">
               <div>{{ item.symbol }}</div>
               <i class="text-gray fal fa-check" v-if="item.symbol === valNow.token" />
             </div>
@@ -59,7 +56,6 @@ export default Vue.extend({
     clickOutside: vClickOutside.directive
   },
   props: {
-
     displayDelete: {
       type: Boolean,
       default: false,
@@ -113,20 +109,22 @@ export default Vue.extend({
   },
   mounted() {
     this.value.address = (this.$store.getters["zk-account/address"] || "") as Address;
-    console.log(this.value)
   },
   watch: {
-    displayedTokens: {
+    value: {
       deep: true,
-      handler(tokens: ZKISingleToken[]) {
-        if (tokens.filter((singleToken: ZKISingleToken) => this.valNow.token===singleToken.symbol).length===0) {
-          this.value.token = this.displayedTokens[0].symbol;
-          this.selectedToken = 0;
-        }
+      handler(val) {
+        this.valNow = val;
       }
     },
-    dropdownOpened(val:boolean): void {
-      if (val) {
+    valNow: {
+      deep: true,
+      handler(val) {
+        this.$emit("input", val);
+      }
+    },
+    dropdownOpened(val) {
+      if (val===true) {
         this.$nextTick(() => {
           (this.$refs.dropdownBody as HTMLElement)?.querySelector("input")?.focus();
         });
@@ -137,18 +135,6 @@ export default Vue.extend({
         this.dropdownOpened = false;
       }
     },
-    valNow: {
-      deep: true,
-      handler(val) {
-        this.$emit("input", val);
-      }
-    },
-    value: {
-      deep: true,
-      handler(val) {
-        this.valNow = val;
-      }
-    }
   },
   methods: {
     enter(event: KeyboardEvent): Event | KeyboardEvent | false {
@@ -173,6 +159,15 @@ export default Vue.extend({
       }
       return event;
     },
+    setToken(token: ZKISingleToken, index: number = 0): void {
+      if(token) {
+        this.$set(this.valNow, "token", token.symbol);
+        this.selectedToken = index;
+      }
+      this.dropdownSearch = "";
+      this.dropdownOpened = false;
+      this.isDropdownFocused = true;
+    },
     focusedOnAmount(): void {
       this.dropdownOpened = false;
       this.isDropdownFocused = true;
@@ -182,14 +177,6 @@ export default Vue.extend({
       this.dropdownOpened = true;
       this.isDropdownFocused = true;
       return false;
-    },
-    setToken(token: ZKISingleToken, index: number = 0): void {
-      this.$set(this.valNow, "token", token.symbol);
-      this.selectedToken = index;
-      this.dropdownOpened = false;
-      this.isDropdownFocused = true;
-      this.dropdownSearch = "";
-      ((this.$refs.amountInput as Vue).$refs.input as HTMLElement).focus();
     },
     unFocused(): void {
       this.dropdownOpened = false;
