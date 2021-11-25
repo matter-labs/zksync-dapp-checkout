@@ -14,7 +14,7 @@ jobs:
       - uses: c-hive/gha-yarn-cache@v2
 
       - name: "#1: Installing deps"
-        run: bash cli-dev.sh ci
+        run: yarn install
 
       - name: "#2: Building rinkeby"
         run: yarn run ci:build:rinkeby
