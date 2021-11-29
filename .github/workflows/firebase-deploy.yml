@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: github.event.inputs.ref
+          ref: '${{ github.event.inputs.ref }}'
           fetch-depth: 0
           # Whether to configure the token or SSH key with the local git config
           # Default: true
