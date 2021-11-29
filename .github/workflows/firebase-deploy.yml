@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     steps:
-      - name: "Prepare: checkout ref"
       - uses: actions/checkout@v2
         with:
           ref: github.event.inputs.ref
@@ -50,7 +49,7 @@ jobs:
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
 
-  deployment:
+  deploy:
     needs: build_and_preview
     runs-on: ubuntu-latest
     environment: prod
