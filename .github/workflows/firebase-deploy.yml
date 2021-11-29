@@ -34,8 +34,8 @@ jobs:
 
       - name: "Prepare: yarn@3 setup"
         run: |
-          yarn set version berry
           yarn install
+          npm install -g firebase-tools
 
       - name: "Preview: building ropsten to test"
         run: yarn ci:build:ropsten
