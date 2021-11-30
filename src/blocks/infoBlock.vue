@@ -13,7 +13,7 @@
         </div>
       </header>
       <vue-custom-scrollbar class="customScrollList transactionsList">
-        <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2" >
+        <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2">
           <template slot="left-top">
             <div class="headline">
               {{ item.description }}
@@ -35,7 +35,7 @@
         </zk-values-block>
       </vue-custom-scrollbar>
       <div class="w-full">
-        <div v-if="isInfoAvailable !==false" class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"/>
+        <div v-if="isInfoAvailable !== false" class="w-full border-b-2 border-light -dark pt-1 lg:pt-3" />
         <zk-values-block v-if="isInfoAvailable" class="pt-1 pb-0 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
           <template slot="left-top">
             <div class="flex items-center">
@@ -73,14 +73,12 @@
           </zk-values-block>
           <zk-values-block class="pt-1 lg:pt-3" v-if="!loggedIn">
             <template slot="left-top">
-              <div class="text-sm text-gray">
-                May require additional one-time account activation fee
-              </div>
+              <div class="text-sm text-gray">May require additional one-time account activation fee</div>
             </template>
           </zk-values-block>
         </zk-max-height>
 
-        <div v-if="isInfoAvailable !==false" class="w-full border-b-2 border-light -dark pt-1 lg:pt-3"/>
+        <div v-if="isInfoAvailable !== false" class="w-full border-b-2 border-light -dark pt-1 lg:pt-3" />
         <transition name="fade">
           <div v-if="loggedIn" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
             <div class="flex-2">
@@ -109,9 +107,9 @@
       <div class="footerContainer hidden md:block">
         <footer>
           <div class="poweredBy flex justify-center items-center mt-3">
-            <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault">Terms of Service</a>
-            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault ml-5">Privacy Policy</a>
-            <a target="_blank" v-if="!isMainnet" :href="zkMint" class="linkDefault ml-5">zkMint</a>
+            <a target="_blank" href="https://zksync.io/legal/terms.html#overview" class="linkDefault lightLink">Terms of Service</a>
+            <a target="_blank" href="https://zksync.io/legal/privacy.html#introduction" class="linkDefault lightLink ml-5">Privacy Policy</a>
+            <a target="_blank" v-show="!isMainnet" :href="zkMint" class="linkDefault lightLink ml-5">zkMint</a>
           </div>
         </footer>
       </div>
@@ -139,14 +137,13 @@ export default Vue.extend({
   },
   computed: {
     isInfoAvailable(): boolean {
-      if (this.transactionData.transactions.length < 1)
-      {
+      if (this.transactionData.transactions.length < 1) {
         return false;
       }
-      return this.$store.getters["checkout/getErrorState"] !== true
+      return this.$store.getters["checkout/getErrorState"] !== true;
     },
     zkMint(): string {
-      return `https://mint${this.network==='ropsten' ? '-ropsten' : ''}.zksync.dev`;
+      return `https://mint${this.network === "ropsten" ? "-ropsten" : ""}.zksync.dev`;
     },
     loggedIn(): boolean {
       return this.$store.getters["account/loggedIn"];

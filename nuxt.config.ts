@@ -3,7 +3,7 @@ import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastObject } from "vue-toasted/types";
 
 //noinspection ES6PreferShortImport
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION, ZK_IS_BETA, ZK_LIB_VERSION } from "./src/plugins/build";
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, VERSION, ZK_LIB_VERSION } from "./src/plugins/build";
 
 // @ts-ignore
 import * as zkTailwindDefault from "matter-zk-ui/tailwind.config.js";
@@ -15,7 +15,7 @@ const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
 const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Checkout";
 const pageImg = "/Cover.jpg";
 
-const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED}${ZK_IS_BETA ? "-beta" : ""} v.${VERSION} | zksync: v.${ZK_LIB_VERSION}`;
+const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED} v.${VERSION} | zksync: v.${ZK_LIB_VERSION}`;
 
 const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
 const pageKeywords = process.env.SITE_KEYWORDS ?? "";

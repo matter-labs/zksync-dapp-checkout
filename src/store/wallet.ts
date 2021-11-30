@@ -1,4 +1,4 @@
-import { BigNumber, Contract, ContractInterface, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, Contract, ContractInterface, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
 import { Address, Balance, GweiBalance, Token, TokenSymbol, TotalByToken, Transaction } from "@/types/index";
 import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
@@ -9,7 +9,7 @@ import onboardConfig from "@/plugins/onboardConfig";
 import web3Wallet from "@/plugins/web3";
 import utils from "@/plugins/utils";
 import watcher from "@/plugins/watcher";
-import { ZK_API_BASE, ETHER_NETWORK_NAME } from "@/plugins/build";
+import { ETHER_NETWORK_NAME, ZK_API_BASE } from "@/plugins/build";
 
 import { walletData } from "@/plugins/walletData";
 import { RootState } from "~/store";
@@ -199,7 +199,9 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   getTransactionsHistory(state): Array<Transaction> {
     return state.transactionsHistory.list;
   },
-  getTokenPrices(state): {
+  getTokenPrices(
+    state,
+  ): {
     [symbol: string]: {
       lastUpdated: number;
       price: number;
@@ -207,13 +209,17 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   } {
     return state.tokenPrices;
   },
-  getTransactionsList(state): {
+  getTransactionsList(
+    state,
+  ): {
     lastUpdated: number;
     list: Array<Transaction>;
   } {
     return state.transactionsHistory;
   },
-  getWithdrawalProcessingTime(state):
+  getWithdrawalProcessingTime(
+    state,
+  ):
     | false
     | {
         normal: number;
@@ -228,6 +234,16 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
     return !!(walletData.get().syncWallet && walletData.get().syncWallet?.address);
   },
 };
+
+interface InitialBalance {
+  id: any;
+  address: any;
+  balance: string;
+  rawBalance: BigNumber;
+  formattedBalance: string;
+  symbol: any;
+  unlocked: BigNumber;
+}
 
 export const actions: ActionTree<WalletModuleState, RootState> = {
   /**
@@ -351,31 +367,33 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     const totalByToken: TotalByToken = this.getters["checkout/getTotalByToken"];
     const usedTokens: string[] = Object.entries(totalByToken).map((e: [string, BigNumber]) => e[0]);
 
-    const loadInitialBalancesPromises = usedTokens.map(async (key: string) => {
-      const currentToken = loadedTokens[key];
-      try {
-        const balance = await syncWallet.getEthereumBalance(key);
-        let unlocked: BigNumber;
-        if (currentToken.symbol.toLowerCase() !== "eth") {
-          const tokenAddress = syncWallet!.provider.tokenSet.resolveTokenAddress(currentToken.symbol);
-          const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE as ContractInterface, syncWallet!.ethSigner);
-          unlocked = await erc20contract.allowance(syncWallet!.address(), syncWallet!.provider.contractAddress.mainContract);
-        } else {
-          unlocked = BigNumber.from(ERC20_APPROVE_TRESHOLD);
+    const loadInitialBalancesPromises = usedTokens.map(
+      async (key: string): Promise<InitialBalance | void> => {
+        const currentToken = loadedTokens[key];
+        try {
+          const balance = await syncWallet.getEthereumBalance(key);
+          let unlocked: BigNumber;
+          if (currentToken.symbol.toLowerCase() !== "eth") {
+            const tokenAddress = syncWallet!.provider.tokenSet.resolveTokenAddress(currentToken.symbol);
+            const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE as ContractInterface, syncWallet!.ethSigner);
+            unlocked = await erc20contract.allowance(syncWallet!.address(), syncWallet!.provider.contractAddress.mainContract);
+          } else {
+            unlocked = BigNumber.from(ERC20_APPROVE_TRESHOLD);
+          }
+          return <InitialBalance>{
+            id: currentToken.id,
+            address: currentToken.address,
+            balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
+            rawBalance: balance,
+            formattedBalance: utils.handleFormatToken(currentToken.symbol, balance.toString()),
+            symbol: currentToken.symbol,
+            unlocked,
+          };
+        } catch (error) {
+          this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
         }
-        return {
-          id: currentToken.id,
-          address: currentToken.address,
-          balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
-          rawBalance: balance,
-          formattedBalance: utils.handleFormatToken(currentToken.symbol, balance.toString()),
-          symbol: currentToken.symbol,
-          unlocked,
-        };
-      } catch (error) {
-        this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
-      }
-    });
+      },
+    );
     const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
       console.log("Get balances error", err);
       // @todo insert sentry logging
@@ -429,7 +447,10 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       return localList.list;
     }
   },
-  async getWithdrawalProcessingTime({ getters, commit }): Promise<{
+  async getWithdrawalProcessingTime({
+    getters,
+    commit,
+  }): Promise<{
     normal: number;
     fast: number;
   }> {
@@ -568,7 +589,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
 
       this.commit("account/setAddress", syncWallet.address());
       this.commit("account/setAccountID", accountState.id);
-      
+
       await this.dispatch("checkout/getAccountUnlockFee");
 
       await watcher.changeNetworkSet(dispatch, this);

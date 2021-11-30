@@ -45,7 +45,7 @@
     ]
   },
   "exclude": [
-    "node_modules/*",
+    "node_modules",
     "dist/*",
     ".yarn/*",
     "public/*",

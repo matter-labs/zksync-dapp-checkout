@@ -29,12 +29,12 @@ const handleFormatToken = (symbol: TokenSymbol, amount: any) => {
 };
 
 const handleFormatTokenPretty = (symbol: TokenSymbol, amount: GweiBalance) => {
-  const firstFormated = handleFormatToken(symbol, amount);
-  const symbolsArr = firstFormated.split(".");
+  const firstFormatted = handleFormatToken(symbol, amount);
+  const symbolsArr = firstFormatted.split(".");
   const symbolsArrInt = symbolsArr[0];
   let symbolsArrDecimal = symbolsArr[1];
   if (!symbolsArrDecimal || symbolsArrDecimal === "0" || symbolsArrDecimal.length < 5) {
-    return firstFormated;
+    return firstFormatted;
   }
   let firstNotZero = -1;
   for (let a = 0; a < symbolsArrDecimal.length; a++) {
@@ -50,7 +50,7 @@ const handleFormatTokenPretty = (symbol: TokenSymbol, amount: GweiBalance) => {
     return "<0.000001";
   }
   let newVal = `${symbolsArrInt}.${symbolsArrDecimal}`;
-  if (newVal.length < firstFormated.length) {
+  if (newVal.length < firstFormatted.length) {
     newVal += "...";
   }
   return newVal;
@@ -78,12 +78,12 @@ export default {
   handleFormatTokenPretty,
 
   handleFormatTokenPrettyCeil: (symbol: TokenSymbol, amount: GweiBalance) => {
-    const firstFormated = handleFormatTokenPretty(symbol, amount);
-    const symbolsArr = firstFormated.split(".");
+    const firstFormatted = handleFormatTokenPretty(symbol, amount);
+    const symbolsArr = firstFormatted.split(".");
     const symbolsArrInt = symbolsArr[0];
     const symbolsArrDecimal = symbolsArr[1];
     if (!symbolsArrDecimal || symbolsArrDecimal === "0" || symbolsArrDecimal.length < 4) {
-      return firstFormated;
+      return firstFormatted;
     }
     /* Converting "14.63316" to "1463316" and adding 1 */
     const bigNumberString = BigNumber.from(`${symbolsArrInt}${symbolsArrDecimal}`).add("1").toString();

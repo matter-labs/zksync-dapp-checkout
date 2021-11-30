@@ -6,7 +6,7 @@
     <title>zkSync Checkout test launcher</title>
     <script type="text/javascript" src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/zksync-checkout@0.0.8/dist/main.js"></script>
-    <link data-n-head="1" data-hid="shortcut-icon" rel="shortcut icon" href="/_nuxt/icons/icon_64x64.3fdd8f.png" />
+    <link data-n-head="1" data-hid="shortcut-icon" rel="shortcut icon" href="favicon-dark.png" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400,500,600%7CFira+Sans+Condensed:200,400,500,600%7CFira+Code:300" media="all" />
     <style>
       body {
@@ -100,9 +100,6 @@
       async function f(network) {
         const local = `/`;
         let cm = new ZkSyncCheckout.CheckoutManager(network, local);
-
-        const constants = ZkSyncCheckout.Constants;
-
         const transactions = [
           {
             to: "0xaDDF10E1F4BaA96E007f61448b70A3033c9b45D3",

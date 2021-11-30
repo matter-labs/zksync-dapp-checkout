@@ -1,5 +1,5 @@
 import { GetterTree, MutationTree } from "vuex";
-import { Address } from "@/types/index";
+import { Address } from "@/types";
 import { RootState } from "~/store";
 
 export const state = () => ({

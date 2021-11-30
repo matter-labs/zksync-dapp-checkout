@@ -1,6 +1,6 @@
 import { addCPKToBatch } from "@/plugins/walletActions/cpk";
 import { walletData } from "@/plugins/walletData";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber } from "ethers";
 import { Address, TokenSymbol } from "types";
 import { ZkSyncTransaction } from "zksync-checkout/src/types";
 import { closestPackableTransactionFee, Provider } from "zksync";
@@ -68,6 +68,7 @@ export const submitSignedTransactionsBatch = async (provider: Provider, signedTx
  * @param transactions
  * @param {TokenSymbol} feeToken
  * @param fee
+ * @param nonce
  * @param changePubKey
  * @param store
  * @returns {Promise<Transaction | Transaction[]>}

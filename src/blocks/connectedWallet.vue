@@ -2,9 +2,7 @@
   <div class="container">
     <div class="connectedWallet flex items-center">
       <i class="text-gray text-4xl mr-3 far fa-wallet" />
-      <popover name="copy-address" event="click" class="text-center block text-xs" :delay="400">
-        Address copied!
-      </popover>
+      <popover name="copy-address" event="click" class="text-center block text-xs" :delay="400"> Address copied! </popover>
       <zk-values-block>
         <template slot="left-top">
           <div class="headline">My wallet</div>
@@ -12,14 +10,16 @@
         <template slot="left-bottom">
           <div @click="copyAddress()" id="copy-address" v-popover:copy-address.bottom class="address">
             <span>
-              <span>{{ ownAddress[0] }}</span><span class="addressMiddle">{{ ownAddress[1] }}</span><span class="dots">...</span><span>{{ ownAddress[2] }}</span>
+              <span>{{ ownAddress[0] }}</span
+              ><span class="addressMiddle">{{ ownAddress[1] }}</span
+              ><span class="dots">...</span><span>{{ ownAddress[2] }}</span>
             </span>
             <i class="copyIcon text-lg far fa-clipboard"></i>
           </div>
         </template>
         <template slot="right-top">
           <div class="flex items-center flex-col md:flex-row">
-            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="testnetWalletUrl">
+            <zk-defbtn outline class="mr-2 mb-2 md:mb-0" target="_blank" :to="walletUrl">
               <span>Open wallet</span>
               <i class="fas fa-external-link" />
             </zk-defbtn>
@@ -36,15 +36,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-
-import { Address } from "@/types";
-import {ETHER_NETWORK_NAME, ETHER_PRODUCTION} from "@/plugins/build";
+import { ETHER_NETWORK_NAME, ETHER_PRODUCTION } from "@/plugins/build";
 
 export default Vue.extend({
   computed: {
     ownAddress(): string[] {
       const address = this.$store.getters["account/address"];
-      return [address.substr(0, 11), address.substr(11, address.length - 5 - 11), address.substr(address.length - 5, address.length)];
+      return address ? [address.substr(0, 11), address.substr(11, address.length - 5 - 11), address.substr(address.length - 5, address.length)] : [];
     },
     isProd(): boolean {
       return ETHER_PRODUCTION;
@@ -52,9 +50,9 @@ export default Vue.extend({
     currentNetwork(): string {
       return ETHER_NETWORK_NAME;
     },
-    testnetWalletUrl(): string {
-      return `///${this.isProd ? "wallet.zksync.io" : `${ETHER_NETWORK_NAME}.zksync.io`}`
-    }
+    walletUrl(): string {
+      return `///wallet.zksync.io/${this.currentNetwork !== "mainnet" ? "?network=" + this.currentNetwork : ""}`;
+    },
   },
   methods: {
     logout(): void {
@@ -71,7 +69,7 @@ export default Vue.extend({
       elem.select();
       document.execCommand("copy");
       document.body.removeChild(elem);
-    }
+    },
   },
 });
 </script>

@@ -13,8 +13,16 @@ import Web3 from "web3";
 
 const initializedWallets: WalletSelectModuleOptions = {
   wallets: <Array<WalletModule | WalletInitOptions>>[
-    { walletName: "imToken", rpcUrl: ONBOARD_RPC_URL, preferred: true },
-    { walletName: "metamask", preferred: true },
+    {
+      walletName: "imToken",
+      rpcUrl: ONBOARD_RPC_URL,
+      preferred: true,
+    },
+    {
+      walletName: "metamask",
+      preferred: true,
+      networkId: ETHER_NETWORK_ID,
+    },
     {
       walletName: "walletConnect",
       networkId: ETHER_NETWORK_ID,

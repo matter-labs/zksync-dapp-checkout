@@ -50,7 +50,7 @@ export interface CPKLocal {
   validFrom: number;
   validUntil: number;
 }
-interface SinglDepositsInterface {
+interface SingleDepositsInterface {
   hash: string;
   amount: string;
   status: string;
@@ -58,7 +58,7 @@ interface SinglDepositsInterface {
 }
 
 export interface DepositsInterface {
-  [tokenSymbol: string]: Array<SinglDepositsInterface>;
+  [tokenSymbol: string]: Array<SingleDepositsInterface>;
 }
 export interface ActiveDepositInterface {
   [tokenSymbol: string]: BigNumber;
@@ -165,7 +165,9 @@ export declare class Signer {
   signSyncChangePubKey(changePubKey: { accountId: number; account: Address; newPkHash: PubKeyHash; feeTokenId: number; fee: BigNumberish; nonce: number }): ChangePubKey;
   static fromPrivateKey(pk: Uint8Array): Signer;
   static fromSeed(seed: Uint8Array): Signer;
-  static fromETHSignature(ethSigner: ethers.Signer): Promise<{
+  static fromETHSignature(
+    ethSigner: ethers.Signer,
+  ): Promise<{
     signer: Signer;
     ethSignatureType: EthSignerType;
   }>;
