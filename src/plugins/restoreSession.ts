@@ -6,6 +6,6 @@ export default ({ store, route, redirect }: Context) => {
     return;
   }
   if (!route.path.startsWith("/connect")) {
-    redirect("/connect");
+    redirect({ path: "/connect", query: route.query });
   }
 };
