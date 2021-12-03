@@ -1,6 +1,6 @@
 <template>
   <div class="amountInputGroup border rounded" :class="[{'hasUnderInput': $slots['underInput']},{'disabled': disabled},{'error': error},{'focused': focused}]"
-       @click.self="focusInput">
+       @click="focusInput">
     <div class="leftSide">
       <div class="amInputContainer">
         <input
