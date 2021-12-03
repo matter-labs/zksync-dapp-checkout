@@ -7,19 +7,30 @@
     will-change: visibility, opacity;
     pointer-events: none;
 
-    .tooltip-inner {
-        margin-top: 7px;
-        background: #00000046;
-        color: $white;
-        border-radius: 4px;
-        font-size: 14px;
-        padding: 3px 10px;
+    &:not(.popover) {
+        .tooltip-inner {
+            margin-top: 7px;
+            background: #00000046;
+            color: $white;
+            border-radius: 4px;
+            font-size: 14px;
+            padding: 3px 10px;
+        }
+        .tooltip-arrow {
+            display: none;
+        }
+        &[aria-hidden='true'] {
+            visibility: hidden;
+            opacity: 0;
+        }
     }
-    .tooltip-arrow {
-        display: none;
-    }
-    &[aria-hidden='true'] {
-        visibility: hidden;
-        opacity: 0;
+    &.popover {
+        .tooltip-inner {
+            background: #fff;
+            color: $black;
+            box-shadow: 0 4px 20px 0 rgba(52, 73, 94, 0.2);
+            border-radius: 5px;
+            font-weight: 300;
+        }
     }
 }
