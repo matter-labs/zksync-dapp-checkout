@@ -8,7 +8,7 @@
           v-model="inputtedAmount"
           :style="{ width: `${width}px` }"
           :disabled="disabled"
-          type="number"
+          type="string"
           placeholder="Amount"
           maxlength="15"
           @focus="focused = true;"
@@ -69,14 +69,14 @@ export default Vue.extend({
     inputtedAmount: {
       immediate: true,
       handler(val) {
-        let strVal = val;
-        if (typeof val === "string") {
-          strVal = strVal.trim().replace(/,/g, ".");
-          const dotParts = strVal.split(".");
-          if (dotParts.length > 2) {
-            strVal = `${dotParts[0]}.${dotParts.splice(1, dotParts.length).join("")}`;
-          }
+        let strVal = val.trim().replace(/,/g, ".").replace(/[^0-9.]/g, '');
+        const dotParts = strVal.split(".");
+        if (dotParts.length > 2) {
+          strVal = `${dotParts[0]}.${dotParts.splice(1, dotParts.length).join("")}`;
+        }
+        if(this.inputtedAmount !== strVal) {
           this.inputtedAmount = strVal;
+          return;
         }
         setTimeout(() => {
           this.$nextTick(() => {
