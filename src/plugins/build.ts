@@ -27,11 +27,6 @@ const nuxtBuildProdOptions: NuxtOptionsBuild = {
   extractCSS: {
     ignoreOrder: true,
   },
-  splitChunks: {
-    layouts: true,
-    pages: true,
-    commons: true,
-  },
   optimization: {
     removeAvailableModules: true,
     flagIncludedChunks: true,
@@ -46,7 +41,6 @@ const nuxtBuildProdOptions: NuxtOptionsBuild = {
   },
   hardSource: false,
   extend: (config: Configuration) => {
-    config.mode = isProduction ? "production" : "development";
     config.node = {
       fs: "empty",
     };
