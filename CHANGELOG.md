@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.0.2...3.0.3) (2021-12-07)
+
+
+### Bug Fixes
+
+* wallet connect logout ([#76](https://github.com/matter-labs/zksync-dapp-checkout/issues/76)) ([eefbef1](https://github.com/matter-labs/zksync-dapp-checkout/commit/eefbef1fd904054626d4d304a3e7390ae5c09091))
+
 ## [3.0.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.0.1...3.0.2) (2021-12-07)
 
 
