@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { utils } from "ethers";
+import { checkAddress } from "@/plugins/utils";
 import { DecimalBalance } from "@matterlabs/zksync-nuxt-core/types";
 
 export default Vue.extend({
@@ -36,7 +36,7 @@ export default Vue.extend({
   },
   computed: {
     isValid(): boolean {
-      return utils.isAddress(this.inputtedWallet) && this.inputtedWallet.startsWith("0x");
+      return checkAddress(this.inputtedWallet);
     },
     error(): string {
       if (this.inputtedWallet && !this.isValid) {
@@ -56,7 +56,7 @@ export default Vue.extend({
       if (val !== trimmed) {
         return;
       }
-      this.$emit("input", this.isValid ? val : "");
+      this.$emit("input", val);
     },
     value(val) {
       if (this.isValid || (!this.isValid && !!val)) {

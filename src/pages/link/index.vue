@@ -96,7 +96,7 @@
         </li>
       </ul>
     </div>
-    <div class="linkBody py-4 md:py-10 mb-20" ref="paymentsContainer">
+    <div class="linkBody py-4 md:py-10" ref="paymentsContainer">
       <h2 class="mx-auto text-center zk-container headline big text-violet mb-3" v-html="createLinkBlockTitle"/>
       <zk-defbtn class="mx-auto mt-5" v-if="!showAddLink" big @click="enableLink()">Try it now</zk-defbtn>
       <div class="paymentContainer w-full py-2 md:py-1" v-for="index in payments.keys()" :key="index" v-if="showAddLink">
@@ -138,6 +138,7 @@ import { Network } from "zksync/build/types";
 import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 import { FACEBOOK_URL, TWEET_URL } from "@/plugins/build";
 import { encrypt } from "@/plugins/link";
+import { checkAddress } from "@/plugins/utils";
 import { PaymentItem } from "@/types";
 
 export default Vue.extend({
@@ -176,7 +177,7 @@ export default Vue.extend({
         return false;
       }
       for (const payment of this.payments) {
-        if (!payment.address || !payment.amount) {
+        if (!checkAddress(payment.address) || !payment.amount) {
           return false;
         }
       }

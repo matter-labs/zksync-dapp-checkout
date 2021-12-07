@@ -2,9 +2,6 @@
   <div class="container">
     <div class="connectedWallet flex items-center">
       <i class="text-gray text-4xl mr-3 far fa-wallet" />
-      <popover name="copy-address" ref="copy-address" class="text-center block text-xs" v-on:show="hide">
-        Address copied!
-      </popover>
       <zk-values-block>
         <template slot="left-top">
           <a target="_blank" :href="walletUrl" class="headline lightLink" v-tooltip.bottom="`Open wallet`">
@@ -13,12 +10,17 @@
           </a>
         </template>
         <template slot="left-bottom">
-          <div @click="copyAddress()" id="copy-address" v-popover.bottom="{ name: 'copy-address' }" class="address">
-            <span>
-              <span>{{ ownAddress[0] }}</span><span class="addressMiddle">{{ ownAddress[1] }}</span><span class="dots">...</span><span>{{ ownAddress[2] }}</span>
-            </span>
-            <i class="copyIcon text-lg far fa-clipboard"></i>
-          </div>
+          <v-popover popoverClass="copy-address">
+            <div @click="copyAddress()" class="address">
+              <span>
+                <span>{{ ownAddress[0] }}</span><span class="addressMiddle">{{ ownAddress[1] }}</span><span class="dots">...</span><span>{{ ownAddress[2] }}</span>
+              </span>
+              <i class="copyIcon text-lg far fa-clipboard"></i>
+            </div>
+            <div slot="popover" class="text-center block text-xs p-1 px-3 mt-2">
+              <span style="color: #7860df;">Address copied!</span>
+            </div>
+          </v-popover>
         </template>
         <template slot="right-top">
           <div class="flex items-center flex-row">
