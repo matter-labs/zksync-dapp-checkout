@@ -211,7 +211,7 @@ export default Vue.extend({
         return "";
       }
       try {
-        return this.$options.filters!.parseDecimal(this.depositAmount, this.token).toString();
+        return this.$options.filters!.parseBigNumberish(this.depositAmount, this.token).toString();
       } catch (error) {
         return "";
       }
