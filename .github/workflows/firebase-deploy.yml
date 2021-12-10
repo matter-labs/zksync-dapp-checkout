@@ -9,7 +9,7 @@ name: "Deploy production"
         type: string
         description: "The branch, tag or SHA to checkout"
         required: true
-§        default: "master"
+        default: "master"
       preview_env:
         type: string
         description: "Rinkeby, ropsten or mainnet preview env"
