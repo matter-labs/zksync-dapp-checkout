@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: github.event.inputs.ref
+          ref: "${{github.event.inputs.ref}}"
           fetch-depth: 0
           # Whether to configure the token or SSH key with the local git config
           # Default: true
@@ -44,14 +44,14 @@ jobs:
           npm install -g firebase-tools
 
       - name: "Build: env:${{github.event.inputs.preview_env}} for the preview"
-        run: yarn run "ci:build:${{ github.event.inputs.preview_env }}"
+        run: yarn run "ci:build:${{github.event.inputs.preview_env}}"
 
-      - name: "Deploy: preview prod-${{ github.event.inputs.preview_env }}"
+      - name: "Deploy: preview prod-${{github.event.inputs.preview_env}}"
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}"
-          target: "prod-${{ github.event.inputs.preview_env }}"
+          repoToken: '${{secrets.GITHUB_TOKEN}}'
+          firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV}}"
+          target: "prod-${{github.event.inputs.preview_env}}"
           projectId: zsync-dapp-checkout
           channelID: "prerelease"
         env:
@@ -68,8 +68,8 @@ jobs:
       - name: "Deploy: prod-mainnet"
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
+          repoToken: "${{secrets.GITHUB_TOKEN}}"
+          firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD}}"
           target: prod-mainnet
           projectId: zsync-dapp-checkout
           channelID: live
@@ -80,8 +80,8 @@ jobs:
       - name: "Deploy: prod-rinkeby"
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
+          repoToken: "${{secrets.GITHUB_TOKEN}}"
+          firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD}}"
           target: prod-rinkeby
           projectId: zsync-dapp-checkout
           channelID: live
@@ -92,8 +92,8 @@ jobs:
       - name: "Deploy: prod-ropsten"
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
+          repoToken: "${{secrets.GITHUB_TOKEN}}"
+          firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD}}"
           target: prod-ropsten
           projectId: zsync-dapp-checkout
           channelID: live
