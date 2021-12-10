@@ -17,8 +17,7 @@ name: "Deploy production"
         default: "rinkeby"
 jobs:
   build_and_preview:
-    if: github.event.repository.full_name == github.repository && (github.event.inputs.preview_env == 'mainnet' || github.event.inputs.preview_env == 'rinkeby' || github.event
-    .inputs.preview_env == 'ropsten')
+    if: github.event.repository.full_name == github.repository
     runs-on: ubuntu-latest
     environment: dev
     steps:
