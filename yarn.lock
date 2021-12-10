@@ -2627,8 +2627,8 @@ __metadata:
   linkType: soft
 
 "@matterlabs/zksync-nuxt-core@npm:^1.3.2":
-  version: 1.3.2
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.3.2"
+  version: 1.4.4
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.4.4"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.6.6
@@ -2643,7 +2643,7 @@ __metadata:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.11.5-beta.0
-  checksum: 2f6a29a1dda5229b1c526f360aa4f5972e3bcc063377ddd4aeb1f7a69a8de9f94edc5a3cb45471c8cbf1a43831a68ea21bc02f3f4534b4a3633505aaa2f71aaa
+  checksum: a28b3bba3c835d1d192cda25aa1b9a656f6a3fa9804bb3eeecf8eede0450f1bd53efac1f07d192c86ac247eaf90b6bc94af0d51907771ff5e299539b29685a08
   languageName: node
   linkType: hard
 
@@ -23485,7 +23485,7 @@ cspell@latest:
 
 "typescript@patch:typescript@~4.2#~builtin<compat/typescript>":
   version: 4.2.4
-  resolution: "typescript@patch:typescript@npm%3A4.2.4#~builtin<compat/typescript>::version=4.2.4&hash=ddd1e8"
+  resolution: "typescript@patch:typescript@npm%3A4.2.4#~builtin<compat/typescript>::version=4.2.4&hash=493e53"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
