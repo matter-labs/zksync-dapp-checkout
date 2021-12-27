@@ -36,6 +36,6 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV }}'
-          target: §
+          target: staging
           projectId: zsync-dapp-checkout
           channelID: live
