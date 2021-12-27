@@ -4,8 +4,7 @@
 name: "Semantic Release"
 "on":
   push:
-    branches: [ master, main ]
-  workflow_dispatch:
+    branches: [ master ]
 jobs:
   build_and_release:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }} && {{ !contains(github.event.head_commit.message, 'skip ci') }}
@@ -26,7 +25,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           cache: "yarn"
-          node-version: lts/*
+          node-version: 14
           cache-dependency-path: |
             **/package-lock.json
             **/yarn.lock
@@ -40,4 +39,4 @@ jobs:
         env:
           CI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
