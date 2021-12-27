@@ -10,7 +10,7 @@ jobs:
   build_and_release:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }} && {{ !contains(github.event.head_commit.message, 'skip ci') }}
     runs-on: ubuntu-latest
-    environment: prod
+    environment: dev
     steps:
       - uses: actions/checkout@v2
         with:
@@ -20,15 +20,24 @@ jobs:
           persist-credentials: false # <--- checking this in commit context
 
       - name: "Prepare: apply cache"
-        uses: c-hive/gha-yarn-cache@v2
+        uses: c-hive/gha-yarn-cache@v2  # using cache
 
-      - name: "Installing deps"
-        run: |
-          yarn set version 3.1.1
-          yarn install
+      - name: "Setting up node & yarn"
+        uses: actions/setup-node@v2
+        with:
+          cache: "yarn"
+          node-version: lts/*
+          cache-dependency-path: |
+            **/package-lock.json
+            **/yarn.lock
+          architecture: "x64" # optional, x64 or x86. If not specified, x64 will be used by default
 
-      - name: "Running semantic-release"
+      - name: "Prepare: yarn@3 & firebase-tools setup"
+        run: yarn set version 3.1.1 && yarn install
+
+      - name: "Semantic release processing"
         run: npx semantic-release
         env:
           CI: true
-          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
