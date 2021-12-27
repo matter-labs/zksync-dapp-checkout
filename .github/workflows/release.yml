@@ -24,8 +24,8 @@ jobs:
 
       - name: "Installing deps"
         run: |
-        yarn set version 3.1.1
-        yarn install
+          yarn set version 3.1.1
+          yarn install
 
       - name: "Running semantic-release"
         run: npx semantic-release
