@@ -22,17 +22,13 @@ jobs:
       - name: "Prepare: apply cache"
       - uses: c-hive/gha-yarn-cache@v2
 
-      - name: "#1: Installing deps"
+      - name: "Installing deps"
       run: |
         yarn set version 3.1.1
         yarn install
 
-      - name: "#2: Building"
-        env:
-          CI: true
-        run: yarn run ci:build:mainnet
-
-      - name: "#3: Running semantic-release"
+      - name: "Running semantic-release"
         run: npx semantic-release
         env:
+          CI: true
           GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
