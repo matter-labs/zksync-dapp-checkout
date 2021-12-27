@@ -19,6 +19,7 @@ jobs:
           # Default: true
           persist-credentials: false # <--- checking this in commit context
 
+      - name: "Prepare: apply cache"
       - uses: c-hive/gha-yarn-cache@v2
 
       - name: "#1: Installing deps"
