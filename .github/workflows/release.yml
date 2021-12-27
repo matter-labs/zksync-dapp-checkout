@@ -19,12 +19,12 @@ jobs:
           persist-credentials: false # <--- checking this in commit context
 
       - name: "Prepare: apply cache"
-      - uses: c-hive/gha-yarn-cache@v2
+        uses: c-hive/gha-yarn-cache@v2
 
       - name: "Installing deps"
-      run: |
-        yarn set version 3.1.1
-        yarn install
+        run: |
+          yarn set version 3.1.1
+          yarn install
 
       - name: "Running semantic-release"
         run: npx semantic-release
