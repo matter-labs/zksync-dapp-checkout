@@ -1,11 +1,9 @@
-import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+// noinspection ES6PreferShortImport
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig } from "./src/plugins/build";
 
 const zkTailwindDefault = require("matter-zk-ui/tailwind.config.js");
-
-// noinspection ES6PreferShortImport
-import { nuxtBuildConfig, isProduction, isDebugEnabled, CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
 
 const srcDir = "./src/";
 
@@ -18,7 +16,7 @@ const pageTitleTemplate = ETHER_PRODUCTION ? CURRENT_APP_NAME : `${ETHER_NETWORK
 const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
 const pageKeywords = process.env.SITE_KEYWORDS ?? "";
 
-const config: NuxtConfig = {
+export default {
   components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
 
@@ -313,4 +311,3 @@ const config: NuxtConfig = {
     devtools: !isProduction,
   },
 };
-export default config;

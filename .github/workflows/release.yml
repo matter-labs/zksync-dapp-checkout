@@ -1,15 +1,16 @@
 # This workflow will do a clean installation of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: "CI: releasing version"
+name: "Semantic Release"
 "on":
   push:
-    branches: [ master ]
+    branches: [ master, main ]
   workflow_dispatch:
 jobs:
   build_and_release:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }} && {{ !contains(github.event.head_commit.message, 'skip ci') }}
     runs-on: ubuntu-latest
+    environment: prod
     steps:
       - uses: actions/checkout@v2
         with:
@@ -18,17 +19,16 @@ jobs:
           # Default: true
           persist-credentials: false # <--- checking this in commit context
 
-      - uses: c-hive/gha-yarn-cache@v2
+      - name: "Prepare: apply cache"
+        uses: c-hive/gha-yarn-cache@v2
 
-      - name: "#1: Installing deps"
-        run: yarn install
+      - name: "Installing deps"
+        run: |
+          yarn set version 3.1.1
+          yarn install
 
-      - name: "#2: Building"
-        env:
-          CI: true
-        run: yarn run ci:build:mainnet
-
-      - name: "#3: Running semantic-release"
+      - name: "Running semantic-release"
         run: npx semantic-release
         env:
+          CI: true
           GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}

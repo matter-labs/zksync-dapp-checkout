@@ -110,3 +110,4 @@ sw.*
 !/public/.gitignore
 !/.yarn/releases/
 !/.yarn/plugins/
+!/.husky/.gitignore

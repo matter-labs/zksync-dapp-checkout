@@ -2595,7 +2595,7 @@ __metadata:
     eslint-plugin-vue: ^7.12.1
     ethers: ^5.4.1
     fs-extra: ^9.1.0
-    husky: ^6.0.0
+    husky: ^7.0.4
     matter-zk-ui: ^1.0.9
     moment: ^2.29.1
     nuxt: ^2.15.7
@@ -13281,12 +13281,12 @@ cspell@latest:
   languageName: node
   linkType: hard
 
-"husky@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "husky@npm:6.0.0"
+"husky@npm:^7.0.4":
+  version: 7.0.4
+  resolution: "husky@npm:7.0.4"
   bin:
     husky: lib/bin.js
-  checksum: db6da76a670b2cd1e967990decfd291e6f35a5aee4d362208a51771474d3b4896d526acb4bf0413c2d7154716e42a4d8b6cc19f2bb108e48d1f554624c723a00
+  checksum: c6ec4af63da2c9522da8674a20ad9b48362cc92704896cc8a58c6a2a39d797feb2b806f93fbd83a6d653fbdceb2c3b6e0b602c6b2e8565206ffc2882ef7db9e9
   languageName: node
   linkType: hard
 
