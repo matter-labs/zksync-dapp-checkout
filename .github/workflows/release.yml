@@ -5,10 +5,9 @@ name: "Semantic Release"
 "on":
   push:
     branches: [ master, main ]
-  workflow_dispatch:
 jobs:
-  build_and_release:
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }} && {{ !contains(github.event.head_commit.message, 'skip ci') }}
+  release:
+    if: '${{ github.event.repository.full_name == github.repository }}'
     runs-on: ubuntu-latest
     environment: prod
     steps:
