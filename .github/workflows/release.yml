@@ -1,15 +1,12 @@
-# This workflow will do a clean installation of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: "Semantic Release"
+name: "Semantic release"
 "on":
   push:
     branches: [ master, main ]
 jobs:
   release:
-    if: '${{ github.event.repository.full_name == github.repository }}'
+    if: ${{ github.event.repository.full_name == github.repository }} && {{ !contains(github.event.head_commit.message, "skip ci") }}
     runs-on: ubuntu-latest
-    environment: prod
+    environment: dev
     steps:
       - uses: actions/checkout@v2
         with:
@@ -26,8 +23,10 @@ jobs:
           yarn set version 3.1.1
           yarn install
 
-      - name: "Running semantic-release"
-        run: npx semantic-release
+      - name: "Semantic release"
+        run: yarn semantic-release
         env:
           CI: true
-          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
+          HUSKY: 0
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
