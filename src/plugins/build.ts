@@ -1,9 +1,9 @@
-import { Network } from "zksync/build/types.d";
-import { version as zkSyncVersion } from "zksync/package.json";
-import { version } from "../../package.json";
-import { NuxtOptionsBuild } from "@nuxt/types/config/build";
-import { Configuration } from "webpack";
-import { ZKIRampConfig } from "~/types";
+import {Network} from "zksync/build/types.d";
+import {version as zkSyncVersion} from "zksync/package.json";
+import {version} from "../../package.json";
+import {NuxtOptionsBuild} from "@nuxt/types/config/build";
+import {Configuration} from "webpack";
+import {ZKIRampConfig} from "~/types";
 
 export const GIT_REVISION: string = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
 export const GIT_REVISION_SHORT: string = GIT_REVISION.length > 8 ? GIT_REVISION.slice(-7) : GIT_REVISION;
@@ -42,6 +42,7 @@ const nuxtBuildProdOptions: NuxtOptionsBuild = {
   hardSource: false,
   extend: (config: Configuration) => {
     config.node = {
+      // @ts-ignore
       fs: "empty",
     };
     if (!config.output) {

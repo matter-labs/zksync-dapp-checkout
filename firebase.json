@@ -137,7 +137,6 @@
     },
     {
       "target": "staging",
-      "target": "staging",
       "public": "public",
       "ignore": [
         "firebase.json",

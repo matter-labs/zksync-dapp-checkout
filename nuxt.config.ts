@@ -1,7 +1,7 @@
-import { NuxtOptionsEnv } from "@nuxt/types/config/env";
-import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+import {NuxtOptionsEnv} from "@nuxt/types/config/env";
+import {ModuleOptions} from "@matterlabs/zksync-nuxt-core/types";
 // noinspection ES6PreferShortImport
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig } from "./src/plugins/build";
+import {CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig} from "./src/plugins/build";
 
 const zkTailwindDefault = require("matter-zk-ui/tailwind.config.js");
 
@@ -17,7 +17,7 @@ const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
 const pageKeywords = process.env.SITE_KEYWORDS ?? "";
 
 export default {
-  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
+  components: ["@/components/", {path: "@/blocks/", prefix: "block"}],
   telemetry: false,
 
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -45,7 +45,6 @@ export default {
     titleTemplate: `%s | ${pageTitleTemplate}`,
     htmlAttrs: {
       lang: "en",
-      amp: "true",
     },
     meta: [
       {
@@ -139,21 +138,21 @@ export default {
         content: pageTitle,
       },
 
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      {charset: "utf-8"},
+      {name: "viewport", content: "width=device-width, initial-scale=1"},
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
         content: "/favicon-dark.png",
       },
-      { hid: "theme-color", name: "theme-color", content: "#4e529a" },
+      {hid: "theme-color", name: "theme-color", content: "#4e529a"},
       {
         hid: "msapplication-TileColor",
         property: "msapplication-TileColor",
         content: "#4e529a",
       },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
+    link: [{rel: "icon", type: "image/x-icon", href: "/favicon-dark.png"}],
   },
 
   /*
@@ -188,7 +187,7 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     "@nuxtjs/tailwindcss",
     "@nuxtjs/style-resources",
-    ["@nuxtjs/dotenv", { path: __dirname }],
+    ["@nuxtjs/dotenv", {path: __dirname}],
     "matter-zk-ui",
     [
       "@matterlabs/zksync-nuxt-core",
@@ -220,7 +219,8 @@ export default {
         title: pageTitle,
         site_name: pageTitle,
         description: pageDescription,
-        img: "/social.jpg",
+        img: "cover.jpg",
+        img_size: {width: "2560", height: "1280"},
         locale: "en_US",
         twitter: "@zksync",
         twitter_card: "https://checkout.zksync.io/social.jpg",
@@ -293,7 +293,6 @@ export default {
           "./node_modules/matter-zk-ui/layouts/**/*.vue",
           "./node_modules/matter-zk-ui/pages/**/*.vue",
           "./node_modules/matter-zk-ui/plugins/**/*.{js,ts}",
-          "./node_modules/matter-zk-ui/nuxt.config.{js,ts}",
         ],
       },
     },
