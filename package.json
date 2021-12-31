@@ -35,7 +35,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/matter-labs/zksync-dapp-checkout.git"
+    "url": "https://github.com/matter-labs/zksync-dapp-checkout.git"
+  },
+  "engines": {
+    "node": ">=14.17"
   },
   "author": "Matter Labs",
   "browserslist": {
@@ -54,22 +57,19 @@
     "url": "https://linear.app/matterlabs/project/zkcheckout-eae8f3c3e539/ZKF"
   },
   "dependencies": {
-    "@semantic-release/npm": "^8.0.3",
+    "@nuxtjs/eslint-config-typescript": "^8.0.0",
     "core-js": "^3.15.1",
     "matter-zk-ui": "^1.0.9",
     "nuxt": "^2.15.7"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.14.7",
-    "@commitlint/cli": "^12.1.4",
-    "@commitlint/config-conventional": "^12.1.4",
+    "@commitlint/cli": "^16.0.1",
+    "@commitlint/config-conventional": "^16.0.0",
     "@matterlabs/zksync-nuxt-core": "^1.3.2",
     "@matterlabs/zksync-nuxt-ui": "^0.0.0",
     "@nuxt/types": "^2.15.7",
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/dotenv": "^1.4.1",
-    "@nuxtjs/eslint-config-typescript": "^6.0.1",
-    "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.0.2",
     "@nuxtjs/style-resources": "latest",
@@ -81,18 +81,19 @@
     "autoprefixer": "9",
     "babel-core": "7.0.0-bridge.0",
     "cspell": "latest",
-    "eslint": "^7.29.0",
-    "eslint-plugin-nuxt": "^2.0.0",
-    "eslint-plugin-vue": "^7.12.1",
+    "eslint": "^8.5.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier-vue": "^3.1.0",
+    "eslint-plugin-vue": "^8.2.0",
     "ethers": "^5.4.1",
     "husky": "^7.0.0",
     "moment": "^2.29.1",
     "nuxt-social-meta": "^0.0.5",
     "nuxt-webfontloader": "^1.1.0",
     "postcss": "7",
-    "prettier": "^2.3.2",
+    "prettier": "^2.5.1",
     "sass": "^1.43.4",
-    "semantic-release": "^18.0.0",
+    "semantic-release": "^18.0.1",
     "stylelint": "^13.13.1",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "^22.0.0",
@@ -112,22 +113,14 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged",
-      "pre-push": "lint-fix"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
-    "*.{ts,vue,js}": "yarn lint-ts:check",
     "*.{vue,css,scss}": "yarn lint-style:check",
     "*.{ts,vue,js,scss}": "yarn format:prettier",
     "*.{md,vue}": "yarn lint:spell-check"
   },
-  "lint-fix": [
-    "yarn format:prettier",
-    "yarn lint-ts:fix",
-    "yarn lint-style:fix",
-    "yarn spell-check"
-  ],
   "scripts": {
     "local": "yarn ci:env 'rinkeby' 'dev' 1 1",
     "dev": "yarn local && nuxt",
@@ -150,12 +143,13 @@
     "lint-style:check": "stylelint \"src/**/*.{vue,css,scss}\" --ignore-path .stylelintignore",
     "lint-ts:fix": "yarn lint-ts:check --fix",
     "lint-style:fix": "yarn lint-style:check --fix -f verbose",
-    "lint:spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js} *.md",
+    "lint:spell-check": "cspell src/**/*.{ts,vue,js}",
     "semantic-release": "semantic-release",
     "postinstall": "husky install"
   },
   "peerDependencies": {
-    "ethers": "5"
+    "ethers": "5",
+    "postcss": "8"
   },
   "packageManager": "yarn@3.1.1"
 }

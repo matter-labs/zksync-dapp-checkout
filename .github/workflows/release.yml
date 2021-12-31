@@ -1,12 +1,12 @@
 name: "Semantic release"
 "on":
   push:
-    branches: [ master, main ]
+    branches: [ main ]
 jobs:
   release:
     if: ${{ github.event.repository.full_name == github.repository }} && {{ !contains(github.event.head_commit.message, "skip ci") }}
     runs-on: ubuntu-latest
-    environment: dev
+    environment: prod
     steps:
       - uses: actions/checkout@v2
         with:
@@ -15,10 +15,15 @@ jobs:
           # Default: true
           persist-credentials: false # <--- checking this in commit context
 
-      - name: "Prepare: apply cache"
-        uses: c-hive/gha-yarn-cache@v2
+      - name: "Enable yarn cache"
+        uses: c-hive/gha-yarn-cache@v2  # using cache
 
-      - name: "Installing deps"
+      - name: "Setup node@14"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: "Install dependencies"
         run: |
           yarn set version 3.1.1
           yarn install
@@ -26,7 +31,7 @@ jobs:
       - name: "Semantic release"
         run: yarn semantic-release
         env:
-          CI: true
           HUSKY: 0
+          CI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
