@@ -37,7 +37,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:>=7.9.0, @babel/core@npm:^7.12.16, @babel/core@npm:^7.13.8, @babel/core@npm:^7.14.0":
+"@babel/core@npm:>=7.9.0, @babel/core@npm:^7.12.16, @babel/core@npm:^7.14.0":
   version: 7.16.7
   resolution: "@babel/core@npm:7.16.7"
   dependencies:
@@ -1165,7 +1165,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:^7.13.9, @babel/preset-env@npm:^7.14.1":
+"@babel/preset-env@npm:^7.14.1":
   version: 7.16.7
   resolution: "@babel/preset-env@npm:7.16.7"
   dependencies:
@@ -1264,7 +1264,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.13.9, @babel/runtime@npm:^7.14.0, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.4":
+"@babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.14.0, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.4":
   version: 7.16.7
   resolution: "@babel/runtime@npm:7.16.7"
   dependencies:
@@ -2622,10 +2622,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@matterlabs/zksync-dapp-checkout@workspace:."
   dependencies:
-    "@babel/core": ^7.13.8
     "@babel/eslint-parser": ^7.14.7
-    "@babel/preset-env": ^7.13.9
-    "@babel/runtime": ^7.13.9
     "@commitlint/cli": ^16.0.1
     "@commitlint/config-conventional": ^16.0.0
     "@matterlabs/zksync-nuxt-core": ^1.3.2
@@ -2683,8 +2680,6 @@ __metadata:
     zksync-checkout: latest
     zksync-checkout-internal: latest
   peerDependencies:
-    "@babel/core": "*"
-    "@babel/runtime": "*"
     ethers: 5
   dependenciesMeta:
     "@sentry/webpack-plugin":
