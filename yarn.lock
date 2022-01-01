@@ -2643,7 +2643,7 @@ __metadata:
     eslint-plugin-vue: ^8.2.0
     ethers: ^5.4.1
     fork-ts-checker-webpack-plugin: ^6.1.0
-    husky: ^7.0.4
+    husky: ^7.0.0
     matter-zk-ui: ^1.0.9
     moment: ^2.29.1
     node-sass: latest
@@ -2659,6 +2659,7 @@ __metadata:
     stylelint-config-prettier: ^8.0.2
     stylelint-config-standard: ^22.0.0
     tailwindcss: "npm:@tailwindcss/postcss7-compat@^2.2.17"
+    typescript: 4.2.3
     v-tooltip: ^2.1.3
     vue-custom-scrollbar: ^1.4.0
     vue-js-popover: ^1.2.1
@@ -2667,6 +2668,7 @@ __metadata:
     zksync-checkout: latest
     zksync-checkout-internal: latest
   peerDependencies:
+    eth-sig-util: ^3.0.1
     ethers: 5
   languageName: unknown
   linkType: soft
@@ -13868,7 +13870,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^7.0.4":
+"husky@npm:^7.0.0":
   version: 7.0.4
   resolution: "husky@npm:7.0.4"
   bin:
@@ -24273,6 +24275,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:4.2.3":
+  version: 4.2.3
+  resolution: "typescript@npm:4.2.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: b4a2020c021211184ac15caf59936b2089c13e79685f340a31aaa839c9de2f73b44a5e3757292de6cdad2ed967aef80d4592161b814cc29c0570f261850c4bca
+  languageName: node
+  linkType: hard
+
 "typescript@npm:^3.5.1":
   version: 3.9.10
   resolution: "typescript@npm:3.9.10"
@@ -24300,6 +24312,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 89c397df192f239359ad798b96d8e8d552e12c0c189ac5676cec4c20c410d6eec636b8e59a88f2aef0a56d961a9678d99c400099be9b7cae2f7b062eb4b7b171
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@4.2.3#~builtin<compat/typescript>":
+  version: 4.2.3
+  resolution: "typescript@patch:typescript@npm%3A4.2.3#~builtin<compat/typescript>::version=4.2.3&hash=493e53"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: f97b1f885444f13c340127a0918b17d0c4e5c248f99203a22712b3b43d7129c9c7b95437e4f1de99edf79d3046fa9e15356fb5d27d9d94e47a98158c8b18fda5
   languageName: node
   linkType: hard
 
