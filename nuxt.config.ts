@@ -293,6 +293,7 @@ export default {
           "./node_modules/matter-zk-ui/layouts/**/*.vue",
           "./node_modules/matter-zk-ui/pages/**/*.vue",
           "./node_modules/matter-zk-ui/plugins/**/*.{js,ts}",
+          "./node_modules/matter-zk-ui/nuxt.config.{js,ts}",
         ],
       },
     },
