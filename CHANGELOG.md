@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.0...3.1.1) (2022-01-04)
+
+
+### Performance Improvements
+
+* **ci:** production deployment flow fixed ([40f3265](https://github.com/matter-labs/zksync-dapp-checkout/commit/40f326500ca78a15595bf48a3cb3b6b8be1fdcd6))
+
 # [3.1.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.0.3...3.1.0) (2022-01-04)
 
 
