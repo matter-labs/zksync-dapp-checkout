@@ -62,7 +62,7 @@
 
     .transactionsList {
       height: max-content;
-      max-height: 40vh;
+      max-height: 30vh;
     }
 
     .footerContainer {
@@ -113,7 +113,6 @@
           max-width: 70%;
         }
 
-
         &.noAddressPadding .valuesBlockRight .valuesBlockSecondary {
           flex-basis: auto;
           width: auto;
@@ -125,11 +124,10 @@
             min-height: 0;
           }
         }
-
       }
       .infoBlock {
         height: auto;
-        max-height: 45vh;
+        max-height: 33vh;
         grid-template-rows: max-content 1fr repeat(2, max-content);
 
         header {
@@ -161,7 +159,8 @@
     }
   }
 
-  .border-b-2, .border-b-1 {
+  .border-b-2,
+  .border-b-1 {
     border-bottom: 1px !important;
 
     &:last-of-type {
@@ -174,5 +173,27 @@
       margin-bottom: -10px;
     }
   }
+}
 
+.valuesBlockContainer .address {
+  position: relative;
+  width: max-content;
+  min-width: 30px;
+  max-width: 100%;
+  overflow: hidden;
+  color: $black2;
+  font-weight: 400;
+  font-size: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: color $transition;
+  will-change: color;
+
+  &::after {
+    position: absolute;
+    z-index: 10;
+    width: 2px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+  }
 }

@@ -1,15 +1,12 @@
-# This workflow will do a clean installation of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: "Semantic Release"
+name: "Semantic release"
 "on":
   push:
-    branches: [ master ]
+    branches: [ main ]
 jobs:
-  build_and_release:
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }} && {{ !contains(github.event.head_commit.message, 'skip ci') }}
+  release:
+    if: ${{ github.event.repository.full_name == github.repository }} && {{ !contains(github.event.head_commit.message, "skip ci") }}
     runs-on: ubuntu-latest
-    environment: dev
+    environment: prod
     steps:
       - uses: actions/checkout@v2
         with:
@@ -18,25 +15,23 @@ jobs:
           # Default: true
           persist-credentials: false # <--- checking this in commit context
 
-      - name: "Prepare: apply cache"
+      - name: "Enable yarn cache"
         uses: c-hive/gha-yarn-cache@v2  # using cache
 
-      - name: "Setting up node & yarn"
+      - name: "Setup node@14"
         uses: actions/setup-node@v2
         with:
-          cache: "yarn"
           node-version: 14
-          cache-dependency-path: |
-            **/package-lock.json
-            **/yarn.lock
-          architecture: "x64" # optional, x64 or x86. If not specified, x64 will be used by default
 
-      - name: "Prepare: yarn@3 & firebase-tools setup"
-        run: yarn set version 3.1.1 && yarn install
+      - name: "Install dependencies"
+        run: |
+          yarn set version 3.1.1
+          yarn install
 
-      - name: "Semantic release processing"
-        run: npx semantic-release
+      - name: "Semantic release"
+        run: yarn semantic-release
         env:
+          HUSKY: 0
           CI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
