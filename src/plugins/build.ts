@@ -1,9 +1,8 @@
-import {Network} from "zksync/build/types.d";
-import {version as zkSyncVersion} from "zksync/package.json";
-import {version} from "../../package.json";
-import {NuxtOptionsBuild} from "@nuxt/types/config/build";
-import {Configuration} from "webpack";
-import {ZKIRampConfig} from "~/types";
+import { Network } from "zksync/build/types.d";
+import { version as zkSyncVersion } from "zksync/package.json";
+import { NuxtOptionsBuild } from "@nuxt/types/config/build";
+import { version } from "../../package.json";
+import { ZKIRampConfig } from "~/types";
 
 export const GIT_REVISION: string = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
 export const GIT_REVISION_SHORT: string = GIT_REVISION.length > 8 ? GIT_REVISION.slice(-7) : GIT_REVISION;
@@ -36,26 +35,13 @@ const nuxtBuildProdOptions: NuxtOptionsBuild = {
       name: isProduction ? undefined : "chunk",
       maxSize: 900 * 1024,
     },
-    nodeEnv: isProduction ? "16" : false,
+    nodeEnv: isProduction ? "14" : false,
     minimize: isProduction,
   },
-  hardSource: false,
-  extend: (config: Configuration) => {
-    config.node = {
-      // @ts-ignore
-      fs: "empty",
-    };
-    if (!config.output) {
-      config.output = {
-        crossOriginLoading: isProduction ? "anonymous" : false,
-      };
-    } else {
-      config.output.crossOriginLoading = isProduction ? "anonymous" : false;
-    }
-  },
+  hardSource: isProduction,
 };
 
-export const nuxtBuildConfig = isProduction && !isDebugEnabled ? nuxtBuildProdOptions : nuxtBuildOptionsDefault;
+export const nuxtBuildConfig = isProduction ? nuxtBuildProdOptions : nuxtBuildOptionsDefault;
 
 export const ZK_LIB_VERSION = zkSyncVersion ?? "latest";
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;

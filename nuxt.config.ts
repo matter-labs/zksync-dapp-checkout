@@ -1,7 +1,11 @@
-import {NuxtOptionsEnv} from "@nuxt/types/config/env";
-import {ModuleOptions} from "@matterlabs/zksync-nuxt-core/types";
+import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+import Sass from "sass";
+import Fiber from "fibers";
+
 // noinspection ES6PreferShortImport
-import {CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig} from "./src/plugins/build";
+import { NuxtConfig } from "@nuxt/types";
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig } from "~/plugins/build";
 
 const zkTailwindDefault = require("matter-zk-ui/tailwind.config.js");
 
@@ -16,8 +20,8 @@ const pageTitleTemplate = ETHER_PRODUCTION ? CURRENT_APP_NAME : `${ETHER_NETWORK
 const pageDescription: string = process.env.SITE_DESCRIPTION ?? "";
 const pageKeywords = process.env.SITE_KEYWORDS ?? "";
 
-export default {
-  components: ["@/components/", {path: "@/blocks/", prefix: "block"}],
+const config: NuxtConfig = {
+  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
 
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -138,21 +142,21 @@ export default {
         content: pageTitle,
       },
 
-      {charset: "utf-8"},
-      {name: "viewport", content: "width=device-width, initial-scale=1"},
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
         content: "/favicon-dark.png",
       },
-      {hid: "theme-color", name: "theme-color", content: "#4e529a"},
+      { hid: "theme-color", name: "theme-color", content: "#4e529a" },
       {
         hid: "msapplication-TileColor",
         property: "msapplication-TileColor",
         content: "#4e529a",
       },
     ],
-    link: [{rel: "icon", type: "image/x-icon", href: "/favicon-dark.png"}],
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
   },
 
   /*
@@ -180,14 +184,13 @@ export default {
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    // https://go.nuxtjs.dev/typescript
     "@nuxt/typescript-build",
-    // https://go.nuxtjs.dev/stylelint
+    // Doc: https://github.com/nuxt-community/stylelint-module
     "@nuxtjs/stylelint-module",
-    // https://go.nuxtjs.dev/tailwindcss
+    // Doc: https://github.com/nuxt-community/style-resources-module/
     "@nuxtjs/tailwindcss",
     "@nuxtjs/style-resources",
-    ["@nuxtjs/dotenv", {path: __dirname}],
+    ["@nuxtjs/dotenv", { path: __dirname }],
     "matter-zk-ui",
     [
       "@matterlabs/zksync-nuxt-core",
@@ -220,7 +223,7 @@ export default {
         site_name: pageTitle,
         description: pageDescription,
         img: "cover.jpg",
-        img_size: {width: "2560", height: "1280"},
+        img_size: { width: "2560", height: "1280" },
         locale: "en_US",
         twitter: "@zksync",
         twitter_card: "https://checkout.zksync.io/social.jpg",
@@ -279,7 +282,7 @@ export default {
     config: {
       ...zkTailwindDefault,
       purge: {
-        enabled: process.env.NODE_ENV === "production",
+        enabled: !isProduction,
         content: [
           `${srcDir}/components/**/*.vue`,
           `${srcDir}/blocks/**/*.vue`,
@@ -303,6 +306,36 @@ export default {
    */
   build: {
     ...nuxtBuildConfig,
+    loaders: {
+      scss: {
+        implementation: Sass,
+        sassOptions: {
+          fiber: Fiber,
+        },
+      },
+    },
+    /*
+     ** You can extend webpack config here
+     */
+    extend(config) {
+      config.node = {
+        fs: "empty",
+      };
+      // Run ESLint on save
+      // if (ctx.isDev && ctx.isClient) {
+      //   config.module.rules.push({
+      //     enforce: "pre",
+      //     test: /\.(js|ts|vue)$/,
+      //     loader: "eslint-loader",
+      //     exclude: /(node_modules)/
+      //   });
+      // }
+    },
+    postcss: {
+      preset: {
+        autoprefixer: { grid: "autoplace" },
+      },
+    },
   },
   generate: {
     dir: "public",
@@ -310,3 +343,4 @@ export default {
     devtools: !isProduction,
   },
 };
+export default config;

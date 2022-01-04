@@ -3,15 +3,14 @@ module.exports = {
   env: {
     browser: true,
     node: true
-  },
+    },
   extends: [
     '@nuxtjs/eslint-config-typescript',
-    'plugin:vue/recommended',
     'plugin:prettier-vue/recommended',
     'prettier',
   ],
   settings: {
-    'prettier-vue': {
+    "prettier-vue": {
       // Settings for how to process Vue SFC Blocks
       SFCBlocks: {
         /**
@@ -44,19 +43,19 @@ module.exports = {
         // Settings for how to process custom blocks
         customBlocks: {
           // Treat the `<docs>` block as a `.markdown` file
-          docs: { lang: 'markdown' },
+          docs: { lang: "markdown" },
 
           // Treat the `<config>` block as a `.json` file
-          config: { lang: 'json' },
+          config: { lang: "json" },
 
           // Treat the `<module>` block as a `.js` file
-          module: { lang: 'js' },
+          module: { lang: "js" },
 
           // Ignore `<comments>` block (omit it or set it to `false` to ignore the block)
-          comments: false,
+          comments: false
 
           // Other custom blocks that are not listed here will be ignored
-        },
+        }
       },
 
       // Use prettierrc for prettier options or not (default: `true`)
@@ -70,26 +69,27 @@ module.exports = {
         ignorePath: '.prettierignore',
 
         // Process the files in `node_modules` or not (default: `false`)
-        withNodeModules: false,
-      },
-    },
+        withNodeModules: false
+      }
+    }
   },
+  // add your custom rules here
   rules: {
     "vue/multi-word-component-names": 0,
     "vue/html-self-closing": 0,
     "prettier-vue/prettier": [
-      'error',
+      "error",
       {
         // Override all options of `prettier` here
         // @see https://prettier.io/docs/en/options.html
         printWidth: 180,
+        bracketSpacing: true,
         singleQuote: false,
         semi: true,
-        trailingComma: 'es5',
-        bracketSpacing: false,
+        trailingComma: "es5",
         bracketSameLine: true,
         jsxSingleQuote: false
-      },
-    ],
-  },
+      }
+    ]
+  }
 };

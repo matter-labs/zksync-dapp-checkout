@@ -1,8 +1,11 @@
-node_modules
+node_modules/*
+.nuxt/*
 src/static/*
-.github
-.idea
-environments
-public
+.github/*
+.idea/*
+environments/*
+public/*
+_nuxt/*
+src/static/sw.js
 .eslintrc.js
-tests
+tests/*
