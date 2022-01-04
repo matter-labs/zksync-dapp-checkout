@@ -33,10 +33,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/matter-labs/zksync-dapp-checkout.git"
-  },
+  "repository": "https://github.com/matter-labs/zksync-dapp-checkout.git",
   "author": "Matter Labs",
   "browserslist": {
     "production": [
@@ -51,7 +48,7 @@
     ]
   },
   "bugs": {
-    "url": "https://linear.app/matterlabs/project/zkcheckout-eae8f3c3e539/ZKF"
+    "url": "https://linear.app/matterlabs/team/ZKF/label/zkcheckout"
   },
   "dependencies": {
     "core-js": "^3.15.1",
@@ -83,7 +80,6 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier-vue": "^3.1.0",
     "eslint-plugin-vue": "^8.2.0",
-    "ethers": "^5.4.1",
     "husky": "^7.0.0",
     "moment": "^2.29.1",
     "nuxt-social-meta": "^0.0.5",
@@ -101,9 +97,9 @@
     "vue-custom-scrollbar": "^1.4.0",
     "vue-js-popover": "^1.2.1",
     "web3-core": "^1.6.1",
-    "zksync": "latest",
-    "zksync-checkout": "latest",
-    "zksync-checkout-internal": "latest"
+    "zksync": "^0.11.6",
+    "zksync-checkout": "^0.0.13",
+    "zksync-checkout-internal": "^0.0.4"
   },
   "optionalDependencies": {
     "@sentry/webpack-plugin": "^1.14.0",
@@ -145,9 +141,6 @@
     "lint:spell-check": "cspell src/**/*.{ts,vue,js} README.md",
     "semantic-release": "semantic-release",
     "postinstall": "husky install"
-  },
-  "peerDependencies": {
-    "ethers": "5"
   },
   "packageManager": "yarn@3.1.1"
 }
