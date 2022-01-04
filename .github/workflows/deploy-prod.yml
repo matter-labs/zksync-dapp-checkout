@@ -6,7 +6,7 @@ name: "Deploy production"
         type: string
         description: "The branch, tag or SHA to checkout"
         required: true
-        default: "HEAD"
+        default: "main"
       preview_env:
         type: string
         description: "Test on Rinkeby, ropsten or mainnet"
@@ -14,42 +14,41 @@ name: "Deploy production"
         default: "rinkeby"
 jobs:
   build_and_preview:
-    if: github.event.repository.full_name == github.repository
+    if: ${{ github.event.repository.full_name == github.repository }}
     runs-on: ubuntu-latest
     environment: dev
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: "${{github.event.inputs.ref}}"
+          ref: "${{ github.event.inputs.ref }}"
           fetch-depth: 0
           # Whether to configure the token or SSH key with the local git config
           # Default: true
           persist-credentials: false # <--- checking this in commit context
 
-      - name: "Prepare: apply cache"
+      - name: "Enable yarn cache"
         uses: c-hive/gha-yarn-cache@v2  # using cache
 
-      - name: "Prepare: node@14 setup"
+      - name: "Setup node@14"
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: 14
 
-      - name: "Prepare: yarn@3 setup"
+      - name: "Install dependencies"
         run: |
           yarn set version 3.1.1
           yarn install
 
       - name: "Build: env:${{github.event.inputs.preview_env}} for the preview"
-        run: yarn run "ci:build:${{github.event.inputs.preview_env}}"
+        run: "yarn run ci:build:${{github.event.inputs.preview_env}}"
 
       - name: "Deploy: preview prod-${{github.event.inputs.preview_env}}"
         uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{secrets.GITHUB_TOKEN}}'
           firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV}}"
-          target: "prod-${{github.event.inputs.preview_env}}"
+          target: "staging"
           projectId: zsync-dapp-checkout
-          channelID: "prerelease"
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
 
@@ -66,51 +65,50 @@ jobs:
           # Default: true
           persist-credentials: false # <--- checking this in commit context
 
-      - name: "Prepare: apply cache"
+      - name: "Enable yarn cache"
         uses: c-hive/gha-yarn-cache@v2  # using cache
 
-      - name: "Prepare: node@14 setup"
+      - name: "Setup node@14"
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: 14
 
-      - name: "Prepare: yarn@3 setup"
+      - name: "Install dependencies"
         run: |
           yarn set version 3.1.1
           yarn install
 
-      - name: "Build: env:mainnet for the production"
+      - name: "Build mainnet"
         run: yarn run ci:build:mainnet
 
-      - name: "Deploy: prod-mainnet"
+      - name: "Deploy target: prod-mainnet"
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          repoToken: "${{secrets.GITHUB_TOKEN}}"
-          firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD}}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
           target: prod-mainnet
           projectId: zsync-dapp-checkout
           channelID: live
 
-      - name: "Build: env:rinkeby for the production"
+
+      - name: "Build rinkeby"
         run: yarn run ci:build:rinkeby
 
-      - name: "Deploy: prod-rinkeby"
+      - name: "Deploy target: prod-rinkeby"
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          repoToken: "${{secrets.GITHUB_TOKEN}}"
-          firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD}}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
           target: prod-rinkeby
           projectId: zsync-dapp-checkout
           channelID: live
 
-      - name: "Build: env:ropsten for the production"
+
+      - name: "Build ropsten"
         run: yarn run ci:build:ropsten
 
-      - name: "Deploy: prod-ropsten"
+      - name: "Deploy target: prod-ropsten"
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          repoToken: "${{secrets.GITHUB_TOKEN}}"
-          firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD}}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
           target: prod-ropsten
           projectId: zsync-dapp-checkout
           channelID: live

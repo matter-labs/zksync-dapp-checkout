@@ -1,4 +1,4 @@
-# [zkSync Checkout dApp](https://checkout.zksync.io) &middot; [zkSync.io](https://zksync.io/)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT)
+# [zkSync Checkout dApp](https://checkout.zksync.io) &middot; [zkSync.io](https://zksync.io/)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE-APACHE)
 
 # zkSync Checkout — trustable permissionless DeFi payment gateway 
 
@@ -16,8 +16,7 @@ Resource targets for the zkCheckout are:
 * [```prod-mainnet```](https://checkout.zksync.io)
 * [```prod-rinkeby```](https://checkout-rinkeby.zksync.io)
 * [```prod-ropsten```](https://checkout-ropsten.zksync.io)
-* [```beta-ropsten```](https://ropsten-beta-checkout-zksync.web.app)
-* [```beta-rinkeby```](https://rinkeby-beta-checkout-zksync.web.app)
+* [```staging```](https://staging-checkout-v1.zksync.dev/link)
 
 ## Initial Setup / Static version generation
 
@@ -69,7 +68,7 @@ $ yarn run lint-ts:fix
 $ yarn format:prettier
 
 # Check spelling in src files
-$ yarn spell-chack
+$ yarn spell-check
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
