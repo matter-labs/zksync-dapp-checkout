@@ -1,3 +1,10 @@
+## [3.1.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.2...3.1.3) (2022-01-04)
+
+
+### Bug Fixes
+
+* firebase config ([9116f07](https://github.com/matter-labs/zksync-dapp-checkout/commit/9116f07f531db8138ffa48c067ccbd6edf227ed2))
+
 ## [3.1.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.1...3.1.2) (2022-01-04)
 
 
