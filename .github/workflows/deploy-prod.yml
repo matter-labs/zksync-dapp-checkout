@@ -21,10 +21,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: "${{ github.event.inputs.ref }}"
-          fetch-depth: 0
-          # Whether to configure the token or SSH key with the local git config
-          # Default: true
-          persist-credentials: false # <--- checking this in commit context
 
       - name: "Enable yarn cache"
         uses: c-hive/gha-yarn-cache@v2  # using cache
@@ -38,9 +34,16 @@ jobs:
         run: |
           yarn set version 3.1.1
           yarn install
+          
 
       - name: "Build: env:${{github.event.inputs.preview_env}} for the preview"
         run: "yarn run ci:build:${{github.event.inputs.preview_env}}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: "checkout-dist"
+          path: "public/"
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+          retention-days: 5
 
       - name: "Deploy: preview prod-${{github.event.inputs.preview_env}}"
         uses: matter-labs/action-hosting-deploy@v0
@@ -49,8 +52,7 @@ jobs:
           firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV}}"
           target: "staging"
           projectId: zsync-dapp-checkout
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels
+          channelID: "staging_preview"
 
   build_and_deploy:
     needs: build_and_preview
@@ -60,10 +62,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: "${{github.event.inputs.ref}}"
-          fetch-depth: 0
-          # Whether to configure the token or SSH key with the local git config
-          # Default: true
-          persist-credentials: false # <--- checking this in commit context
 
       - name: "Enable yarn cache"
         uses: c-hive/gha-yarn-cache@v2  # using cache
@@ -89,7 +87,6 @@ jobs:
           projectId: zsync-dapp-checkout
           channelID: live
 
-
       - name: "Build rinkeby"
         run: yarn run ci:build:rinkeby
 
@@ -100,7 +97,6 @@ jobs:
           target: prod-rinkeby
           projectId: zsync-dapp-checkout
           channelID: live
-
 
       - name: "Build ropsten"
         run: yarn run ci:build:ropsten
