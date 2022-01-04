@@ -1,24 +1,19 @@
 <template>
-  <div v-if="version" class="system-info flex items-stretch">
-    <v-popover popoverClass="env-popover" trigger="hover" :width="230">
-      <div class="flex-col justify-items-stretch p-3" slot="popover">
-        <div class="text-left mb-2">Environment details</div>
-        <span class="flex">
-            <i class="fab fa-npm mr-2" />
-            zkSync <strong class=" ml-auto">v.{{ zkLibVersion }}</strong>
-          </span>
-        <span class="flex">
-          <i class="fas fa-fingerprint mr-2" />
-            Ethereum env: <strong class=" ml-auto">{{ netName }}</strong>
-          </span>
-        <span class="flex whitespace-no-wrap">
-          <i class="fas fa-code mr-2" />
-          API:&nbsp;<strong class="ml-auto text-xs">{{ zkApiBase.replace("https://", "") }}</strong>
-        </span>
+  <div v-if="version" class="system-info">
+    <v-popover popover-class="system-env-popover" trigger="hover" :width="230" :placement="'top'">
+      <div slot="popover" class="flex-col items-stretch p-2 text-xs">
+        <div class="text-left text-sm mb-2">Environment details</div>
+        <div class="flex flex-auto">
+          zkSync: <strong class="ml-auto">v.{{ zkLibVersion }}</strong>
+        </div>
+        <div class="flex flex-auto">
+          ETH: <strong class="ml-auto">{{ netName }}</strong>
+        </div>
+        <div class="flex flex-auto whitespace-no-wrap">
+          API:&nbsp;<strong class="ml-auto">{{ zkApiBase.replace("https://", "") }}</strong>
+        </div>
       </div>
-      <a class="version">
-        v.{{ version }}
-      </a>
+      <a class="version"> v.{{ version }} </a>
     </v-popover>
 
     <span class="mx-3 md:mx-2">|</span>
@@ -55,7 +50,7 @@ export default Vue.extend({
     },
     zkApiBase(): string {
       return this.config.zkSyncNetwork.api;
-    }
-  }
+    },
+  },
 });
 </script>
