@@ -82,8 +82,9 @@ jobs:
       - name: "Deploy target: prod-mainnet"
         uses: matter-labs/action-hosting-deploy@v0
         with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: prod-mainnet
+          target: "prod-mainnet"
           projectId: zsync-dapp-checkout
           channelID: live
 
@@ -93,8 +94,9 @@ jobs:
       - name: "Deploy target: prod-rinkeby"
         uses: matter-labs/action-hosting-deploy@v0
         with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: prod-rinkeby
+          target: "prod-rinkeby"
           projectId: zsync-dapp-checkout
           channelID: live
 
@@ -104,7 +106,8 @@ jobs:
       - name: "Deploy target: prod-ropsten"
         uses: matter-labs/action-hosting-deploy@v0
         with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: prod-ropsten
+          target: "prod-ropsten"
           projectId: zsync-dapp-checkout
           channelID: live
