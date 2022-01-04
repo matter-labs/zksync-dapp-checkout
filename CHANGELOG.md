@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.1...3.1.2) (2022-01-04)
+
+
+### Bug Fixes
+
+* ci-runners fixed ([#87](https://github.com/matter-labs/zksync-dapp-checkout/issues/87)) ([93c57c2](https://github.com/matter-labs/zksync-dapp-checkout/commit/93c57c2c4b1ab998017152b2ac4546bbe55cdd6f))
+
 ## [3.1.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.0...3.1.1) (2022-01-04)
 
 
