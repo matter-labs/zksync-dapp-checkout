@@ -1,3 +1,17 @@
+# [3.1.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.0.3...3.1.0) (2022-01-04)
+
+
+### Bug Fixes
+
+* ci changes ([#83](https://github.com/matter-labs/zksync-dapp-checkout/issues/83)) ([0a6e591](https://github.com/matter-labs/zksync-dapp-checkout/commit/0a6e5913104d2bd24208fc2a9fced8cee66a40b2))
+* **ci:** environment changed ([1fd5e1d](https://github.com/matter-labs/zksync-dapp-checkout/commit/1fd5e1da33af7a1c07fb755bcba35ff57b82a1f3))
+
+
+### Features
+
+* **ci:** fixes for the ci setup ([31f1ab4](https://github.com/matter-labs/zksync-dapp-checkout/commit/31f1ab47ff5d25286b3c940864fd648140e23c78))
+* **config:** ci fix ([857925d](https://github.com/matter-labs/zksync-dapp-checkout/commit/857925d35e25cabd7e67623b4973fbd89e6d96ac))
+
 ## [3.0.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.0.2...3.0.3) (2021-12-07)
 
 
