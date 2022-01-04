@@ -3,9 +3,9 @@ import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import Sass from "sass";
 import Fiber from "fibers";
 
-// noinspection ES6PreferShortImport
 import { NuxtConfig } from "@nuxt/types";
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig } from "~/plugins/build";
+// noinspection ES6PreferShortImport
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig } from "./src/plugins/build";
 
 const zkTailwindDefault = require("matter-zk-ui/tailwind.config.js");
 
