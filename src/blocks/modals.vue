@@ -21,9 +21,7 @@
         </div>
       </template>
       <template slot="default">
-        <div class="text-center">
-          We failed to parse link checkout data. Try again later or try to use another link.
-        </div>
+        <div class="text-center">We failed to parse link checkout data. Try again later or try to use another link.</div>
       </template>
     </zk-modal>
   </div>
@@ -32,7 +30,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { TransactionData } from "@/types";
-import {APP_ZK_LINK} from "@/plugins/build";
 
 export default Vue.extend({
   computed: {
@@ -45,9 +42,6 @@ export default Vue.extend({
     transactionData(): TransactionData {
       return this.$store.getters["checkout/getTransactionData"];
     },
-    zkLink(): string {
-      return APP_ZK_LINK as string;
-    }
   },
   methods: {
     closeModal() {

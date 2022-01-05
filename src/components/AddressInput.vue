@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue/types";
+import Vue, { PropOptions } from "vue";
 import { DecimalBalance } from "@matterlabs/zksync-nuxt-core/types";
 import { checkAddress } from "@/plugins/utils";
 

@@ -17,14 +17,14 @@ import { ETHER_NETWORK_NAME } from "~/plugins/build";
 export default Vue.extend({
   computed: {
     isLinkPage(): boolean {
-      return this.$route.path.startsWith("/link")
+      return this.$route.path.startsWith("/link");
     },
     blockExplorerLink(): string {
       return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
     },
     zkWalletLink(): string {
       return `//wallet.zksync.io?network=${ETHER_NETWORK_NAME}`;
-    }
-  }
+    },
+  },
 });
 </script>

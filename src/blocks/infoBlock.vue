@@ -120,7 +120,7 @@
 import Vue from "vue";
 import { Network, TokenSymbol } from "zksync/build/types";
 import { ZkFeeType, ZkTokenPrices } from "@matterlabs/zksync-nuxt-core/types";
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber, BigNumberish } from "@ethersproject/bignumber/lib/bignumber";
 import { TotalByToken, TransactionData, TransactionFee } from "~/types";
 import Logo from "@/blocks/logo.vue";
 import { ETHER_NETWORK_NAME } from "~/plugins/build";

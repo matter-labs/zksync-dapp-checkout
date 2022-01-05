@@ -1,11 +1,11 @@
-import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { TransactionData, TransactionFee, TotalByToken } from "@/types/index";
+import { ActionTree, GetterTree, MutationTree } from "vuex/types";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
 import { closestPackableTransactionAmount, closestPackableTransactionFee } from "zksync";
-import { TokenSymbol, Address } from "zksync/build/types";
+import { Address, TokenSymbol } from "zksync/build/types";
 import { BigNumber } from "ethers";
-import { RootState } from "~/store";
 import { ZkFee } from "@matterlabs/zksync-nuxt-core/types";
+import { RootState } from "~/store";
+import { TotalByToken, TransactionData, TransactionFee } from "~/types";
 
 export const state = () => ({
   linkCheckout: <boolean>false,
@@ -28,7 +28,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     };
   },
   getTransactionBatchFee(_, __, ___, rootGetters): false | TransactionFee {
-    // noinspection BadExpressionStatementJS
+    // @ts-ignore
     rootGetters["zk-transaction/feeLoading"];
     if (rootGetters["zk-transaction/fee"]) {
       const minFee = BigNumber.from(rootGetters["zk-transaction/fee"]);
@@ -42,7 +42,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     return false;
   },
   getAccountUnlockFee(_, __, ___, rootGetters): false | BigNumber {
-    // noinspection BadExpressionStatementJS
+    // @ts-ignore
     rootGetters["zk-transaction/activationFeeLoading"];
     return rootGetters["zk-transaction/accountActivationFee"];
   },
@@ -112,7 +112,7 @@ export const mutations: MutationTree<CheckoutModuleState> = {
 };
 
 export const actions: ActionTree<CheckoutModuleState, RootState> = {
-  async setTransactionData({ commit, dispatch, rootGetters }, data: TransactionData) {
+  setTransactionData({ commit, dispatch, rootGetters }, data: TransactionData) {
     commit("setTransactionData", data);
     commit(
       "zk-transaction/setTransferBatch",
@@ -130,7 +130,7 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     const usedTokens = getters.usedTokens;
     const allowanceArr = [];
     for (const symbol of usedTokens) {
-      allowanceArr.push(dispatch("zk-balances/requestAllowance", { force: true, symbol: symbol }, { root: true }));
+      allowanceArr.push(dispatch("zk-balances/requestAllowance", { force: true, symbol }, { root: true }));
     }
     await Promise.all([
       dispatch("zk-transaction/requestAllFees", true, { root: true }),
@@ -139,7 +139,7 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
       ...allowanceArr,
     ]);
   },
-  async requestUsedTokensPrice({ getters, dispatch }): Promise<void> {
+  requestUsedTokensPrice({ getters, dispatch }): void {
     const usedTokens = getters.usedTokens;
     for (const symbol of usedTokens) {
       dispatch("zk-tokens/getTokenPrice", symbol, { root: true });

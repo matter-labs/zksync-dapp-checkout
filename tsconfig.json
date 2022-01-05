@@ -3,7 +3,6 @@
     "allowJs": true,
     "baseUrl": "./src/",
     "checkJs": false,
-    "exactOptionalPropertyTypes": false,
     "declaration": true,
     "composite": false,
     "esModuleInterop": true,
@@ -38,7 +37,8 @@
       "@types/node",
       "@nuxtjs/sentry",
       "@matterlabs/zksync-nuxt-core",
-      "web3-core/types"
+      "web3-core/types",
+      "vue/types"
     ]
   },
   "exclude": [

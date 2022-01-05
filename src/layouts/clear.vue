@@ -32,5 +32,5 @@ export default Vue.extend({
       window.history.scrollRestoration = "manual";
     }
   },
-})
+});
 </script>
