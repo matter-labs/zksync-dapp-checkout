@@ -49,9 +49,12 @@
   }
 
   .rightSide {
-    width: 100%;
-    text-align: right;
-    justify-content: flex-end;
+    @apply flex items-baseline w-full text-right justify-end;
+
+    .system-info
+    {
+      @apply flex items-baseline;
+    }
   }
 
   #system-b-popover {

@@ -1,3 +1,24 @@
+## [3.1.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.2...3.1.3) (2022-01-04)
+
+
+### Bug Fixes
+
+* firebase config ([9116f07](https://github.com/matter-labs/zksync-dapp-checkout/commit/9116f07f531db8138ffa48c067ccbd6edf227ed2))
+
+## [3.1.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.1...3.1.2) (2022-01-04)
+
+
+### Bug Fixes
+
+* ci-runners fixed ([#87](https://github.com/matter-labs/zksync-dapp-checkout/issues/87)) ([93c57c2](https://github.com/matter-labs/zksync-dapp-checkout/commit/93c57c2c4b1ab998017152b2ac4546bbe55cdd6f))
+
+## [3.1.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.0...3.1.1) (2022-01-04)
+
+
+### Performance Improvements
+
+* **ci:** production deployment flow fixed ([40f3265](https://github.com/matter-labs/zksync-dapp-checkout/commit/40f326500ca78a15595bf48a3cb3b6b8be1fdcd6))
+
 # [3.1.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.0.3...3.1.0) (2022-01-04)
 
 
