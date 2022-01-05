@@ -28,13 +28,12 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
-    "target": "ES2018",
+    "target": "ESNext",
     "types": [
-      "@nuxt/types",
       "@types/node",
+      "@nuxt/types",
       "@nuxtjs/sentry",
       "@matterlabs/zksync-nuxt-core",
-      "web3-core/types"
     ]
   },
   "exclude": [

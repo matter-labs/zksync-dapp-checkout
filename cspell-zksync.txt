@@ -91,3 +91,6 @@ getzk
 Vuex
 zsync
 Syncjs
+corejs
+Nuxtjs
+optimisations

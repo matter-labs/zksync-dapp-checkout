@@ -1,6 +1,6 @@
 <template>
   <aside class="infoBlockContainer bg-white h-screen">
-    <div class="infoBlock border-none lg:min-h-screen py-4 md:py-10 px-5 md:px-10">
+    <div class="infoBlock border-none lg:min-h-screen pt-4 pb-1 md:pt-10 md:pb-10 px-5 md:px-10">
       <header class="lg:mb-6">
         <div class="flex justify-center md:items-center mb-2">
           <a href="//zksync.io" class="logo-container" target="_blank"><logo /></a>
@@ -13,7 +13,7 @@
         </div>
       </header>
       <vue-custom-scrollbar class="customScrollList transactionsList">
-        <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2" >
+        <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2">
           <template slot="left-top">
             <div class="headline">
               {{ item.description }}
@@ -35,14 +35,14 @@
         </zk-values-block>
       </vue-custom-scrollbar>
       <div class="w-full">
-        <div v-if="isInfoAvailable !==false" class="w-full border-b-1 border-light -dark pt-3"/>
+        <div v-if="isInfoAvailable !== false" class="w-full border-b-1 border-light -dark pt-3" />
         <zk-values-block v-if="isInfoAvailable" class="pt-1 pb-0 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
           <template slot="left-top">
             <div class="flex items-center">
               <div class="headline big">Fees</div>
               <transition name="fadeFast">
                 <span class="ml-3" v-if="!feesLoading">
-                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${feesOpened === true ? -180 : 0}deg)` }" />
+                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{transform: `rotate(${feesOpened === true ? -180 : 0}deg)`}" />
                 </span>
               </transition>
             </div>
@@ -76,21 +76,19 @@
           </zk-values-block>
           <zk-values-block class="pt-1 lg:pt-3" v-if="!loggedIn">
             <template slot="left-top">
-              <div class="text-sm text-gray">
-                May require additional one-time account activation fee
-              </div>
+              <div class="text-sm text-gray">May require additional one-time account activation fee</div>
             </template>
           </zk-values-block>
         </zk-max-height>
 
-        <div v-if="isInfoAvailable !== false" class="w-full border-b-1 border-light -dark pt-1 lg:pt-3"/>
+        <div v-if="isInfoAvailable !== false" class="w-full border-b-1 border-light -dark pt-1 lg:pt-3" />
         <transition name="fade">
           <div v-if="loggedIn && !feesLoading" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
             <div class="flex-2">
               <div class="flex items-center">
                 <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark -dark">Total amount</div>
                 <span class="ml-3">
-                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${totalOpened === true ? -180 : 0}deg)` }" />
+                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{transform: `rotate(${totalOpened === true ? -180 : 0}deg)`}" />
                 </span>
               </div>
             </div>
@@ -120,12 +118,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { BigNumber, BigNumberish } from "ethers";
-import { Network, TokenSymbol } from "zksync/build/types";
-import { ZkTokenPrices, ZkFeeType } from "@matterlabs/zksync-nuxt-core/types";
-import { TotalByToken, TransactionData, TransactionFee } from "@/types/index";
+import {BigNumber, BigNumberish} from "ethers";
+import {Network, TokenSymbol} from "zksync/build/types";
+import {ZkFeeType, ZkTokenPrices} from "@matterlabs/zksync-nuxt-core/types";
+import {TotalByToken, TransactionData, TransactionFee} from "@/types/index";
 import Logo from "@/blocks/logo.vue";
-import { ETHER_NETWORK_NAME } from "~/plugins/build";
+import {ETHER_NETWORK_NAME} from "~/plugins/build";
 
 export default Vue.extend({
   components: {
@@ -142,11 +140,10 @@ export default Vue.extend({
       return this.$store.getters["zk-transaction/feeLoading"] || this.$store.getters["zk-transaction/activationFeeLoading"];
     },
     isInfoAvailable(): boolean {
-      if (this.transactionData.transactions.length < 1)
-      {
+      if (this.transactionData.transactions.length < 1) {
         return false;
       }
-      return this.$store.getters["checkout/getErrorState"] !== true
+      return this.$store.getters["checkout/getErrorState"] !== true;
     },
     loggedIn(): boolean {
       return this.$store.getters["zk-account/loggedIn"];
@@ -170,7 +167,7 @@ export default Vue.extend({
       return this.$store.getters["zk-transaction/fees"];
     },
     zkWalletLink(): string {
-      return `//wallet.zksync.io?network=${ETHER_NETWORK_NAME}`
+      return `//wallet.zksync.io?network=${ETHER_NETWORK_NAME}`;
     },
     totalFees(): BigNumberish {
       const allFees = this.allFees;
@@ -187,11 +184,11 @@ export default Vue.extend({
     },
     totalUSD(): string {
       const transactionData = this.transactionData;
-      const allFees = this.allFees.map(e => ({...e, amount: e.amount.toString(), token: this.feeToken}));
+      const allFees = this.allFees.map((e) => ({...e, amount: e.amount.toString(), token: this.feeToken}));
       const tokensPrices = this.tokensPrices;
       let totalUSD = 0;
       for (const item of [...transactionData.transactions, ...allFees]) {
-        if(!tokensPrices[item.token]) {
+        if (!tokensPrices[item.token]) {
           return "";
         }
         totalUSD += +tokensPrices[item.token] * +this.$options.filters!.parseBigNumberish(item.amount, item.token);
@@ -207,12 +204,12 @@ export default Vue.extend({
   },
   methods: {
     getFeeNameFromKey(key: ZkFeeType) {
-      if(key === "txFee") {
+      if (key === "txFee") {
         return "Tx Batch Fee / zkSync";
-      } else if(key === "accountActivation") {
+      } else if (key === "accountActivation") {
         return "One-time account activation fee";
       }
-    }
+    },
   },
 });
 </script>

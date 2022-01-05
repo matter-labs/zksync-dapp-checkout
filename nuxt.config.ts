@@ -1,11 +1,13 @@
-import { NuxtConfig } from "@nuxt/types";
-import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+import Sass from "sass";
+import Fiber from "fibers";
+
+import { NuxtConfig } from "@nuxt/types";
+// noinspection ES6PreferShortImport
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig } from "./src/plugins/build";
 
 const zkTailwindDefault = require("matter-zk-ui/tailwind.config.js");
-
-// noinspection ES6PreferShortImport
-import { nuxtBuildConfig, isProduction, isDebugEnabled, CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
 
 const srcDir = "./src/";
 
@@ -47,7 +49,6 @@ const config: NuxtConfig = {
     titleTemplate: `%s | ${pageTitleTemplate}`,
     htmlAttrs: {
       lang: "en",
-      amp: "true",
     },
     meta: [
       {
@@ -183,11 +184,10 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    // https://go.nuxtjs.dev/typescript
     "@nuxt/typescript-build",
-    // https://go.nuxtjs.dev/stylelint
+    // Doc: https://github.com/nuxt-community/stylelint-module
     "@nuxtjs/stylelint-module",
-    // https://go.nuxtjs.dev/tailwindcss
+    // Doc: https://github.com/nuxt-community/style-resources-module/
     "@nuxtjs/tailwindcss",
     "@nuxtjs/style-resources",
     ["@nuxtjs/dotenv", { path: __dirname }],
@@ -222,7 +222,8 @@ const config: NuxtConfig = {
         title: pageTitle,
         site_name: pageTitle,
         description: pageDescription,
-        img: "/social.jpg",
+        img: "cover.jpg",
+        img_size: { width: "2560", height: "1280" },
         locale: "en_US",
         twitter: "@zksync",
         twitter_card: "https://checkout.zksync.io/social.jpg",
@@ -281,7 +282,7 @@ const config: NuxtConfig = {
     config: {
       ...zkTailwindDefault,
       purge: {
-        enabled: process.env.NODE_ENV === "production",
+        enabled: !isProduction,
         content: [
           `${srcDir}/components/**/*.vue`,
           `${srcDir}/blocks/**/*.vue`,
@@ -306,6 +307,36 @@ const config: NuxtConfig = {
    */
   build: {
     ...nuxtBuildConfig,
+    loaders: {
+      scss: {
+        implementation: Sass,
+        sassOptions: {
+          fiber: Fiber,
+        },
+      },
+    },
+    /*
+     ** You can extend webpack config here
+     */
+    extend(config) {
+      config.node = {
+        fs: "empty",
+      };
+      // Run ESLint on save
+      // if (ctx.isDev && ctx.isClient) {
+      //   config.module.rules.push({
+      //     enforce: "pre",
+      //     test: /\.(js|ts|vue)$/,
+      //     loader: "eslint-loader",
+      //     exclude: /(node_modules)/
+      //   });
+      // }
+    },
+    postcss: {
+      preset: {
+        autoprefixer: { grid: "autoplace" },
+      },
+    },
   },
   generate: {
     dir: "public",
