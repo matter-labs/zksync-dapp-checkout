@@ -72,6 +72,7 @@ export default Vue.extend({
       setTimeout(() => {
         const copyAddress = this.$refs["copy-address"];
         if (copyAddress && copyAddress.hasOwnProperty("visible")) {
+          // @ts-ignore
           copyAddress.visible = false;
         }
       }, 1500);
