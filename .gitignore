@@ -83,9 +83,6 @@ public
 # Nuxt generate
 dist
 
-# vuepress build output
-.vuepress/dist
-
 # Serverless directories
 .serverless
 
@@ -99,19 +96,18 @@ sw.*
 # macOS
 .DS_Store
 
-# Vim swap files
+# Cache & swap files
 *.swp
-.yarn
+/.yarn/
+/.firebase/
+/.eslintcache/
 
-# Unignore yarn release
-!.yarn/releases/*.cjs
-.firebase
-
-# unignore
-!public/.gitignore
-!.yarn/releases/*
-!.yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
-!.yarn/plugins/@yarnpkg/plugin-version.cjs
+# Cypress
 /cypress/screenshots/examples/misc.spec.js/
 /cypress/videos/examples/
-/.eslintcache
+
+# unignore
+!/public/.gitignore
+!/.yarn/releases/
+!/.yarn/plugins/
+!/.husky/.gitignore

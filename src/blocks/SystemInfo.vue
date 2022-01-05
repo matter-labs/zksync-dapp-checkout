@@ -1,24 +1,20 @@
 <template>
-  <div v-if="version" class="system-info flex items-stretch">
-    <popover name="env-details" transition="show-from-bottom" event="hover" :width="230"
-             class="system-env-popover rounded-md bg-gray-500 flex-col justify-items-stretch p-5">
-      <template slot="header">Environment details</template>
-      <span class="flex">
-          <i class="fab fa-npm mr-2" />
-          zkSync <strong class=" ml-auto">v.{{ zkLibVersion }}</strong>
-        </span>
-      <span class="flex">
-        <i class="fas fa-fingerprint mr-2" />
-          Ethereum env: <strong class=" ml-auto">{{ netName }}</strong>
-        </span>
-      <span class="flex whitespace-no-wrap">
-          <i class="fas fa-code mr-2" />
-          API:&nbsp;<strong class="ml-auto text-xs">{{ zkApiBase.replace("https://", "") }}</strong>
-        </span>
-    </popover>
-    <a id="system-b-popover" v-popover:env-details.top class="version">
-      v.{{ version }}
-    </a>
+  <div v-if="version" class="system-info">
+    <v-popover popover-class="system-env-popover" trigger="hover" :width="230" :placement="'top'">
+      <div slot="popover" class="flex-col items-stretch p-2 text-xs">
+        <div class="text-left text-sm mb-2">Environment details</div>
+        <div class="flex flex-auto">
+          zkSync: <strong class="ml-auto">v.{{ zkLibVersion }}</strong>
+        </div>
+        <div class="flex flex-auto">
+          ETH: <strong class="ml-auto">{{ netName }}</strong>
+        </div>
+        <div class="flex flex-auto whitespace-no-wrap">
+          API:&nbsp;<strong class="ml-auto">{{ zkApiBase.replace("https://", "") }}</strong>
+        </div>
+      </div>
+      <a class="version"> v.{{ version }} </a>
+    </v-popover>
 
     <span class="mx-3 md:mx-2">|</span>
     <a :href="githubLink" class="revision lightLink" target="_blank">
@@ -47,14 +43,14 @@ export default Vue.extend({
       return VERSION;
     },
     githubLink(): string | undefined {
-      return `https://github.com/matter-labs/zksync-wallet-vue/commit/${this.revision}`;
+      return `https://github.com/matter-labs/zksync-dapp-checkout/commit/${this.revision}`;
     },
     revision(): string {
       return GIT_REVISION_SHORT;
     },
     zkApiBase(): string {
       return this.config.zkSyncNetwork.api;
-    }
-  }
+    },
+  },
 });
 </script>

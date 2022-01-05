@@ -1,18 +1,22 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": "./src/",
     "checkJs": false,
+    "exactOptionalPropertyTypes": false,
     "declaration": true,
+    "composite": false,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": false,
+    "skipLibCheck": true,
     "lib": [
       "ESNext",
       "ESNext.AsyncIterable",
       "DOM"
     ],
-    "module": "ESNext",
+    "module": "esnext",
     "moduleResolution": "Node",
     "noEmit": true,
     "noImplicitAny": true,

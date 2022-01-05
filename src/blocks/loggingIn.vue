@@ -21,7 +21,7 @@ export default Vue.extend({
   data() {
     return {
       loggingInScreenDelay: false,
-      loggedInAnimationTimeout: <ReturnType<typeof setTimeout> | undefined> undefined,
+      loggedInAnimationTimeout: undefined,
     };
   },
   computed: {
@@ -57,7 +57,7 @@ export default Vue.extend({
     cancelLogin() {
       this.$store.dispatch("zk-account/logout");
       this.$store.dispatch("checkout/setTransactionData", this.$store.getters["checkout/getTransactionData"]);
-      this.$router.push("/connect");
+      this.$router.push({ path: "/connect", query: this.$route.query });
     },
   },
 });

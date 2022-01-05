@@ -40,6 +40,10 @@ Alef
 Zcon
 Paypal
 Numio
+Barak's
+Keriat
+zypovk
+Hamer
 
 // Used libraries
 numberish
@@ -91,3 +95,9 @@ getzk
 Vuex
 zsync
 Syncjs
+corejs
+Nuxtjs
+optimisations
+gserviceaccount
+releaserc
+ilol

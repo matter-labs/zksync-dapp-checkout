@@ -1,13 +1,6 @@
 <template>
   <div class="addressInput">
-    <zk-input
-      v-model="inputtedWallet"
-      class="walletAddress"
-      :maxlength="45"
-      :error="!!error"
-      placeholder="0x address"
-      type="text"
-    />
+    <zk-input v-model="inputtedWallet" class="walletAddress" :maxlength="45" :error="!!error" placeholder="0x address" type="text" />
     <div class="errorTextContainer">
       <transition name="fadeFast">
         <div v-if="error" class="errorText text-xs text-red text-left">{{ error }}</div>
@@ -17,9 +10,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import { utils } from "ethers";
+import Vue, { PropOptions } from "vue/types";
 import { DecimalBalance } from "@matterlabs/zksync-nuxt-core/types";
+import { checkAddress } from "@/plugins/utils";
 
 export default Vue.extend({
   props: {
@@ -36,11 +29,11 @@ export default Vue.extend({
   },
   computed: {
     isValid(): boolean {
-      return utils.isAddress(this.inputtedWallet) && this.inputtedWallet.startsWith("0x");
+      return checkAddress(this.inputtedWallet);
     },
     error(): string {
       if (this.inputtedWallet && !this.isValid) {
-        if(!this.inputtedWallet.startsWith("0x")) {
+        if (!this.inputtedWallet.startsWith("0x")) {
           return "Address should start with '0x'";
         }
         return "Invalid address";
@@ -56,7 +49,7 @@ export default Vue.extend({
       if (val !== trimmed) {
         return;
       }
-      this.$emit("input", this.isValid ? val : "");
+      this.$emit("input", val);
     },
     value(val) {
       if (this.isValid || (!this.isValid && !!val)) {
