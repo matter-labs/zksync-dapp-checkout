@@ -6,13 +6,13 @@
           <a href="//zksync.io" class="logo-container" target="_blank"><logo /></a>
           <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
-            <span class="networkName text-sm font-light inline-flex items-center -mr-10 md:mr-0" v-if="!isMainnet">
+            <span v-if="!isMainnet" class="networkName text-sm font-light inline-flex items-center -mr-10 md:mr-0">
               {{ network }}
             </span>
           </div>
         </div>
       </header>
-      <vue-custom-scrollbar class="customScrollList transactionsList">
+      <div class="customScrollList transactionsList">
         <zk-values-block v-for="(item, index) in transactionData.transactions" :key="index" class="mt-2">
           <template slot="left-top">
             <div class="headline">
@@ -33,7 +33,8 @@
             </div>
           </template>
         </zk-values-block>
-      </vue-custom-scrollbar>
+        <scroll-down-icon />
+      </div>
       <div class="w-full">
         <div v-if="isInfoAvailable !== false" class="w-full border-b-1 border-light -dark pt-3" />
         <zk-values-block v-if="isInfoAvailable" class="pt-1 pb-0 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
@@ -41,8 +42,8 @@
             <div class="flex items-center">
               <div class="headline big">Fees</div>
               <transition name="fadeFast">
-                <span class="ml-3" v-if="!feesLoading">
-                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{transform: `rotate(${feesOpened === true ? -180 : 0}deg)`}" />
+                <span v-if="!feesLoading" class="ml-3">
+                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${feesOpened === true ? -180 : 0}deg)` }" />
                 </span>
               </transition>
             </div>
@@ -50,10 +51,10 @@
           <template slot="right-top">
             <div class="flex items-center">
               <div class="flex flex-col">
-                <div class="value" v-if="!feesLoading">
+                <div v-if="!feesLoading" class="value">
                   {{ totalFees | formattedPrice(transactionData.feeToken) }}
                 </div>
-                <div class="value" v-else>Loading...</div>
+                <div v-else class="value">Loading...</div>
               </div>
             </div>
           </template>
@@ -74,7 +75,7 @@
               </div>
             </template>
           </zk-values-block>
-          <zk-values-block class="pt-1 lg:pt-3" v-if="!loggedIn">
+          <zk-values-block v-if="!loggedIn" class="pt-1 lg:pt-3">
             <template slot="left-top">
               <div class="text-sm text-gray">May require additional one-time account activation fee</div>
             </template>
@@ -88,7 +89,7 @@
               <div class="flex items-center">
                 <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark -dark">Total amount</div>
                 <span class="ml-3">
-                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{transform: `rotate(${totalOpened === true ? -180 : 0}deg)`}" />
+                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${totalOpened === true ? -180 : 0}deg)` }" />
                 </span>
               </div>
             </div>
@@ -118,12 +119,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {BigNumber, BigNumberish} from "ethers";
-import {Network, TokenSymbol} from "zksync/build/types";
-import {ZkFeeType, ZkTokenPrices} from "@matterlabs/zksync-nuxt-core/types";
-import {TotalByToken, TransactionData, TransactionFee} from "@/types/index";
+// eslint-disable-next-line import/named
+import { BigNumber, BigNumberish } from "ethers";
+import { Network, TokenSymbol } from "zksync/build/types";
+import { ZkFeeType, ZkTokenPrices } from "@matterlabs/zksync-nuxt-core/types";
+import { TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import Logo from "@/blocks/logo.vue";
-import {ETHER_NETWORK_NAME} from "~/plugins/build";
+import { ETHER_NETWORK_NAME } from "~/plugins/build";
 
 export default Vue.extend({
   components: {
@@ -184,7 +186,7 @@ export default Vue.extend({
     },
     totalUSD(): string {
       const transactionData = this.transactionData;
-      const allFees = this.allFees.map((e) => ({...e, amount: e.amount.toString(), token: this.feeToken}));
+      const allFees = this.allFees.map((e) => ({ ...e, amount: e.amount.toString(), token: this.feeToken }));
       const tokensPrices = this.tokensPrices;
       let totalUSD = 0;
       for (const item of [...transactionData.transactions, ...allFees]) {

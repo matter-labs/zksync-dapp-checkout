@@ -56,37 +56,41 @@ input[type="number"] {
 }
 
 .customScrollList {
+  position: relative;
   overflow: auto;
   width: calc(100% + 10px);
   padding-right: 10px;
-  &::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
 
-  .ps__rail-y {
-    opacity: 0.7;
-    width: 6px;
-    will-change: top, opacity;
-    transition: opacity $transition;
-
-    &:hover, &.ps--clicking {
-      opacity: 1;
-      background-color: transparent !important;
-
-      .ps__thumb-y {
-        width: 10px;
-      }
+  .scrollDownIcon {
+    position: sticky;
+    left: 50%;
+    bottom: 5px;
+    transform: translateX(-50%);
+    background-color: transparentize($color: $white, $amount: 0.2);
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 1px solid $light;
+    color: $light;
+    font-size: 13px;
+    line-height: 25px;
+    text-align: center;
+    transition: $transition;
+    transition-property: color, border-color, background-color, transform;
+    cursor: pointer;
+    &:hover {
+      color: $gray;
+      border-color: $gray;
+      background-color: lighten($color: $light, $amount: 5);
     }
-
-    .ps__thumb-y {
-      left: 0;
-      width: 6px !important;
-      background-color: lighten($color: $gray, $amount: 5) !important;
-      border-radius: 6px !important;
-      will-change: width, height, background-color, top;
-      transition: $transition;
-      transition-property: width, height;
+    &:active {
+      transition-duration: 0.001s;
+      color: $light;
+      border-color: $light;
+      background-color: transparentize($color: $white, $amount: 0.2);
+    }
+    &.scrolledDown {
+      transform: translateX(-50%) rotate(180deg); 
     }
   }
 }
