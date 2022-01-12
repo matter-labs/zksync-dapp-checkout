@@ -75,6 +75,7 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ---
 
+
 ## Release CI
 
 > This sharable configuration conforms to angular standard
