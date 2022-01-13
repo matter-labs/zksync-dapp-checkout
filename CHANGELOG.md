@@ -1,3 +1,10 @@
+## [3.1.4](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.3...3.1.4) (2022-01-12)
+
+
+### Bug Fixes
+
+* update infura keys on all environments ([#88](https://github.com/matter-labs/zksync-dapp-checkout/issues/88)) ([99149a3](https://github.com/matter-labs/zksync-dapp-checkout/commit/99149a3e89b6e572dd576d7c8927b81cec88677b))
+
 ## [3.1.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.2...3.1.3) (2022-01-04)
 
 
