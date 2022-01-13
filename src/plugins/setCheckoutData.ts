@@ -9,6 +9,7 @@ export default async ({ store }: Context): Promise<void> => {
   await store.dispatch("zk-provider/requestProvider");
   await store.dispatch("zk-tokens/loadZkTokens");
   if (!window.opener || window.opener === window) {
+    store.commit("checkout/setError", "Windows isn't a popup. Can't initialize zkCheckoutManager");
     return;
   }
   try {
