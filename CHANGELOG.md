@@ -1,3 +1,10 @@
+## [3.1.5](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.4...3.1.5) (2022-01-14)
+
+
+### Bug Fixes
+
+* do not initiate zkCheckout if window is not a popup ([#89](https://github.com/matter-labs/zksync-dapp-checkout/issues/89)) ([e8bbe0e](https://github.com/matter-labs/zksync-dapp-checkout/commit/e8bbe0ee68e87bf6159f635b57a7a37d66f56a32))
+
 ## [3.1.4](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.3...3.1.4) (2022-01-12)
 
 
