@@ -1,11 +1,11 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { TransactionData, TransactionFee, TotalByToken } from "@/types/index";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
 import { closestPackableTransactionAmount, closestPackableTransactionFee } from "zksync";
 import { TokenSymbol, Address } from "zksync/build/types";
 import { BigNumber } from "ethers";
-import { RootState } from "~/store";
 import { ZkFee } from "@matterlabs/zksync-nuxt-core/types";
+import { RootState } from "~/store";
+import { TransactionData, TransactionFee, TotalByToken } from "@/types/index";
 
 export const state = () => ({
   linkCheckout: <boolean>false,
@@ -130,7 +130,7 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     const usedTokens = getters.usedTokens;
     const allowanceArr = [];
     for (const symbol of usedTokens) {
-      allowanceArr.push(dispatch("zk-balances/requestAllowance", { force: true, symbol: symbol }, { root: true }));
+      allowanceArr.push(dispatch("zk-balances/requestAllowance", { force: true, symbol }, { root: true }));
     }
     await Promise.all([
       dispatch("zk-transaction/requestAllFees", true, { root: true }),
@@ -152,5 +152,10 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
       balancesPromises.push(dispatch("zk-balances/requestEthereumBalance", { symbol, force }, { root: true }));
     }
     await Promise.all(balancesPromises);
+  },
+  async setFeeToken({ commit, dispatch }, feeToken: TokenSymbol): Promise<void> {
+    commit("setFeeToken", feeToken);
+    dispatch("zk-tokens/getTokenPrice", feeToken, { root: true });
+    dispatch("zk-transaction/setSymbol", feeToken, { root: true });
   },
 };

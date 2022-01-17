@@ -12,6 +12,12 @@ export default async ({ store, route, redirect }: Context, hash: string) => {
     const transactions: PaymentItem[] = decrypt(hash);
     store.commit("checkout/setError", false);
     console.log("Transactions", transactions);
+    const totalByToken = Object.fromEntries(transactions.map((e) => [e.token, 0]));
+    transactions.forEach((e) => totalByToken[e.token]++);
+    let highestNumberSymbol = transactions[0].token;
+    transactions.forEach((e) => {
+      if (totalByToken[highestNumberSymbol] < totalByToken[e.token]) highestNumberSymbol = e.token;
+    });
     store.dispatch("checkout/setTransactionData", {
       transactions: transactions.map((e, index) => ({
         to: e.address,
@@ -19,15 +25,12 @@ export default async ({ store, route, redirect }: Context, hash: string) => {
         amount: parseDecimal(syncProvider, e.token, e.amount.toString()),
         description: `Payment ${index + 1}`,
       })),
-      feeToken: "ETH",
+      feeToken: highestNumberSymbol,
       fromAddress: undefined,
     });
     store.dispatch("checkout/requestUsedTokensPrice");
     if (store.getters["zk-account/loggedIn"]) {
-      await Promise.all([
-        store.dispatch("checkout/requestInitialData"),
-        store.dispatch("zk-account/updateAccountState", true),
-      ]);
+      await Promise.all([store.dispatch("checkout/requestInitialData"), store.dispatch("zk-account/updateAccountState", true)]);
     }
     if (!route.path.startsWith("/connect")) {
       redirect({ path: "/connect", query: { link: hash } });
