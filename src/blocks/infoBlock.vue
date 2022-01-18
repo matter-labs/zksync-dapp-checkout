@@ -1,19 +1,5 @@
 <template>
   <aside class="infoBlockContainer bg-white h-screen">
-    <!-- <zk-modal v-model="feeTokenModal">
-      <template slot="header">
-        <div class="withIcon text-violet">
-          <i class="fad fa-pen-alt" />
-          <div>Change fee token</div>
-        </div>
-      </template>
-      <template slot="default">
-        <div class="text-center">
-          <token-dropdown class="w-full" />
-        </div>
-      </template>
-    </zk-modal> -->
-
     <div class="infoBlock border-none lg:min-h-screen pt-4 pb-1 md:pt-10 md:pb-10 px-5 md:px-10">
       <header class="lg:mb-6">
         <div class="flex justify-center md:items-center mb-2">
