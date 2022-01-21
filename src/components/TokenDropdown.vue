@@ -39,6 +39,7 @@
 import Vue, { PropOptions } from "vue";
 import { ZkSingleToken, ZkTokens } from "@/types";
 import { TokenSymbol } from "zksync/build/types";
+import { ZkTokenBalances } from "@matterlabs/zksync-nuxt-core/types";
 
 export default Vue.extend({
     props: {
@@ -103,6 +104,10 @@ export default Vue.extend({
                     }
                     result.push(this.tokens[key] as ZkSingleToken);
                 }
+            }
+            if (this.$store.getters["zk-account/loggedIn"]) {
+                const balances: ZkTokenBalances = this.$store.getters["zk-balances/balances"];
+                return result.sort((a,b) => Number(!!balances[b.symbol]) - Number(!!balances[a.symbol]));
             }
             return result;
         },
