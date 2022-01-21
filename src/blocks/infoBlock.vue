@@ -58,15 +58,15 @@
             </div>
           </template>
         </zk-values-block>
+        <zk-values-block class="py-3 lg:pt-3">
+          <template slot="left-top">
+            <div class="headline">Fee token</div>
+          </template>
+          <template slot="right-top">
+            <token-dropdown v-model="feeToken" fee-allowed standalone :disabled="feesLoading" class="w-44" />
+          </template>
+        </zk-values-block>
         <zk-max-height v-model="feesOpened" :update-value="allFees.length">
-          <zk-values-block class="py-3 lg:pt-3">
-            <template slot="left-top">
-              <div class="headline">Fee token</div>
-            </template>
-            <template slot="right-top">
-              <token-dropdown v-model="feeToken" fee-allowed :disabled="feesLoading" class="standalone w-44" />
-            </template>
-          </zk-values-block>
           <zk-values-block v-for="(item, index) in allFees" :key="index" class="pt-1 lg:pt-3">
             <template slot="left-top">
               <div class="headline">

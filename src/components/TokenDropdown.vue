@@ -1,9 +1,9 @@
 <template>
-    <v-popover class="tokenDropdown" :handle-resize="true" :boundaries-element="boundariesElement" offset="5" placement="bottom" popover-base-class="dropdownBody" :open.sync="dropdownOpened" trigger="manual">
+    <v-popover class="tokenDropdown" :class="{'standalone': standalone}" :handle-resize="true" :boundaries-element="boundariesElement" offset="5" placement="bottom" :popover-base-class="['dropdownBody', standalone ? 'w-44' : '']" :open.sync="dropdownOpened" trigger="manual">
         <div class="dropdownMainContainer">
-            <div class="dropdownMain flex items-center justify-between border border-light rounded px-3" :class="[{'opacity-50': disabled}, disabled ? 'cursor-default' : 'cursor-pointer']">
+            <div class="dropdownMain flex items-center justify-between border border-light rounded px-2 md:px-3" :class="[{'opacity-50': disabled}, disabled ? 'cursor-default' : 'cursor-pointer']">
                 <div class="flex items-center pr-4 select-none" @click="focusedOnDropdown">
-                    <div class="font-bold text-lg pr-2 whitespace-no-wrap">{{ value }}</div>
+                    <div class="font-bold text-md md:text-lg pr-2 whitespace-no-wrap">{{ value }}</div>
                     <i class="text-gray fal" :class="[{ 'fa-angle-down': !dropdownOpened }, { 'fa-angle-up': dropdownOpened }]" />
                 </div>
                 <slot />
@@ -22,7 +22,7 @@
                     <div
                         v-for="(item, index) in displayedTokens"
                         :key="index"
-                        class="tokenItem py-1 px-3 text-lg cursor-pointer flex justify-between items-center"
+                        class="tokenItem py-1 px-2 md:px-3 text-md md:text-lg cursor-pointer flex justify-between items-center"
                         :class="{ selected: selectedToken === index }"
                         @click="setToken(item, index)"
                     >
@@ -54,6 +54,11 @@ export default Vue.extend({
             required: false
         } as PropOptions<boolean>,
         feeAllowed: {
+            type: Boolean,
+            default: false,
+            required: false
+        } as PropOptions<boolean>,
+        standalone: {
             type: Boolean,
             default: false,
             required: false

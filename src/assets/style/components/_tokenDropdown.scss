@@ -64,3 +64,9 @@
         }
     }
 }
+
+@media screen and (max-width: $mobile) {
+    .tokenDropdown .trigger .dropdownMain {
+        height: 28px;
+    }
+}
