@@ -77,11 +77,14 @@ export default Vue.extend({
         },
         dropdownOpened(val) {
             if (val===true) {
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        (document.querySelector('.dropdownBody.open') as HTMLElement)?.querySelector("input")?.focus();
-                    }, 100);
-                });
+                const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+                if (vw > 768) {
+                    this.$nextTick(() => {
+                        setTimeout(() => {
+                            (document.querySelector('.dropdownBody.open') as HTMLElement)?.querySelector("input")?.focus();
+                        }, 100);
+                    });
+                }
             } else {
                 this.dropdownSearch = "";
             }
