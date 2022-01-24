@@ -3,7 +3,7 @@
   "title": "zkSync Checkout — simple permissionless DeFi payment gateway",
   "homepage": "https://checkout.zksync.io",
   "description": "zkSync Checkout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.",
-  "version": "3.1.5",
+  "version": "3.2.0",
   "keywords": [
     "zksync",
     "ethereum",

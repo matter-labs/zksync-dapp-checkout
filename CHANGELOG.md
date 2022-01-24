@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.5...3.2.0) (2022-01-24)
+
+
+### Features
+
+* choose fee token ([#91](https://github.com/matter-labs/zksync-dapp-checkout/issues/91)) ([5e4ecfb](https://github.com/matter-labs/zksync-dapp-checkout/commit/5e4ecfb7b670e353ab7117c298e2de695540a4f5))
+
 ## [3.1.5](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.4...3.1.5) (2022-01-14)
 
 
