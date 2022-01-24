@@ -9,7 +9,7 @@
         <div class="flex flex-auto">
           ETH: <strong class="ml-auto">{{ netName }}</strong>
         </div>
-        <div class="flex flex-auto whitespace-no-wrap">
+        <div class="flex flex-auto whitespace-nowrap">
           API:&nbsp;<strong class="ml-auto">{{ zkApiBase.replace("https://", "") }}</strong>
         </div>
       </div>
