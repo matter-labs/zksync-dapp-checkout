@@ -7,9 +7,6 @@
 }
 
 @media (min-width: $mobile) {
-  .linkPage .zkFooterContainer .whitespace-no-wrap {
-    white-space: nowrap;
-  }
   .linkLayout .linkPage .zkFooterContainer #built-by-matterlabs {
     position: absolute;
     bottom: 40px;

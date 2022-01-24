@@ -160,60 +160,6 @@
         }
       }
 
-      .tokenDropdown {
-        position: relative;
-
-        &.focused,
-        &.opened {
-          z-index: 1;
-
-          .dropdownMain {
-            border-color: $violet;
-          }
-        }
-
-        .dropdownMain {
-          height: 36px;
-          background-color: $white;
-        }
-
-        .dropdownBody {
-          z-index: -1;
-          position: absolute;
-          width: 100%;
-          height: max-content;
-          top: 0;
-          left: 0;
-          padding-top: 35px;
-          box-sizing: content-box;
-          background-color: $white2;
-          outline: none;
-
-          .searchField {
-            position: sticky;
-            top: 0;
-            background-color: $white2;
-            padding-top: 8px;
-          }
-
-          .tokensList {
-            width: 100%;
-            height: max-content;
-            max-height: 45vh;
-            overflow: auto;
-
-            .tokenItem {
-              transition: background-color $transition;
-
-              &:hover,
-              &.selected {
-                background-color: $violetOpacity;
-              }
-            }
-          }
-        }
-      }
-
       @media screen and (max-width: $mobile) {
         max-width: $maxWidthMobile;
 

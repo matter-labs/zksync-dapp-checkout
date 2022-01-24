@@ -207,9 +207,6 @@ export default Vue.extend({
     enableLink() {
       this.addLinkMode = true;
       this.addPayment();
-      setTimeout(() => {
-        console.log((this.$refs.paymentsContainer as HTMLElement).querySelector("input")?.focus());
-      }, 500);
     },
     generate() {
       for (const payment of this.payments) {

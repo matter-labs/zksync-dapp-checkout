@@ -5,9 +5,10 @@
     transition: $transition;
     transition-property: visibility, opacity;
     will-change: visibility, opacity;
-    pointer-events: none;
-
+    
     &:not(.popover) {
+        pointer-events: none;
+        
         .tooltip-inner {
             margin-top: 7px;
             background: #00000046;
