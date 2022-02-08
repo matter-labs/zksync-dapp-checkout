@@ -15,7 +15,14 @@ import { TokenSymbol, Address } from "zksync/build/types";
  * @param statusFunction
  * @returns {Promise<Transaction | Transaction[]>}
  */
-export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, feeToken: TokenSymbol, fee: BigNumber, nonce: number, store: any, statusFunction: Function) => {
+export const transactionBatch = async (
+  transactions: Array<ZkSyncTransaction>,
+  feeToken: TokenSymbol,
+  fee: BigNumber,
+  nonce: number,
+  store: any,
+  statusFunction: Function
+) => {
   const syncWallet: Wallet = store.getters["zk-wallet/syncWallet"];
   const batchBuilder = syncWallet.batchBuilder(nonce);
   await store.dispatch("zk-transaction/addCPKToBatch", batchBuilder);
@@ -36,5 +43,7 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
   statusFunction("waitingUserConfirmation");
   const batchTransactionData = await batchBuilder.build();
   statusFunction("processing");
-  return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [
+    batchTransactionData.signature,
+  ]);
 };

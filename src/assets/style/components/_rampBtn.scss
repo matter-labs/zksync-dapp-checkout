@@ -1,25 +1,22 @@
 .defbtn.rampBtn.filled {
+  background-color: $rampGreen;
+  padding: 0 10px;
+  &:not(:disabled):hover {
+    background-color: lighten($color: $rampGreen, $amount: 5);
+  }
+  &:not(:disabled):active {
     background-color: $rampGreen;
-    padding: 0 10px;
-    &:not(:disabled):hover {
-        background-color: lighten($color: $rampGreen, $amount: 5);
-    }
-    &:not(:disabled):active {
-        background-color: $rampGreen;
-    }
+  }
 }
 
-@media screen and (max-width: $mobile)
-{
-  .valuesRightTop .rampBtn.filled
-  {
+@media screen and (max-width: $mobile) {
+  .valuesRightTop .rampBtn.filled {
     padding-top: 0.25rem !important;
     padding-bottom: 0.25rem !important;
     height: auto;
     font-size: 10px !important;
     text-align: left;
-    span span
-    {
+    span span {
       display: block;
     }
   }

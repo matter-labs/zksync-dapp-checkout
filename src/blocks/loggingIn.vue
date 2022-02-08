@@ -2,7 +2,9 @@
   <transition name="fade">
     <div v-if="loggingIn && !loggingInScreenDelay" class="loggingInContainer">
       <block-logo class="h-16" />
-      <h1 class="text-dark -dark text-3xl mt-3 text-center leading-tight">Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
+      <h1 class="text-dark -dark text-3xl mt-3 text-center leading-tight">
+        Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}
+      </h1>
       <transition-group tag="div" name="slide-vertical-fade" class="hint text-gray text-center text-sm mt-2">
         <div :key="hintText">{{ hintText }}</div>
       </transition-group>
@@ -21,12 +23,15 @@ export default Vue.extend({
   data() {
     return {
       loggingInScreenDelay: false,
-      loggedInAnimationTimeout: <ReturnType<typeof setTimeout> | undefined> undefined,
+      loggedInAnimationTimeout: <ReturnType<typeof setTimeout> | undefined>undefined,
     };
   },
   computed: {
     loggingIn() {
-      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
+      return (
+        this.$store.getters["zk-onboard/onboardStatus"] === "connecting" ||
+        this.$store.getters["zk-onboard/restoringSession"]
+      );
     },
     loggedIn() {
       return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";

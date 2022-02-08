@@ -1,9 +1,1 @@
-{
-  "printWidth": 180,
-  "singleQuote": false,
-  "semi": true,
-  "trailingComma": "es5",
-  "bracketSpacing": false,
-  "bracketSameLine": true,
-  "jsxSingleQuote": false
-}
+"@matterlabs/prettier-config"

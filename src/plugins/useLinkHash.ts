@@ -30,7 +30,10 @@ export default async ({ store, route, redirect }: Context, hash: string) => {
     });
     store.dispatch("checkout/requestUsedTokensPrice");
     if (store.getters["zk-account/loggedIn"]) {
-      await Promise.all([store.dispatch("checkout/requestInitialData"), store.dispatch("zk-account/updateAccountState", true)]);
+      await Promise.all([
+        store.dispatch("checkout/requestInitialData"),
+        store.dispatch("zk-account/updateAccountState", true),
+      ]);
     }
     if (!route.path.startsWith("/connect")) {
       redirect({ path: "/connect", query: { link: hash } });
