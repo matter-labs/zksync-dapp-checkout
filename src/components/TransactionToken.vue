@@ -203,7 +203,7 @@ export default Vue.extend({
       return this.$store.getters["zk-balances/ethereumBalanceLoading"][this.token];
     },
     unlocked(): boolean {
-      // noinspection BadExpressionStatementJS
+      // eslint-disable-next-line no-unused-expressions
       this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
       return (
         this.enoughZkBalance ||
@@ -220,7 +220,7 @@ export default Vue.extend({
       );
     },
     isAllowanceLoading(): boolean {
-      // noinspection BadExpressionStatementJS
+      // eslint-disable-next-line no-unused-expressions
       this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
       return !!this.$store.getters["zk-balances/tokensAllowanceLoading"][this.token];
     },

@@ -57,9 +57,9 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { ZkSingleToken, ZkTokens } from "@/types";
 import { TokenSymbol } from "zksync/build/types";
 import { ZkTokenBalances } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkSingleToken, ZkTokens } from "@/types";
 
 export default Vue.extend({
   props: {
@@ -86,11 +86,42 @@ export default Vue.extend({
   },
   data() {
     return {
-      dropdownOpened: <boolean>false,
-      dropdownSearch: <string>"",
-      isDropdownFocused: <boolean>false,
+      dropdownOpened: false,
+      dropdownSearch: "",
+      isDropdownFocused: false,
       selectedToken: 0,
     };
+  },
+  computed: {
+    tokens(): ZkTokens {
+      return this.$store.getters["zk-tokens/zkTokens"] as ZkTokens;
+    },
+    displayedTokens(): ZkSingleToken[] {
+      const result: ZkSingleToken[] = [];
+        let key: string;
+      for (key in this.tokens) {
+        if (
+          Object.prototype.hasOwnProperty.call(this.tokens, key) &&
+          (!this.feeAllowed || (this.feeAllowed && this.tokens[key].enabledForFees))
+        ) {
+          if (
+            this.dropdownSearch &&
+            !this.tokens[key].symbol.toLowerCase().includes(this.dropdownSearch.toLowerCase())
+          ) {
+            continue;
+          }
+          result.push(this.tokens[key] as ZkSingleToken);
+        }
+      }
+      if (this.$store.getters["zk-account/loggedIn"]) {
+        const balances: ZkTokenBalances = this.$store.getters["zk-balances/balances"];
+        return result.sort((a, b) => Number(!!balances[b.symbol]) - Number(!!balances[a.symbol]));
+      }
+      return result;
+    },
+    boundariesElement(): HTMLElement {
+      return window.document.body;
+    },
   },
   watch: {
     displayedTokens: {
@@ -114,37 +145,6 @@ export default Vue.extend({
       } else {
         this.dropdownSearch = "";
       }
-    },
-  },
-  computed: {
-    tokens(): ZkTokens {
-      return this.$store.getters["zk-tokens/zkTokens"] as ZkTokens;
-    },
-    displayedTokens(): ZkSingleToken[] {
-      let result: ZkSingleToken[] = [],
-        key: string;
-      for (key in this.tokens) {
-        if (
-          this.tokens.hasOwnProperty(key) &&
-          (!this.feeAllowed || (this.feeAllowed && this.tokens[key].enabledForFees))
-        ) {
-          if (
-            this.dropdownSearch &&
-            !this.tokens[key].symbol.toLowerCase().includes(this.dropdownSearch.toLowerCase())
-          ) {
-            continue;
-          }
-          result.push(this.tokens[key] as ZkSingleToken);
-        }
-      }
-      if (this.$store.getters["zk-account/loggedIn"]) {
-        const balances: ZkTokenBalances = this.$store.getters["zk-balances/balances"];
-        return result.sort((a, b) => Number(!!balances[b.symbol]) - Number(!!balances[a.symbol]));
-      }
-      return result;
-    },
-    boundariesElement(): HTMLElement {
-      return window.document.body;
     },
   },
   methods: {

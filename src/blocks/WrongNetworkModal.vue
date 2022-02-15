@@ -30,7 +30,7 @@ export default Vue.extend({
   name: "WrongNetwork",
   computed: {
     network(): string {
-      return (<ZkConfig>this.$store.getters["zk-onboard/config"]).ethereumNetwork.name;
+      return (this.$store.getters["zk-onboard/config"] as ZkConfig).ethereumNetwork.name;
     },
     opened: {
       set(val): void {
