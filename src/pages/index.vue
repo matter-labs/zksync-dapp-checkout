@@ -6,7 +6,8 @@
       @close="
         modal = false;
         cancelTransfer();
-      ">
+      "
+    >
       <template slot="header">
         <div class="withIcon text-warning text-yellow">
           <i class="fad fa-info-square" />
@@ -14,10 +15,17 @@
         </div>
       </template>
       <template slot="default">
-        <div class="text-sm">The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.</div>
-        <div v-if="!transferAllowed" class="text-sm text-red">You have to deposit a little bit more to cover new transaction fee.</div>
+        <div class="text-sm">
+          The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible
+          to break-even costs.
+        </div>
+        <div v-if="!transferAllowed" class="text-sm text-red">
+          You have to deposit a little bit more to cover new transaction fee.
+        </div>
         <div v-for="(item, index) in transactionFees" :key="index" class="mt-3">
-          <div class="text-lg">{{ item.type === "batch" ? "Batch transaction fee" : "One-time account activation fee" }}</div>
+          <div class="text-lg">
+            {{ item.type === "batch" ? "Batch transaction fee" : "One-time account activation fee" }}
+          </div>
           <zk-values-block>
             <template slot="left-top">
               <div class="headline">Previous fee</div>
@@ -27,7 +35,9 @@
                 <div class="value">
                   {{ item.previous | formattedPrice(transactionData.feeToken) }}
                 </div>
-                <div class="secondaryValue">{{ item.previous | parseBigNumberish(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
+                <div class="secondaryValue">
+                  {{ item.previous | parseBigNumberish(transactionData.feeToken) }} {{ transactionData.feeToken }}
+                </div>
               </div>
             </template>
           </zk-values-block>
@@ -40,7 +50,9 @@
                 <div class="value">
                   {{ item.new | formattedPrice(transactionData.feeToken) }}
                 </div>
-                <div class="secondaryValue">{{ item.new | parseBigNumberish(transactionData.feeToken) }} {{ transactionData.feeToken }}</div>
+                <div class="secondaryValue">
+                  {{ item.new | parseBigNumberish(transactionData.feeToken) }} {{ transactionData.feeToken }}
+                </div>
               </div>
             </template>
           </zk-values-block>
@@ -53,7 +65,8 @@
             @click="
               modal = false;
               cancelTransfer();
-            ">
+            "
+          >
             <i class="far fa-arrow-left" />
             <span>Cancel payment</span>
           </zk-defbtn>
@@ -62,7 +75,8 @@
             @click="
               modal = false;
               transfer();
-            ">
+            "
+          >
             <i class="fas fa-paper-plane" />
             <span>Complete payment</span>
           </zk-defbtn>
@@ -95,8 +109,9 @@
             </template>
             <template slot="default">
               <div class="text-sm text-gray font-light">
-                The default recommended <span class="font-normal">{{ transactionData.feeToken }}</span> amount to deposit is <span class="font-normal">25% higher</span> than the
-                minimal required one for paying fees to take into account the risk of fluctuating transaction fees.
+                The default recommended <span class="font-normal">{{ transactionData.feeToken }}</span> amount to
+                deposit is <span class="font-normal">25% higher</span> than the minimal required one for paying fees to
+                take into account the risk of fluctuating transaction fees.
               </div>
             </template>
           </zk-note>
@@ -114,10 +129,16 @@
         :key="token"
         v-model="tokenItemsValid[token]"
         :token="token"
-        :total="totalByToken[token] ? totalByToken[token].toString() : '0'" />
+        :total="totalByToken[token] ? totalByToken[token].toString() : '0'"
+      />
       <div class="mainBtnsContainer">
         <div class="mainBtns">
-          <zk-defbtn v-if="displayActivateAccountBtn" :disabled="!transferAllowed || !canCPK || cpkLoading" :loader="cpkLoading" @click="signActivation()">
+          <zk-defbtn
+            v-if="displayActivateAccountBtn"
+            :disabled="!transferAllowed || !canCPK || cpkLoading"
+            :loader="cpkLoading"
+            @click="signActivation()"
+          >
             <i class="fas fa-unlock"></i>
             <span>{{ cpkBtnText }}</span>
           </zk-defbtn>
@@ -126,7 +147,10 @@
             <span>Complete payment</span>
           </zk-defbtn>
         </div>
-        <div v-if="displayActivateAccountBtn && (!canCPK || !transferAllowed) && !cpkLoading" class="text-gray text-center text-sm pt-2">
+        <div
+          v-if="displayActivateAccountBtn && (!canCPK || !transferAllowed) && !cpkLoading"
+          class="text-gray text-center text-sm pt-2"
+        >
           Complete all deposit operations to continue
         </div>
       </div>
@@ -134,15 +158,20 @@
     <div v-else-if="step === 'transfer'" class="w-full">
       <div class="font-firaCondensed font-medium text-3xl text-dark -dark text-center pt-5 md:pt-10">Payment</div>
       <div v-if="subStep === 'processing'" class="text-lg text-center pt-2">Processing...</div>
-      <div v-else-if="subStep === 'waitingUserConfirmation'" class="text-lg text-center pt-2">Follow the instructions in your wallet</div>
-      <div v-else-if="subStep === 'committing'" class="text-lg text-center pt-2">Waiting for the transactions to be mined...</div>
+      <div v-else-if="subStep === 'waitingUserConfirmation'" class="text-lg text-center pt-2">
+        Follow the instructions in your wallet
+      </div>
+      <div v-else-if="subStep === 'committing'" class="text-lg text-center pt-2">
+        Waiting for the transactions to be mined...
+      </div>
       <zk-loader class="mx-auto mt-6" size="md" color="violet" />
     </div>
     <div v-else-if="step === 'success'" class="successPage w-full">
       <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Done. Thank you!</div>
       <zk-success-check-mark big class="w-11/12 max-w-xxs mx-auto py-5" />
       <div class="text-md text-center font-light pt-2">
-        Wasn't that easy? Learn more about <a class="linkDefault lightLink" href="https://zksync.io/" target="_blank">zkSync</a>
+        Wasn't that easy? Learn more about
+        <a class="linkDefault lightLink" href="https://zksync.io/" target="_blank">zkSync</a>
       </div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
@@ -165,7 +194,11 @@
             <template slot="first">
               <div class="tokenItem">
                 <div class="tokenName">
-                  {{ getTokenByID(typeof item.txData.tx.token === "number" ? item.txData.tx.token : item.txData.tx.feeToken) }}
+                  {{
+                    getTokenByID(
+                      typeof item.txData.tx.token === "number" ? item.txData.tx.token : item.txData.tx.feeToken
+                    )
+                  }}
                 </div>
               </div>
             </template>
@@ -174,7 +207,12 @@
                 {{
                   item.txData.tx.fee === "0"
                     ? item.txData.tx.amount
-                    : item.txData.tx.fee | parseBigNumberish(getTokenByID(typeof item.txData.tx.token === "number" ? item.txData.tx.token : item.txData.tx.feeToken))
+                    : item.txData.tx.fee
+                      | parseBigNumberish(
+                        getTokenByID(
+                          typeof item.txData.tx.token === "number" ? item.txData.tx.token : item.txData.tx.feeToken
+                        )
+                      )
                 }}
               </div>
             </template>
@@ -282,7 +320,10 @@ export default Vue.extend({
       return this.cpkStatus === false;
     },
     canCPK(): boolean {
-      return this.$store.getters["zk-account/accountState"] && typeof this.$store.getters["zk-account/accountState"].id === "number";
+      return (
+        this.$store.getters["zk-account/accountState"] &&
+        typeof this.$store.getters["zk-account/accountState"].id === "number"
+      );
     },
     cpkLoading(): boolean {
       return this.cpkState === "processing" || this.cpkState === "waitingUserConfirmation";

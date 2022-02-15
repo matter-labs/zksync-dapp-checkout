@@ -18,8 +18,8 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { checkAddress } from "@/plugins/utils";
 import { DecimalBalance } from "@matterlabs/zksync-nuxt-core/types";
+import { checkAddress } from "@/plugins/utils";
 
 export default Vue.extend({
   props: {
@@ -40,7 +40,7 @@ export default Vue.extend({
     },
     error(): string {
       if (this.inputtedWallet && !this.isValid) {
-        if(!this.inputtedWallet.startsWith("0x")) {
+        if (!this.inputtedWallet.startsWith("0x")) {
           return "Address should start with '0x'";
         }
         return "Invalid address";

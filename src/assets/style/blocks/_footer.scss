@@ -51,8 +51,7 @@
   .rightSide {
     @apply flex items-baseline w-full text-right justify-end;
 
-    .system-info
-    {
+    .system-info {
       @apply flex items-baseline;
     }
   }

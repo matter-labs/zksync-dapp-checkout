@@ -18,7 +18,7 @@
         font-weight: 400;
         min-width: 300px;
         width: max-content;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         height: 55px;
       }
@@ -39,7 +39,7 @@
   @media screen and (max-width: $mobile) {
     .successPage {
       height: auto;
-      
+
       .customScrollList {
         max-height: 50vh;
       }
@@ -57,7 +57,7 @@
         width: 100%;
         background-color: $white;
         padding: 10px 1.25rem;
-        box-shadow: 0 32px 64px rgba(17, 17, 17, .08);
+        box-shadow: 0 32px 64px rgba(17, 17, 17, 0.08);
 
         .defbtn {
           height: 50px;

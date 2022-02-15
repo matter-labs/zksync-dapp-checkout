@@ -1,72 +1,74 @@
 .tokenDropdown {
-    position: relative;
+  position: relative;
 
-    &.focused, &.open {
-        .dropdownMain {
-            border-color: $violet;
-        }
+  &.focused,
+  &.open {
+    .dropdownMain {
+      border-color: $violet;
     }
-    &.standalone {
-        &.open {
-            .dropdownMainContainer .dropdownMain {
-                width: 100%;
-            }
-        }
-        .dropdownMainContainer {
-            display: flex;
-            justify-content: flex-end;
-
-            .dropdownMain {
-                width: max-content;
-                & > div {
-                    width: 100%;
-                    padding-right: 0 !important;
-                    justify-content: space-between;
-                }
-            }
-        }
+  }
+  &.standalone {
+    &.open {
+      .dropdownMainContainer .dropdownMain {
+        width: 100%;
+      }
     }
-
     .dropdownMainContainer {
-        width: 100%;
-    }
+      display: flex;
+      justify-content: flex-end;
 
-    .trigger {
-        width: 100%;
-
-        .dropdownMain {
-            width: 100%;
-            height: 36px;
-            background-color: $white;
-            transition: opacity $transition;
-            will-change: opacity;
+      .dropdownMain {
+        width: max-content;
+        & > div {
+          width: 100%;
+          padding-right: 0 !important;
+          justify-content: space-between;
         }
+      }
     }
+  }
+
+  .dropdownMainContainer {
+    width: 100%;
+  }
+
+  .trigger {
+    width: 100%;
+
+    .dropdownMain {
+      width: 100%;
+      height: 36px;
+      background-color: $white;
+      transition: opacity $transition;
+      will-change: opacity;
+    }
+  }
 }
 .dropdownBody {
-    z-index: 99;
-    box-sizing: content-box;
-    background-color: $white2;
-    outline: none;
+  z-index: 99;
+  box-sizing: content-box;
+  background-color: $white2;
+  outline: none;
 
-    .tokensList {
-        width: 100%;
-        height: max-content;
-        max-height: 35vh;
-        overflow: auto;
+  .tokensList {
+    width: 100%;
+    height: max-content;
+    max-height: 35vh;
+    overflow: auto;
 
-        .tokenItem {
-            transition: background-color $transition;
+    .tokenItem {
+      transition: background-color $transition;
 
-            &:hover, &.selected {
-                background-color: $violetOpacity;
-            }
-        }
+      &:hover,
+      &.selected {
+        background-color: $violetOpacity;
+      }
     }
+  }
 }
 
 @media screen and (max-width: $mobile) {
-    .tokenDropdown .trigger .dropdownMain {
-        height: 28px;
-    }
+  .tokenDropdown .trigger .dropdownMain {
+    height: 28px;
+  }
 }

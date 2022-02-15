@@ -25,7 +25,7 @@ body {
 
 a {
   &:hover {
-    color: darken($violet, .5)
+    color: darken($violet, 0.5);
   }
 }
 
@@ -70,7 +70,8 @@ input[type="number"] {
     will-change: top, opacity;
     transition: opacity $transition;
 
-    &:hover, &.ps--clicking {
+    &:hover,
+    &.ps--clicking {
       opacity: 1;
       background-color: transparent !important;
 

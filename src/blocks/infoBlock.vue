@@ -4,7 +4,9 @@
       <header class="lg:mb-6">
         <div class="flex justify-center md:items-center mb-2">
           <a href="//zksync.io" class="logo-container" target="_blank"><logo /></a>
-          <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
+          <div
+            class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1"
+          >
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
             <span v-if="!isMainnet" class="networkName text-sm font-light inline-flex items-center -mr-10 md:mr-0">
               {{ network }}
@@ -36,13 +38,20 @@
       </vue-custom-scrollbar>
       <div class="w-full">
         <div v-if="isInfoAvailable !== false" class="w-full border-b-1 border-light -dark pt-3" />
-        <zk-values-block v-if="isInfoAvailable" class="pt-1 pb-0 lg:pt-3 cursor-pointer" @click="feesOpened = !feesOpened">
+        <zk-values-block
+          v-if="isInfoAvailable"
+          class="pt-1 pb-0 lg:pt-3 cursor-pointer"
+          @click="feesOpened = !feesOpened"
+        >
           <template slot="left-top">
             <div class="flex items-center">
               <div class="headline big">Fees</div>
               <transition name="fadeFast">
                 <span v-if="!feesLoading" class="ml-3">
-                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${feesOpened === true ? -180 : 0}deg)` }" />
+                  <i
+                    class="transition-transform ease-ease duration-200 far fa-angle-down"
+                    :style="{ transform: `rotate(${feesOpened === true ? -180 : 0}deg)` }"
+                  />
                 </span>
               </transition>
             </div>
@@ -91,12 +100,19 @@
 
         <div v-if="isInfoAvailable !== false" class="w-full border-b-1 border-light -dark pt-1 lg:pt-3" />
         <transition name="fade">
-          <div v-if="loggedIn && !feesLoading" class="pt-2 lg:pt-4 flex cursor-pointer" @click="totalOpened = !totalOpened">
+          <div
+            v-if="loggedIn && !feesLoading"
+            class="pt-2 lg:pt-4 flex cursor-pointer"
+            @click="totalOpened = !totalOpened"
+          >
             <div class="flex-2">
               <div class="flex items-center">
                 <div class="font-firaCondensed font-bold text-lg md:text-xl text-dark -dark">Total amount</div>
                 <span class="ml-3">
-                  <i class="transition-transform ease-ease duration-200 far fa-angle-down" :style="{ transform: `rotate(${totalOpened === true ? -180 : 0}deg)` }" />
+                  <i
+                    class="transition-transform ease-ease duration-200 far fa-angle-down"
+                    :style="{ transform: `rotate(${totalOpened === true ? -180 : 0}deg)` }"
+                  />
                 </span>
               </div>
             </div>
@@ -106,7 +122,11 @@
               </div>
               <zk-max-height v-model="totalOpened" :update-value="allFees.length">
                 <div class="md:flex flex-col items-end totalTokensList">
-                  <div v-for="(item, token) in totalByToken" :key="token" class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 -dark pt-1 md:pt-2">
+                  <div
+                    v-for="(item, token) in totalByToken"
+                    :key="token"
+                    class="flex items-center justify-end font-firaCondensed font-bold text-xs text-black2 -dark pt-1 md:pt-2"
+                  >
                     <div>{{ item | parseBigNumberish(token) }} {{ token }}</div>
                   </div>
                 </div>
@@ -146,7 +166,9 @@ export default Vue.extend({
   },
   computed: {
     feesLoading(): boolean {
-      return this.$store.getters["zk-transaction/feeLoading"] || this.$store.getters["zk-transaction/activationFeeLoading"];
+      return (
+        this.$store.getters["zk-transaction/feeLoading"] || this.$store.getters["zk-transaction/activationFeeLoading"]
+      );
     },
     isInfoAvailable(): boolean {
       if (this.transactionData.transactions.length < 1) {
@@ -176,7 +198,9 @@ export default Vue.extend({
     },
     allFees(): Array<TransactionFee> {
       if (!this.loggedIn) {
-        return this.$store.getters["zk-transaction/fees"].filter((item: TransactionFee) => item.key !== "accountActivation");
+        return this.$store.getters["zk-transaction/fees"].filter(
+          (item: TransactionFee) => item.key !== "accountActivation"
+        );
       }
       return this.$store.getters["zk-transaction/fees"];
     },
