@@ -20,7 +20,6 @@ const walletMiddleware: Middleware = (context: Context) => {
     if (context.route.path.startsWith("/connect")) {
       context.redirect({ query: context.route.query, path: "/" });
     }
-    
   } else if (!context.route.path.startsWith("/connect") && !context.store.getters["zk-onboard/restoringSession"]) {
     context.redirect({ query: context.route.query, path: "/connect" });
   }

@@ -98,7 +98,7 @@ export default Vue.extend({
     },
     displayedTokens(): ZkSingleToken[] {
       const result: ZkSingleToken[] = [];
-        let key: string;
+      let key: string;
       for (key in this.tokens) {
         if (
           Object.prototype.hasOwnProperty.call(this.tokens, key) &&

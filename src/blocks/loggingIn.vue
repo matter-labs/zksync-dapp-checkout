@@ -23,7 +23,7 @@ export default Vue.extend({
   data() {
     return {
       loggingInScreenDelay: false,
-      loggedInAnimationTimeout: <ReturnType<typeof setTimeout> | undefined>undefined,
+      loggedInAnimationTimeout: undefined as ReturnType<typeof setTimeout> | undefined,
     };
   },
   computed: {

@@ -29,9 +29,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    if (process ? process.client : undefined) {
-      window.history.scrollRestoration = "manual";
-    }
+    window.history.scrollRestoration = "manual";
   },
 });
 </script>

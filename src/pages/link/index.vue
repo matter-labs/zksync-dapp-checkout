@@ -14,7 +14,7 @@
       </template>
     </zk-modal>
 
-    <zk-modal :not-closable="true" v-model="successModal" @close="successModal = false">
+    <zk-modal v-model="successModal" :not-closable="true" @close="successModal = false">
       <template slot="header">
         <div class="withIcon text-green">
           <i class="fad fa-box-check" />
@@ -26,8 +26,8 @@
           Your payment link has been created!<br />Now you can share it with someone.
         </div>
         <div class="successLinkContainer">
-          <zk-input size="sm" ref="linkInput" :value="paymentLink" readonly @click="$refs.linkInput.focus()" />
-          <zk-defbtn id="copy-link" @click="copyLink()" v-popover:copy-link.bottom>
+          <zk-input ref="linkInput" size="sm" :value="paymentLink" readonly @click="$refs.linkInput.focus()" />
+          <zk-defbtn id="copy-link" v-popover:copy-link.bottom @click="copyLink()">
             <span>Copy</span>
             <i class="fal fa-clipboard" />
           </zk-defbtn>
@@ -48,7 +48,7 @@
             <i class="far fa-arrow-left" />
             <span>Close</span>
           </zk-defbtn>
-          <zk-defbtn @click.native="previewLoading = true" :loader="previewLoading" :to="`/link/${paymentHash}`">
+          <zk-defbtn :loader="previewLoading" :to="`/link/${paymentHash}`" @click.native="previewLoading = true">
             <span>Try now</span>
             <i v-if="!previewLoading" class="far fa-arrow-right" />
           </zk-defbtn>
@@ -63,12 +63,12 @@
           class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1"
         >
           <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
-          <span class="networkName text-sm font-light" v-if="!isMainnet"> {{ currentNetwork }}</span>
+          <span v-if="!isMainnet" class="networkName text-sm font-light"> {{ currentNetwork }}</span>
         </div>
       </nuxt-link>
       <ul
-        class="feature-list zk-container font-light text-dark mt-4 mr-auto ml-auto mb-6 text-sm md:text-md flex-col items-center text-gray-600 dark:text-gray-100"
         v-if="!showAddLink"
+        class="feature-list zk-container font-light text-dark mt-4 mr-auto ml-auto mb-6 text-sm md:text-md flex-col items-center text-gray-600 dark:text-gray-100"
       >
         <li class="flex-grow headline big text-violet mb-3">Get paid in tokens with zkSync:</li>
         <li class="mb-3">
@@ -96,43 +96,44 @@
         </li>
       </ul>
     </div>
-    <div class="linkBody py-4 md:py-10" ref="paymentsContainer">
+    <div ref="paymentsContainer" class="linkBody py-4 md:py-10">
       <h2 class="mx-auto text-center zk-container headline big text-violet mb-3" v-html="createLinkBlockTitle" />
-      <zk-defbtn class="mx-auto mt-5" v-if="!showAddLink" big @click="enableLink()">Try it now</zk-defbtn>
-      <div
-        class="paymentContainer w-full py-2 md:py-1"
-        v-for="index in payments.keys()"
-        :key="index"
-        v-if="showAddLink"
-      >
-        <payment-item
-          :displayIndex="payments.length >= 2"
-          :displayDelete="payments.length >= 2"
-          :index="index"
-          v-model="payments[index]"
-          @delete="deletePayment(index)"
-        />
-      </div>
+      <zk-defbtn v-if="!showAddLink" class="mx-auto mt-5" big @click="enableLink()">Try it now</zk-defbtn>
+      <template v-if="showAddLink">
+        <div
+          v-for="index in payments.keys()"
+          :key="index"
+          class="paymentContainer w-full py-2 md:py-1"
+        >
+          <payment-item
+            v-model="payments[index]"
+            :display-index="payments.length >= 2"
+            :display-delete="payments.length >= 2"
+            :index="index"
+            @delete="deletePayment(index)"
+          />
+        </div>
+      </template>
       <zk-defbtn
+        v-if="showAddLink"
         outline
         class="mx-auto mt-5"
-        @click="addPayment()"
-        v-if="showAddLink"
         :disabled="payments.length >= maxPayments"
+        @click="addPayment()"
         >Add another transaction</zk-defbtn
       >
       <div
+        v-if="showAddLink"
         class="text-gray text-sm text-center leading-tight pt-2"
         :class="{ 'text-dark': payments.length >= maxPayments }"
-        v-if="showAddLink"
       >
         {{ payments.length >= 5 ? `${payments.length}/` : "Up to " }}{{ maxPayments }} transactions
       </div>
     </div>
     <div class="linkFooter filter rounded-b px-5">
       <zk-max-height
-        :value="!validConfig && showAddLink"
         v-show="payments.length < 3"
+        :value="!validConfig && showAddLink"
         class="mt-0 md:mt-5 md:mt-7 zk-container mx-auto"
       >
         <div>
@@ -151,9 +152,8 @@
         </div>
       </zk-max-height>
       <zk-defbtn
-        class="mx-auto mt-5 md:mt-5 shadow-sm"
-        id=""
         v-if="showAddLink"
+        class="mx-auto mt-5 md:mt-5 shadow-sm"
         :outline="!validConfig"
         :disabled="!validConfig"
         big
@@ -161,7 +161,7 @@
         >Build your payment link</zk-defbtn
       >
       <div class="poweredBy pt-5 md:pt-10 pb-0 md:pb-5 flex items-center justify-between">
-        <block-footer :fullFooterMenu="true" />
+        <block-footer :full-footer-menu="true" />
       </div>
     </div>
   </div>
@@ -181,7 +181,7 @@ export default Vue.extend({
   data() {
     return {
       addLinkMode: false,
-      payments: <PaymentItem[]>[],
+      payments: [] as PaymentItem[],
       wrongDataModal: false,
       successModal: false,
       previewLoading: false,

@@ -75,7 +75,7 @@ export default Vue.extend({
     hide(): void {
       setTimeout(() => {
         if (this.$refs["copy-address"]) {
-          this.$refs["copy-address"].visible = false;
+          (this.$refs["copy-address"] as HTMLElement).hidden = true;
         }
       }, 1500);
     },
