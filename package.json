@@ -59,7 +59,7 @@
     "@babel/eslint-parser": "^7.14.7",
     "@commitlint/cli": "^16.0.1",
     "@commitlint/config-conventional": "^16.0.0",
-    "@matterlabs/zksync-nuxt-core": "1.7.0-alpha.9",
+    "@matterlabs/zksync-nuxt-core": "1.7.0-alpha.10",
     "@matterlabs/zksync-nuxt-ui": "^0.0.0",
     "@nuxt/types": "^2.15.7",
     "@nuxt/typescript-build": "^2.1.0",
