@@ -1,3 +1,4 @@
+/* eslint-disable require-await */
 import { ActionTree, GetterTree, MutationTree } from "vuex";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
 import { closestPackableTransactionAmount, closestPackableTransactionFee } from "zksync";
@@ -28,7 +29,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     };
   },
   getTransactionBatchFee(_, __, ___, rootGetters): false | TransactionFee {
-    // noinspection BadExpressionStatementJS
+    // eslint-disable-next-line no-unused-expressions
     rootGetters["zk-transaction/feeLoading"];
     if (rootGetters["zk-transaction/fee"]) {
       const minFee = BigNumber.from(rootGetters["zk-transaction/fee"]);
@@ -42,7 +43,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     return false;
   },
   getAccountUnlockFee(_, __, ___, rootGetters): false | BigNumber {
-    // noinspection BadExpressionStatementJS
+    // eslint-disable-next-line no-unused-expressions
     rootGetters["zk-transaction/activationFeeLoading"];
     return rootGetters["zk-transaction/accountActivationFee"];
   },
@@ -55,7 +56,10 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     return Array.from(tokens);
   },
   getTotalByToken(state, _, __, rootGetters): TotalByToken {
-    const allFees = rootGetters["zk-transaction/fees"].map((e: ZkFee) => ({ ...e, token: rootGetters["zk-transaction/feeSymbol"] }));
+    const allFees = rootGetters["zk-transaction/fees"].map((e: ZkFee) => ({
+      ...e,
+      token: rootGetters["zk-transaction/feeSymbol"],
+    }));
     const totalByToken = new Map();
     const addToTotalByToken = (amount: BigNumber, token: TokenSymbol) => {
       if (totalByToken.has(token)) {
@@ -118,7 +122,10 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
       "zk-transaction/setTransferBatch",
       [
         ...data.transactions.map((e) => ({ address: e.to, token: e.token })),
-        { address: rootGetters["zk-account/address"] ? rootGetters["zk-account/address"] : data.transactions[0].to, token: data.feeToken },
+        {
+          address: rootGetters["zk-account/address"] ? rootGetters["zk-account/address"] : data.transactions[0].to,
+          token: data.feeToken,
+        },
       ],
       { root: true }
     );

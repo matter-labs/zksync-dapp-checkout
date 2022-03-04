@@ -53,18 +53,19 @@
     "@nuxt/typescript-runtime": "^2.1.0",
     "core-js": "^3.15.1",
     "matter-zk-ui": "^1.0.9",
-    "nuxt": "^2.15.7"
+    "nuxt": "latest"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",
     "@commitlint/cli": "^16.0.1",
     "@commitlint/config-conventional": "^16.0.0",
-    "@matterlabs/zksync-nuxt-core": "1.7.0-alpha.10",
+    "@matterlabs/eslint-config-nuxt": "^1.0.6",
+    "@matterlabs/prettier-config": "^1.0.2",
+    "@matterlabs/zksync-nuxt-core": "1.7.0-alpha.11",
     "@matterlabs/zksync-nuxt-ui": "^0.0.0",
     "@nuxt/types": "^2.15.7",
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/dotenv": "^1.4.1",
-    "@nuxtjs/eslint-config-typescript": "^6.0.1",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.0.2",
     "@nuxtjs/style-resources": "^1.2.1",
@@ -77,19 +78,14 @@
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "^5.8.1",
     "cspell": "latest",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-prettier-vue": "^3.1.0",
-    "eslint-plugin-vue": "^8.2.0",
-    "fibers": "^5.0.0",
+    "eslint": "8",
     "husky": "^7.0.4",
     "lint-staged": "^10.5.4",
     "moment": "^2.29.1",
     "nuxt-social-meta": "^0.0.5",
     "nuxt-webfontloader": "^1.1.0",
     "postcss": "latest",
-    "prettier": "^2.5.1",
+    "prettier": "2.x",
     "sass": "^1.43.5",
     "sass-loader": "^10.2.0",
     "semantic-release": "^18.0.1",
@@ -103,7 +99,7 @@
     "vue": "^2.6.12",
     "vue-custom-scrollbar": "^1.4.0",
     "vue-js-popover": "^1.2.1",
-    "zksync": "0.12.0-alpha.5",
+    "zksync": "0.12.0-alpha.6",
     "zksync-checkout": "latest",
     "zksync-checkout-internal": "latest"
   },
@@ -148,5 +144,10 @@
     "semantic-release": "semantic-release",
     "postinstall": "husky install"
   },
+  "resolutions": {
+    "core-js": "^3.15.1",
+    "eth-sig-utils": "^3.0.1"
+  },
+  "prettier": "@matterlabs/prettier-config",
   "packageManager": "yarn@3.1.1"
 }
