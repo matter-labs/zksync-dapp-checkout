@@ -53,7 +53,7 @@
     "@nuxt/typescript-runtime": "^2.1.0",
     "core-js": "^3.15.1",
     "matter-zk-ui": "^1.0.9",
-    "nuxt": "latest"
+    "nuxt": "^2.15.7"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",

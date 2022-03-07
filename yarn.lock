@@ -2710,7 +2710,7 @@ __metadata:
     lint-staged: ^10.5.4
     matter-zk-ui: ^1.0.9
     moment: ^2.29.1
-    nuxt: latest
+    nuxt: ^2.15.7
     nuxt-social-meta: ^0.0.5
     nuxt-webfontloader: ^1.1.0
     postcss: latest
@@ -17354,7 +17354,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nuxt@npm:^2.15.3, nuxt@npm:latest":
+"nuxt@npm:^2.15.3, nuxt@npm:^2.15.7":
   version: 2.15.8
   resolution: "nuxt@npm:2.15.8"
   dependencies:
