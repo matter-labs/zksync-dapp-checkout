@@ -348,6 +348,11 @@ export default Vue.extend({
         }
       },
     },
+    needToDeposit(val) {
+      if (val > 0) {
+        this.depositAmount = this.$options.filters!.parseBigNumberish(this.needToDeposit, this.token);
+      }
+    },
     async subStep(val) {
       if (val === "waitingUserConfirmation") {
         this.lineStateText = "Confirm operation";
