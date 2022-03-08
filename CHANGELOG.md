@@ -1,3 +1,10 @@
+# [3.3.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.2.0...3.3.0) (2022-03-08)
+
+
+### Features
+
+* Argent integration ([#93](https://github.com/matter-labs/zksync-dapp-checkout/issues/93)) ([9725f3c](https://github.com/matter-labs/zksync-dapp-checkout/commit/9725f3c22a5bac830e36d0b80b1cf9a5470b8e0c))
+
 # [3.2.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.5...3.2.0) (2022-01-24)
 
 
