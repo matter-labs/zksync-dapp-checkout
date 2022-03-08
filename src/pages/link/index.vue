@@ -97,6 +97,7 @@
       </ul>
     </div>
     <div ref="paymentsContainer" class="linkBody py-4 md:py-10">
+      <!-- @ts-ignore -->
       <h2 class="mx-auto text-center zk-container headline big text-violet mb-3" v-html="createLinkBlockTitle" />
       <zk-defbtn v-if="!showAddLink" class="mx-auto mt-5" big @click="enableLink()">Try it now</zk-defbtn>
       <template v-if="showAddLink">
@@ -169,12 +170,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Network } from "zksync/build/types";
-import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
-import { FACEBOOK_URL, TWEET_URL } from "@/plugins/build";
-import { encrypt } from "@/plugins/link";
-import { checkAddress } from "@/plugins/utils";
-import { PaymentItem } from "@/types";
+import {Network} from "zksync/build/types";
+import {copyToClipboard} from "@matterlabs/zksync-nuxt-core/utils";
+import {FACEBOOK_URL, TWEET_URL} from "@/plugins/build";
+import {encrypt} from "@/plugins/link";
+import {checkAddress} from "@/plugins/utils";
+import {PaymentItem} from "@/types";
 
 export default Vue.extend({
   layout: "link",

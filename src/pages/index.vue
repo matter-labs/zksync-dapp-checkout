@@ -194,10 +194,7 @@
             <template slot="first">
               <div class="tokenItem">
                 <div class="tokenName">
-                  {{
-                    getTokenByID(
-                      typeof item.txData.tx.token === "number" ? item.txData.tx.token : item.txData.tx.feeToken
-                    )
+                  {{ item.txData.tx.token ? item.txData.tx.token : item.txData.tx.feeToken
                   }}
                 </div>
               </div>
@@ -205,14 +202,7 @@
             <template slot="second">
               <div class="amount">
                 {{
-                  item.txData.tx.fee === "0"
-                    ? item.txData.tx.amount
-                    : item.txData.tx.fee
-                      | parseBigNumberish(
-                        getTokenByID(
-                          typeof item.txData.tx.token === "number" ? item.txData.tx.token : item.txData.tx.feeToken
-                        )
-                      )
+                  item.txData.tx.fee === "0" ? item.txData.tx.amount : item.txData.tx.fee | parseBigNumberish(item.txData.tx.token ? item.txData.tx.token : item.txData.tx.feeToken)
                 }}
               </div>
             </template>
@@ -234,16 +224,16 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { BigNumberish } from "ethers";
-import { Wallet } from "zksync";
-import { ZkSyncTransaction } from "zksync-checkout-internal/src/types";
-import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
-import { Transaction } from "zksync/build/wallet";
-import { ZkCPKStatus } from "@matterlabs/zksync-nuxt-core/types";
-import { filterError } from "@matterlabs/zksync-nuxt-core/utils";
-import { Address, TokenSymbol } from "zksync/build/types";
-import { transactionBatch } from "@/plugins/walletActions/transaction";
-import { TransactionData, TotalByToken } from "@/types";
+import {BigNumberish} from "ethers";
+import {Wallet} from "zksync";
+import {ZkSyncTransaction} from "zksync-checkout-internal/src/types";
+import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
+import {Transaction} from "zksync/build/wallet";
+import {ZkCPKStatus} from "@matterlabs/zksync-nuxt-core/types";
+import {filterError} from "@matterlabs/zksync-nuxt-core/utils";
+import {Address, TokenSymbol} from "zksync/build/types";
+import {transactionBatch} from "@/plugins/walletActions/transaction";
+import {TotalByToken, TransactionData} from "@/types";
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 
@@ -460,7 +450,25 @@ export default Vue.extend({
           manager.notifyHashes(endHashes);
         }
 
-        this.finalTransactions.push(...transactions);
+        this.finalTransactions.push(
+          ...transactions.map((e) => {
+            if (typeof e.txData.tx.amount === "number") {
+              e.txData.tx.amount = String(e.txData.tx.amount);
+            }
+            if (typeof e.txData.tx.fee === "number") {
+              e.txData.tx.fee = String(e.txData.tx.fee);
+            }
+            if (typeof e.txData.tx.token === "number") {
+              e.txData.tx.tokenId = e.txData.tx.token;
+              e.txData.tx.token = this.getTokenByID(e.txData.tx.tokenId);
+            }
+            if (typeof e.txData.tx.feeToken === "number") {
+              e.txData.tx.feeTokenId = e.txData.tx.feeToken;
+              e.txData.tx.feeToken = this.getTokenByID(e.txData.tx.feeTokenId);
+            }
+            return e;
+          })
+        );
         console.log("finalTransactions", this.finalTransactions);
         this.subStep = "committing";
 

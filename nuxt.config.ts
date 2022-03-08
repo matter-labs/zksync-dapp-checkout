@@ -1,11 +1,10 @@
-import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
-import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+import {ModuleOptions} from "@matterlabs/zksync-nuxt-core/types";
+import {NuxtOptionsEnv} from "@nuxt/types/config/env";
 import Sass from "sass";
-import Fiber from "fibers";
 
-import { NuxtConfig } from "@nuxt/types";
+import {NuxtConfig} from "@nuxt/types";
 // noinspection ES6PreferShortImport
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig } from "./src/plugins/build";
+import {CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig} from "./src/plugins/build";
 
 const zkTailwindDefault = require("matter-zk-ui/tailwind.config.js");
 
@@ -309,10 +308,7 @@ const config: NuxtConfig = {
     ...nuxtBuildConfig,
     loaders: {
       scss: {
-        implementation: Sass,
-        sassOptions: {
-          fiber: Fiber,
-        },
+        implementation: Sass
       },
     },
     /*
