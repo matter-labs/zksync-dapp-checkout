@@ -491,7 +491,7 @@ export default Vue.extend({
             }
           }
           this.errorModal = {
-            headline: "Activation error 1",
+            headline: "Batch transfer error",
             text: realError,
           };
         }
