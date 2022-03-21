@@ -450,25 +450,23 @@ export default Vue.extend({
           manager.notifyHashes(endHashes);
         }
 
-        this.finalTransactions.push(
-          ...transactions.map((e) => {
-            if (typeof e.txData.tx.amount === "number") {
-              e.txData.tx.amount = String(e.txData.tx.amount);
-            }
-            if (typeof e.txData.tx.fee === "number") {
-              e.txData.tx.fee = String(e.txData.tx.fee);
-            }
-            if (typeof e.txData.tx.token === "number") {
-              e.txData.tx.tokenId = e.txData.tx.token;
-              e.txData.tx.token = this.getTokenByID(e.txData.tx.tokenId);
-            }
-            if (typeof e.txData.tx.feeToken === "number") {
-              e.txData.tx.feeTokenId = e.txData.tx.feeToken;
-              e.txData.tx.feeToken = this.getTokenByID(e.txData.tx.feeTokenId);
-            }
-            return e;
-          })
-        );
+        this.finalTransactions = transactions.map((e) => {
+          if (typeof e.txData.tx.amount === "number") {
+            e.txData.tx.amount = String(e.txData.tx.amount);
+          }
+          if (typeof e.txData.tx.fee === "number") {
+            e.txData.tx.fee = String(e.txData.tx.fee);
+          }
+          if (typeof e.txData.tx.token === "number") {
+            e.txData.tx.tokenId = e.txData.tx.token;
+            e.txData.tx.token = this.getTokenByID(e.txData.tx.tokenId);
+          }
+          if (typeof e.txData.tx.feeToken === "number") {
+            e.txData.tx.feeTokenId = e.txData.tx.feeToken;
+            e.txData.tx.feeToken = this.getTokenByID(e.txData.tx.feeTokenId);
+          }
+          return e;
+        });
         console.log("finalTransactions", this.finalTransactions);
         this.subStep = "committing";
 
