@@ -1,3 +1,10 @@
+## [3.3.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.1...3.3.2) (2022-03-21)
+
+
+### Bug Fixes
+
+* prevent from displaying checkout transactions twice in results ([#95](https://github.com/matter-labs/zksync-dapp-checkout/issues/95)) ([a1b6215](https://github.com/matter-labs/zksync-dapp-checkout/commit/a1b62158dea9c12ccc58474cb965210c73dc032b))
+
 ## [3.3.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.0...3.3.1) (2022-03-11)
 
 
