@@ -38,7 +38,7 @@
     "url": "https://github.com/matter-labs/zksync-dapp-checkout.git"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=14 <17.0.0"
   },
   "author": "Matter Labs",
   "browserslist": [
