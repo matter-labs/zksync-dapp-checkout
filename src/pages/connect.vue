@@ -9,14 +9,14 @@
         <div class="tileName">ETH connect</div>
       </div>
 
-      <div data-cy="core_connect_wallet_button" class="tileContainer h-auto m-5 md:m-5 text-center" @click="walletConnect()">
+      <div data-cy="wc_connect_wallet_button" class="tileContainer h-auto m-5 md:m-5 text-center" @click="walletConnect()">
         <div class="tile">
           <img src="@/static/wc.png" alt="Wallet Connect" />
         </div>
         <div class="tileName">Wallet Connect</div>
       </div>
 
-      <div data-cy="core_connect_wallet_button" class="tileContainer h-auto m-5 md:m-5 text-center" @click="argent()">
+      <div data-cy="argent_connect_wallet_button" class="tileContainer h-auto m-5 md:m-5 text-center" @click="argent()">
         <div class="tile">
           <img src="@/static/argent.svg" alt="Argent" />
         </div>
