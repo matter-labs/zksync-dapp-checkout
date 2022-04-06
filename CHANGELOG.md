@@ -1,3 +1,10 @@
+## [3.3.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.2...3.3.3) (2022-04-06)
+
+
+### Bug Fixes
+
+* login with argent button, update core module ([#99](https://github.com/matter-labs/zksync-dapp-checkout/issues/99)) ([6876b0f](https://github.com/matter-labs/zksync-dapp-checkout/commit/6876b0fe957dc6260986fcac907c031616ce0c1e))
+
 ## [3.3.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.1...3.3.2) (2022-03-21)
 
 
