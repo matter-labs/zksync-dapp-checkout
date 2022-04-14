@@ -164,7 +164,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
-import { RestProvider, Wallet } from "zksync";
+import { Wallet } from "zksync";
 import { Network, TokenSymbol } from "zksync/build/types";
 import { ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
 import { filterError } from "@matterlabs/zksync-nuxt-core/utils";
@@ -307,14 +307,17 @@ export default Vue.extend({
       return this.$store.getters["checkout/getAllowedRampZkTokens"];
     },
     lineStateText(): string {
-      if (this.subStep === "waitingUserConfirmation") {
-        return "Confirm operation";
-      } else if (this.subStep === "committing") {
-        return "Committing transaction...";
-      } else if (this.subStep === "confirming" || this.isZkBalanceDepositing) {
+      if (this.subStep === "confirming" || this.isZkBalanceDepositing) {
         return `Waiting for ${this.confirmationsAmount} confirmations.`;
-      } else {
-        return "";
+      }
+      switch (this.subStep) {
+        case "waitingUserConfirmation":
+          return "Confirm operation";
+        case "committing":
+          return "Committing transaction...";
+      
+        default:
+          return "";
       }
     },
 

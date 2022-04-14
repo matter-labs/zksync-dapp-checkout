@@ -394,6 +394,7 @@ export default Vue.extend({
       } catch (error) {
         this.step = "main";
         this.modal = false;
+        this.accountStateLoading = false;
         const realError = filterError(error as Error);
         if (realError) {
           this.errorModal = {
