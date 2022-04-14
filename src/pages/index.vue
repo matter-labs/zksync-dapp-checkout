@@ -411,8 +411,7 @@ export default Vue.extend({
       try {
         const syncWallet: Wallet = this.$store.getters["zk-wallet/syncWallet"];
         const nonce = await syncWallet.getNonce("committed");
-        const transactionsList = [] as Array<ZkSyncTransaction>;
-        transactionsList.push(...transactionData.transactions);
+        const transactionsList = transactionData.transactions;
         const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"];
         const transactions = await transactionBatch(
           transactionsList,
