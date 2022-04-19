@@ -142,7 +142,7 @@
             <i class="fas fa-unlock"></i>
             <span>{{ cpkBtnText }}</span>
           </zk-defbtn>
-          <zk-defbtn v-else :disabled="!transferAllowed" @click="preTransfer()">
+          <zk-defbtn v-else :loader="accountStateLoading" :disabled="!transferAllowed || accountStateLoading" @click="preTransfer()">
             <i class="fas fa-paper-plane" />
             <span>Complete payment</span>
           </zk-defbtn>
@@ -226,7 +226,6 @@ import Vue from "vue";
 
 import {BigNumberish} from "ethers";
 import {Wallet} from "zksync";
-import {ZkSyncTransaction} from "zksync-checkout-internal/src/types";
 import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
 import {Transaction} from "zksync/build/wallet";
 import {ZkCPKStatus} from "@matterlabs/zksync-nuxt-core/types";
@@ -272,6 +271,7 @@ export default Vue.extend({
             text: string;
           },
       transactionFees: [] as UpdatedFee[],
+      accountStateLoading: false,
     };
   },
   computed: {
@@ -378,9 +378,13 @@ export default Vue.extend({
       }
     },
     async preTransfer() {
-      this.step = "transfer";
-      this.subStep = "processing";
       try {
+        this.accountStateLoading = true;
+        await this.$store.dispatch("zk-account/updateAccountState", true);
+        this.accountStateLoading = false;
+        if (!this.transferAllowed) { return }
+        this.step = "transfer";
+        this.subStep = "processing";
         await this.checkFees();
         if (this.transactionFees.length > 0) {
           this.modal = "feeChanged";
@@ -390,6 +394,7 @@ export default Vue.extend({
       } catch (error) {
         this.step = "main";
         this.modal = false;
+        this.accountStateLoading = false;
         const realError = filterError(error as Error);
         if (realError) {
           this.errorModal = {
@@ -411,8 +416,7 @@ export default Vue.extend({
       try {
         const syncWallet: Wallet = this.$store.getters["zk-wallet/syncWallet"];
         const nonce = await syncWallet.getNonce("committed");
-        const transactionsList = [] as Array<ZkSyncTransaction>;
-        transactionsList.push(...transactionData.transactions);
+        const transactionsList = transactionData.transactions;
         const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"];
         const transactions = await transactionBatch(
           transactionsList,
