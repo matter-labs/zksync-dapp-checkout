@@ -1,3 +1,10 @@
+## [3.3.4](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.3...3.3.4) (2022-04-19)
+
+
+### Bug Fixes
+
+* more pre-transfer checks ([#100](https://github.com/matter-labs/zksync-dapp-checkout/issues/100)) ([c3480f4](https://github.com/matter-labs/zksync-dapp-checkout/commit/c3480f401fbd0ac1460371b1062471b24d299122))
+
 ## [3.3.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.2...3.3.3) (2022-04-06)
 
 
