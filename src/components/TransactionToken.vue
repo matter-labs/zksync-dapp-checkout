@@ -164,7 +164,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
-import { RestProvider, Wallet } from "zksync";
+import { Wallet } from "zksync";
 import { Network, TokenSymbol } from "zksync/build/types";
 import { ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
 import { filterError } from "@matterlabs/zksync-nuxt-core/utils";
@@ -192,7 +192,6 @@ export default Vue.extend({
       step: "default" as "default" | "depositing" | "unlocking",
       subStep: "" as "waitingUserConfirmation" | "depositing" | "committing" | "confirming",
       depositAmount: "",
-      lineStateText: "",
     };
   },
   computed: {
@@ -230,7 +229,8 @@ export default Vue.extend({
         !this.accountStateLoaded ||
         this.ethereumBalanceLoading ||
         this.isFeeTokenLoading ||
-        this.isAllowanceLoading
+        this.isAllowanceLoading ||
+        this.isZkBalanceDepositing
       );
     },
     isLoading(): boolean {
@@ -240,7 +240,8 @@ export default Vue.extend({
         !this.accountStateLoaded ||
         this.ethereumBalanceLoading ||
         this.isFeeTokenLoading ||
-        this.isAllowanceLoading
+        this.isAllowanceLoading ||
+        this.isZkBalanceDepositing
       );
     },
     amountClass(): string {
@@ -248,6 +249,12 @@ export default Vue.extend({
     },
     zkBalance(): ZkTokenBalance | undefined {
       return this.$store.getters["zk-balances/balances"][this.token];
+    },
+    isZkBalanceDepositing(): boolean {
+      return BigNumber.from(this.$store.getters["zk-balances/depositingBalances"][this.token]?.amount || "0").gt("0");
+    },
+    confirmationsAmount(): number {
+      return this.$store.getters["checkout/getConfirmationsAmount"];
     },
     initialBalance(): BigNumber {
       return BigNumber.from(this.$store.getters["zk-balances/ethereumBalances"][this.token] || "0");
@@ -298,6 +305,20 @@ export default Vue.extend({
     },
     allowedRampZkTokens(): TokenSymbol[] {
       return this.$store.getters["checkout/getAllowedRampZkTokens"];
+    },
+    lineStateText(): string {
+      if (this.subStep === "confirming" || this.isZkBalanceDepositing) {
+        return `Waiting for ${this.confirmationsAmount} confirmations.`;
+      }
+      switch (this.subStep) {
+        case "waitingUserConfirmation":
+          return "Confirm operation";
+        case "committing":
+          return "Committing transaction...";
+      
+        default:
+          return "";
+      }
     },
 
     /**
@@ -351,19 +372,6 @@ export default Vue.extend({
     needToDeposit(val) {
       if (val > 0) {
         this.depositAmount = this.$options.filters!.parseBigNumberish(this.needToDeposit, this.token);
-      }
-    },
-    async subStep(val) {
-      if (val === "waitingUserConfirmation") {
-        this.lineStateText = "Confirm operation";
-      } else if (val === "committing") {
-        this.lineStateText = "Committing transaction...";
-      } else if (val === "confirming") {
-        const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider", null);
-        const confirmations = await syncProvider.getConfirmationsForEthOpAmount();
-        this.lineStateText = `Waiting for ${confirmations} confirmations.`;
-      } else {
-        this.lineStateText = "";
       }
     },
     step(val) {
