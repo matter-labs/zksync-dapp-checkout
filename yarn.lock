@@ -2656,17 +2656,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/eslint-config-nuxt@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "@matterlabs/eslint-config-nuxt@npm:1.0.6"
+"@matterlabs/eslint-config-nuxt@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "@matterlabs/eslint-config-nuxt@npm:2.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40matterlabs%2Feslint-config-nuxt%2F-%2Feslint-config-nuxt-2.0.1.tgz"
   dependencies:
     "@nuxtjs/eslint-config-typescript": ^8.0.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-nuxt: ^3.0.0
+    eslint-plugin-prettier: ^4.0.0
   peerDependencies:
     eslint: 8
     prettier: 2.x
-  checksum: 37983f8525e91058caa50b2c63929adea45f8d11a92f9bdc23c55afa82ce2c716e4f1d3f064b1539d3fb093e898f24a38d584c1bb5e3941992c3cad33dbbc43f
+  checksum: 0aac7d5ede1de9c71e304b39d3280272790e92ef0a46f50979eeb5dbab659355b23122623a606d5de3cd836788251ed1225d221c5f2279811a90d7d8bad3b79b
   languageName: node
   linkType: hard
 
@@ -2684,7 +2685,7 @@ __metadata:
     "@babel/eslint-parser": ^7.14.7
     "@commitlint/cli": ^16.0.1
     "@commitlint/config-conventional": ^16.0.0
-    "@matterlabs/eslint-config-nuxt": ^1.0.6
+    "@matterlabs/eslint-config-nuxt": ^2.0.0
     "@matterlabs/prettier-config": ^1.0.2
     "@matterlabs/zksync-nuxt-core": ^1.7.3
     "@matterlabs/zksync-nuxt-ui": ^0.0.0
@@ -10539,6 +10540,21 @@ __metadata:
     prettier: ^2.0.0
     prettier-linter-helpers: ^1.0.0
   checksum: 70825154576cc67ca83689ca49de2d295cbef3f9f8048f56f224e3603867f9fa0897523bf354bdd5bf115fdbba743aa605b9d90dc2c12dd531e7d817276e4e23
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-prettier@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "eslint-plugin-prettier@npm:4.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Feslint-plugin-prettier%2F-%2Feslint-plugin-prettier-4.0.0.tgz"
+  dependencies:
+    prettier-linter-helpers: ^1.0.0
+  peerDependencies:
+    eslint: ">=7.28.0"
+    prettier: ">=2.0.0"
+  peerDependenciesMeta:
+    eslint-config-prettier:
+      optional: true
+  checksum: 03d69177a3c21fa2229c7e427ce604429f0b20ab7f411e2e824912f572a207c7f5a41fd1f0a95b9b8afe121e291c1b1f1dc1d44c7aad4b0837487f9c19f5210d
   languageName: node
   linkType: hard
 
