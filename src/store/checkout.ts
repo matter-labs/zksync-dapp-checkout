@@ -10,7 +10,6 @@ import { TransactionData, TransactionFee, TotalByToken } from "@/types/index";
 
 export const state = () => ({
   linkCheckout: <boolean>false,
-
   isError: <boolean>false,
   noDataError: <unknown | undefined>undefined,
   transactions: [] as Array<ZkSyncTransaction>,
