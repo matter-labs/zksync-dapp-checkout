@@ -142,7 +142,12 @@
             <i class="fas fa-unlock"></i>
             <span>{{ cpkBtnText }}</span>
           </zk-defbtn>
-          <zk-defbtn v-else :loader="accountStateLoading" :disabled="!transferAllowed || accountStateLoading" @click="preTransfer()">
+          <zk-defbtn
+            v-else
+            :loader="accountStateLoading"
+            :disabled="!transferAllowed || accountStateLoading"
+            @click="preTransfer()"
+          >
             <i class="fas fa-paper-plane" />
             <span>Complete payment</span>
           </zk-defbtn>
@@ -194,15 +199,17 @@
             <template slot="first">
               <div class="tokenItem">
                 <div class="tokenName">
-                  {{ item.txData.tx.token ? item.txData.tx.token : item.txData.tx.feeToken
-                  }}
+                  {{ item.txData.tx.token ? item.txData.tx.token : item.txData.tx.feeToken }}
                 </div>
               </div>
             </template>
             <template slot="second">
               <div class="amount">
                 {{
-                  item.txData.tx.fee === "0" ? item.txData.tx.amount : item.txData.tx.fee | parseBigNumberish(item.txData.tx.token ? item.txData.tx.token : item.txData.tx.feeToken)
+                  item.txData.tx.fee === "0"
+                    ? item.txData.tx.amount
+                    : item.txData.tx.fee
+                      | parseBigNumberish(item.txData.tx.token ? item.txData.tx.token : item.txData.tx.feeToken)
                 }}
               </div>
             </template>
@@ -224,15 +231,15 @@
 <script lang="ts">
 import Vue from "vue";
 
-import {BigNumberish} from "ethers";
-import {Wallet} from "zksync";
-import {ZkSyncCheckoutManager} from "zksync-checkout-internal";
-import {Transaction} from "zksync/build/wallet";
-import {ZkCPKStatus} from "@matterlabs/zksync-nuxt-core/types";
-import {filterError} from "@matterlabs/zksync-nuxt-core/utils";
-import {Address, TokenSymbol} from "zksync/build/types";
-import {transactionBatch} from "@/plugins/walletActions/transaction";
-import {TotalByToken, TransactionData} from "@/types";
+import { BigNumberish } from "ethers";
+import { Wallet } from "zksync";
+import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
+import { Transaction } from "zksync/build/wallet";
+import { ZkCPKStatus } from "@matterlabs/zksync-nuxt-core/types";
+import { filterError } from "@matterlabs/zksync-nuxt-core/utils";
+import { Address, TokenSymbol } from "zksync/build/types";
+import { transactionBatch } from "@/plugins/walletActions/transaction";
+import { TotalByToken, TransactionData } from "@/types";
 import connectedWallet from "@/blocks/connectedWallet.vue";
 import lineTableHeader from "@/blocks/lineTableHeader.vue";
 
@@ -382,7 +389,9 @@ export default Vue.extend({
         this.accountStateLoading = true;
         await this.$store.dispatch("zk-account/updateAccountState", true);
         this.accountStateLoading = false;
-        if (!this.transferAllowed) { return }
+        if (!this.transferAllowed) {
+          return;
+        }
         this.step = "transfer";
         this.subStep = "processing";
         await this.checkFees();

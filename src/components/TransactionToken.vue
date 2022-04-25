@@ -315,7 +315,7 @@ export default Vue.extend({
           return "Confirm operation";
         case "committing":
           return "Committing transaction...";
-      
+
         default:
           return "";
       }

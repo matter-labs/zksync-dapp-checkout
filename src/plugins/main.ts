@@ -3,6 +3,7 @@ import Vue from "vue";
 // @ts-ignore
 import Popover from "vue-js-popover";
 
+// eslint-disable-next-line import/no-named-as-default
 import VTooltip from "v-tooltip";
 
 // @ts-ignore
@@ -12,6 +13,7 @@ import { Context } from "@nuxt/types";
 
 export default (_ctx: Context) => {
   Vue.use(VTooltip);
+
   Vue.use(Popover);
   Vue.component("VueCustomScrollbar", VueCustomScrollbar);
 };

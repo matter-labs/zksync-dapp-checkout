@@ -2,14 +2,22 @@
   <div class="connectContainer">
     <div class="font-bold text-center text-2xl md:text-3xl text-dark">Connect with your Wallet</div>
     <div class="container flex h-auto flex-row flex-wrap connections items-center justify-center">
-      <div data-cy="core_connect_wallet_button" class="tileContainer h-auto m-5 md:m-5 text-center" @click="customWallet()">
+      <div
+        data-cy="core_connect_wallet_button"
+        class="tileContainer h-auto m-5 md:m-5 text-center"
+        @click="customWallet()"
+      >
         <div class="tile">
           <img src="@/static/eth.svg" alt="External" />
         </div>
         <div class="tileName">ETH connect</div>
       </div>
 
-      <div data-cy="wc_connect_wallet_button" class="tileContainer h-auto m-5 md:m-5 text-center" @click="walletConnect()">
+      <div
+        data-cy="wc_connect_wallet_button"
+        class="tileContainer h-auto m-5 md:m-5 text-center"
+        @click="walletConnect()"
+      >
         <div class="tile">
           <img src="@/static/wc.png" alt="Wallet Connect" />
         </div>

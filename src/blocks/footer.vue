@@ -2,7 +2,8 @@
   <footer class="zkFooterContainer flex justify-between items-center pt-1 md:py-5">
     <block-bottom-menu v-if="fullFooterMenu" />
     <div id="built-by-matterlabs" class="whitespace-nowrap whitespace-nowrap">
-      <span class="desktopOnly">Made with ❤️&nbsp;</span><a href="https://matter-labs.io" target="_blank" class="lightLink">by&nbsp;Matter&nbsp;Labs</a>
+      <span class="desktopOnly">Made with ❤️&nbsp;</span
+      ><a href="https://matter-labs.io" target="_blank" class="lightLink">by&nbsp;Matter&nbsp;Labs</a>
     </div>
     <div class="rightSide">
       <block-system-info />
