@@ -27,6 +27,10 @@ jobs:
           yarn set version 3.1.1
           yarn install
 
+      - name: "Lint"
+        run: |
+          yarn lint --max-warnings 0
+
       - name: "Semantic release"
         run: yarn semantic-release
         env:

@@ -21,6 +21,10 @@ jobs:
           yarn set version 3.1.1
           yarn install
 
+      - name: "Lint"
+        run: |
+          yarn lint --max-warnings 0
+
       - name: "Build: dapp"
         run: yarn run ci:build:rinkeby
 
