@@ -43,5 +43,9 @@ export const transactionBatch = async (
   statusFunction("waitingUserConfirmation");
   const batchTransactionData = await batchBuilder.build();
   statusFunction("processing");
-  return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, batchTransactionData.signature ? [batchTransactionData.signature] : undefined);
+  return await submitSignedTransactionsBatch(
+    syncWallet.provider,
+    batchTransactionData.txs,
+    batchTransactionData.signature ? [batchTransactionData.signature] : undefined
+  );
 };

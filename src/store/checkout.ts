@@ -8,18 +8,16 @@ import { ZkFee } from "@matterlabs/zksync-nuxt-core/types";
 import { RootState } from "~/store";
 import { TransactionData, TransactionFee, TotalByToken } from "@/types/index";
 
-const a:any;
 export const state = () => ({
-        linkCheckout: <boolean>false,
+  linkCheckout: <boolean>false,
 
-              isError: <boolean>false,
+  isError: <boolean>false,
   noDataError: <unknown | undefined>undefined,
   transactions: [] as Array<ZkSyncTransaction>,
   fromAddress: "" as Address,
   feeToken: undefined as TokenSymbol | undefined,
   allowedRampZkTokens: ["ETH", "DAI", "USDT", "USDC"] as TokenSymbol[],
-  confirmationsAmount:
-  <number | undefined>undefined,
+  confirmationsAmount: <number | undefined>undefined,
 });
 
 export type CheckoutModuleState = ReturnType<typeof state>;
@@ -32,7 +30,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
       feeToken: state.feeToken!,
     };
   },
-getTransactionBatchFee  (     _, __, ___, rootGetters): false | TransactionFee {
+  getTransactionBatchFee(_, __, ___, rootGetters): false | TransactionFee {
     // eslint-disable-next-line no-unused-expressions
     rootGetters["zk-transaction/feeLoading"];
     if (rootGetters["zk-transaction/fee"]) {

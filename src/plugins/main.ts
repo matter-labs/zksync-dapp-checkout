@@ -12,8 +12,7 @@ import "vue-custom-scrollbar/dist/vueScrollbar.css";
 import { Context } from "@nuxt/types";
 
 export default (_ctx: Context) => {
-        Vue.use(VTooltip);
-
+  Vue.use(VTooltip);
 
   Vue.use(Popover);
   Vue.component("VueCustomScrollbar", VueCustomScrollbar);
