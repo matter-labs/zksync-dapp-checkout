@@ -1,3 +1,10 @@
+## [3.3.5](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.4...3.3.5) (2022-04-25)
+
+
+### Bug Fixes
+
+* add linting check ([#102](https://github.com/matter-labs/zksync-dapp-checkout/issues/102)) ([e633d59](https://github.com/matter-labs/zksync-dapp-checkout/commit/e633d590e839956e8a4271b0cd49743d4729d377))
+
 ## [3.3.4](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.3...3.3.4) (2022-04-19)
 
 
