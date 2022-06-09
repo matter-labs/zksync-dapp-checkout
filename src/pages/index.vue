@@ -453,7 +453,6 @@ export default Vue.extend({
         console.log("finalTransactions", this.finalTransactions);
 
         const manager = ZkSyncCheckoutManager.getManager();
-
         const validHashes = this.finalTransactions
           .filter((tx: any) => {
             if (tx.txData.tx.type !== "Transfer") {
@@ -461,8 +460,8 @@ export default Vue.extend({
             }
             for (const singleTx of transactionsList) {
               if (
-                tx.txData.tx.to === singleTx.to?.toLowerCase() &&
-                tx.txData.tx.amount === singleTx.amount?.toString() &&
+                tx.txData.tx.to?.toLowerCase() === singleTx.to?.toLowerCase() &&
+                tx.txData.tx.amount?.toString() === singleTx.amount?.toString() &&
                 tx.txData.tx.token === singleTx.token
               ) {
                 return true;
