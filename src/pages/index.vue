@@ -437,39 +437,9 @@ export default Vue.extend({
         );
         console.log("Batch transaction", transactionsList);
 
-        const manager = ZkSyncCheckoutManager.getManager();
-
-        let endHashes = [];
-        const validHashes = transactions.filter((tx: any) => {
-          if (tx.txData.tx.type !== "Transfer") {
-            return false;
-          }
-          for (const singleTx of transactionsList) {
-            if (
-              typeof tx.txData.tx.to === "string" &&
-              typeof singleTx.to === "string" &&
-              tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() &&
-              tx.txData.tx.amount === singleTx.amount
-            ) {
-              return true;
-            }
-          }
-          return false;
-        });
-        endHashes = validHashes.map((tx: any) => tx.txHash);
-        console.log("Sent hashes", endHashes);
-        // @ts-ignore
-        if (manager.openerPromise) {
-          manager.notifyHashes(endHashes);
-        }
-
         this.finalTransactions = transactions.map((e) => {
-          if (typeof e.txData.tx.amount === "number") {
-            e.txData.tx.amount = String(e.txData.tx.amount);
-          }
-          if (typeof e.txData.tx.fee === "number") {
-            e.txData.tx.fee = String(e.txData.tx.fee);
-          }
+          e.txData.tx.amount = e.txData.tx.amount?.toString();
+          e.txData.tx.fee = e.txData.tx.fee?.toString();
           if (typeof e.txData.tx.token === "number") {
             e.txData.tx.tokenId = e.txData.tx.token;
             e.txData.tx.token = this.getTokenByID(e.txData.tx.tokenId);
@@ -481,6 +451,31 @@ export default Vue.extend({
           return e;
         });
         console.log("finalTransactions", this.finalTransactions);
+
+        const manager = ZkSyncCheckoutManager.getManager();
+        const validHashes = this.finalTransactions
+          .filter((tx: any) => {
+            if (tx.txData.tx.type !== "Transfer") {
+              return false;
+            }
+            for (const singleTx of transactionsList) {
+              if (
+                tx.txData.tx.to?.toLowerCase() === singleTx.to?.toLowerCase() &&
+                tx.txData.tx.amount?.toString() === singleTx.amount?.toString() &&
+                tx.txData.tx.token === singleTx.token
+              ) {
+                return true;
+              }
+            }
+            return false;
+          })
+          .map((tx) => tx.txHash);
+        console.log("Sent hashes", validHashes);
+        // @ts-ignore
+        if (manager.openerPromise) {
+          manager.notifyHashes(validHashes);
+        }
+
         this.subStep = "committing";
 
         await transactions[0].awaitReceipt();
