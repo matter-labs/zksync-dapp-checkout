@@ -1,3 +1,10 @@
+## [3.3.7](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.6...3.3.7) (2022-06-10)
+
+
+### Bug Fixes
+
+* update ci/cd ([6c6f14f](https://github.com/matter-labs/zksync-dapp-checkout/commit/6c6f14f28f488638d1f9c354af1190853ecfc829))
+
 ## [3.3.6](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.5...3.3.6) (2022-06-10)
 
 
