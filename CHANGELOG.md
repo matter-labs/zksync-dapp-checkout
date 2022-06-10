@@ -1,3 +1,10 @@
+## [3.3.6](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.5...3.3.6) (2022-06-10)
+
+
+### Bug Fixes
+
+* improve hashes checks ([#105](https://github.com/matter-labs/zksync-dapp-checkout/issues/105)) ([0782dad](https://github.com/matter-labs/zksync-dapp-checkout/commit/0782dad7920f9036bea18cc7d1eb75aafcc5df36))
+
 ## [3.3.5](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.4...3.3.5) (2022-04-25)
 
 
