@@ -109,3 +109,16 @@ jobs:
           target: "prod-ropsten"
           projectId: zsync-dapp-checkout
           channelID: live
+
+      - name: "Build goerli"
+        run: yarn run ci:build:goerli-beta
+
+      - name: "Deploy target: prod-goerli"
+        run: yarn run ci:build:goerli-beta
+      - uses: matter-labs/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
+          target: "prod-goerli"
+          projectId: zsync-dapp-checkout
+          channelID: live

@@ -16,6 +16,7 @@ Resource targets for the zkCheckout are:
 * [```prod-mainnet```](https://checkout.zksync.io)
 * [```prod-rinkeby```](https://checkout-rinkeby.zksync.io)
 * [```prod-ropsten```](https://checkout-ropsten.zksync.io)
+* [```prod-goerli```](https://checkout-goerli.zksync.io)
 * [```staging```](https://staging-checkout-v1.zksync.dev/link)
 
 ## Initial Setup / Static version generation
@@ -24,7 +25,7 @@ Resource targets for the zkCheckout are:
 # install dependencies
 $ sh cli-dev.sh ci
 
-# Populate .env file as of ropsten-beta connection && serve with hot reload at localhost:3000
+# Populate .env file as of rinkeby connection && serve with hot reload at localhost:3000
 $ yarn dev
 
 # static version generation
