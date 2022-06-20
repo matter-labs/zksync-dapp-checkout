@@ -273,7 +273,7 @@ const config: NuxtConfig = {
         domains: [
           "checkout.zksync.io",
           "checkout-rinkeby.zksync.io",
-          "ropsten-rinkeby.zksync.io",
+          "checkout-ropsten.zksync.io",
           "checkout-goerli.zksync.io",
           "web.app",
         ],
