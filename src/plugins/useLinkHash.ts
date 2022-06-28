@@ -1,17 +1,22 @@
 import { Context } from "@nuxt/types";
-import { parseDecimal } from "@matterlabs/zksync-nuxt-core/utils";
 import { RestProvider } from "zksync";
-import { PaymentItem } from "@/types";
 import { decrypt } from "@/plugins/link";
 
 export default async ({ store, route, redirect }: Context, hash: string) => {
+  const onError = async () => {
+    await store.dispatch("openModal", "zkLinkParseFail");
+    redirect("/link");
+  };
   try {
     store.commit("checkout/setLinkCheckoutState", true);
     const syncProvider: RestProvider = await store.dispatch("zk-provider/requestProvider");
     await store.dispatch("zk-tokens/loadZkTokens");
-    const transactions: PaymentItem[] = decrypt(hash);
+    const transactions = decrypt(hash, syncProvider, store.getters["zk-tokens/zkTokens"]);
     store.commit("checkout/setError", false);
     console.log("Transactions", transactions);
+    if (transactions.length === 0) {
+      return await onError();
+    }
     const totalByToken = Object.fromEntries(transactions.map((e) => [e.token, 0]));
     transactions.forEach((e) => totalByToken[e.token]++);
     let highestNumberSymbol = transactions[0].token;
@@ -22,7 +27,7 @@ export default async ({ store, route, redirect }: Context, hash: string) => {
       transactions: transactions.map((e, index) => ({
         to: e.address,
         token: e.token,
-        amount: parseDecimal(syncProvider, e.token, e.amount.toString()),
+        amount: e.amount,
         description: `Payment ${index + 1}`,
       })),
       feeToken: highestNumberSymbol,
@@ -39,8 +44,7 @@ export default async ({ store, route, redirect }: Context, hash: string) => {
       redirect({ path: "/connect", query: { link: hash } });
     }
   } catch (error) {
-    console.log("zkLink error", error);
-    await store.dispatch("openModal", "zkLinkParseFail");
-    redirect("/link");
+    console.warn("zkLink error", error);
+    await onError();
   }
 };
