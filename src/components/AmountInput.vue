@@ -14,6 +14,7 @@
           type="string"
           placeholder="Amount"
           maxlength="15"
+          spellcheck="false"
           @focus="focused = true"
           @blur="blurInput"
           @keyup.enter="$emit('enter')"

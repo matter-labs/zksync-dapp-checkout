@@ -29,6 +29,7 @@
             v-model="dropdownSearch"
             class="bg-white"
             size="sm"
+            spellcheck="false"
             :maxlength="10"
             placeholder="Search for token"
             @keyup.native="enter"

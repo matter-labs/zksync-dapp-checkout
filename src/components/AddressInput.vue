@@ -6,6 +6,7 @@
       :maxlength="45"
       :error="!!error"
       placeholder="0x address"
+      spellcheck="false"
       type="text"
     />
     <div class="errorTextContainer">

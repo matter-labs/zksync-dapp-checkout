@@ -1,3 +1,4 @@
+import { isAddress } from "@ethersproject/address";
 import { PaymentItem } from "@/types";
 
 export const encrypt = (transactions: PaymentItem[]): string => {
@@ -14,6 +15,9 @@ export const decrypt = (hash: string): PaymentItem[] => {
   const transactions: PaymentItem[] = [];
   for (const item of transactionHashes) {
     const [address, token, amount] = item.split("|");
+    if (!isAddress(address)) {
+      continue;
+    }
     transactions.push({
       address,
       token,
