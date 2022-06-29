@@ -1,3 +1,10 @@
+## [3.3.8](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.7...3.3.8) (2022-06-29)
+
+
+### Bug Fixes
+
+* validate address, token and amount when using zklink ([#107](https://github.com/matter-labs/zksync-dapp-checkout/issues/107)) ([5e16f85](https://github.com/matter-labs/zksync-dapp-checkout/commit/5e16f8546a2c64d46036f763413971361861f6bc))
+
 ## [3.3.7](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.6...3.3.7) (2022-06-10)
 
 
