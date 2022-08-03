@@ -1,10 +1,17 @@
-import {ModuleOptions} from "@matterlabs/zksync-nuxt-core/types";
-import {NuxtOptionsEnv} from "@nuxt/types/config/env";
+import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import Sass from "sass";
 
-import {NuxtConfig} from "@nuxt/types";
+import { NuxtConfig } from "@nuxt/types";
 // noinspection ES6PreferShortImport
-import {CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, isDebugEnabled, isProduction, nuxtBuildConfig} from "./src/plugins/build";
+import {
+  CURRENT_APP_NAME,
+  ETHER_NETWORK_CAPITALIZED,
+  ETHER_PRODUCTION,
+  isDebugEnabled,
+  isProduction,
+  nuxtBuildConfig,
+} from "./src/plugins/build";
 
 const zkTailwindDefault = require("matter-zk-ui/tailwind.config.js");
 
@@ -263,7 +270,7 @@ const config: NuxtConfig = {
       anonymize_ip: true, // anonymize IP
       send_page_view: isProduction, // might be necessary to avoid duplicated page track on page reload
       linker: {
-        domains: ["checkout.zksync.io", "checkout-rinkeby.zksync.io", "ropsten-rinkeby.zksync.io", "web.app"],
+        domains: ["checkout.zksync.io", "checkout-goerli.zksync.io", "web.app"],
       },
     },
     debug: isDebugEnabled, // enable to track in dev mode
@@ -308,7 +315,7 @@ const config: NuxtConfig = {
     ...nuxtBuildConfig,
     loaders: {
       scss: {
-        implementation: Sass
+        implementation: Sass,
       },
     },
     /*

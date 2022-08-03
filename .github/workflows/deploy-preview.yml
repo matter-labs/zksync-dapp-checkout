@@ -26,7 +26,7 @@ jobs:
           yarn lint --max-warnings 0
 
       - name: "Build: dapp"
-        run: yarn run ci:build:rinkeby
+        run: yarn run ci:build:goerli
 
       - name: "Deploy: preview"
         uses: matter-labs/action-hosting-deploy@v0

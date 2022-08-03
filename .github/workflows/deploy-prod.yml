@@ -9,9 +9,9 @@ name: "Deploy production"
         default: "main"
       preview_env:
         type: string
-        description: "Test on Rinkeby, ropsten or mainnet"
+        description: "Test on goerli, sepolia or mainnet"
         required: true
-        default: "rinkeby"
+        default: "goerli"
 jobs:
   build_and_preview:
     if: ${{ github.event.repository.full_name == github.repository }}
@@ -87,25 +87,25 @@ jobs:
           projectId: zsync-dapp-checkout
           channelID: live
 
-      - name: "Build rinkeby"
-        run: yarn run ci:build:rinkeby
+      - name: "Build goerli"
+        run: yarn run ci:build:goerli
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: "prod-rinkeby"
+          target: "prod-goerli"
           projectId: zsync-dapp-checkout
           channelID: live
 
-      - name: "Build ropsten"
-        run: yarn run ci:build:ropsten
+      - name: "Build sepolia"
+        run: yarn run ci:build:sepolia
 
-      - name: "Deploy target: prod-ropsten"
-        run: yarn run ci:build:ropsten
+      - name: "Deploy target: prod-sepolia"
+        run: yarn run ci:build:sepolia
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: "prod-ropsten"
+          target: "prod-sepolia"
           projectId: zsync-dapp-checkout
           channelID: live

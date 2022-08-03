@@ -38,6 +38,6 @@ export type ZKISingleRampConfig = {
   hostApiKey: string;
 };
 export type ZKIRampConfig = {
-  rinkeby: ZKISingleRampConfig;
+  goerli: ZKISingleRampConfig;
   mainnet: ZKISingleRampConfig;
 };
