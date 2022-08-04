@@ -39,7 +39,7 @@
       ]
     },
     {
-      "target": "prod-rinkeby",
+      "target": "prod-goerli",
       "public": "public",
       "ignore": [
         "firebase.json",
@@ -77,7 +77,7 @@
       ]
     },
     {
-      "target": "prod-ropsten",
+      "target": "prod-sepolia",
       "public": "public",
       "ignore": [
         "firebase.json",

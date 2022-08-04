@@ -30,6 +30,7 @@ sidechain
 sidechains
 tokenomics
 validator's
+sepolia
 
 // Names
 Stichting

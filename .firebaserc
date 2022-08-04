@@ -8,11 +8,11 @@
         "prod-mainnet": [
           "zsync-dapp-checkout"
         ],
-        "prod-rinkeby": [
-          "rinkeby-checkout-zksync"
+        "prod-goerli": [
+          "goerli-checkout-zksync"
         ],
-        "prod-ropsten": [
-          "ropsten-checkout-zksync"
+        "prod-sepolia": [
+          "sepolia-checkout-zksync"
         ],
         "staging": [
           "staging-checkout-v1-zksync"

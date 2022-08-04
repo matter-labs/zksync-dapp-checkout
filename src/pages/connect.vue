@@ -24,7 +24,12 @@
         <div class="tileName">Wallet Connect</div>
       </div>
 
-      <div data-cy="argent_connect_wallet_button" class="tileContainer h-auto m-5 md:m-5 text-center" @click="argent()">
+      <div
+        v-if="isMainnet"
+        data-cy="argent_connect_wallet_button"
+        class="tileContainer h-auto m-5 md:m-5 text-center"
+        @click="argent()"
+      >
         <div class="tile">
           <img src="@/static/argent.svg" alt="Argent" />
         </div>
@@ -36,6 +41,11 @@
 
 <script>
 export default {
+  computed: {
+    isMainnet() {
+      return this.$store.getters["zk-provider/network"] === "mainnet";
+    },
+  },
   methods: {
     async customWallet() {
       const loginTry = await this.$store.dispatch("zk-onboard/loginWithOnboard");

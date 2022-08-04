@@ -2687,7 +2687,7 @@ __metadata:
     "@commitlint/config-conventional": ^16.0.0
     "@matterlabs/eslint-config-nuxt": ^2.0.0
     "@matterlabs/prettier-config": ^1.0.2
-    "@matterlabs/zksync-nuxt-core": ^1.8.0
+    "@matterlabs/zksync-nuxt-core": ^1.8.2
     "@matterlabs/zksync-nuxt-ui": ^0.0.0
     "@nuxt/types": ^2.15.7
     "@nuxt/typescript-build": ^2.1.0
@@ -2729,15 +2729,15 @@ __metadata:
     vue: ^2.6.12
     vue-custom-scrollbar: ^1.4.0
     vue-js-popover: ^1.2.1
-    zksync: 0.12.0-alpha.6
+    zksync: ^0.13.1
     zksync-checkout: latest
     zksync-checkout-internal: latest
   languageName: unknown
   linkType: soft
 
-"@matterlabs/zksync-nuxt-core@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.8.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40matterlabs%2Fzksync-nuxt-core%2F-%2Fzksync-nuxt-core-1.8.0.tgz"
+"@matterlabs/zksync-nuxt-core@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.8.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40matterlabs%2Fzksync-nuxt-core%2F-%2Fzksync-nuxt-core-1.8.2.tgz"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/client": ^1.7.1
@@ -2753,8 +2753,8 @@ __metadata:
     nuxt: ^2.15.3
     ts-node: ^9.1.1
     web3: ^1.5.3
-    zksync: 0.12.0-alpha.6
-  checksum: a67e16958ef951291deea86c2a7546f4d984f94049d6cdab73e12d7752cd2cce954c12047af5e9f58ba16a9b8fbcab09079504bb6c19900fb05797cff89ef549
+    zksync: ^0.13.1
+  checksum: be2e9cbf607df738ca61549e2c4a79c9ea8e91ab44d42797dcb65cf151be785ca868e3eb4aa2aa1ce9987e079fda22c81f20a40df4c90ba0214187829a9abb99
   languageName: node
   linkType: hard
 
@@ -25905,9 +25905,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zksync@npm:0.12.0-alpha.6":
-  version: 0.12.0-alpha.6
-  resolution: "zksync@npm:0.12.0-alpha.6"
+"zksync@npm:^0.13.1":
+  version: 0.13.1
+  resolution: "zksync@npm:0.13.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fzksync%2F-%2Fzksync-0.13.1.tgz"
   dependencies:
     axios: ^0.21.2
     websocket: ^1.0.30
@@ -25916,7 +25916,7 @@ __metadata:
   peerDependencies:
     "@ethersproject/logger": ^5.4.0
     ethers: ^5.4.4
-  checksum: b672f3bc775b4d062fd0752bd5b18fcf2b03dba88e63482ebd470021093857ea8c4a7b7be03e93b8d8fef36951bb6aa6a9e49329fcaf9e5e51a8501b28c58bbd
+  checksum: dee05af41b15a5c89aafa0cebc3647895baa13bb5a06f37178fa98e499229224b649b1eee3d86f60967167cad8ab49e9a6d97c96a5029734c41e645ed1e99859
   languageName: node
   linkType: hard
 
