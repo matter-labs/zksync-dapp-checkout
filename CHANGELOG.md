@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.8...3.4.0) (2022-08-04)
+
+
+### Features
+
+* new networks, remove deprecated networks ([#108](https://github.com/matter-labs/zksync-dapp-checkout/issues/108)) ([76e9803](https://github.com/matter-labs/zksync-dapp-checkout/commit/76e9803f51cb69f81f86d80ab4f776cb551cbfce))
+
 ## [3.3.8](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.7...3.3.8) (2022-06-29)
 
 
