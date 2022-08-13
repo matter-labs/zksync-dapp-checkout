@@ -32,6 +32,8 @@ tokenomics
 validator's
 sepolia
 
+tlds
+
 // Names
 Stichting
 Kingsfordweg
