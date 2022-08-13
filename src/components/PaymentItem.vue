@@ -12,7 +12,7 @@
       <div class="label text-sm text-light">
         <strong class="mobileOnly">Txn #{{ index + 1 }}:&nbsp;</strong>Receiver ETH address
       </div>
-      <address-input v-model="valNow.address" />
+      <address-input ref="addressInput" v-model="valNow.address" :token="valNow.token" />
     </div>
     <div class="md:pl-4 w-full md:w-auto">
       <div class="label text-sm text-light desktopOnly">&nbsp;</div>

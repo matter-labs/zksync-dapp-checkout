@@ -10,10 +10,13 @@ import VTooltip from "v-tooltip";
 import VueCustomScrollbar from "vue-custom-scrollbar";
 import "vue-custom-scrollbar/dist/vueScrollbar.css";
 import { Context } from "@nuxt/types";
+import { UNSResolver } from "./uns";
 
 export default (_ctx: Context) => {
   Vue.use(VTooltip);
 
   Vue.use(Popover);
   Vue.component("VueCustomScrollbar", VueCustomScrollbar);
+
+  Vue.prototype.$domainResolver = new UNSResolver();
 };

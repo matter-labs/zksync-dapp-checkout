@@ -210,7 +210,10 @@ export default Vue.extend({
         return false;
       }
       for (const payment of this.payments) {
-        if (!checkAddress(payment.address) || !payment.amount) {
+        if (
+          (!this.isValidDomain(payment.address, payment.token) && !checkAddress(payment.address)) ||
+          !payment.amount
+        ) {
           return false;
         }
       }
@@ -236,6 +239,7 @@ export default Vue.extend({
         amount: "",
         token,
       });
+      this.getDomainAddress(address, token);
     },
     enableLink() {
       this.addLinkMode = true;
@@ -258,6 +262,14 @@ export default Vue.extend({
     },
     facebookShare() {
       window.open(`${FACEBOOK_URL}${encodeURIComponent(this.paymentLink)}`, "_blank");
+    },
+    isValidDomain(address: string, token: string): boolean {
+      return (this as any).$domainResolver.isValidAddress(address, token);
+    },
+    async getDomainAddress(currentAddress: string, token: string) {
+      if (!this.isValidDomain(currentAddress, token)) {
+        await (this as any).$domainResolver.lookupDomain(currentAddress, token);
+      }
     },
   },
 });
