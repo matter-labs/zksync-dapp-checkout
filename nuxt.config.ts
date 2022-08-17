@@ -19,7 +19,7 @@ const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
 const pageTitle = `${CURRENT_APP_NAME}`.toString() ?? "zkSync Checkout";
-const pageImg = "/cover.jpg";
+const pageImg = "/social.png";
 
 const pageTitleTemplate = ETHER_PRODUCTION ? CURRENT_APP_NAME : `${ETHER_NETWORK_CAPITALIZED}`;
 
@@ -108,6 +108,11 @@ const config: NuxtConfig = {
         content: pageImg,
       },
       {
+        hid: "twitter:image:alt",
+        name: "twitter:image:alt",
+        content: pageTitle,
+      },
+      {
         hid: "twitter:site",
         name: "twitter:site",
         content: "@zksync",
@@ -116,11 +121,6 @@ const config: NuxtConfig = {
         hid: "twitter:creator",
         name: "twitter:creator",
         content: "@the_matter_labs",
-      },
-      {
-        hid: "twitter:image:alt",
-        name: "twitter:image:alt",
-        content: pageTitle,
       },
       {
         hid: "og:title",
@@ -228,11 +228,11 @@ const config: NuxtConfig = {
         title: pageTitle,
         site_name: pageTitle,
         description: pageDescription,
-        img: "cover.jpg",
+        img: "social.png",
         img_size: { width: "2560", height: "1280" },
         locale: "en_US",
         twitter: "@zksync",
-        twitter_card: "https://checkout.zksync.io/social.jpg",
+        twitter_card: "https://checkout.zksync.io/social.png",
         themeColor: "#4e529a",
       },
     ],
