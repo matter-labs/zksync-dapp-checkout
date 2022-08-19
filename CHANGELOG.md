@@ -1,3 +1,10 @@
+# [3.5.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.4.0...3.5.0) (2022-08-19)
+
+
+### Features
+
+* social share image ([#110](https://github.com/matter-labs/zksync-dapp-checkout/issues/110)) ([6f006fd](https://github.com/matter-labs/zksync-dapp-checkout/commit/6f006fd8cb589ad90100779e16301b7aa7322ca5))
+
 # [3.4.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.8...3.4.0) (2022-08-04)
 
 
