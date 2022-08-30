@@ -1,3 +1,10 @@
+## [3.5.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.5.0...3.5.1) (2022-08-30)
+
+
+### Bug Fixes
+
+* uptime url ([#111](https://github.com/matter-labs/zksync-dapp-checkout/issues/111)) ([af688e3](https://github.com/matter-labs/zksync-dapp-checkout/commit/af688e3a217350166931e1fe6df08b680d11e207))
+
 # [3.5.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.4.0...3.5.0) (2022-08-19)
 
 
