@@ -9,7 +9,7 @@ name: "Deploy production"
         default: "main"
       preview_env:
         type: string
-        description: "Test on goerli, sepolia or mainnet"
+        description: "Test on goerli or mainnet"
         required: true
         default: "goerli"
 jobs:
@@ -94,18 +94,5 @@ jobs:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
           target: "prod-goerli"
-          projectId: zsync-dapp-checkout
-          channelID: live
-
-      - name: "Build sepolia"
-        run: yarn run ci:build:sepolia
-
-      - name: "Deploy target: prod-sepolia"
-        run: yarn run ci:build:sepolia
-      - uses: matter-labs/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: "prod-sepolia"
           projectId: zsync-dapp-checkout
           channelID: live
