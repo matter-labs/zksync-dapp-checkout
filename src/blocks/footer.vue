@@ -8,7 +8,7 @@
     <div class="rightSide">
       <block-system-info />
       <span class="mx-2 md:mx-2">|</span>
-      <a href="https://uptime.com/s/zksync" class="lightLink" target="_blank"
+      <a href="https://uptime.com/s/zkSync" class="lightLink" target="_blank"
         >up<span class="desktopOnly">time</span></a
       >
     </div>

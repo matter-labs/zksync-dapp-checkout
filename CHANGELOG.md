@@ -1,3 +1,24 @@
+## [3.5.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.5.1...3.5.2) (2022-09-12)
+
+
+### Bug Fixes
+
+* remove sepolia network ([#112](https://github.com/matter-labs/zksync-dapp-checkout/issues/112)) ([5681daf](https://github.com/matter-labs/zksync-dapp-checkout/commit/5681dafbb9216b5a2dd49a7a9018fd98eaf5fdd7))
+
+## [3.5.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.5.0...3.5.1) (2022-08-30)
+
+
+### Bug Fixes
+
+* uptime url ([#111](https://github.com/matter-labs/zksync-dapp-checkout/issues/111)) ([af688e3](https://github.com/matter-labs/zksync-dapp-checkout/commit/af688e3a217350166931e1fe6df08b680d11e207))
+
+# [3.5.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.4.0...3.5.0) (2022-08-19)
+
+
+### Features
+
+* social share image ([#110](https://github.com/matter-labs/zksync-dapp-checkout/issues/110)) ([6f006fd](https://github.com/matter-labs/zksync-dapp-checkout/commit/6f006fd8cb589ad90100779e16301b7aa7322ca5))
+
 # [3.4.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.8...3.4.0) (2022-08-04)
 
 

@@ -11,9 +11,6 @@
         "prod-goerli": [
           "goerli-checkout-zksync"
         ],
-        "prod-sepolia": [
-          "sepolia-checkout-zksync"
-        ],
         "staging": [
           "staging-checkout-v1-zksync"
         ]

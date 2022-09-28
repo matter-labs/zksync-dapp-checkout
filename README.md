@@ -15,7 +15,6 @@ Resource targets for the zkCheckout are:
 
 * [```prod-mainnet```](https://checkout.zksync.io)
 * [```prod-goerli```](https://checkout-goerli.zksync.io)
-* [```prod-sepolia```](https://checkout-sepolia.zksync.io)
 * [```staging```](https://staging-checkout-v1.zksync.dev/link)
 
 ## Initial Setup / Static version generation
