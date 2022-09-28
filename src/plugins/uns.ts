@@ -1,6 +1,6 @@
 const reg = /^[.a-z0-9-]+$/;
 
-const resolutionService = "https://unstoppabledomains.g.alchemy.com/domains/";
+const resolutionService = "https://resolve.unstoppabledomains.com/domains/";
 const tldAPI = "https://resolve.unstoppabledomains.com/supported_tlds";
 export class UNSResolver {
   supportedTlds: string[] = [];
@@ -13,7 +13,7 @@ export class UNSResolver {
         const response = await fetch(resolutionService + domain, {
           method: "get",
           headers: new Headers({
-            Authorization: "Bearer " + process.env.UNS_ALCHEMY_KEY,
+            Authorization: "Bearer " + process.env.UNS_KEY,
           }),
         });
         const data = await response.json();
