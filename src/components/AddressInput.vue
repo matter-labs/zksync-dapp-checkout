@@ -44,6 +44,7 @@ export default Vue.extend({
   data() {
     return {
       inputtedWallet: this.value ?? "",
+      resolvingUnsDomain: false,
       unsDomain: "",
     };
   },
@@ -52,7 +53,7 @@ export default Vue.extend({
       return checkAddress(this.inputtedWallet) || this.isValidDomain;
     },
     error(): string {
-      if (this.inputtedWallet && !this.isValid) {
+      if (!this.resolvingUnsDomain && this.inputtedWallet && !this.isValid) {
         if (!this.inputtedWallet.startsWith("0x")) {
           return "Address should start with '0x'";
         }
@@ -62,7 +63,7 @@ export default Vue.extend({
       }
     },
     isValidDomain(): boolean {
-      return (this as any).$domainResolver.isValidAddress(this.inputtedWallet, this.token);
+      return !this.resolvingUnsDomain && (this as any).$domainResolver.isValidAddress(this.inputtedWallet, this.token);
     },
     getDomain(): string {
       return (this as any).$domainResolver.getDomain(this.inputtedWallet, this.token);
@@ -95,13 +96,20 @@ export default Vue.extend({
   },
   methods: {
     async getDomainAddress() {
-      this.unsDomain = "";
-      if (!this.isValidDomain) {
-        const currentAddress = this.inputtedWallet;
-        const domainAddress = await (this as any).$domainResolver.lookupDomain(currentAddress, this.token);
-        this.unsDomain = domainAddress;
-      } else {
-        this.unsDomain = this.getDomain;
+      try {
+        this.resolvingUnsDomain = true;
+        this.unsDomain = "";
+        if (!this.isValidDomain) {
+          const currentAddress = this.inputtedWallet;
+          const domainAddress = await (this as any).$domainResolver.lookupDomain(currentAddress, this.token);
+          this.unsDomain = domainAddress;
+        } else {
+          this.unsDomain = this.getDomain;
+        }
+      } catch (error) {
+        console.warn("Resolving UNS domain failed", error);
+      } finally {
+        this.resolvingUnsDomain = false;
       }
     },
   },
