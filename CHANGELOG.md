@@ -1,3 +1,10 @@
+# [3.6.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.5.2...3.6.0) (2022-12-06)
+
+
+### Features
+
+* unstoppable domains integration ([#117](https://github.com/matter-labs/zksync-dapp-checkout/issues/117)) ([fc40735](https://github.com/matter-labs/zksync-dapp-checkout/commit/fc40735a86c5ccb8bdb3ad7daf37890307e70111))
+
 ## [3.5.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.5.1...3.5.2) (2022-09-12)
 
 
