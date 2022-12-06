@@ -31,6 +31,8 @@ sidechains
 tokenomics
 validator's
 
+tlds
+
 // Names
 Stichting
 Kingsfordweg

@@ -23,7 +23,7 @@
           </template>
           <template slot="left-bottom">
             <div class="address">
-              {{ item.to }}
+              {{ toAddress(item.to) }}
             </div>
           </template>
           <template slot="right-top">
@@ -247,6 +247,13 @@ export default Vue.extend({
       } else if (key === "accountActivation") {
         return "One-time account activation fee";
       }
+    },
+    shrinkAddress(address: string): string {
+      return address.substring(0, 6) + "..." + address.substring(address.length - 6, address.length);
+    },
+    toAddress(to: string): string {
+      const domain = this.transactionData.domains.get(to);
+      return domain ? `${domain} (${this.shrinkAddress(to)})` : to;
     },
   },
 });

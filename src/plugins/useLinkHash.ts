@@ -1,5 +1,6 @@
 import { Context } from "@nuxt/types";
 import { RestProvider } from "zksync";
+import { Address } from "zksync/build/types";
 import { decrypt } from "@/plugins/link";
 
 export default async ({ store, route, redirect }: Context, hash: string) => {
@@ -11,13 +12,19 @@ export default async ({ store, route, redirect }: Context, hash: string) => {
     store.commit("checkout/setLinkCheckoutState", true);
     const syncProvider: RestProvider = await store.dispatch("zk-provider/requestProvider");
     await store.dispatch("zk-tokens/loadZkTokens");
-    const transactions = decrypt(hash, syncProvider, store.getters["zk-tokens/zkTokens"]);
+    const transactions = await decrypt(hash, syncProvider, store.getters["zk-tokens/zkTokens"]);
     store.commit("checkout/setError", false);
-    console.log("Transactions", transactions);
     if (transactions.length === 0) {
       return await onError();
     }
     const totalByToken = Object.fromEntries(transactions.map((e) => [e.token, 0]));
+    const domains = new Map<Address, string>();
+    transactions.forEach((e) => {
+      if (e.domain) {
+        domains.set(e.address, e.domain);
+      }
+    });
+
     transactions.forEach((e) => totalByToken[e.token]++);
     let highestNumberSymbol = transactions[0].token;
     transactions.forEach((e) => {
@@ -32,6 +39,7 @@ export default async ({ store, route, redirect }: Context, hash: string) => {
       })),
       feeToken: highestNumberSymbol,
       fromAddress: undefined,
+      domains,
     });
     store.dispatch("checkout/requestUsedTokensPrice");
     if (store.getters["zk-account/loggedIn"]) {

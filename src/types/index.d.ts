@@ -12,6 +12,7 @@ export type TransactionData = {
   transactions: Array<ZkSyncTransaction>;
   fromAddress: Address;
   feeToken: TokenSymbol;
+  domains: Map<Address, string>;
 };
 export type TransactionFee = {
   key: string;

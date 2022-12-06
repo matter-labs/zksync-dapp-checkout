@@ -17,6 +17,7 @@ export const state = () => ({
   feeToken: undefined as TokenSymbol | undefined,
   allowedRampZkTokens: ["ETH", "DAI", "USDT", "USDC"] as TokenSymbol[],
   confirmationsAmount: <number | undefined>undefined,
+  domains: new Map<Address, string>(),
 });
 
 export type CheckoutModuleState = ReturnType<typeof state>;
@@ -27,6 +28,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
       transactions: state.transactions,
       fromAddress: state.fromAddress,
       feeToken: state.feeToken!,
+      domains: state.domains,
     };
   },
   getTransactionBatchFee(_, __, ___, rootGetters): false | TransactionFee {
@@ -101,7 +103,7 @@ export const mutations: MutationTree<CheckoutModuleState> = {
   setFeeToken(state, feeToken: TokenSymbol) {
     state.feeToken = feeToken;
   },
-  setTransactionData(state, { transactions, fromAddress }: TransactionData) {
+  setTransactionData(state, { transactions, fromAddress, domains }: TransactionData) {
     state.transactions = transactions.map((tx) => {
       return {
         ...tx,
@@ -109,6 +111,7 @@ export const mutations: MutationTree<CheckoutModuleState> = {
       };
     });
     state.fromAddress = fromAddress;
+    state.domains = domains;
   },
   setError(state: CheckoutModuleState, errorData) {
     state.isError = !!errorData;
