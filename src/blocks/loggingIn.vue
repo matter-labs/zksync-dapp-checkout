@@ -1,9 +1,9 @@
 <template>
   <transition name="fade">
-    <div v-if="loggingIn && !loggingInScreenDelay" class="loggingInContainer">
+    <div v-if="connecting && !connectingScreenDelay" class="loggingInContainer">
       <block-logo class="h-16" />
       <h1 class="text-dark -dark text-3xl mt-3 text-center leading-tight">
-        Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}
+        Connecting {{ selectedWallet ? `with ${selectedWallet}` : "" }}
       </h1>
       <transition-group tag="div" name="slide-vertical-fade" class="hint text-gray text-center text-sm mt-2">
         <div :key="hintText">{{ hintText }}</div>
@@ -18,16 +18,16 @@
 <script lang="ts">
 import Vue from "vue";
 
+let loggedInAnimationTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
   name: "LoggingInLoader",
   data() {
     return {
-      loggingInScreenDelay: false,
-      loggedInAnimationTimeout: undefined as ReturnType<typeof setTimeout> | undefined,
+      connectingScreenDelay: false,
     };
   },
   computed: {
-    loggingIn() {
+    connecting() {
       return (
         this.$store.getters["zk-onboard/onboardStatus"] === "connecting" ||
         this.$store.getters["zk-onboard/restoringSession"]
@@ -45,16 +45,16 @@ export default Vue.extend({
   },
   watch: {
     loggingIn(val) {
-      if (this.loggedInAnimationTimeout) {
-        clearTimeout(this.loggedInAnimationTimeout);
+      if (loggedInAnimationTimeout) {
+        clearTimeout(loggedInAnimationTimeout);
       }
       if (val === true) {
-        this.loggingInScreenDelay = true;
-        this.loggedInAnimationTimeout = setTimeout(() => {
-          this.loggingInScreenDelay = false;
+        this.connectingScreenDelay = true;
+        loggedInAnimationTimeout = setTimeout(() => {
+          this.connectingScreenDelay = false;
         }, 150);
       } else {
-        this.loggingInScreenDelay = false;
+        this.connectingScreenDelay = false;
       }
     },
   },
