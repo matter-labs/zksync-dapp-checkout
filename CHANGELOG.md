@@ -1,3 +1,10 @@
+## [3.6.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.0...3.6.1) (2022-12-12)
+
+
+### Bug Fixes
+
+* onboard v2 ([#119](https://github.com/matter-labs/zksync-dapp-checkout/issues/119)) ([d85867c](https://github.com/matter-labs/zksync-dapp-checkout/commit/d85867cf3cd361492bb8d96966c828ab9c8d130e))
+
 # [3.6.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.5.2...3.6.0) (2022-12-06)
 
 
