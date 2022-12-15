@@ -3148,7 +3148,7 @@ __metadata:
     "@commitlint/config-conventional": ^16.0.0
     "@matterlabs/eslint-config-nuxt": ^2.0.0
     "@matterlabs/prettier-config": ^1.0.2
-    "@matterlabs/zksync-nuxt-core": 1.9.3-alpha.3
+    "@matterlabs/zksync-nuxt-core": 1.9.3-alpha.4
     "@matterlabs/zksync-nuxt-ui": ^0.0.0
     "@nuxt/types": ^2.15.7
     "@nuxt/typescript-build": ^2.1.0
@@ -3196,9 +3196,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@matterlabs/zksync-nuxt-core@npm:1.9.3-alpha.3":
-  version: 1.9.3-alpha.3
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.9.3-alpha.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40matterlabs%2Fzksync-nuxt-core%2F-%2Fzksync-nuxt-core-1.9.3-alpha.3.tgz"
+"@matterlabs/zksync-nuxt-core@npm:1.9.3-alpha.4":
+  version: 1.9.3-alpha.4
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.9.3-alpha.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40matterlabs%2Fzksync-nuxt-core%2F-%2Fzksync-nuxt-core-1.9.3-alpha.4.tgz"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@web3-onboard/coinbase": ^2.2.0
@@ -3224,7 +3224,7 @@ __metadata:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.13.1
-  checksum: a1b219bfac2cb8c8d7626c3db456cb4571afdc7b118dedb72db01c51a88594e96b5a409479dbbada3e2e2bf4df149fcbff0d9ae2c12f2c486608cebdd2a9e9c4
+  checksum: ec04261ea2dc23dfe841d1b144e2ee2679d681003c995e3e278df3c14ace4a1db762a78a1e55660afe7d71e3d2f4c04eb2b8afcfe19a35324fef0c62072eed3d
   languageName: node
   linkType: hard
 
