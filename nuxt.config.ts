@@ -201,7 +201,6 @@ const config: NuxtConfig = {
     [
       "@matterlabs/zksync-nuxt-core",
       <ModuleOptions>{
-        ipfsGateway: "https://ipfs.io",
         network: process.env.ZK_NETWORK,
         apiKeys: {
           FORTMATIC_KEY: process.env.APP_FORTMATIC,
