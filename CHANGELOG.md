@@ -1,3 +1,10 @@
+## [3.6.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.1...3.6.2) (2022-12-19)
+
+
+### Bug Fixes
+
+* use wallet connect v2 ([#121](https://github.com/matter-labs/zksync-dapp-checkout/issues/121)) ([ec5435d](https://github.com/matter-labs/zksync-dapp-checkout/commit/ec5435dfdb334832ac426d970475fca244f692c4))
+
 ## [3.6.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.0...3.6.1) (2022-12-12)
 
 
