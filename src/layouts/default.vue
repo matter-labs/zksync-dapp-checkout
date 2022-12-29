@@ -14,6 +14,7 @@
         <nuxt v-if="!connecting" class="routeMain" @step="step = $event" />
       </transition>
       <block-wrong-network-modal />
+      <block-onboard-error-modal />
       <block-footer />
     </div>
   </div>
