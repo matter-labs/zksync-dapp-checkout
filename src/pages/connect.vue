@@ -24,8 +24,12 @@
         <div class="tileName">Wallet Connect</div>
       </div>
 
-      <!-- v-if="isMainnet" -->
-      <div data-cy="argent_connect_wallet_button" class="tileContainer h-auto m-5 md:m-5 text-center" @click="argent()">
+      <div
+        v-if="isMainnet"
+        data-cy="argent_connect_wallet_button"
+        class="tileContainer h-auto m-5 md:m-5 text-center"
+        @click="argent()"
+      >
         <div class="tile">
           <img src="@/static/argent.svg" alt="Argent" />
         </div>
