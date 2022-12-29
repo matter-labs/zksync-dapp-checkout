@@ -1,3 +1,10 @@
+## [3.6.4](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.3...3.6.4) (2022-12-29)
+
+
+### Bug Fixes
+
+* argent wallet ([#123](https://github.com/matter-labs/zksync-dapp-checkout/issues/123)) ([8c89725](https://github.com/matter-labs/zksync-dapp-checkout/commit/8c8972553423e2c145ae7af801b3235bcc876478))
+
 ## [3.6.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.2...3.6.3) (2022-12-21)
 
 
