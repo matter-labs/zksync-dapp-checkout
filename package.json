@@ -61,7 +61,7 @@
     "@commitlint/config-conventional": "^16.0.0",
     "@matterlabs/eslint-config-nuxt": "^2.0.0",
     "@matterlabs/prettier-config": "^1.0.2",
-    "@matterlabs/zksync-nuxt-core": "1.9.5-alpha.4",
+    "@matterlabs/zksync-nuxt-core": "1.9.6-alpha.1",
     "@matterlabs/zksync-nuxt-ui": "^0.0.0",
     "@nuxt/types": "^2.15.7",
     "@nuxt/typescript-build": "^2.1.0",
