@@ -1,3 +1,10 @@
+## [3.6.5](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.4...3.6.5) (2023-01-20)
+
+
+### Bug Fixes
+
+* update core module to stable version ([#126](https://github.com/matter-labs/zksync-dapp-checkout/issues/126)) ([1ace4ac](https://github.com/matter-labs/zksync-dapp-checkout/commit/1ace4acd26c61d533783330cddf79b228e602686))
+
 ## [3.6.4](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.3...3.6.4) (2022-12-29)
 
 
