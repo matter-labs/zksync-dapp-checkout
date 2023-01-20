@@ -58,7 +58,7 @@
 
     <div class="linkHeader">
       <nuxt-link to="/link" class="flex items-stretch justify-center">
-        <img src="@/static/zkSyncLogoFull.svg" class="head-logo" alt="Checkout by zkSync" />
+        <img src="@/static/images/logo.svg" class="head-logo" alt="Checkout by zkSync" />
         <div
           class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1"
         >

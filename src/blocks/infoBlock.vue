@@ -3,7 +3,9 @@
     <div class="infoBlock border-none lg:min-h-screen pt-4 pb-1 md:pt-10 md:pb-10 px-5 md:px-10">
       <header class="lg:mb-6">
         <div class="flex justify-center md:items-center mb-2">
-          <a href="//zksync.io" class="logo-container" target="_blank"><logo /></a>
+          <a href="//zksync.io" class="logo-container" target="_blank">
+            <img src="@/static/images/logo.svg" class="zkSyncLogo" alt="Checkout by zkSync" />
+          </a>
           <div
             class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1"
           >
@@ -150,13 +152,9 @@ import { BigNumber, BigNumberish } from "ethers";
 import { Network, TokenSymbol } from "zksync/build/types";
 import { ZkFeeType, ZkTokenPrices } from "@matterlabs/zksync-nuxt-core/types";
 import { TotalByToken, TransactionData, TransactionFee } from "@/types/index";
-import Logo from "@/blocks/logo.vue";
 import { ETHER_NETWORK_NAME } from "~/plugins/build";
 
 export default Vue.extend({
-  components: {
-    Logo,
-  },
   data() {
     return {
       totalOpened: false,
