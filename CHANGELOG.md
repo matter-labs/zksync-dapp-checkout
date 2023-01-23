@@ -1,3 +1,10 @@
+## [3.6.6](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.5...3.6.6) (2023-01-23)
+
+
+### Bug Fixes
+
+* change zksync logo ([#127](https://github.com/matter-labs/zksync-dapp-checkout/issues/127)) ([7a176a3](https://github.com/matter-labs/zksync-dapp-checkout/commit/7a176a326435a990843342739d5811d7e9223b40))
+
 ## [3.6.5](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.4...3.6.5) (2023-01-20)
 
 
