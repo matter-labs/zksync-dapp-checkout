@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div v-if="connecting && !connectingScreenDelay" class="loggingInContainer">
-      <block-logo class="h-16" />
+      <img src="@/static/images/logo.svg" class="h-16" alt="Checkout by zkSync" />
       <h1 class="text-dark -dark text-3xl mt-3 text-center leading-tight">
         Connecting {{ selectedWallet ? `with ${selectedWallet}` : "" }}
       </h1>
