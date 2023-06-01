@@ -49,7 +49,7 @@ export default Vue.extend({
         throw new Error("Ramp is not supported on this environment.");
       }
       new RampInstantSDK({
-        hostAppName: "zkSync Checkout",
+        hostAppName: "RIF Rollup Checkout",
         hostLogoUrl: window.location.origin + "/favicon-dark.png",
         variant: "hosted-auto",
         swapAsset: "ZKSYNC_*",

@@ -14,7 +14,7 @@
         </div>
       </template>
       <template slot="default">
-        <div class="text-sm">The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.</div>
+        <div class="text-sm">The price for RIF Rollup transactions fluctuates a little bit to make sure that RIF Rollup runs as close as possible to break-even costs.</div>
         <div v-if="!transferAllowed" class="text-sm text-red">You have to deposit a little bit more to cover new transaction fee.</div>
         <div v-for="(item, index) in transactionFees" :key="index" class="mt-3">
           <div class="text-lg">

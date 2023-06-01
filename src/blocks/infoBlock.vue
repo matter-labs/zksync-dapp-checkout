@@ -4,7 +4,7 @@
       <header class="lg:mb-6">
         <div class="flex justify-center md:items-center mb-2">
           <a href="//zksync.io" class="logo-container" target="_blank">
-            <img src="@/static/images/logo.svg" class="zkSyncLogo" alt="Checkout by zkSync" />
+            <img src="@/static/images/logo.png" class="zkSyncLogo" alt="Checkout by RIF Rollup" />
           </a>
           <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
@@ -217,7 +217,7 @@ export default Vue.extend({
   methods: {
     getFeeNameFromKey(key: ZkFeeType) {
       if (key === "txFee") {
-        return "Tx Batch Fee / zkSync";
+        return "Tx Batch Fee / RIF Rollup";
       } else if (key === "accountActivation") {
         return "One-time account activation fee";
       }
