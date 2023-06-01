@@ -36,5 +36,5 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
   statusFunction("waitingUserConfirmation");
   const batchTransactionData = await batchBuilder.build();
   statusFunction("processing");
-  return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, batchTransactionData.signature ? [batchTransactionData.signature] : undefined);
 };

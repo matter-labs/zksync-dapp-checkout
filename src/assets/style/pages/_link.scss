@@ -19,9 +19,9 @@
   .linkHeader {
     a {
       img.head-logo {
-        @apply mr-2;
+        @apply mr-2 relative top-0.5;
 
-        height: 40px;
+        height: 30px;
       }
     }
 

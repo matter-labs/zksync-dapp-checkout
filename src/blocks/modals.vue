@@ -9,7 +9,8 @@
       </template>
       <template slot="default">
         <div class="text-center">
-          The website that initiated the checkout, expects you to be logged in to the following account: <b>{{ transactionData.fromAddress }}</b>
+          The website that initiated the checkout, expects you to be logged in to the following account:
+          <b>{{ transactionData.fromAddress }}</b>
         </div>
       </template>
     </zk-modal>
@@ -21,9 +22,7 @@
         </div>
       </template>
       <template slot="default">
-        <div class="text-center">
-          We failed to parse link checkout data. Try again later or try to use another link.
-        </div>
+        <div class="text-center">We failed to parse link checkout data. Try again later or try to use another link.</div>
       </template>
     </zk-modal>
   </div>

@@ -3,7 +3,9 @@
     <div class="infoBlock border-none lg:min-h-screen pt-4 pb-1 md:pt-10 md:pb-10 px-5 md:px-10">
       <header class="lg:mb-6">
         <div class="flex justify-center md:items-center mb-2">
-          <a href="//zksync.io" class="logo-container" target="_blank"><logo /></a>
+          <a href="//zksync.io" class="logo-container" target="_blank">
+            <img src="@/static/images/logo.svg" class="zkSyncLogo" alt="Checkout by zkSync" />
+          </a>
           <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
             <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
             <span v-if="!isMainnet" class="networkName text-sm font-light inline-flex items-center -mr-10 md:mr-0">
@@ -21,7 +23,7 @@
           </template>
           <template slot="left-bottom">
             <div class="address">
-              {{ item.to }}
+              {{ toAddress(item.to) }}
             </div>
           </template>
           <template slot="right-top">
@@ -128,15 +130,11 @@
 import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
 import { Network, TokenSymbol } from "zksync/build/types";
-import { ZkFeeType, ZkTokenPrices } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkFeeType, ZkTokenPrices } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { TotalByToken, TransactionData, TransactionFee } from "@/types/index";
-import Logo from "@/blocks/logo.vue";
 import { ETHER_NETWORK_NAME } from "~/plugins/build";
 
 export default Vue.extend({
-  components: {
-    Logo,
-  },
   data() {
     return {
       totalOpened: false,
@@ -223,6 +221,13 @@ export default Vue.extend({
       } else if (key === "accountActivation") {
         return "One-time account activation fee";
       }
+    },
+    shrinkAddress(address: string): string {
+      return address.substring(0, 6) + "..." + address.substring(address.length - 6, address.length);
+    },
+    toAddress(to: string): string {
+      const domain = this.transactionData.domains.get(to);
+      return domain ? `${domain} (${this.shrinkAddress(to)})` : to;
     },
   },
 });

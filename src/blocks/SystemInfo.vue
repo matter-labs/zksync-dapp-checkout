@@ -25,7 +25,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkConfig } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { GIT_REVISION_SHORT, VERSION, ZK_LIB_VERSION } from "@/plugins/build";
 
 export default Vue.extend({

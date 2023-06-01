@@ -14,10 +14,10 @@
   flex-direction: column;
   animation-fill-mode: forwards;
   overflow: hidden;
-  transition-delay: .35s;
+  transition-delay: 0.35s;
 
   &.fade-leave-active {
-    transition-delay: .5s;
+    transition-delay: 0.5s;
   }
 
   .hint {
@@ -47,7 +47,7 @@
   background-color: $darkBlue;
 }
 
-@media screen and (max-width: $mobile)  {
+@media screen and (max-width: $mobile) {
   .loggingInContainer {
     .hint {
       font-size: 14px !important;

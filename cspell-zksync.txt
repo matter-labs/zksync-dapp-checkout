@@ -22,6 +22,7 @@ trustlessness
 IERC
 Schnorr
 MuSig
+rsksmart
 
 mainchain
 offchain
@@ -30,6 +31,8 @@ sidechain
 sidechains
 tokenomics
 validator's
+
+tlds
 
 // Names
 Stichting

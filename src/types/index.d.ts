@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { DecimalBalance } from "@matterlabs/zksync-nuxt-core/types";
+import { DecimalBalance } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
 import { TokenSymbol, Address } from "zksync/build/types";
 
@@ -12,6 +12,7 @@ export type TransactionData = {
   transactions: Array<ZkSyncTransaction>;
   fromAddress: Address;
   feeToken: TokenSymbol;
+  domains: Map<Address, string>;
 };
 export type TransactionFee = {
   key: string;
@@ -38,6 +39,6 @@ export type ZKISingleRampConfig = {
   hostApiKey: string;
 };
 export type ZKIRampConfig = {
-  rinkeby: ZKISingleRampConfig;
+  goerli: ZKISingleRampConfig;
   mainnet: ZKISingleRampConfig;
 };

@@ -5,7 +5,7 @@ export const state = () => ({
    * Used to handle modals and simplify the code
    */
   currentModal: false as String | false,
-  step: 'main' as string,
+  step: "main" as string,
   darkMode: false,
 });
 
