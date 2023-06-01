@@ -1,3 +1,150 @@
+## [3.6.7](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.6...3.6.7) (2023-03-28)
+
+
+### Bug Fixes
+
+* network change ([#133](https://github.com/matter-labs/zksync-dapp-checkout/issues/133)) ([445aab8](https://github.com/matter-labs/zksync-dapp-checkout/commit/445aab869026b410fccd69ffa6ec4f6ffd14a5e5))
+
+## [3.6.6](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.5...3.6.6) (2023-01-23)
+
+
+### Bug Fixes
+
+* change zksync logo ([#127](https://github.com/matter-labs/zksync-dapp-checkout/issues/127)) ([7a176a3](https://github.com/matter-labs/zksync-dapp-checkout/commit/7a176a326435a990843342739d5811d7e9223b40))
+
+## [3.6.5](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.4...3.6.5) (2023-01-20)
+
+
+### Bug Fixes
+
+* update core module to stable version ([#126](https://github.com/matter-labs/zksync-dapp-checkout/issues/126)) ([1ace4ac](https://github.com/matter-labs/zksync-dapp-checkout/commit/1ace4acd26c61d533783330cddf79b228e602686))
+
+## [3.6.4](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.3...3.6.4) (2022-12-29)
+
+
+### Bug Fixes
+
+* argent wallet ([#123](https://github.com/matter-labs/zksync-dapp-checkout/issues/123)) ([8c89725](https://github.com/matter-labs/zksync-dapp-checkout/commit/8c8972553423e2c145ae7af801b3235bcc876478))
+
+## [3.6.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.2...3.6.3) (2022-12-21)
+
+
+### Bug Fixes
+
+* wallet connect login ([#122](https://github.com/matter-labs/zksync-dapp-checkout/issues/122)) ([a3f60ea](https://github.com/matter-labs/zksync-dapp-checkout/commit/a3f60ea1762755a6e1a6f3479778a8d4bcc0f893))
+
+## [3.6.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.1...3.6.2) (2022-12-19)
+
+
+### Bug Fixes
+
+* use wallet connect v2 ([#121](https://github.com/matter-labs/zksync-dapp-checkout/issues/121)) ([ec5435d](https://github.com/matter-labs/zksync-dapp-checkout/commit/ec5435dfdb334832ac426d970475fca244f692c4))
+
+## [3.6.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.0...3.6.1) (2022-12-12)
+
+
+### Bug Fixes
+
+* onboard v2 ([#119](https://github.com/matter-labs/zksync-dapp-checkout/issues/119)) ([d85867c](https://github.com/matter-labs/zksync-dapp-checkout/commit/d85867cf3cd361492bb8d96966c828ab9c8d130e))
+
+# [3.6.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.5.2...3.6.0) (2022-12-06)
+
+
+### Features
+
+* unstoppable domains integration ([#117](https://github.com/matter-labs/zksync-dapp-checkout/issues/117)) ([fc40735](https://github.com/matter-labs/zksync-dapp-checkout/commit/fc40735a86c5ccb8bdb3ad7daf37890307e70111))
+
+## [3.5.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.5.1...3.5.2) (2022-09-12)
+
+
+### Bug Fixes
+
+* remove sepolia network ([#112](https://github.com/matter-labs/zksync-dapp-checkout/issues/112)) ([5681daf](https://github.com/matter-labs/zksync-dapp-checkout/commit/5681dafbb9216b5a2dd49a7a9018fd98eaf5fdd7))
+
+## [3.5.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.5.0...3.5.1) (2022-08-30)
+
+
+### Bug Fixes
+
+* uptime url ([#111](https://github.com/matter-labs/zksync-dapp-checkout/issues/111)) ([af688e3](https://github.com/matter-labs/zksync-dapp-checkout/commit/af688e3a217350166931e1fe6df08b680d11e207))
+
+# [3.5.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.4.0...3.5.0) (2022-08-19)
+
+
+### Features
+
+* social share image ([#110](https://github.com/matter-labs/zksync-dapp-checkout/issues/110)) ([6f006fd](https://github.com/matter-labs/zksync-dapp-checkout/commit/6f006fd8cb589ad90100779e16301b7aa7322ca5))
+
+# [3.4.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.8...3.4.0) (2022-08-04)
+
+
+### Features
+
+* new networks, remove deprecated networks ([#108](https://github.com/matter-labs/zksync-dapp-checkout/issues/108)) ([76e9803](https://github.com/matter-labs/zksync-dapp-checkout/commit/76e9803f51cb69f81f86d80ab4f776cb551cbfce))
+
+## [3.3.8](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.7...3.3.8) (2022-06-29)
+
+
+### Bug Fixes
+
+* validate address, token and amount when using zklink ([#107](https://github.com/matter-labs/zksync-dapp-checkout/issues/107)) ([5e16f85](https://github.com/matter-labs/zksync-dapp-checkout/commit/5e16f8546a2c64d46036f763413971361861f6bc))
+
+## [3.3.7](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.6...3.3.7) (2022-06-10)
+
+
+### Bug Fixes
+
+* update ci/cd ([6c6f14f](https://github.com/matter-labs/zksync-dapp-checkout/commit/6c6f14f28f488638d1f9c354af1190853ecfc829))
+
+## [3.3.6](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.5...3.3.6) (2022-06-10)
+
+
+### Bug Fixes
+
+* improve hashes checks ([#105](https://github.com/matter-labs/zksync-dapp-checkout/issues/105)) ([0782dad](https://github.com/matter-labs/zksync-dapp-checkout/commit/0782dad7920f9036bea18cc7d1eb75aafcc5df36))
+
+## [3.3.5](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.4...3.3.5) (2022-04-25)
+
+
+### Bug Fixes
+
+* add linting check ([#102](https://github.com/matter-labs/zksync-dapp-checkout/issues/102)) ([e633d59](https://github.com/matter-labs/zksync-dapp-checkout/commit/e633d590e839956e8a4271b0cd49743d4729d377))
+
+## [3.3.4](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.3...3.3.4) (2022-04-19)
+
+
+### Bug Fixes
+
+* more pre-transfer checks ([#100](https://github.com/matter-labs/zksync-dapp-checkout/issues/100)) ([c3480f4](https://github.com/matter-labs/zksync-dapp-checkout/commit/c3480f401fbd0ac1460371b1062471b24d299122))
+
+## [3.3.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.2...3.3.3) (2022-04-06)
+
+
+### Bug Fixes
+
+* login with argent button, update core module ([#99](https://github.com/matter-labs/zksync-dapp-checkout/issues/99)) ([6876b0f](https://github.com/matter-labs/zksync-dapp-checkout/commit/6876b0fe957dc6260986fcac907c031616ce0c1e))
+
+## [3.3.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.1...3.3.2) (2022-03-21)
+
+
+### Bug Fixes
+
+* prevent from displaying checkout transactions twice in results ([#95](https://github.com/matter-labs/zksync-dapp-checkout/issues/95)) ([a1b6215](https://github.com/matter-labs/zksync-dapp-checkout/commit/a1b62158dea9c12ccc58474cb965210c73dc032b))
+
+## [3.3.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.3.0...3.3.1) (2022-03-11)
+
+
+### Bug Fixes
+
+* cpk fix ([#94](https://github.com/matter-labs/zksync-dapp-checkout/issues/94)) ([1a327d8](https://github.com/matter-labs/zksync-dapp-checkout/commit/1a327d8a8899dbd5eb77c85f3c81e2c410d2b0ba))
+
+# [3.3.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.2.0...3.3.0) (2022-03-08)
+
+
+### Features
+
+* Argent integration ([#93](https://github.com/matter-labs/zksync-dapp-checkout/issues/93)) ([9725f3c](https://github.com/matter-labs/zksync-dapp-checkout/commit/9725f3c22a5bac830e36d0b80b1cf9a5470b8e0c))
+
 # [3.2.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.1.5...3.2.0) (2022-01-24)
 
 
