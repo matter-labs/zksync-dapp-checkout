@@ -3031,7 +3031,7 @@ __metadata:
     "@nuxtjs/stylelint-module": ^4.1.0
     "@nuxtjs/tailwindcss": ^4.2.1
     "@ramp-network/ramp-instant-sdk": ^2.5.0
-    "@rsksmart/rif-rollup-nuxt-core": "git@github.com:rsksmart/rif-rollup-nuxt-core.git"
+    "@rsksmart/rif-rollup-nuxt-core": "git+ssh://git@github.com:rsksmart/rif-rollup-nuxt-core.git"
     "@semantic-release/changelog": ^6.0.1
     "@semantic-release/git": ^10.0.1
     "@types/fibers": ^3.1.1
@@ -3062,7 +3062,7 @@ __metadata:
     vue: ^2.6.12
     vue-custom-scrollbar: ^1.4.0
     vue-js-popover: ^1.2.1
-    zksync: "git@github.com:rsksmart/rif-rollup-js-sdk.git"
+    zksync: "git+ssh://git@github.com:rsksmart/rif-rollup-js-sdk.git"
     zksync-checkout: latest
     zksync-checkout-internal: latest
   languageName: unknown
@@ -4043,9 +4043,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rsksmart/rif-rollup-nuxt-core@git@github.com:rsksmart/rif-rollup-nuxt-core.git":
+"@rsksmart/rif-rollup-nuxt-core@git+ssh://git@github.com:rsksmart/rif-rollup-nuxt-core.git":
   version: 1.10.2
-  resolution: "@rsksmart/rif-rollup-nuxt-core@git@github.com:rsksmart/rif-rollup-nuxt-core.git#commit=d18162d55d32970c77ada95c74462765d556154c"
+  resolution: "@rsksmart/rif-rollup-nuxt-core@git+ssh://git@github.com:rsksmart/rif-rollup-nuxt-core.git#commit=2c0e076f492e7876be4fe1fe39ca7aaad2f0b538"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.8.0
@@ -4071,8 +4071,8 @@ __metadata:
     nuxt: ^2.15.3
     ts-node: ^9.1.1
     web3: ^1.5.3
-    zksync: "https://github.com/rsksmart/rif-rollup-js-sdk.git"
-  checksum: 2e3639eed96e748f14e500d364c53f7e8ccd312ab052715a0ab4bee79708efb9efadf9d7b9dc3bec188e81e047639ad0195ac1b5211377a0678efb552dfb57a5
+    zksync: "git+ssh://git@github.com:rsksmart/rif-rollup-js-sdk.git"
+  checksum: 9cf238b6a5bfb9888f1fd4f5ccd6aa2a4daecdbc72bb2dbc2f8fdb2c7728ab9164952e67b39ba020bc5f0346e3b365310f51ddc8d0696b9154c08e1940b1b9ea
   languageName: node
   linkType: hard
 
@@ -24702,9 +24702,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zksync@git@github.com:rsksmart/rif-rollup-js-sdk.git":
-  version: 0.13.1
-  resolution: "zksync@git@github.com:rsksmart/rif-rollup-js-sdk.git#commit=7e31ed347e5b933861d57d3b64e316f986820dee"
+"zksync@git+ssh://git@github.com:rsksmart/rif-rollup-js-sdk.git":
+  version: 0.0.2
+  resolution: "zksync@git+ssh://git@github.com:rsksmart/rif-rollup-js-sdk.git#commit=2139c56ba9d8b9991cf14d193e06e6b5e73a0b15"
   dependencies:
     axios: ^0.21.2
     websocket: ^1.0.30
@@ -24713,22 +24713,7 @@ __metadata:
   peerDependencies:
     "@ethersproject/logger": ^5.4.0
     ethers: ^5.4.4
-  checksum: 04b2ab71d4808f4999f4361c17fb6ae9f715e59d40854db4b3cb25e375b73ece6d5a1056c866afd5a624219f154493f120632d73eb234e9822046fe0954561dd
-  languageName: node
-  linkType: hard
-
-"zksync@https://github.com/rsksmart/rif-rollup-js-sdk.git":
-  version: 0.13.1
-  resolution: "zksync@https://github.com/rsksmart/rif-rollup-js-sdk.git#commit=7e31ed347e5b933861d57d3b64e316f986820dee"
-  dependencies:
-    axios: ^0.21.2
-    websocket: ^1.0.30
-    websocket-as-promised: ^1.1.0
-    zksync-crypto: ^0.6.1
-  peerDependencies:
-    "@ethersproject/logger": ^5.4.0
-    ethers: ^5.4.4
-  checksum: 04b2ab71d4808f4999f4361c17fb6ae9f715e59d40854db4b3cb25e375b73ece6d5a1056c866afd5a624219f154493f120632d73eb234e9822046fe0954561dd
+  checksum: 9e14536fed2fc18b8537d3f94bcc5a1f75ecb8baff400490b5badff9be0dc5f5ba99603379fe1c8823eddf628002d2e1ae6bbda03564e0a51aabea522ffa6bed
   languageName: node
   linkType: hard
 

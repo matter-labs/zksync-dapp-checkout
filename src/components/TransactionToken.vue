@@ -378,7 +378,7 @@ export default Vue.extend({
           this.subStep = "waitingUserConfirmation";
           this.step = "depositing";
           const syncWallet: Wallet = this.$store.getters["zk-wallet/syncWallet"];
-          const depositResponse = await syncWallet.depositToSyncFromEthereum({
+          const depositResponse = await syncWallet.depositToSyncFromRootstock({
             depositTo: syncWallet.address(),
             token: this.token,
             amount: this.depositBigNumber,
@@ -387,7 +387,7 @@ export default Vue.extend({
             throw new Error("Unexpected payment error!");
           }
           this.subStep = "committing";
-          await depositResponse.awaitEthereumTxCommit();
+          await depositResponse.awaitRootstockTxCommit();
           this.subStep = "confirming";
           await depositResponse.awaitReceipt();
           console.log("depositResponse", depositResponse);
