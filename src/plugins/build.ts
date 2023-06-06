@@ -45,7 +45,7 @@ export const nuxtBuildConfig = isProduction ? nuxtBuildProdOptions : nuxtBuildOp
 
 export const ZK_LIB_VERSION = zkSyncVersion ?? "latest";
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;
-export const CURRENT_APP_NAME = "zkSync Checkout";
+export const CURRENT_APP_NAME = "RIF Rollup Checkout";
 
 export const CURRENT_APP_TITLE = process.env.SITE_TITLE || CURRENT_APP_NAME;
 
