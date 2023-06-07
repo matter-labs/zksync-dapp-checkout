@@ -129,7 +129,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
-import { Network, TokenSymbol } from "zksync/build/types";
+import { Network, TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { ZkFeeType, ZkTokenPrices } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { TotalByToken, TransactionData, TransactionFee } from "@/types/index";
 import { ETHER_NETWORK_NAME } from "~/plugins/build";

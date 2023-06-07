@@ -126,7 +126,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Network } from "zksync/build/types";
+import { Network } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { copyToClipboard } from "@rsksmart/rif-rollup-nuxt-core/utils";
 import { FACEBOOK_URL, TWEET_URL } from "@/plugins/build";
 import { encrypt } from "@/plugins/link";

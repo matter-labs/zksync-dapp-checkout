@@ -24,7 +24,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { DecimalBalance } from "@rsksmart/rif-rollup-nuxt-core/types";
-import { TokenSymbol } from "zksync/build/types";
+import { TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { checkAddress } from "@/plugins/utils";
 
 export default Vue.extend({

@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { isTransactionAmountPackable } from "zksync/build/utils";
+import { isTransactionAmountPackable } from "@rsksmart/rif-rollup-js-sdk/build/utils";
 
 export default Vue.extend({
   props: {

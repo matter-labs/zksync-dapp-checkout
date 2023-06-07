@@ -1,5 +1,5 @@
-import { Network } from "zksync/build/types.d";
-import { version as zkSyncVersion } from "zksync/package.json";
+import { Network } from "@rsksmart/rif-rollup-js-sdk/build/types.d";
+import { version as zkSyncVersion } from "@rsksmart/rif-rollup-js-sdk/package.json";
 import { NuxtOptionsBuild } from "@nuxt/types/config/build";
 import { version } from "../../package.json";
 import { ZKIRampConfig } from "~/types";

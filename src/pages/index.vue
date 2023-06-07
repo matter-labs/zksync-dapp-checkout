@@ -198,12 +198,12 @@
 import Vue from "vue";
 
 import { BigNumberish } from "ethers";
-import { Wallet } from "zksync";
+import { Wallet } from "@rsksmart/rif-rollup-js-sdk";
 import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
-import { Transaction } from "zksync/build/wallet";
+import { Transaction } from "@rsksmart/rif-rollup-js-sdk/build/wallet";
 import { ZkCPKStatus } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { filterError } from "@rsksmart/rif-rollup-nuxt-core/utils";
-import { Address, TokenSymbol } from "zksync/build/types";
+import { Address, TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
 import { TotalByToken, TransactionData } from "@/types";
 import connectedWallet from "@/blocks/connectedWallet.vue";
