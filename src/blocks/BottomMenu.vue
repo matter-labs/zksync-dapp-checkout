@@ -1,6 +1,6 @@
 <template>
   <div class="poweredBy flex justify-center mx-auto items-center mr-5">
-    <a target="_blank" href="//rootstock.io/legal/terms.html" class="linkDefault lightLink whitespace-nowrap mr-3">Our&nbsp;terms</a>
+    <a target="_blank" href="rootstock.io/terms-conditions" class="linkDefault lightLink whitespace-nowrap mr-3">Our&nbsp;terms</a>
     <a target="_blank" href="rootstock.io/terms-conditions" class="linkDefault lightLink whitespace-nowrap mr-3">Privacy</a>
     <div v-show="!isLinkPage" class="linkDefault whitespace-nowrap mr-3 hidden md:block">
       <span class="dividerLine">|</span>
