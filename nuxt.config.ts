@@ -1,7 +1,6 @@
-import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+import { ModuleOptions } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import Sass from "sass";
-import Fiber from "fibers";
 
 import { NuxtConfig } from "@nuxt/types";
 // noinspection ES6PreferShortImport
@@ -12,8 +11,8 @@ const zkTailwindDefault = require("matter-zk-ui/tailwind.config.js");
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
-const pageTitle = `${CURRENT_APP_NAME}`.toString() ?? "zkSync Checkout";
-const pageImg = "/cover.jpg";
+const pageTitle = `${CURRENT_APP_NAME}`.toString() ?? "Rollup Checkout";
+const pageImg = "/social.png";
 
 const pageTitleTemplate = ETHER_PRODUCTION ? CURRENT_APP_NAME : `${ETHER_NETWORK_CAPITALIZED}`;
 
@@ -102,6 +101,11 @@ const config: NuxtConfig = {
         content: pageImg,
       },
       {
+        hid: "twitter:image:alt",
+        name: "twitter:image:alt",
+        content: pageTitle,
+      },
+      {
         hid: "twitter:site",
         name: "twitter:site",
         content: "@zksync",
@@ -110,11 +114,6 @@ const config: NuxtConfig = {
         hid: "twitter:creator",
         name: "twitter:creator",
         content: "@the_matter_labs",
-      },
-      {
-        hid: "twitter:image:alt",
-        name: "twitter:image:alt",
-        content: pageTitle,
       },
       {
         hid: "og:title",
@@ -193,7 +192,7 @@ const config: NuxtConfig = {
     ["@nuxtjs/dotenv", { path: __dirname }],
     "matter-zk-ui",
     [
-      "@matterlabs/zksync-nuxt-core",
+      "@rsksmart/rif-rollup-nuxt-core",
       <ModuleOptions>{
         network: process.env.ZK_NETWORK,
         apiKeys: {
@@ -205,6 +204,7 @@ const config: NuxtConfig = {
           APP_NAME: pageTitle,
           APP_ID: process.env.APP_ONBOARDING_APP_ID,
         },
+        restoreNetwork: false,
         logoutRedirect: "/connect",
       },
     ],
@@ -222,11 +222,11 @@ const config: NuxtConfig = {
         title: pageTitle,
         site_name: pageTitle,
         description: pageDescription,
-        img: "cover.jpg",
+        img: "social.png",
         img_size: { width: "2560", height: "1280" },
         locale: "en_US",
         twitter: "@zksync",
-        twitter_card: "https://checkout.zksync.io/social.jpg",
+        twitter_card: "https://checkout.zksync.io/social.png",
         themeColor: "#4e529a",
       },
     ],
@@ -264,7 +264,7 @@ const config: NuxtConfig = {
       anonymize_ip: true, // anonymize IP
       send_page_view: isProduction, // might be necessary to avoid duplicated page track on page reload
       linker: {
-        domains: ["checkout.zksync.io", "checkout-rinkeby.zksync.io", "ropsten-rinkeby.zksync.io", "web.app"],
+        domains: ["checkout.zksync.io", "checkout-goerli.zksync.io", "web.app"],
       },
     },
     debug: isDebugEnabled, // enable to track in dev mode
@@ -310,9 +310,6 @@ const config: NuxtConfig = {
     loaders: {
       scss: {
         implementation: Sass,
-        sassOptions: {
-          fiber: Fiber,
-        },
       },
     },
     /*

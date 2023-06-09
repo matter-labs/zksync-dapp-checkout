@@ -33,7 +33,7 @@
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",
-      "@matterlabs/zksync-nuxt-core",
+      "@rsksmart/rif-rollup-nuxt-core"
     ]
   },
   "exclude": [

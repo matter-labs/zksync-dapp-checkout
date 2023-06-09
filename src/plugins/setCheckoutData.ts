@@ -1,6 +1,6 @@
 import { Context } from "@nuxt/types";
 import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
-import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
+import theme from "@rsksmart/rif-rollup-nuxt-core/utils/theme";
 
 export default async ({ store }: Context): Promise<void> => {
   if (theme.getUserTheme() === "dark") {

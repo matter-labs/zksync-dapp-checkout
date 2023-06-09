@@ -13,7 +13,10 @@ $black: #000;
 $darkBlue: #272640;
 $violet: #5436d6;
 $violetOpacity: rgba(84, 54, 214, 0.25);
-$lightViolet: lighten($color: $violet, $amount: 10);
+$lightViolet: lighten(
+  $color: $violet,
+  $amount: 10,
+);
 $red: #f25f5c;
 $green: #057a55;
 $rampGreen: #059669;
@@ -33,7 +36,6 @@ $transition2: 0.3s ease;
 $mobile: 768px;
 $breakpoint1: 1100px;
 $maxWidth: 1370px;
-
 
 /* max-width */
 $maxWidthDefault: 660px;

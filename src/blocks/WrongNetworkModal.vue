@@ -10,7 +10,7 @@
       <template slot="default">
         <div class="text-left">
           <div class="pb-1">
-            You are on the wrong network.<br>Please switch your wallet to <b>{{ network }}</b> to continue.
+            You are on the wrong network.<br />Please switch your wallet to <b>{{ network }}</b> to continue.
           </div>
           <div class="pb-1 text-sm">
             Some wallets may not support changing networks. If you can not change networks in your wallet you may consider switching to a different wallet.
@@ -23,13 +23,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkConfig } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 export default Vue.extend({
   name: "WrongNetwork",
   computed: {
     network(): string {
-      return (<ZkConfig>this.$store.getters["zk-onboard/config"]).ethereumNetwork.name;
+      return (this.$store.getters["zk-onboard/config"] as ZkConfig).ethereumNetwork.name;
     },
     opened: {
       set(val): void {
