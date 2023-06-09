@@ -8,7 +8,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
-import { TokenSymbol } from "zksync/build/types";
+import { TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { ZKISingleRampConfig } from "@/types";
 import { rampConfig } from "@/plugins/build";
 
@@ -49,7 +49,7 @@ export default Vue.extend({
         throw new Error("Ramp is not supported on this environment.");
       }
       new RampInstantSDK({
-        hostAppName: "zkSync Checkout",
+        hostAppName: "RIF Rollup Checkout",
         hostLogoUrl: window.location.origin + "/favicon-dark.png",
         variant: "hosted-auto",
         swapAsset: "ZKSYNC_*",

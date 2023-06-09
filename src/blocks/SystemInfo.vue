@@ -4,7 +4,7 @@
       <div slot="popover" class="flex-col items-stretch p-2 text-xs">
         <div class="text-left text-sm mb-2">Environment details</div>
         <div class="flex flex-auto">
-          zkSync: <strong class="ml-auto">v.{{ zkLibVersion }}</strong>
+          RIF Rollup: <strong class="ml-auto">v.{{ zkLibVersion }}</strong>
         </div>
         <div class="flex flex-auto">
           ETH: <strong class="ml-auto">{{ netName }}</strong>
@@ -43,7 +43,7 @@ export default Vue.extend({
       return VERSION;
     },
     githubLink(): string | undefined {
-      return `https://github.com/matter-labs/zksync-dapp-checkout/commit/${this.revision}`;
+      return `https://github.com/rsksmart/ri-aggregation-dapp-checkout/commit/${this.revision}`;
     },
     revision(): string {
       return GIT_REVISION_SHORT;

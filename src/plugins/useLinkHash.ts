@@ -1,6 +1,6 @@
 import { Context } from "@nuxt/types";
-import { RestProvider } from "zksync";
-import { Address } from "zksync/build/types";
+import { RestProvider } from "@rsksmart/rif-rollup-js-sdk";
+import { Address } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { decrypt } from "@/plugins/link";
 
 export default async ({ store, route, redirect }: Context, hash: string) => {

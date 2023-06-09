@@ -71,7 +71,8 @@
     "@nuxtjs/stylelint-module": "^4.1.0",
     "@nuxtjs/tailwindcss": "^4.2.1",
     "@ramp-network/ramp-instant-sdk": "^2.5.0",
-    "@rsksmart/rif-rollup-nuxt-core": "git@github.com:rsksmart/rif-rollup-nuxt-core.git",
+    "@rsksmart/rif-rollup-js-sdk": "^0.13.1-alpha",
+    "@rsksmart/rif-rollup-nuxt-core": "^1.0.0",
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
     "@types/fibers": "^3.1.1",
@@ -99,7 +100,6 @@
     "vue": "^2.6.12",
     "vue-custom-scrollbar": "^1.4.0",
     "vue-js-popover": "^1.2.1",
-    "zksync": "git@github.com:rsksmart/rif-rollup-js-sdk.git",
     "zksync-checkout": "latest",
     "zksync-checkout-internal": "latest"
   },

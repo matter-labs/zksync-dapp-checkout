@@ -11,7 +11,7 @@ const zkTailwindDefault = require("matter-zk-ui/tailwind.config.js");
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
-const pageTitle = `${CURRENT_APP_NAME}`.toString() ?? "zkSync Checkout";
+const pageTitle = `${CURRENT_APP_NAME}`.toString() ?? "Rollup Checkout";
 const pageImg = "/social.png";
 
 const pageTitleTemplate = ETHER_PRODUCTION ? CURRENT_APP_NAME : `${ETHER_NETWORK_CAPITALIZED}`;

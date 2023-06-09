@@ -1,8 +1,8 @@
 /* eslint-disable require-await */
 import { ActionTree, GetterTree, MutationTree } from "vuex";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
-import { closestPackableTransactionAmount, closestPackableTransactionFee, RestProvider } from "zksync";
-import { TokenSymbol, Address } from "zksync/build/types";
+import { closestPackableTransactionAmount, closestPackableTransactionFee, RestProvider } from "@rsksmart/rif-rollup-js-sdk";
+import { TokenSymbol, Address } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { BigNumber } from "ethers";
 import { ZkFee } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { RootState } from "~/store";

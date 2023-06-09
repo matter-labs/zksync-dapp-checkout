@@ -1,5 +1,5 @@
-import { Network } from "zksync/build/types.d";
-import { version as zkSyncVersion } from "zksync/package.json";
+import { Network } from "@rsksmart/rif-rollup-js-sdk/build/types.d";
+import { version as zkSyncVersion } from "@rsksmart/rif-rollup-js-sdk/package.json";
 import { NuxtOptionsBuild } from "@nuxt/types/config/build";
 import { version } from "../../package.json";
 import { ZKIRampConfig } from "~/types";
@@ -45,7 +45,7 @@ export const nuxtBuildConfig = isProduction ? nuxtBuildProdOptions : nuxtBuildOp
 
 export const ZK_LIB_VERSION = zkSyncVersion ?? "latest";
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;
-export const CURRENT_APP_NAME = "zkSync Checkout";
+export const CURRENT_APP_NAME = "RIF Rollup Checkout";
 
 export const CURRENT_APP_TITLE = process.env.SITE_TITLE || CURRENT_APP_NAME;
 

@@ -52,7 +52,7 @@
 
     <div class="linkHeader">
       <nuxt-link to="/link" class="flex items-stretch justify-center">
-        <img src="@/static/images/logo.svg" class="head-logo" alt="Checkout by zkSync" />
+        <img src="@/static/images/logo.png" class="head-logo" alt="Checkout by RIF Rollup" />
         <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
           <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
           <span v-if="!isMainnet" class="networkName text-sm font-light"> {{ currentNetwork }}</span>
@@ -61,7 +61,7 @@
       <ul
         v-if="!showAddLink"
         class="feature-list zk-container font-light text-dark mt-4 mr-auto ml-auto mb-6 text-sm md:text-md flex-col items-center text-gray-600 dark:text-gray-100">
-        <li class="flex-grow headline big text-violet mb-3">Get paid in tokens with zkSync:</li>
+        <li class="flex-grow headline big text-violet mb-3">Get paid in tokens with RIF Rollup:</li>
         <li class="mb-3">
           <i class="fad fa-check text-violet mr-2" />
           <span>Blazing-fast & cost efficient</span>
@@ -76,7 +76,7 @@
         </li>
         <li class="mb-3">
           <i class="fad fa-check text-violet mr-2" />
-          <span><a href="https://zksync.io/api/sdk/checkout/" CLASS="lightLink" target="_blank">zkSync Checkout SDK</a>&nbsp;for the fully-featured checkout</span>
+          <span><a href="https://zksync.io/api/sdk/checkout/" CLASS="lightLink" target="_blank">RIF Rollup Checkout SDK</a>&nbsp;for the fully-featured checkout</span>
         </li>
         <li class="mb-3">
           <i class="fad fa-check text-violet mr-2" />
@@ -126,7 +126,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Network } from "zksync/build/types";
+import { Network } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { copyToClipboard } from "@rsksmart/rif-rollup-nuxt-core/utils";
 import { FACEBOOK_URL, TWEET_URL } from "@/plugins/build";
 import { encrypt } from "@/plugins/link";

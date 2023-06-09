@@ -1,7 +1,7 @@
 import { isAddress } from "@ethersproject/address";
-import { Address, TokenSymbol } from "zksync/build/types";
+import { Address, TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { parseDecimal } from "@rsksmart/rif-rollup-nuxt-core/utils";
-import { RestProvider } from "zksync";
+import { RestProvider } from "@rsksmart/rif-rollup-js-sdk";
 import { BigNumber } from "ethers";
 import { UNSResolver } from "./uns";
 import { PaymentItem, ZkTokens } from "@/types";

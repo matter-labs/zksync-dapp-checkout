@@ -12,7 +12,7 @@
         <div v-if="modal === 'insufficientL1Deposit'" class="text-sm">
           On-chain wallet has insufficient funds to deposit
           <strong>{{ depositBigNumber | parseBigNumberish(token) }} {{ token }}</strong>
-          to zkSync L2 account. Your on-chain balance is
+          to RIF Rollup L2 account. Your on-chain balance is
           <strong
             class="cursor-pointer"
             @click="
@@ -136,8 +136,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { BigNumber, BigNumberish } from "ethers";
-import { Wallet } from "zksync";
-import { Network, TokenSymbol } from "zksync/build/types";
+import { Wallet } from "@rsksmart/rif-rollup-js-sdk";
+import { Network, TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { ZkTokenBalance } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { filterError } from "@rsksmart/rif-rollup-nuxt-core/utils";
 
@@ -378,7 +378,7 @@ export default Vue.extend({
           this.subStep = "waitingUserConfirmation";
           this.step = "depositing";
           const syncWallet: Wallet = this.$store.getters["zk-wallet/syncWallet"];
-          const depositResponse = await syncWallet.depositToSyncFromEthereum({
+          const depositResponse = await syncWallet.depositToSyncFromRootstock({
             depositTo: syncWallet.address(),
             token: this.token,
             amount: this.depositBigNumber,
@@ -387,7 +387,7 @@ export default Vue.extend({
             throw new Error("Unexpected payment error!");
           }
           this.subStep = "committing";
-          await depositResponse.awaitEthereumTxCommit();
+          await depositResponse.awaitRootstockTxCommit();
           this.subStep = "confirming";
           await depositResponse.awaitReceipt();
           console.log("depositResponse", depositResponse);

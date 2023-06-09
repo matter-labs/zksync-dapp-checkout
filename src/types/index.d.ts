@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { DecimalBalance } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
-import { TokenSymbol, Address } from "zksync/build/types";
+import { TokenSymbol, Address } from "@rsksmart/rif-rollup-js-sdk/build/types";
 
 export type PaymentItem = {
   address: Address;

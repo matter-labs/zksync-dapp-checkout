@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div v-if="connecting && !connectingScreenDelay" class="loggingInContainer">
-      <img src="@/static/images/logo.svg" class="h-16" alt="Checkout by zkSync" />
+      <img src="@/static/images/logo.png" class="h-16" alt="Checkout by RIF Rollup" />
       <h1 class="text-dark -dark text-3xl mt-3 text-center leading-tight">Connecting {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
       <transition-group tag="div" name="slide-vertical-fade" class="hint text-gray text-center text-sm mt-2">
         <div :key="hintText">{{ hintText }}</div>
