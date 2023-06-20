@@ -52,7 +52,7 @@
 
     <div class="linkHeader">
       <nuxt-link to="/link" class="flex items-stretch justify-center">
-        <img src="@/static/zkSyncLogoFull.svg" class="head-logo" alt="Checkout by zkSync" />
+        <img src="@/static/images/logo.png" class="head-logo" alt="Checkout by RIF Rollup" />
         <div class="brandContainer text-violet -dark text-2xl font-bold flex flex-col lg:flex-row items-end md:items-start md:gap-2 mr-5 lg:justify-start leading-1">
           <h1 class="leading-1 -mb-1 lg:m-0 w-auto">Checkout</h1>
           <span v-if="!isMainnet" class="networkName text-sm font-light"> {{ currentNetwork }}</span>
@@ -61,7 +61,7 @@
       <ul
         v-if="!showAddLink"
         class="feature-list zk-container font-light text-dark mt-4 mr-auto ml-auto mb-6 text-sm md:text-md flex-col items-center text-gray-600 dark:text-gray-100">
-        <li class="flex-grow headline big text-violet mb-3">Get paid in tokens with zkSync:</li>
+        <li class="flex-grow headline big text-violet mb-3">Get paid in tokens with RIF Rollup:</li>
         <li class="mb-3">
           <i class="fad fa-check text-violet mr-2" />
           <span>Blazing-fast & cost efficient</span>
@@ -76,7 +76,7 @@
         </li>
         <li class="mb-3">
           <i class="fad fa-check text-violet mr-2" />
-          <span><a href="https://zksync.io/api/sdk/checkout/" CLASS="lightLink" target="_blank">zkSync Checkout SDK</a>&nbsp;for the fully-featured checkout</span>
+          <span><a href="https://zksync.io/api/sdk/checkout/" CLASS="lightLink" target="_blank">RIF Rollup Checkout SDK</a>&nbsp;for the fully-featured checkout</span>
         </li>
         <li class="mb-3">
           <i class="fad fa-check text-violet mr-2" />
@@ -85,11 +85,14 @@
       </ul>
     </div>
     <div ref="paymentsContainer" class="linkBody py-4 md:py-10">
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <h2 class="mx-auto text-center zk-container headline big text-violet mb-3" v-html="createLinkBlockTitle" />
       <zk-defbtn v-if="!showAddLink" class="mx-auto mt-5" big @click="enableLink()">Try it now</zk-defbtn>
-      <div v-for="index in payments.keys()" v-if="showAddLink" :key="index" class="paymentContainer w-full py-2 md:py-1">
-        <payment-item v-model="payments[index]" :display-index="payments.length >= 2" :display-delete="payments.length >= 2" :index="index" @delete="deletePayment(index)" />
-      </div>
+      <template v-if="showAddLink">
+        <div v-for="index in payments.keys()" :key="index" class="paymentContainer w-full py-2 md:py-1">
+          <payment-item v-model="payments[index]" :display-index="payments.length >= 2" :display-delete="payments.length >= 2" :index="index" @delete="deletePayment(index)" />
+        </div>
+      </template>
       <zk-defbtn v-if="showAddLink" outline class="mx-auto mt-5" :disabled="payments.length >= maxPayments" @click="addPayment()">Add another transaction</zk-defbtn>
       <div v-if="showAddLink" class="text-gray text-sm text-center leading-tight pt-2" :class="{ 'text-dark': payments.length >= maxPayments }">
         {{ payments.length >= 5 ? `${payments.length}/` : "Up to " }}{{ maxPayments }} transactions
@@ -111,8 +114,8 @@
           </zk-note>
         </div>
       </zk-max-height>
-      <zk-defbtn v-if="showAddLink" id="" class="mx-auto mt-5 md:mt-5 shadow-sm" :outline="!validConfig" :disabled="!validConfig" big @click="generate()"
-        >Build your payment link</zk-defbtn
+      <zk-defbtn v-if="showAddLink" class="mx-auto mt-5 md:mt-5 shadow-sm" :outline="!validConfig" :disabled="!validConfig" big @click="generate()"
+      >Build your payment link</zk-defbtn
       >
       <div class="poweredBy pt-5 md:pt-10 pb-0 md:pb-5 flex items-center justify-between">
         <block-footer :full-footer-menu="true" />
@@ -123,18 +126,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Network } from "zksync/build/types";
-import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
+import { Network } from "@rsksmart/rif-rollup-js-sdk/build/types";
+import { copyToClipboard } from "@rsksmart/rif-rollup-nuxt-core/utils";
 import { FACEBOOK_URL, TWEET_URL } from "@/plugins/build";
 import { encrypt } from "@/plugins/link";
 import { checkAddress } from "@/plugins/utils";
+import { PaymentItem } from "@/types";
 
 export default Vue.extend({
   layout: "link",
   data() {
     return {
       addLinkMode: false,
-      payments: [],
+      payments: [] as PaymentItem[],
       wrongDataModal: false,
       successModal: false,
       previewLoading: false,
@@ -164,7 +168,7 @@ export default Vue.extend({
         return false;
       }
       for (const payment of this.payments) {
-        if (!checkAddress(payment.address) || !payment.amount) {
+        if ((!this.isValidDomain(payment.address, payment.token) && !checkAddress(payment.address)) || !payment.amount) {
           return false;
         }
       }
@@ -190,13 +194,11 @@ export default Vue.extend({
         amount: "",
         token,
       });
+      this.getDomainAddress(address, token);
     },
     enableLink() {
       this.addLinkMode = true;
       this.addPayment();
-      setTimeout(() => {
-        console.log((this.$refs.paymentsContainer as HTMLElement).querySelector("input")?.focus());
-      }, 500);
     },
     generate() {
       for (const payment of this.payments) {
@@ -215,6 +217,14 @@ export default Vue.extend({
     },
     facebookShare() {
       window.open(`${FACEBOOK_URL}${encodeURIComponent(this.paymentLink)}`, "_blank");
+    },
+    isValidDomain(address: string, token: string): boolean {
+      return (this as any).$domainResolver.isValidAddress(address, token);
+    },
+    async getDomainAddress(currentAddress: string, token: string) {
+      if (!this.isValidDomain(currentAddress, token)) {
+        await (this as any).$domainResolver.lookupDomain(currentAddress, token);
+      }
     },
   },
 });

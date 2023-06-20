@@ -9,7 +9,8 @@
       </template>
       <template slot="default">
         <div class="text-center">
-          The website that initiated the checkout, expects you to be logged in to the following account: <b>{{ transactionData.fromAddress }}</b>
+          The website that initiated the checkout, expects you to be logged in to the following account:
+          <b>{{ transactionData.fromAddress }}</b>
         </div>
       </template>
     </zk-modal>

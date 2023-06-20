@@ -1,8 +1,8 @@
 import { BigNumber } from "ethers";
-import { Wallet } from "zksync";
+import { Wallet } from "@rsksmart/rif-rollup-js-sdk";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
-import { submitSignedTransactionsBatch } from "zksync/build/wallet";
-import { TokenSymbol, Address } from "zksync/build/types";
+import { submitSignedTransactionsBatch } from "@rsksmart/rif-rollup-js-sdk/build/wallet";
+import { TokenSymbol, Address } from "@rsksmart/rif-rollup-js-sdk/build/types";
 
 /**
  * Transaction processing action
@@ -36,5 +36,5 @@ export const transactionBatch = async (transactions: Array<ZkSyncTransaction>, f
   statusFunction("waitingUserConfirmation");
   const batchTransactionData = await batchBuilder.build();
   statusFunction("processing");
-  return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  return await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, batchTransactionData.signature ? [batchTransactionData.signature] : undefined);
 };

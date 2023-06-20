@@ -1,6 +1,6 @@
 import { Context } from "@nuxt/types";
 import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
-import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
+import theme from "@rsksmart/rif-rollup-nuxt-core/utils/theme";
 
 export default async ({ store }: Context): Promise<void> => {
   if (theme.getUserTheme() === "dark") {
@@ -8,6 +8,10 @@ export default async ({ store }: Context): Promise<void> => {
   }
   await store.dispatch("zk-provider/requestProvider");
   await store.dispatch("zk-tokens/loadZkTokens");
+  if (!window.opener || window.opener === window) {
+    store.commit("checkout/setError", "Windows isn't a popup. Can't initialize zkCheckoutManager");
+    return;
+  }
   try {
     const checkoutManager = ZkSyncCheckoutManager.getManager();
     checkoutManager.startCheckout((e) => console.log(`Err ${e} has occurred`));

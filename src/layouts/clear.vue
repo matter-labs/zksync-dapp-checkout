@@ -14,9 +14,10 @@ export default Vue.extend({
       immediate: true,
       handler(val, oldVal) {
         if (!oldVal) {
-          return this.$nextTick(() => {
+          this.$nextTick(() => {
             document.documentElement.scrollTop = 0;
           });
+          return;
         }
         if (val.path !== oldVal.path) {
           this.$nextTick(() => {
@@ -28,9 +29,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    if (process ? process.client : undefined) {
-      window.history.scrollRestoration = "manual";
-    }
+    window.history.scrollRestoration = "manual";
   },
 });
 </script>

@@ -14,21 +14,20 @@
     }
 
     .tile {
-      margin: 20px auto;
       position: relative;
       width: 130px;
       height: 130px;
       background-color: $white;
       border-radius: 27px;
       padding: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       transition: box-shadow $transition;
       will-change: box-shadow;
 
       img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
       }
 
       .tileIcon {
@@ -49,7 +48,7 @@
     .tileName {
       font-size: 18px;
       font-weight: 600;
-      padding-top: 7px;
+      padding-top: 10px;
     }
   }
 

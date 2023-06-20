@@ -1,11 +1,12 @@
-import { ActionTree, GetterTree, MutationTree } from "vuex/types";
+/* eslint-disable require-await */
+import { ActionTree, GetterTree, MutationTree } from "vuex";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
-import { closestPackableTransactionAmount, closestPackableTransactionFee } from "zksync";
-import { Address, TokenSymbol } from "zksync/build/types";
+import { closestPackableTransactionAmount, closestPackableTransactionFee, RestProvider } from "@rsksmart/rif-rollup-js-sdk";
+import { TokenSymbol, Address } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { BigNumber } from "ethers";
-import { ZkFee } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkFee } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { RootState } from "~/store";
-import { TotalByToken, TransactionData, TransactionFee } from "~/types";
+import { TransactionData, TransactionFee, TotalByToken } from "@/types/index";
 
 export const state = () => ({
   linkCheckout: <boolean>false,
@@ -15,6 +16,8 @@ export const state = () => ({
   fromAddress: "" as Address,
   feeToken: undefined as TokenSymbol | undefined,
   allowedRampZkTokens: ["ETH", "DAI", "USDT", "USDC"] as TokenSymbol[],
+  confirmationsAmount: <number | undefined>undefined,
+  domains: new Map<Address, string>(),
 });
 
 export type CheckoutModuleState = ReturnType<typeof state>;
@@ -25,10 +28,11 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
       transactions: state.transactions,
       fromAddress: state.fromAddress,
       feeToken: state.feeToken!,
+      domains: state.domains,
     };
   },
   getTransactionBatchFee(_, __, ___, rootGetters): false | TransactionFee {
-    // @ts-ignore
+    // eslint-disable-next-line no-unused-expressions
     rootGetters["zk-transaction/feeLoading"];
     if (rootGetters["zk-transaction/fee"]) {
       const minFee = BigNumber.from(rootGetters["zk-transaction/fee"]);
@@ -42,7 +46,7 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     return false;
   },
   getAccountUnlockFee(_, __, ___, rootGetters): false | BigNumber {
-    // @ts-ignore
+    // eslint-disable-next-line no-unused-expressions
     rootGetters["zk-transaction/activationFeeLoading"];
     return rootGetters["zk-transaction/accountActivationFee"];
   },
@@ -55,7 +59,10 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
     return Array.from(tokens);
   },
   getTotalByToken(state, _, __, rootGetters): TotalByToken {
-    const allFees = rootGetters["zk-transaction/fees"].map((e: ZkFee) => ({ ...e, token: rootGetters["zk-transaction/feeSymbol"] }));
+    const allFees = rootGetters["zk-transaction/fees"].map((e: ZkFee) => ({
+      ...e,
+      token: rootGetters["zk-transaction/feeSymbol"],
+    }));
     const totalByToken = new Map();
     const addToTotalByToken = (amount: BigNumber, token: TokenSymbol) => {
       if (totalByToken.has(token)) {
@@ -81,6 +88,9 @@ export const getters: GetterTree<CheckoutModuleState, RootState> = {
   getAllowedRampZkTokens(state: CheckoutModuleState): TokenSymbol[] {
     return state.allowedRampZkTokens;
   },
+  getConfirmationsAmount(state: CheckoutModuleState): number | undefined {
+    return state.confirmationsAmount;
+  },
   isLinkCheckout(state: CheckoutModuleState): boolean {
     return state.linkCheckout;
   },
@@ -93,7 +103,7 @@ export const mutations: MutationTree<CheckoutModuleState> = {
   setFeeToken(state, feeToken: TokenSymbol) {
     state.feeToken = feeToken;
   },
-  setTransactionData(state, { transactions, fromAddress }: TransactionData) {
+  setTransactionData(state, { transactions, fromAddress, domains }: TransactionData) {
     state.transactions = transactions.map((tx) => {
       return {
         ...tx,
@@ -101,6 +111,7 @@ export const mutations: MutationTree<CheckoutModuleState> = {
       };
     });
     state.fromAddress = fromAddress;
+    state.domains = domains;
   },
   setError(state: CheckoutModuleState, errorData) {
     state.isError = !!errorData;
@@ -109,16 +120,22 @@ export const mutations: MutationTree<CheckoutModuleState> = {
   setAllowedRampZkTokens(state: CheckoutModuleState, tokens: TokenSymbol[]) {
     state.allowedRampZkTokens = tokens;
   },
+  setConfirmationsAmount(state: CheckoutModuleState, confirmationsAmount: number) {
+    state.confirmationsAmount = confirmationsAmount;
+  },
 };
 
 export const actions: ActionTree<CheckoutModuleState, RootState> = {
-  setTransactionData({ commit, dispatch, rootGetters }, data: TransactionData) {
+  async setTransactionData({ commit, dispatch, rootGetters }, data: TransactionData) {
     commit("setTransactionData", data);
     commit(
       "zk-transaction/setTransferBatch",
       [
         ...data.transactions.map((e) => ({ address: e.to, token: e.token })),
-        { address: rootGetters["zk-account/address"] ? rootGetters["zk-account/address"] : data.transactions[0].to, token: data.feeToken },
+        {
+          address: rootGetters["zk-account/address"] ? rootGetters["zk-account/address"] : data.transactions[0].to,
+          token: data.feeToken,
+        },
       ],
       { root: true }
     );
@@ -135,15 +152,24 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
     await Promise.all([
       dispatch("zk-transaction/requestAllFees", true, { root: true }),
       dispatch("requestUsedTokensPrice"),
+      dispatch("requestConfirmationsAmount"),
       dispatch("requestUsedTokensEthereumBalance", true),
       ...allowanceArr,
     ]);
   },
-  requestUsedTokensPrice({ getters, dispatch }): void {
+  async requestUsedTokensPrice({ getters, dispatch }): Promise<void> {
     const usedTokens = getters.usedTokens;
     for (const symbol of usedTokens) {
       dispatch("zk-tokens/getTokenPrice", symbol, { root: true });
     }
+  },
+  async requestConfirmationsAmount({ getters, commit, dispatch }): Promise<void> {
+    if (getters.confirmationsAmount) {
+      return;
+    }
+    const syncProvider: RestProvider = await dispatch("zk-provider/requestProvider", null, { root: true });
+    const confirmationsAmount = await syncProvider.getConfirmationsForEthOpAmount();
+    commit("setConfirmationsAmount", confirmationsAmount);
   },
   async requestUsedTokensEthereumBalance({ getters, dispatch }, force = false): Promise<void> {
     const usedTokens = getters.usedTokens;
@@ -152,5 +178,10 @@ export const actions: ActionTree<CheckoutModuleState, RootState> = {
       balancesPromises.push(dispatch("zk-balances/requestEthereumBalance", { symbol, force }, { root: true }));
     }
     await Promise.all(balancesPromises);
+  },
+  async setFeeToken({ commit, dispatch }, feeToken: TokenSymbol): Promise<void> {
+    commit("setFeeToken", feeToken);
+    dispatch("zk-tokens/getTokenPrice", feeToken, { root: true });
+    dispatch("zk-transaction/setSymbol", feeToken, { root: true });
   },
 };

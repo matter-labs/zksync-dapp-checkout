@@ -5,9 +5,10 @@
     <div class="routerContainer bg-white2 py-4 px-5 md:px-10">
       <block-logging-in />
       <transition name="fade">
-        <nuxt v-if="!loggingIn" class="routeMain" @step="step = $event" />
+        <nuxt v-if="!connecting" class="routeMain" @step="step = $event" />
       </transition>
       <block-wrong-network-modal />
+      <block-onboard-error-modal />
       <block-footer />
     </div>
   </div>
@@ -30,7 +31,7 @@ export default Vue.extend({
     footerUpStyle(): boolean {
       return this.loggedIn && (this.step === "main" || this.step === "success");
     },
-    loggingIn(): boolean {
+    connecting(): boolean {
       return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
     },
   },

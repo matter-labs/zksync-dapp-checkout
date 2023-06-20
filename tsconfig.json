@@ -1,21 +1,18 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": "./src/",
     "checkJs": false,
     "declaration": true,
-    "composite": false,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "strictNullChecks": false,
-    "skipLibCheck": true,
     "lib": [
       "ESNext",
       "ESNext.AsyncIterable",
       "DOM"
     ],
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "Node",
     "noEmit": true,
     "noImplicitAny": true,
@@ -31,14 +28,12 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
-    "target": "ES2018",
+    "target": "ESNext",
     "types": [
-      "@nuxt/types",
       "@types/node",
+      "@nuxt/types",
       "@nuxtjs/sentry",
-      "@matterlabs/zksync-nuxt-core",
-      "web3-core/types",
-      "vue/types"
+      "@rsksmart/rif-rollup-nuxt-core"
     ]
   },
   "exclude": [

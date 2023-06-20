@@ -1,111 +1,111 @@
-name: "Deploy production"
-"on":
-  workflow_dispatch:
-    inputs:
-      ref:
-        type: string
-        description: "The branch, tag or SHA to checkout"
-        required: true
-        default: "main"
-      preview_env:
-        type: string
-        description: "Test on Rinkeby, ropsten or mainnet"
-        required: true
-        default: "rinkeby"
-jobs:
-  build_and_preview:
-    if: ${{ github.event.repository.full_name == github.repository }}
-    runs-on: ubuntu-latest
-    environment: dev
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: "${{ github.event.inputs.ref }}"
-
-      - name: "Enable yarn cache"
-        uses: c-hive/gha-yarn-cache@v2  # using cache
-
-      - name: "Setup node@14"
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: "Install dependencies"
-        run: |
-          yarn set version 3.1.1
-          yarn install
-          
-
-      - name: "Build: env:${{github.event.inputs.preview_env}} for the preview"
-        run: "yarn run ci:build:${{github.event.inputs.preview_env}}"
-      - uses: actions/upload-artifact@v2
-        with:
-          name: "checkout-dist"
-          path: "public/"
-          if-no-files-found: error # "warn" or "ignore" are also available, defaults to `warn`
-          retention-days: 5
-
-      - name: "Deploy: preview prod-${{github.event.inputs.preview_env}}"
-        uses: matter-labs/action-hosting-deploy@v0
-        with:
-          repoToken: "${{secrets.GITHUB_TOKEN}}"
-          firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV}}"
-          target: "staging"
-          projectId: zsync-dapp-checkout
-          channelID: "staging_preview"
-
-  build_and_deploy:
-    if: ${{ github.event.repository.full_name == github.repository }}
-    needs: build_and_preview
-    runs-on: ubuntu-latest
-    environment: prod
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: "${{github.event.inputs.ref}}"
-
-      - name: "Enable yarn cache"
-        uses: c-hive/gha-yarn-cache@v2  # using cache
-
-      - name: "Setup node@14"
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: "Install dependencies"
-        run: |
-          yarn set version 3.1.1
-          yarn install
-
-      - name: "Deploy target: prod-mainnet"
-        run: yarn run ci:build:mainnet
-      - uses: matter-labs/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: "prod-mainnet"
-          projectId: zsync-dapp-checkout
-          channelID: live
-
-      - name: "Build rinkeby"
-        run: yarn run ci:build:rinkeby
-      - uses: matter-labs/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: "prod-rinkeby"
-          projectId: zsync-dapp-checkout
-          channelID: live
-
-      - name: "Build ropsten"
-        run: yarn run ci:build:ropsten
-
-      - name: "Deploy target: prod-ropsten"
-        run: yarn run ci:build:ropsten
-      - uses: matter-labs/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: "prod-ropsten"
-          projectId: zsync-dapp-checkout
-          channelID: live
+#name: "Deploy production"
+#"on":
+#  workflow_dispatch:
+#    inputs:
+#      ref:
+#        type: string
+#        description: "The branch, tag or SHA to checkout"
+#        required: true
+#        default: "main"
+#      preview_env:
+#        type: string
+#        description: "Test on Rinkeby, ropsten or mainnet"
+#        required: true
+#        default: "rinkeby"
+#jobs:
+#  build_and_preview:
+#    if: ${{ github.event.repository.full_name == github.repository }}
+#    runs-on: ubuntu-latest
+#    environment: dev
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          ref: "${{ github.event.inputs.ref }}"
+#
+#      - name: "Enable yarn cache"
+#        uses: c-hive/gha-yarn-cache@v2  # using cache
+#
+#      - name: "Setup node@14"
+#        uses: actions/setup-node@v2
+#        with:
+#          node-version: 14
+#
+#      - name: "Install dependencies"
+#        run: |
+#          yarn set version 3.1.1
+#          yarn install
+#
+#
+#      - name: "Build: env:${{github.event.inputs.preview_env}} for the preview"
+#        run: "yarn run ci:build:${{github.event.inputs.preview_env}}"
+#      - uses: actions/upload-artifact@v2
+#        with:
+#          name: "checkout-dist"
+#          path: "public/"
+#          if-no-files-found: error # "warn" or "ignore" are also available, defaults to `warn`
+#          retention-days: 5
+#
+#      - name: "Deploy: preview prod-${{github.event.inputs.preview_env}}"
+#        uses: matter-labs/action-hosting-deploy@v0
+#        with:
+#          repoToken: "${{secrets.GITHUB_TOKEN}}"
+#          firebaseServiceAccount: "${{secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_DEV}}"
+#          target: "staging"
+#          projectId: zsync-dapp-checkout
+#          channelID: "staging_preview"
+#
+#  build_and_deploy:
+#    if: ${{ github.event.repository.full_name == github.repository }}
+#    needs: build_and_preview
+#    runs-on: ubuntu-latest
+#    environment: prod
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          ref: "${{github.event.inputs.ref}}"
+#
+#      - name: "Enable yarn cache"
+#        uses: c-hive/gha-yarn-cache@v2  # using cache
+#
+#      - name: "Setup node@14"
+#        uses: actions/setup-node@v2
+#        with:
+#          node-version: 14
+#
+#      - name: "Install dependencies"
+#        run: |
+#          yarn set version 3.1.1
+#          yarn install
+#
+#      - name: "Deploy target: prod-mainnet"
+#        run: yarn run ci:build:mainnet
+#      - uses: matter-labs/action-hosting-deploy@v0
+#        with:
+#          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+#          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
+#          target: "prod-mainnet"
+#          projectId: zsync-dapp-checkout
+#          channelID: live
+#
+#      - name: "Build rinkeby"
+#        run: yarn run ci:build:rinkeby
+#      - uses: matter-labs/action-hosting-deploy@v0
+#        with:
+#          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+#          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
+#          target: "prod-rinkeby"
+#          projectId: zsync-dapp-checkout
+#          channelID: live
+#
+#      - name: "Build ropsten"
+#        run: yarn run ci:build:ropsten
+#
+#      - name: "Deploy target: prod-ropsten"
+#        run: yarn run ci:build:ropsten
+#      - uses: matter-labs/action-hosting-deploy@v0
+#        with:
+#          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+#          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
+#          target: "prod-ropsten"
+#          projectId: zsync-dapp-checkout
+#          channelID: live

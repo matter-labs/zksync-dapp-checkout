@@ -14,10 +14,12 @@
         </div>
       </template>
       <template slot="default">
-        <div class="text-sm">The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.</div>
+        <div class="text-sm">The price for RIF Rollup transactions fluctuates a little bit to make sure that RIF Rollup runs as close as possible to break-even costs.</div>
         <div v-if="!transferAllowed" class="text-sm text-red">You have to deposit a little bit more to cover new transaction fee.</div>
         <div v-for="(item, index) in transactionFees" :key="index" class="mt-3">
-          <div class="text-lg">{{ item.type === "batch" ? "Batch transaction fee" : "One-time account activation fee" }}</div>
+          <div class="text-lg">
+            {{ item.type === "batch" ? "Batch transaction fee" : "One-time account activation fee" }}
+          </div>
           <zk-values-block>
             <template slot="left-top">
               <div class="headline">Previous fee</div>
@@ -74,12 +76,12 @@
       <template slot="header">
         <div class="withIcon text-red">
           <i class="fad fa-info-square" />
-          <div>{{ errorModal ? errorModal.headline : "" }}</div>
+          <div>{{ errorModal.headline }}</div>
         </div>
       </template>
       <template slot="default">
         <div class="text-sm">
-          {{ errorModal ? errorModal.text : "" }}
+          {{ errorModal.text }}
         </div>
       </template>
     </zk-modal>
@@ -121,7 +123,7 @@
             <i class="fas fa-unlock"></i>
             <span>{{ cpkBtnText }}</span>
           </zk-defbtn>
-          <zk-defbtn v-else :disabled="!transferAllowed" @click="preTransfer()">
+          <zk-defbtn v-else :loader="accountStateLoading" :disabled="!transferAllowed || accountStateLoading" @click="preTransfer()">
             <i class="fas fa-paper-plane" />
             <span>Complete payment</span>
           </zk-defbtn>
@@ -142,7 +144,8 @@
       <div class="font-firaCondensed font-medium text-3xl text-green text-center pt-5 md:pt-10">Done. Thank you!</div>
       <zk-success-check-mark big class="w-11/12 max-w-xxs mx-auto py-5" />
       <div class="text-md text-center font-light pt-2">
-        Wasn't that easy? Learn more about <a class="linkDefault lightLink" href="https://zksync.io/" target="_blank">zkSync</a>
+        Wasn't that easy? Learn more about
+        <a class="linkDefault lightLink" href="https://zksync.io/" target="_blank">zkSync</a>
       </div>
       <div class="mainBtnsContainer">
         <div class="mainBtns">
@@ -165,16 +168,14 @@
             <template slot="first">
               <div class="tokenItem">
                 <div class="tokenName">
-                  {{ getTokenByID(typeof item.txData.tx.token === "number" ? item.txData.tx.token : item.txData.tx.feeToken) }}
+                  {{ item.txData.tx.token ? item.txData.tx.token : item.txData.tx.feeToken }}
                 </div>
               </div>
             </template>
             <template slot="second">
               <div class="amount">
                 {{
-                  item.txData.tx.fee === "0"
-                    ? item.txData.tx.amount
-                    : item.txData.tx.fee | parseBigNumberish(getTokenByID(typeof item.txData.tx.token === "number" ? item.txData.tx.token : item.txData.tx.feeToken))
+                  item.txData.tx.fee === "0" ? item.txData.tx.amount : item.txData.tx.fee | parseBigNumberish(item.txData.tx.token ? item.txData.tx.token : item.txData.tx.feeToken)
                 }}
               </div>
             </template>
@@ -196,14 +197,13 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { Wallet } from "zksync";
-import { ZkSyncTransaction } from "zksync-checkout-internal/src/types";
+import { BigNumberish } from "ethers";
+import { Wallet } from "@rsksmart/rif-rollup-js-sdk";
 import { ZkSyncCheckoutManager } from "zksync-checkout-internal";
-import { Transaction } from "zksync/build/wallet";
-import { ZkCPKStatus } from "@matterlabs/zksync-nuxt-core/types";
-import { filterError } from "@matterlabs/zksync-nuxt-core/utils";
-import { Address, TokenSymbol } from "zksync/build/types";
-import { BigNumberish } from "@ethersproject/bignumber/lib/bignumber";
+import { Transaction } from "@rsksmart/rif-rollup-js-sdk/build/wallet";
+import { ZkCPKStatus } from "@rsksmart/rif-rollup-nuxt-core/types";
+import { filterError } from "@rsksmart/rif-rollup-nuxt-core/utils";
+import { Address, TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { transactionBatch } from "@/plugins/walletActions/transaction";
 import { TotalByToken, TransactionData } from "@/types";
 import connectedWallet from "@/blocks/connectedWallet.vue";
@@ -237,8 +237,14 @@ export default Vue.extend({
         [token: string]: boolean;
       },
       finalTransactions: [] as Array<Transaction>,
-      errorModal: false as { headline: string; text: string } | false,
+      errorModal: false as
+        | false
+        | {
+        headline: string;
+        text: string;
+      },
       transactionFees: [] as UpdatedFee[],
+      accountStateLoading: false,
     };
   },
   computed: {
@@ -258,14 +264,15 @@ export default Vue.extend({
       return this.$store.getters["checkout/usedTokens"];
     },
     totalByToken(): TotalByToken {
-      // noinspection no-unused-expressions
+      // eslint-disable-next-line no-unused-expressions
       this.updateTransferAllowed;
       return this.$store.getters["checkout/getTotalByToken"];
     },
     transferAllowed(): boolean {
-      // noinspection BadExpressionStatementJS
+      // eslint-disable-next-line no-unused-expressions
       this.updateTransferAllowed;
-      for (const [, state] of Object.entries(this.tokenItemsValid)) {
+      const items = Object.entries(this.tokenItemsValid).filter(([token, _]) => this.usedTokens.includes(token));
+      for (const [, state] of items) {
         if (!state) {
           return false;
         }
@@ -341,9 +348,15 @@ export default Vue.extend({
       }
     },
     async preTransfer() {
-      this.step = "transfer";
-      this.subStep = "processing";
       try {
+        this.accountStateLoading = true;
+        await this.$store.dispatch("zk-account/updateAccountState", true);
+        this.accountStateLoading = false;
+        if (!this.transferAllowed) {
+          return;
+        }
+        this.step = "transfer";
+        this.subStep = "processing";
         await this.checkFees();
         if (this.transactionFees.length > 0) {
           this.modal = "feeChanged";
@@ -353,6 +366,7 @@ export default Vue.extend({
       } catch (error) {
         this.step = "main";
         this.modal = false;
+        this.accountStateLoading = false;
         const realError = filterError(error as Error);
         if (realError) {
           this.errorModal = {
@@ -374,8 +388,7 @@ export default Vue.extend({
       try {
         const syncWallet: Wallet = this.$store.getters["zk-wallet/syncWallet"];
         const nonce = await syncWallet.getNonce("committed");
-        const transactionsList = [] as Array<ZkSyncTransaction>;
-        transactionsList.push(...transactionData.transactions);
+        const transactionsList = transactionData.transactions;
         const transactionFees = this.$store.getters["checkout/getTransactionBatchFee"];
         const transactions = await transactionBatch(
           transactionsList,
@@ -387,34 +400,45 @@ export default Vue.extend({
         );
         console.log("Batch transaction", transactionsList);
 
-        const manager = ZkSyncCheckoutManager.getManager();
-
-        let endHashes = [];
-        const validHashes = transactions.filter((tx: any) => {
-          if (tx.txData.tx.type !== "Transfer") {
-            return false;
+        this.finalTransactions = transactions.map((e) => {
+          e.txData.tx.amount = e.txData.tx.amount?.toString();
+          e.txData.tx.fee = e.txData.tx.fee?.toString();
+          if (typeof e.txData.tx.token === "number") {
+            e.txData.tx.tokenId = e.txData.tx.token;
+            e.txData.tx.token = this.getTokenByID(e.txData.tx.tokenId);
           }
-          for (const singleTx of transactionsList) {
-            if (
-              typeof tx.txData.tx.to === "string" &&
-              typeof singleTx.to === "string" &&
-              tx.txData.tx.to.toLowerCase() === singleTx.to.toLowerCase() &&
-              tx.txData.tx.amount === singleTx.amount
-            ) {
-              return true;
-            }
+          if (typeof e.txData.tx.feeToken === "number") {
+            e.txData.tx.feeTokenId = e.txData.tx.feeToken;
+            e.txData.tx.feeToken = this.getTokenByID(e.txData.tx.feeTokenId);
           }
-          return false;
+          return e;
         });
-        endHashes = validHashes.map((tx: any) => tx.txHash);
-        console.log("Sent hashes", endHashes);
+        console.log("finalTransactions", this.finalTransactions);
+
+        const manager = ZkSyncCheckoutManager.getManager();
+        const validHashes = this.finalTransactions
+          .filter((tx: any) => {
+            if (tx.txData.tx.type !== "Transfer") {
+              return false;
+            }
+            for (const singleTx of transactionsList) {
+              if (
+                tx.txData.tx.to?.toLowerCase() === singleTx.to?.toLowerCase() &&
+                tx.txData.tx.amount?.toString() === singleTx.amount?.toString() &&
+                tx.txData.tx.token === singleTx.token
+              ) {
+                return true;
+              }
+            }
+            return false;
+          })
+          .map((tx) => tx.txHash);
+        console.log("Sent hashes", validHashes);
         // @ts-ignore
         if (manager.openerPromise) {
-          manager.notifyHashes(endHashes);
+          manager.notifyHashes(validHashes);
         }
 
-        this.finalTransactions.push(...transactions);
-        console.log("finalTransactions", this.finalTransactions);
         this.subStep = "committing";
 
         await transactions[0].awaitReceipt();
@@ -436,7 +460,7 @@ export default Vue.extend({
             }
           }
           this.errorModal = {
-            headline: "Activation error 1",
+            headline: "Batch transfer error",
             text: realError,
           };
         }

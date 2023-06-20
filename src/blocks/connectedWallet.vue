@@ -15,7 +15,7 @@
               <span>
                 <span>{{ ownAddress[0] }}</span
                 ><span class="addressMiddle">{{ ownAddress[1] }}</span
-                ><span class="dots">...</span><span>{{ ownAddress[2] }}</span>
+              ><span class="dots">...</span><span>{{ ownAddress[2] }}</span>
               </span>
               <i class="copyIcon text-lg far fa-clipboard"></i>
             </div>
@@ -37,8 +37,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Network } from "zksync/build/types";
-import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
+import { Network } from "@rsksmart/rif-rollup-js-sdk/build/types";
+import { copyToClipboard } from "@rsksmart/rif-rollup-nuxt-core/utils";
 
 export default Vue.extend({
   computed: {
@@ -70,10 +70,8 @@ export default Vue.extend({
     },
     hide(): void {
       setTimeout(() => {
-        const copyAddress = this.$refs["copy-address"];
-        if (copyAddress && copyAddress.hasOwnProperty("visible")) {
-          // @ts-ignore
-          copyAddress.visible = false;
+        if (this.$refs["copy-address"]) {
+          (this.$refs["copy-address"] as HTMLElement).hidden = true;
         }
       }, 1500);
     },
