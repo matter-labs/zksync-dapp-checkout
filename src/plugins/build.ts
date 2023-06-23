@@ -17,11 +17,15 @@ export const isDebugEnabled: boolean = env === "dev";
 const nuxtBuildOptionsDefault: NuxtOptionsBuild = {
   corejs: 3,
   ssr: false,
+  babel: {
+    plugins: ["@babel/plugin-proposal-optional-chaining", "@babel/plugin-proposal-nullish-coalescing-operator"],
+  },
 };
 const nuxtBuildProdOptions: NuxtOptionsBuild = {
   ...nuxtBuildOptionsDefault,
   babel: {
     compact: true,
+    ...nuxtBuildOptionsDefault.babel,
   },
   extractCSS: {
     ignoreOrder: true,
