@@ -323,6 +323,22 @@ const config: NuxtConfig = {
      ** You can extend webpack config here
      */
     extend(config) {
+      config.module!.rules.push({
+        test: /\.m?js$/,
+        include: [
+          /node_modules[\\/]@walletconnect/,
+          /node_modules[\\/]@web3modal[\\/]core/,
+          /node_modules[\\/]@web3modal[\\/]ui/,
+        ],
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+            plugins: ["@babel/plugin-proposal-optional-chaining", "@babel/plugin-proposal-nullish-coalescing-operator"],
+          },
+        },
+      });
+
       config.node = {
         fs: "empty",
       };
