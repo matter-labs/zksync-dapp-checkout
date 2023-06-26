@@ -1,3 +1,10 @@
+# [3.7.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.7...3.7.0) (2023-06-26)
+
+
+### Features
+
+* wc v2 ([#138](https://github.com/matter-labs/zksync-dapp-checkout/issues/138)) ([571a4ba](https://github.com/matter-labs/zksync-dapp-checkout/commit/571a4ba20850abaded980cafc6774cc9b612d618))
+
 ## [3.6.7](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.6...3.6.7) (2023-03-28)
 
 
