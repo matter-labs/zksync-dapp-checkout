@@ -1,3 +1,10 @@
+## [3.7.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.7.0...3.7.1) (2023-08-14)
+
+
+### Bug Fixes
+
+* update ramp sdk ([#139](https://github.com/matter-labs/zksync-dapp-checkout/issues/139)) ([056c723](https://github.com/matter-labs/zksync-dapp-checkout/commit/056c72329a5fa64faf0d65a69fe49c7167bc98f1))
+
 # [3.7.0](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.6.7...3.7.0) (2023-06-26)
 
 
