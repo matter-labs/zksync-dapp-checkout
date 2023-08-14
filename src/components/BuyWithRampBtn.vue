@@ -59,8 +59,8 @@ export default Vue.extend({
       })
         // Weird typing error
         // @ts-ignore
-        .on("PURCHASE_SUCCESSFUL", (event) => {
-          console.log("Ramp PURCHASE_SUCCESSFUL", event);
+        .on("PURCHASE_CREATED", (event) => {
+          console.log("Ramp PURCHASE_CREATED", event);
           this.$store.dispatch("checkout/requestUsedTokensEthereumBalance", true);
           this.$store.dispatch("zk-account/updateAccountState", true);
         })
