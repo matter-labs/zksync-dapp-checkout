@@ -1,3 +1,10 @@
+## [3.7.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.7.2...3.7.3) (2023-08-15)
+
+
+### Bug Fixes
+
+* update onboard wallet modules ([#140](https://github.com/matter-labs/zksync-dapp-checkout/issues/140)) ([619edac](https://github.com/matter-labs/zksync-dapp-checkout/commit/619edac03a7f7ffe1ea327cc3b5948a7e054e14d))
+
 ## [3.7.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.7.1...3.7.2) (2023-08-15)
 
 
