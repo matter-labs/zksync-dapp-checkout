@@ -326,6 +326,7 @@ const config: NuxtConfig = {
       config.module!.rules.push({
         test: /\.m?js$/,
         include: [
+          /node_modules[\\/]superstruct/,
           /node_modules[\\/]@walletconnect/,
           /node_modules[\\/]@web3modal[\\/]core/,
           /node_modules[\\/]@web3modal[\\/]ui/,
