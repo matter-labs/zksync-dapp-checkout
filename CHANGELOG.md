@@ -1,3 +1,10 @@
+## [3.7.2](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.7.1...3.7.2) (2023-08-15)
+
+
+### Bug Fixes
+
+* update prod deployment node js version ([4376a0a](https://github.com/matter-labs/zksync-dapp-checkout/commit/4376a0a21e69ff8f55f17109950737605058a161))
+
 ## [3.7.1](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.7.0...3.7.1) (2023-08-14)
 
 
