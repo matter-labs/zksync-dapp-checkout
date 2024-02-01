@@ -3,7 +3,7 @@ import { Wallet } from "zksync";
 import { ZkSyncTransaction } from "zksync-checkout/build/types";
 import { submitSignedTransactionsBatch } from "zksync/build/wallet";
 import { TokenSymbol, Address } from "zksync/build/types";
-
+import { screenAddress } from "@matterlabs/zksync-nuxt-core/utils/screening";
 /**
  * Transaction processing action
  *
@@ -40,6 +40,13 @@ export const transactionBatch = async (
     to: syncWallet.address(),
     token: feeToken,
   });
+
+  if (process.env.SCREENING_API_URL) {
+    await Promise.all([
+      ...transactions.map((e) => screenAddress(e.to, process.env.SCREENING_API_URL!)),
+      store.dispatch("zk-account/screenAccountAddress", null, { root: true }),
+    ]);
+  }
   statusFunction("waitingUserConfirmation");
   const batchTransactionData = await batchBuilder.build();
   statusFunction("processing");
