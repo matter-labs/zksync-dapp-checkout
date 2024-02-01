@@ -1,3 +1,10 @@
+## [3.7.5](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.7.4...3.7.5) (2024-02-01)
+
+
+### Bug Fixes
+
+* production deployment ([3382325](https://github.com/matter-labs/zksync-dapp-checkout/commit/3382325b8291e649eae7262b5dcdb7a38fd9b812))
+
 ## [3.7.4](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.7.3...3.7.4) (2024-02-01)
 
 
