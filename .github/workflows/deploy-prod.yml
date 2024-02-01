@@ -79,6 +79,12 @@ jobs:
 
       - name: "Deploy target: prod-mainnet"
         run: yarn run ci:build:mainnet
+
+      - name: "Setup node@18"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
       - uses: matter-labs/action-hosting-deploy@main
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
@@ -87,8 +93,19 @@ jobs:
           projectId: zsync-dapp-checkout
           channelID: live
 
+      - name: "Setup node@16"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          
       - name: "Build goerli"
         run: yarn run ci:build:goerli
+
+      - name: "Setup node@18"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
       - uses: matter-labs/action-hosting-deploy@main
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
