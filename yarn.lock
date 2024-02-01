@@ -3084,13 +3084,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/connect-kit-loader@npm:^1.1.0":
-  version: 1.1.2
-  resolution: "@ledgerhq/connect-kit-loader@npm:1.1.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40ledgerhq%2Fconnect-kit-loader%2F-%2Fconnect-kit-loader-1.1.2.tgz"
-  checksum: 614fdd9ac2363da60af667adcfe4721f863d8ea06ee45a08192a162c28e806dc07491bee4833d14def74de673eac1f1450eaf67e783c8c28da4e0cd095b4474a
-  languageName: node
-  linkType: hard
-
 "@lit-labs/ssr-dom-shim@npm:^1.0.0, @lit-labs/ssr-dom-shim@npm:^1.1.0":
   version: 1.1.1
   resolution: "@lit-labs/ssr-dom-shim@npm:1.1.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40lit-labs%2Fssr-dom-shim%2F-%2Fssr-dom-shim-1.1.1.tgz"
@@ -3140,7 +3133,7 @@ __metadata:
     "@commitlint/config-conventional": ^16.0.0
     "@matterlabs/eslint-config-nuxt": ^2.0.0
     "@matterlabs/prettier-config": ^1.0.2
-    "@matterlabs/zksync-nuxt-core": ^1.11.2
+    "@matterlabs/zksync-nuxt-core": alpha
     "@matterlabs/zksync-nuxt-ui": ^0.0.0
     "@nuxt/types": ^2.15.7
     "@nuxt/typescript-build": ^2.1.0
@@ -3188,9 +3181,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@matterlabs/zksync-nuxt-core@npm:^1.11.2":
-  version: 1.11.2
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.11.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40matterlabs%2Fzksync-nuxt-core%2F-%2Fzksync-nuxt-core-1.11.2.tgz"
+"@matterlabs/zksync-nuxt-core@npm:alpha":
+  version: 1.12.0-alpha.2
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.12.0-alpha.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40matterlabs%2Fzksync-nuxt-core%2F-%2Fzksync-nuxt-core-1.12.0-alpha.2.tgz"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.8.0
@@ -3201,7 +3194,6 @@ __metadata:
     "@web3-onboard/gnosis": ^2.1.10
     "@web3-onboard/injected-wallets": ^2.10.4
     "@web3-onboard/keepkey": ^2.3.7
-    "@web3-onboard/ledger": ^2.5.2
     "@web3-onboard/mew-wallet": ^2.0.4
     "@web3-onboard/portis": ^2.1.7
     "@web3-onboard/torus": ^2.2.5
@@ -3217,7 +3209,7 @@ __metadata:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.13.1
-  checksum: 93331353a7ab5298df170015226e0c6383beb1ee6d83abae42d4043ecab3e53b6a51d2d145eb50a1f456b88bc62d770ed764265c6900bdc85c34690268192949
+  checksum: fe56c6fe3c027574949424a74be1ad68e0b8d13d90a47d3f1f8f8c2fbe3acdd1e313df8a2e3f63e6832b9754b23bcd99396d9e100c7fbc7fefe8289d324fcf55
   languageName: node
   linkType: hard
 
@@ -6842,21 +6834,6 @@ __metadata:
     "@web3-onboard/hw-common": ^2.3.0
     ethereumjs-util: ^7.1.3
   checksum: 5901a89dfc313ee82245c46d21dd8079e86bbe4c6c35299d6ba2eb7c4bcbd9a9cb1b3765e5127299e4dcba0e6bdd264c148fc652603b0462bdba33762dffef5c
-  languageName: node
-  linkType: hard
-
-"@web3-onboard/ledger@npm:^2.5.2":
-  version: 2.5.2
-  resolution: "@web3-onboard/ledger@npm:2.5.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40web3-onboard%2Fledger%2F-%2Fledger-2.5.2.tgz"
-  dependencies:
-    "@ethersproject/providers": 5.5.0
-    "@ledgerhq/connect-kit-loader": ^1.1.0
-    "@walletconnect/client": ^1.8.0
-    "@walletconnect/ethereum-provider": 2.9.1
-    "@walletconnect/modal": 2.6.1
-    "@web3-onboard/common": ^2.3.3
-    rxjs: ^7.5.2
-  checksum: e1b100d6a19749b612f0857b49be368b9d79b078612790cae1e15e7b1b2aa85618371cc43cdc9c62f24898d770c3aff30d13b7513d0a028644cb624937fb3eeb
   languageName: node
   linkType: hard
 
