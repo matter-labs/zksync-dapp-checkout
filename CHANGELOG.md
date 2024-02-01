@@ -1,3 +1,10 @@
+## [3.7.4](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.7.3...3.7.4) (2024-02-01)
+
+
+### Bug Fixes
+
+* validate address ([#141](https://github.com/matter-labs/zksync-dapp-checkout/issues/141)) ([51c16a6](https://github.com/matter-labs/zksync-dapp-checkout/commit/51c16a694f7b9627131c3988eafa43db682cc100))
+
 ## [3.7.3](https://github.com/matter-labs/zksync-dapp-checkout/compare/3.7.2...3.7.3) (2023-08-15)
 
 
