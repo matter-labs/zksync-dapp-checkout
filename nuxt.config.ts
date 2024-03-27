@@ -272,7 +272,7 @@ const config: NuxtConfig = {
       anonymize_ip: true, // anonymize IP
       send_page_view: isProduction, // might be necessary to avoid duplicated page track on page reload
       linker: {
-        domains: ["checkout.zksync.io", "checkout-goerli.zksync.io", "web.app"],
+        domains: ["checkout.zksync.io", "checkout-sepolia.zksync.io", "web.app"],
       },
     },
     debug: isDebugEnabled, // enable to track in dev mode

@@ -39,7 +39,7 @@
       ]
     },
     {
-      "target": "prod-goerli",
+      "target": "prod-sepolia",
       "public": "public",
       "ignore": [
         "firebase.json",

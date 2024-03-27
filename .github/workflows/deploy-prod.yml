@@ -9,9 +9,9 @@ name: "Deploy production"
         default: "main"
       preview_env:
         type: string
-        description: "Test on goerli or mainnet"
+        description: "Test on sepolia or mainnet"
         required: true
-        default: "goerli"
+        default: "sepolia"
 jobs:
   build_and_preview:
     if: ${{ github.event.repository.full_name == github.repository }}
@@ -102,8 +102,8 @@ jobs:
         with:
           node-version: 16
           
-      - name: "Build goerli"
-        run: yarn run ci:build:goerli
+      - name: "Build sepolia"
+        run: yarn run ci:build:sepolia
 
       - name: "Setup node@18"
         uses: actions/setup-node@v2
@@ -114,6 +114,6 @@ jobs:
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZSYNC_DAPP_CHECKOUT_PROD }}"
-          target: "prod-goerli"
+          target: "prod-sepolia"
           projectId: zsync-dapp-checkout
           channelID: live
