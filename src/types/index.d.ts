@@ -39,6 +39,6 @@ export type ZKISingleRampConfig = {
   hostApiKey: string;
 };
 export type ZKIRampConfig = {
-  goerli: ZKISingleRampConfig;
+  sepolia: ZKISingleRampConfig;
   mainnet: ZKISingleRampConfig;
 };

@@ -26,8 +26,8 @@ jobs:
         run: |
           yarn lint --max-warnings 0
 
-      - name: "Deploy target: goerli"
-        run: yarn run ci:build:goerli
+      - name: "Deploy target: sepolia"
+        run: yarn run ci:build:sepolia
         
       - name: "Setup node@18"
         uses: actions/setup-node@v2

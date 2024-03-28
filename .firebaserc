@@ -8,8 +8,8 @@
         "prod-mainnet": [
           "zsync-dapp-checkout"
         ],
-        "prod-goerli": [
-          "goerli-checkout-zksync"
+        "prod-sepolia": [
+          "sepolia-checkout-zksync-lite"
         ],
         "staging": [
           "staging-checkout-v1-zksync"

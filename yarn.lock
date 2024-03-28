@@ -3133,7 +3133,7 @@ __metadata:
     "@commitlint/config-conventional": ^16.0.0
     "@matterlabs/eslint-config-nuxt": ^2.0.0
     "@matterlabs/prettier-config": ^1.0.2
-    "@matterlabs/zksync-nuxt-core": ^1.12.1
+    "@matterlabs/zksync-nuxt-core": ^1.12.3
     "@matterlabs/zksync-nuxt-ui": ^0.0.0
     "@nuxt/types": ^2.15.7
     "@nuxt/typescript-build": ^2.1.0
@@ -3175,15 +3175,15 @@ __metadata:
     vue: ^2.6.12
     vue-custom-scrollbar: ^1.4.0
     vue-js-popover: ^1.2.1
-    zksync: ^0.13.1
+    zksync: 0.13.0
     zksync-checkout: latest
     zksync-checkout-internal: latest
   languageName: unknown
   linkType: soft
 
-"@matterlabs/zksync-nuxt-core@npm:^1.12.1":
-  version: 1.12.1
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.12.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40matterlabs%2Fzksync-nuxt-core%2F-%2Fzksync-nuxt-core-1.12.1.tgz"
+"@matterlabs/zksync-nuxt-core@npm:^1.12.3":
+  version: 1.12.3
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.12.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40matterlabs%2Fzksync-nuxt-core%2F-%2Fzksync-nuxt-core-1.12.3.tgz"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.8.0
@@ -3208,8 +3208,8 @@ __metadata:
     nuxt: ^2.15.3
     ts-node: ^9.1.1
     web3: ^1.5.3
-    zksync: ^0.13.1
-  checksum: bf0b428afec60f5835e23cc21bfcbd5e813a4503252fc703bc18fa8bc8fafbe8d5f068454366d7be6453762d88484cb1c0fee8b375a227337e3e29d7122093d2
+    zksync: 0.13.0
+  checksum: 61c115ca33fecc8f2481f840e539ad89bd585b6eed2ebbbfa5025c245c38e4ff532fb108f9a638e071308827373ce2b715417e41a549226076d53f4266ff259f
   languageName: node
   linkType: hard
 
@@ -26160,9 +26160,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zksync@npm:^0.13.1":
-  version: 0.13.1
-  resolution: "zksync@npm:0.13.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fzksync%2F-%2Fzksync-0.13.1.tgz"
+"zksync@npm:0.13.0":
+  version: 0.13.0
+  resolution: "zksync@npm:0.13.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fzksync%2F-%2Fzksync-0.13.0.tgz"
   dependencies:
     axios: ^0.21.2
     websocket: ^1.0.30
@@ -26171,7 +26171,7 @@ __metadata:
   peerDependencies:
     "@ethersproject/logger": ^5.4.0
     ethers: ^5.4.4
-  checksum: dee05af41b15a5c89aafa0cebc3647895baa13bb5a06f37178fa98e499229224b649b1eee3d86f60967167cad8ab49e9a6d97c96a5029734c41e645ed1e99859
+  checksum: a9e3b32e2e48d941f60b8e2a1aae7e283b40440b62610935fcf02b8e27a235a284a263a8d03f298bfa29e67c190589d074da6a90220b4b957944670bcf0d75ea
   languageName: node
   linkType: hard
 
