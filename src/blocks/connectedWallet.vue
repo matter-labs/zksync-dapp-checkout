@@ -60,7 +60,7 @@ export default Vue.extend({
       return this.network === "mainnet";
     },
     walletUrl(): string {
-      return `///wallet.zksync.io/${this.network !== "mainnet" ? "?network=" + this.network : ""}`;
+      return `///lite.zksync.io/${this.network !== "mainnet" ? "?network=" + this.network : ""}`;
     },
   },
   methods: {

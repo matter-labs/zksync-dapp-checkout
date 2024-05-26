@@ -203,7 +203,7 @@ export default Vue.extend({
       return this.$store.getters["zk-transaction/fees"];
     },
     zkWalletLink(): string {
-      return `//wallet.zksync.io?network=${ETHER_NETWORK_NAME}`;
+      return `//lite.zksync.io?network=${ETHER_NETWORK_NAME}`;
     },
     totalFees(): BigNumberish {
       const allFees = this.allFees;

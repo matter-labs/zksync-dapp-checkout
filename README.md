@@ -1,14 +1,14 @@
-# [zkSync Checkout dApp](https://checkout.zksync.io) &middot; [zkSync.io](https://zksync.io/)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE-APACHE)
+# [zkSync Lite Checkout](https://checkout.zksync.io) &middot; [zkSync.io](https://zksync.io/)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE-APACHE)
 
-# zkSync Checkout — trustable permissionless DeFi payment gateway 
+# zkSync Lite Checkout — trustable permissionless DeFi payment gateway 
 
-zkSync Checkout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.
+zkSync Lite Checkout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Lite Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.
 
 * **[SDK documentation](https://zksync.io/api/sdk/checkout/)** | [**Changelog**](CHANGELOG.md)
 
 ## Deployment
 
-zkSync uses firebase hosting for all it's dApps.
+zkSync Checkout uses firebase hosting.
 Resource targets for the zkCheckout are:
 
 ### Available Hosts

@@ -15,7 +15,7 @@
         <div v-if="modal === 'insufficientL1Deposit'" class="text-sm">
           On-chain wallet has insufficient funds to deposit
           <strong>{{ depositBigNumber | parseBigNumberish(token) }} {{ token }}</strong>
-          to zkSync L2 account. Your on-chain balance is
+          to zkSync Lite account. Your on-chain balance is
           <strong
             class="cursor-pointer"
             @click="
