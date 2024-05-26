@@ -1,8 +1,8 @@
 {
   "name": "@matterlabs/zksync-dapp-checkout",
-  "title": "zkSync Checkout — simple permissionless DeFi payment gateway",
+  "title": "zkSync Lite Checkout — simple permissionless DeFi payment gateway",
   "homepage": "https://checkout.zksync.io",
-  "description": "zkSync Checkout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.",
+  "description": "zkSync Lite Checkout helps anyone permission-less adopt checkout backed by zkSync, receive payments automatically and benefit from all the advantage of zkSync Lite Rollup: speed of the transaction, times lower cost of a single transaction, simplicity of withdrawal fund to the onchain-wallet.",
   "version": "3.7.5",
   "keywords": [
     "zksync",
@@ -16,7 +16,6 @@
     "payment gateway",
     "cryptopayments",
     "gitcoin",
-    "matter labs",
     "zksync dapps",
     "dapp",
     "ethers"

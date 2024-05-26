@@ -16,8 +16,8 @@
       </template>
       <template slot="default">
         <div class="text-sm">
-          The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible
-          to break-even costs.
+          The price for zkSync Lite transactions fluctuates a little bit to make sure that zkSync Lite runs as close as
+          possible to break-even costs.
         </div>
         <div v-if="!transferAllowed" class="text-sm text-red">
           You have to deposit a little bit more to cover new transaction fee.
@@ -486,7 +486,7 @@ export default Vue.extend({
         this.step = "main";
         let realError = filterError(error as Error);
         if (realError) {
-          if (realError.includes("Account does not exist in the zkSync network")) {
+          if (realError.includes("Account does not exist in the zkSync Lite network")) {
             realError = "Please, make deposit or request tokens in order to activate the account.";
           } else if (realError.includes("batch summary fee is too low")) {
             await this.checkFees();

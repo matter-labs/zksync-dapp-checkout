@@ -31,7 +31,7 @@ export default Vue.extend({
       return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
     },
     zkWalletLink(): string {
-      return `//wallet.zksync.io?network=${ETHER_NETWORK_NAME}`;
+      return `//lite.zksync.io?network=${ETHER_NETWORK_NAME}`;
     },
   },
 });
