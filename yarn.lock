@@ -1314,7 +1314,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.20.6, @babel/runtime@npm:^7.17.2":
+"@babel/runtime@npm:7.20.6":
   version: 7.20.6
   resolution: "@babel/runtime@npm:7.20.6::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40babel%2Fruntime%2F-%2Fruntime-7.20.6.tgz"
   dependencies:
@@ -1332,12 +1332,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.22.6":
-  version: 7.22.10
-  resolution: "@babel/runtime@npm:7.22.10::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40babel%2Fruntime%2F-%2Fruntime-7.22.10.tgz"
+"@babel/runtime@npm:^7.24.5":
+  version: 7.24.6
+  resolution: "@babel/runtime@npm:7.24.6::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40babel%2Fruntime%2F-%2Fruntime-7.24.6.tgz"
   dependencies:
     regenerator-runtime: ^0.14.0
-  checksum: 524d41517e68953dbc73a4f3616b8475e5813f64e28ba89ff5fca2c044d535c2ea1a3f310df1e5bb06162e1f0b401b5c4af73fe6e2519ca2450d9d8c44cf268d
+  checksum: 44d95ca743898fed31b4cefef31de6fd3cf7906e94493368e9d6538289cc52c6c46185205d9c01d38466a5b3f673550f80892d30b1ed02a2c13e704863a8cc48
   languageName: node
   linkType: hard
 
@@ -3334,16 +3334,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/curves@npm:^1.0.0":
-  version: 1.1.0
-  resolution: "@noble/curves@npm:1.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40noble%2Fcurves%2F-%2Fcurves-1.1.0.tgz"
+"@noble/curves@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@noble/curves@npm:1.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40noble%2Fcurves%2F-%2Fcurves-1.4.0.tgz"
   dependencies:
-    "@noble/hashes": 1.3.1
-  checksum: 2658cdd3f84f71079b4e3516c47559d22cf4b55c23ac8ee9d2b1f8e5b72916d9689e59820e0f9d9cb4a46a8423af5b56dc6bb7782405c88be06a015180508db5
+    "@noble/hashes": 1.4.0
+  checksum: 0014ff561d16e98da4a57e2310a4015e4bdab3b1e1eafcd18d3f9b955c29c3501452ca5d702fddf8ca92d570bbeadfbe53fe16ebbd81a319c414f739154bb26b
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:1.3.1, @noble/hashes@npm:^1.2.0, @noble/hashes@npm:^1.3.1":
+"@noble/hashes@npm:1.4.0, @noble/hashes@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@noble/hashes@npm:1.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40noble%2Fhashes%2F-%2Fhashes-1.4.0.tgz"
+  checksum: 8ba816ae26c90764b8c42493eea383716396096c5f7ba6bea559993194f49d80a73c081f315f4c367e51bd2d5891700bcdfa816b421d24ab45b41cb03e4f3342
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:^1.2.0":
   version: 1.3.1
   resolution: "@noble/hashes@npm:1.3.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40noble%2Fhashes%2F-%2Fhashes-1.3.1.tgz"
   checksum: 7fdefc0f7a0c1ec27acc6ff88841793e3f93ec4ce6b8a6a12bfc0dd70ae6b7c4c82fe305fdfeda1735d5ad4a9eebe761e6693b3d355689c559e91242f4bc95b1
@@ -4736,7 +4743,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@solana/buffer-layout@npm:^4.0.0":
+"@solana/buffer-layout@npm:^4.0.1":
   version: 4.0.1
   resolution: "@solana/buffer-layout@npm:4.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40solana%2Fbuffer-layout%2F-%2Fbuffer-layout-4.0.1.tgz"
   dependencies:
@@ -4746,14 +4753,14 @@ __metadata:
   linkType: hard
 
 "@solana/web3.js@npm:^1.70.1":
-  version: 1.78.4
-  resolution: "@solana/web3.js@npm:1.78.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40solana%2Fweb3.js%2F-%2Fweb3.js-1.78.4.tgz"
+  version: 1.91.8
+  resolution: "@solana/web3.js@npm:1.91.8::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40solana%2Fweb3.js%2F-%2Fweb3.js-1.91.8.tgz"
   dependencies:
-    "@babel/runtime": ^7.22.6
-    "@noble/curves": ^1.0.0
-    "@noble/hashes": ^1.3.1
-    "@solana/buffer-layout": ^4.0.0
-    agentkeepalive: ^4.3.0
+    "@babel/runtime": ^7.24.5
+    "@noble/curves": ^1.4.0
+    "@noble/hashes": ^1.4.0
+    "@solana/buffer-layout": ^4.0.1
+    agentkeepalive: ^4.5.0
     bigint-buffer: ^1.1.5
     bn.js: ^5.2.1
     borsh: ^0.7.0
@@ -4761,10 +4768,10 @@ __metadata:
     buffer: 6.0.3
     fast-stable-stringify: ^1.0.0
     jayson: ^4.1.0
-    node-fetch: ^2.6.12
-    rpc-websockets: ^7.5.1
+    node-fetch: ^2.7.0
+    rpc-websockets: ^7.11.0
     superstruct: ^0.14.2
-  checksum: e1c44c6cbec87cdfd4d6d23b4241b746e14ed3a9ca73d596693758d91ac825cecf579345da3b0b7bb5e54b6794791bc0eac02cadf11f1ec79e859b6536f26f11
+  checksum: ffc3c31a58fbf401b12c90d87615e5e611ba878c976092bc0a8bd2b96accf14c9898883c5dcdba8cc3a98c3e410f3261c06b5c7a42936c23dcbc69d084d3ad1d
   languageName: node
   linkType: hard
 
@@ -7258,7 +7265,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"agentkeepalive@npm:^4.3.0":
+"agentkeepalive@npm:^4.5.0":
   version: 4.5.0
   resolution: "agentkeepalive@npm:4.5.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fagentkeepalive%2F-%2Fagentkeepalive-4.5.0.tgz"
   dependencies:
@@ -17910,9 +17917,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.12":
-  version: 2.6.12
-  resolution: "node-fetch@npm:2.6.12::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fnode-fetch%2F-%2Fnode-fetch-2.6.12.tgz"
+"node-fetch@npm:^2.7.0":
+  version: 2.7.0
+  resolution: "node-fetch@npm:2.7.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fnode-fetch%2F-%2Fnode-fetch-2.7.0.tgz"
   dependencies:
     whatwg-url: ^5.0.0
   peerDependencies:
@@ -17920,7 +17927,7 @@ __metadata:
   peerDependenciesMeta:
     encoding:
       optional: true
-  checksum: 3bc1655203d47ee8e313c0d96664b9673a3d4dd8002740318e9d27d14ef306693a4b2ef8d6525775056fd912a19e23f3ac0d7111ad8925877b7567b29a625592
+  checksum: d76d2f5edb451a3f05b15115ec89fc6be39de37c6089f1b6368df03b91e1633fd379a7e01b7ab05089a25034b2023d959b47e59759cb38d88341b2459e89d6e5
   languageName: node
   linkType: hard
 
@@ -21745,11 +21752,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rpc-websockets@npm:^7.5.1":
-  version: 7.6.0
-  resolution: "rpc-websockets@npm:7.6.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Frpc-websockets%2F-%2Frpc-websockets-7.6.0.tgz"
+"rpc-websockets@npm:^7.11.0":
+  version: 7.11.0
+  resolution: "rpc-websockets@npm:7.11.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Frpc-websockets%2F-%2Frpc-websockets-7.11.0.tgz"
   dependencies:
-    "@babel/runtime": ^7.17.2
     bufferutil: ^4.0.1
     eventemitter3: ^4.0.7
     utf-8-validate: ^5.0.2
@@ -21760,7 +21766,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: af2b254f65985610bd354e8e13de07b5a36010b94672b0b5a9d226b9bb1b8b17d01c63221cad97263845888f3610e55867a32e4c0017dfb92fddf89417c4cb6c
+  checksum: bf8b760e661a1ac4a26d4d139cf98978d14b79dd6463d7acfd8a300355db4be57675f8e2cf5e2feada8cd9cc2ab063914f3b63fce442540a66141dff69e74f60
   languageName: node
   linkType: hard
 
